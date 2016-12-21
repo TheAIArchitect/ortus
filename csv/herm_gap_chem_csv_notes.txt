@@ -1,0 +1,11 @@
+Modifications to .csv files prior to converstion with WormwiringCSVToSQLite.cpp:
+
+- Changed "PHARYNX - NEURONS" (3rd row and column, and vice versa) to "PHARYNX INTERNEURONS"
+- Added "PHARYNX MOTORNEURONS" starting at M1 (breaking up the previously named "PHARYNX - NEURONS" into interneurons and motorneurons
+    - Note: MI, NSML, NSMR, MCL and MCR are not really motorneurons... more like motorinter neurons
+- Removed dash and a space in "PHARYNX - MUSCLES" to read "PHARYNX MUSCLES"
+- Removed spaces between "MOTOR NEURONS" anywhere it appeared, to read "MOTORNEURONS"
+- Changed "SEX MN's" to "SEX MOTORNEURONS"
+
+
+NOTE: 9/15/16 - THESE NEED TO BE REFRESHED!!!!

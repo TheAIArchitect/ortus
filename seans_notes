@@ -1,0 +1,10 @@
+The summation in chemical synapse:
+    - reversal_potential - v_current
+    -- Doesn't this always turn out negative regardless, therefore always
+       reducing the neurons voltage no matter what?
+
+voltages_vec vs updated_voltages:
+    - Obviously we update the voltage value in updated_voltages
+    - Do we also update the value in voltages_vec or do we have all neurons run
+      off the input voltage values instead of updated values?
+    -- Doesn't look like it matters, didn't change the values

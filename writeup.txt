@@ -1,0 +1,17 @@
+Body:
+	Genetic algorithm:
+		Algorithm will work on 2 worms at a time, call them left and right, which are chosen from a hand-picked selection of the worms we've currently evolved through random parameter selection. Each run of the algorithm will return 100 worms as a 'new generation':
+			- The best 20 worms will carry over from the previous generation
+			- 40 will come from 40 'mothers' and 'fathers', each produced sexually by randomly choosing traits from "left" and "right"
+			- 40 will come from the same selection of 'mothers' and 'fathers', but presumably will be different due to the random nature of the reproduction
+
+		- Concerns:
+			The initial population will have come from randomly generated parameter sets (within a limited range) and therefore the parameters may vary quite a bit between any two given worms. For example, one parent could have weak muscles and weak spring, another parent could have strong muscles and strong springs...the likelihood that these worms would produce a good offspring seems unlikely; however as this hasn't been tested this will initially be allowed. If the above example produces a selection of worms that get progressively worse the algorithm will be modifed to make sure that 2 parents worms are relatively similar (within some yet to be determined range).
+
+			The method of introducing randomness 
+
+
+
+
+Nervous system:
+

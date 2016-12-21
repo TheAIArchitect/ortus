@@ -1,0 +1,2 @@
+** ALL OLD GRAPHICS FILES USING GLUT NEED TO BE REMOVED BEFORE COMPILING **
+clang++-3.6 *.cpp -std=c++11 -lOpenCL -lsqlite3 -o run

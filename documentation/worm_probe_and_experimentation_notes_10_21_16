@@ -1,0 +1,21 @@
+- Initial observations with the voltage/activation probe suggested that our issue was too much voltage transfer. Essentially, it seemed as though we would transfer a lot of positive voltage, which would cause a large differential between neurons at the next step, and they would then get really negative activations (perhaps, as our interneurons are inhibitory unless explicity defined otherwise), which would then cause a large positive transfer to the following postsyaptic neuron. Since neurons are connected in a recurrent sort of network, it's not hard to see how this system would become unstable.
+    => solution: probably want to decrease voltage transfer.
+
+=> question (1): should we try to decrease the difference between a synapse with weight of 15 vs 50? (see below)
+
+- mapping weights to (log(weight)+1)/log(max_weight), "amount_passed_on" = .1, decay_constant = .2f, ALL muscles turn red...
+- same exact configs as above, but decay_constant = .21f, and *NO* muscles turn red -- decay is too fast for signal to propagate.
+    => this is interesting.
+    => perhaps mapping weights to a logarithmic sort of function makes things too sensitive / brings values too close together. 
+
+==> answer to (1): It seems doing this might bring things too close together... 
+
+**** CAVEAT: setting v_decay_constant = .205f, leaving everything else the same, shows, a **VERY** slight propagation of muscle activation from front to back, and from side to side. The muscles *do not* relax, but there appears to be a methotical "contraction"
+    => this may be seen starting around frame *24*, and lasts through approximately frame *40*.
+    => the git commit in the master branch with comment "first sequential muscle activation observed", commit info: 94c3ff4..17dece2  master -> master
+    => also note, that the activation of the muscles is being multiplied by 10x during rendering only, in order to make it easier to see differences in muscle activaiton
+
+
+=> SO: In light of this, we should probably explore not using the "log" based approach with respect to synaptic weights, but we should certainly look a little deeper into using a "log" (or similar approach. Though, compared to what we were getting before, with both neurons and muscles flipping between positive and negative "activation", this seems to be definite progress. 
+    -> so, explore different neuron approaches, and keep in mind the sensitivity issue with regard to decay, signal transmission, and synaptic weight.
+

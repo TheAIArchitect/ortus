@@ -1,0 +1,31 @@
+For the most part all you're going to care about is what's found in the "pelegans" folder. Inside
+that folder is "main.cpp", it's currently testing the the classes we currently care about so you can
+follow along with the calls there. Keep in mind this is still reading in fake neuron fake and still
+setting BS polarities.
+
+mainKernel.cl is the active kernel, it's a translation of the algorithm you had written up in the
+old java version.
+
+Core.{h,c}pp is the heart of what's going on. Due to the use of opencl things have to happen in a
+specific order, so if you make a change somewhere to opencl related stuff make sure all is good.
+It makes use of MatrixSetup for all the matrix related stuff, MatrixSetup is also where the data
+is populated from (fake init voltages and polarities).
+
+TSQueue is verified thread safe, though the queue operations aren't currently being handled in a MT
+way so it doesn't actually matter.
+
+There are still some classes in the main pelegans directory that were for the old system not using
+matricies so you can just ignore them. I'm pretty sure they are just:
+    - NeuronContainer
+    - GPUNeuron
+
+CoreProcessor and VoltageDataWriter aren't implemented yet but the idea is to use them in a
+background thread to write the data to the db (or file) and to process the data (the genetic algo).
+
+The genetic algorithm I had mostly implemented for the body is more or less useless for the neuron
+evolution so I'll start implementing the new algorithm when I'm back from the beach tuesday
+
+ALSO NOTE:::: My library files need to be updated here, they're quite old. I don't feel like doing
+that right now because there are a few functions with changes that break what they're currently
+doing. When I have down-time over the next few days I'll push the updated files and make sure all
+is working as expected. 

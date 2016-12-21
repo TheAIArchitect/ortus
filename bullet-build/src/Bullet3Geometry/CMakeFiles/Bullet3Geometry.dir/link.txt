@@ -1,0 +1,2 @@
+/usr/bin/ar cr libBullet3Geometry.a  CMakeFiles/Bullet3Geometry.dir/b3ConvexHullComputer.o CMakeFiles/Bullet3Geometry.dir/b3GeometryUtil.o
+/usr/bin/ranlib libBullet3Geometry.a
