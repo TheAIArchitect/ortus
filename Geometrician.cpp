@@ -3,7 +3,7 @@
 //  LearningOpenGL
 //
 //  Created by onyx on 1/25/16.
-//  Copyright © 2016 AweM. All rights reserved.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #include "Geometrician.hpp"

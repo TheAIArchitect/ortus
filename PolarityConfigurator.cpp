@@ -3,6 +3,7 @@
 //  delegans
 //
 //  Created by onyx on 10/13/16.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #include "PolarityConfigurator.hpp"

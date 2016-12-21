@@ -3,6 +3,7 @@
 //  App_ExampleBrowser
 //
 //  Created by onyx on 3/3/16.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 //
 

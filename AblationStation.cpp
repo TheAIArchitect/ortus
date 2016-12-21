@@ -3,7 +3,7 @@
 //  delegans
 //
 //  Created by onyx on 10/18/16.
-//  Copyright © 2016 Sean Grimes. All rights reserved.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #include "AblationStation.hpp"

@@ -3,7 +3,7 @@
 //  delegans
 //
 //  Created by onyx on 9/15/16.
-//  Copyright © 2016 Sean Grimes. All rights reserved.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #ifndef GraphicsGovernor_h
