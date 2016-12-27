@@ -35,28 +35,27 @@
 		444DE46A1D8A717500247E36 /* DataSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4361D8A717300247E36 /* DataSteward.cpp */; };
 		444DE46B1D8A717500247E36 /* GeneticUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE43C1D8A717300247E36 /* GeneticUtils.cpp */; };
 		444DE46C1D8A717500247E36 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4451D8A717400247E36 /* main.cpp */; };
-		444DE46D1D8A717500247E36 /* mainKernel.cl in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4461D8A717400247E36 /* mainKernel.cl */; };
 		444DE46E1D8A717500247E36 /* makefile in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4471D8A717400247E36 /* makefile */; };
 		444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE44A1D8A717400247E36 /* myDebug.cpp */; };
 		444DE4701D8A717500247E36 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 444DE44F1D8A717400247E36 /* README.md */; };
 		444DE4711D8A717500247E36 /* SignalBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4541D8A717400247E36 /* SignalBuilder.cpp */; };
 		444DE4731D8A717500247E36 /* TheRealDeal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4591D8A717500247E36 /* TheRealDeal.cpp */; };
 		444DE4761D8A717500247E36 /* WormWiringDatabaseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4621D8A717500247E36 /* WormWiringDatabaseManager.cpp */; };
-		449019C51DB8847800569854 /* StupidKernel.cl in Sources */ = {isa = PBXBuildFile; fileRef = 449019C41DB8847800569854 /* StupidKernel.cl */; };
 		449019C81DBA13CF00569854 /* Probe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 449019C61DBA13CE00569854 /* Probe.cpp */; };
 		44AF538D1DA46F89009546BC /* OptionForewoman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44AF538B1DA46F89009546BC /* OptionForewoman.cpp */; };
 		44B6E6221D8A790200A8DB7B /* BulletDynamics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B6E6211D8A790200A8DB7B /* BulletDynamics.framework */; };
 		44B6E6241D8A792300A8DB7B /* BulletCollision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B6E6231D8A792300A8DB7B /* BulletCollision.framework */; };
 		44B6E6261D8A793A00A8DB7B /* LinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B6E6251D8A793A00A8DB7B /* LinearMath.framework */; };
 		44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B6E6321D9A6CB300A8DB7B /* Camera.cpp */; };
-		44B6E6361D9CE39200A8DB7B /* NewKernel.cl in Sources */ = {isa = PBXBuildFile; fileRef = 44B6E6351D9CE39200A8DB7B /* NewKernel.cl */; };
 		44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */ = {isa = PBXBuildFile; fileRef = 44E5428D1E091D0E00D3BF7A /* OrtusKernelOne.cl */; };
 		44E542911E09FCE000D3BF7A /* Gymnasium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44E5428F1E09FCE000D3BF7A /* Gymnasium.cpp */; };
 		44E542941E09FD1C00D3BF7A /* ElementStimulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44E542921E09FD1C00D3BF7A /* ElementStimulator.cpp */; };
 		44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FDA2EA1DCC7995005897DB /* DataVisualizer.cpp */; };
-		663A75BD1D0B1A6800F6B561 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BC1D0B1A6800F6B561 /* OpenCL.framework */; };
-		663A75BF1D0B1A6F00F6B561 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */; };
-		663A75C71D0B1AF000F6B561 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75C61D0B1AF000F6B561 /* GLUT.framework */; };
+		496841931E125FB1008AF250 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C31E125D07000D0A00 /* CoreVideo.framework */; };
+		49C754BF1E121DA7000D0A00 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BC1D0B1A6800F6B561 /* OpenCL.framework */; };
+		49C754C01E125CEB000D0A00 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75C61D0B1AF000F6B561 /* GLUT.framework */; };
+		49C754C11E125CF8000D0A00 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */; };
+		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
 		666FF3941D19A23F001972D4 /* libutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666FF3931D19A23F001972D4 /* libutil.a */; };
 /* End PBXBuildFile section */
 
@@ -158,7 +157,6 @@
 		444DE4431D8A717400247E36 /* list_sleeping_procs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = list_sleeping_procs.sh; sourceTree = "<group>"; };
 		444DE4441D8A717400247E36 /* log.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = log.txt; sourceTree = "<group>"; };
 		444DE4451D8A717400247E36 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		444DE4461D8A717400247E36 /* mainKernel.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = mainKernel.cl; sourceTree = "<group>"; };
 		444DE4471D8A717400247E36 /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
 		444DE4481D8A717400247E36 /* merged_wbp_meta.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = merged_wbp_meta.txt; sourceTree = "<group>"; };
 		444DE4491D8A717400247E36 /* merged_wbp.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = merged_wbp.txt; sourceTree = "<group>"; };
@@ -181,7 +179,6 @@
 		444DE4621D8A717500247E36 /* WormWiringDatabaseManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WormWiringDatabaseManager.cpp; sourceTree = "<group>"; };
 		444DE4631D8A717500247E36 /* WormWiringDatabaseManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WormWiringDatabaseManager.hpp; sourceTree = "<group>"; };
 		444DE4641D8A717500247E36 /* writeup.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = writeup.txt; sourceTree = "<group>"; };
-		449019C41DB8847800569854 /* StupidKernel.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = StupidKernel.cl; sourceTree = "<group>"; };
 		449019C61DBA13CE00569854 /* Probe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Probe.cpp; sourceTree = "<group>"; };
 		449019C71DBA13CF00569854 /* Probe.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Probe.hpp; sourceTree = "<group>"; };
 		4499E10D1D5B9BB500242561 /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
@@ -194,7 +191,6 @@
 		44B6E62A1D8B455900A8DB7B /* rapidjson */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rapidjson; sourceTree = "<group>"; };
 		44B6E6321D9A6CB300A8DB7B /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		44B6E6331D9A6CB300A8DB7B /* Camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
-		44B6E6351D9CE39200A8DB7B /* NewKernel.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = NewKernel.cl; sourceTree = "<group>"; };
 		44E5428D1E091D0E00D3BF7A /* OrtusKernelOne.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = OrtusKernelOne.cl; sourceTree = "<group>"; };
 		44E5428F1E09FCE000D3BF7A /* Gymnasium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gymnasium.cpp; sourceTree = "<group>"; };
 		44E542901E09FCE000D3BF7A /* Gymnasium.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Gymnasium.hpp; sourceTree = "<group>"; };
@@ -204,6 +200,8 @@
 		44FDA2EB1DCC7995005897DB /* DataVisualizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DataVisualizer.hpp; sourceTree = "<group>"; };
 		44FDA2EE1DCC7B51005897DB /* Plotr.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Plotr.hpp; sourceTree = "<group>"; };
 		44FDA2EF1DCC7B51005897DB /* Interpreter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interpreter.hpp; sourceTree = "<group>"; };
+		49C754C31E125D07000D0A00 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		49C754C51E125D15000D0A00 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		663A75931D0B193D00F6B561 /* ortus */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ortus; sourceTree = BUILT_PRODUCTS_DIR; };
 		663A759D1D0B198D00F6B561 /* bullet-build */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "bullet-build"; sourceTree = "<group>"; };
 		663A75BC1D0B1A6800F6B561 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
@@ -218,13 +216,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				496841931E125FB1008AF250 /* CoreVideo.framework in Frameworks */,
+				49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */,
+				49C754C11E125CF8000D0A00 /* OpenGL.framework in Frameworks */,
+				49C754C01E125CEB000D0A00 /* GLUT.framework in Frameworks */,
+				49C754BF1E121DA7000D0A00 /* OpenCL.framework in Frameworks */,
 				44B6E6261D8A793A00A8DB7B /* LinearMath.framework in Frameworks */,
 				44B6E6241D8A792300A8DB7B /* BulletCollision.framework in Frameworks */,
 				44B6E6221D8A790200A8DB7B /* BulletDynamics.framework in Frameworks */,
 				666FF3941D19A23F001972D4 /* libutil.a in Frameworks */,
-				663A75C71D0B1AF000F6B561 /* GLUT.framework in Frameworks */,
-				663A75BF1D0B1A6F00F6B561 /* OpenGL.framework in Frameworks */,
-				663A75BD1D0B1A6800F6B561 /* OpenCL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,9 +286,6 @@
 			isa = PBXGroup;
 			children = (
 				44E5428D1E091D0E00D3BF7A /* OrtusKernelOne.cl */,
-				444DE4461D8A717400247E36 /* mainKernel.cl */,
-				44B6E6351D9CE39200A8DB7B /* NewKernel.cl */,
-				449019C41DB8847800569854 /* StupidKernel.cl */,
 			);
 			name = kernels;
 			sourceTree = "<group>";
@@ -300,6 +297,15 @@
 				44FDA2EF1DCC7B51005897DB /* Interpreter.hpp */,
 			);
 			name = Plotr;
+			sourceTree = "<group>";
+		};
+		49C754C21E125D07000D0A00 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				49C754C51E125D15000D0A00 /* Cocoa.framework */,
+				49C754C31E125D07000D0A00 /* CoreVideo.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		663A758A1D0B193D00F6B561 = {
@@ -330,6 +336,7 @@
 				663A75BC1D0B1A6800F6B561 /* OpenCL.framework */,
 				663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */,
 				663A75941D0B193D00F6B561 /* Products */,
+				49C754C21E125D07000D0A00 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -494,7 +501,6 @@
 				44E542941E09FD1C00D3BF7A /* ElementStimulator.cpp in Sources */,
 				44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */,
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,
-				44B6E6361D9CE39200A8DB7B /* NewKernel.cl in Sources */,
 				444DE4031D8A5D7F00247E36 /* MuscleInfoModule.cpp in Sources */,
 				444DE4701D8A717500247E36 /* README.md in Sources */,
 				444DE4041D8A5D7F00247E36 /* NeuronInfoModule.cpp in Sources */,
@@ -505,7 +511,6 @@
 				444DE4081D8A5D7F00247E36 /* FileShit.cpp in Sources */,
 				444DE4241D8A642700247E36 /* image_helper.c in Sources */,
 				444DE46B1D8A717500247E36 /* GeneticUtils.cpp in Sources */,
-				444DE46D1D8A717500247E36 /* mainKernel.cl in Sources */,
 				444DE4071D8A5D7F00247E36 /* WormwiringCSVToSQLite.cpp in Sources */,
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE40F1D8A5D7F00247E36 /* Playground.cpp in Sources */,
@@ -515,7 +520,6 @@
 				444DE46A1D8A717500247E36 /* DataSteward.cpp in Sources */,
 				444DE46E1D8A717500247E36 /* makefile in Sources */,
 				444DE40D1D8A5D7F00247E36 /* MassPoint.cpp in Sources */,
-				449019C51DB8847800569854 /* StupidKernel.cl in Sources */,
 				44AF538D1DA46F89009546BC /* OptionForewoman.cpp in Sources */,
 				44E542911E09FCE000D3BF7A /* Gymnasium.cpp in Sources */,
 				444DE4091D8A5D7F00247E36 /* Artist.cpp in Sources */,

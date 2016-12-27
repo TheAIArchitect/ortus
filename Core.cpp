@@ -241,7 +241,7 @@ void Core::pushVoltageBuffer(bool isFirst){
             int sco2Idx = stewie.n2idxMap["SCO2"];
             int minhaleIdx = stewie.n2idxMap["MINHALE"];
             int so2Idx = stewie.n2idxMap["SO2"];
-            float CO2_addition = 1.5f;
+            float CO2_addition = 2.5f;
             returned_voltages[sco2Idx] += CO2_addition;
             //if (returned_voltages[minhaleIdx] > 1.0){
             //    returned_voltages[so2Idx] += CO2_addition/2.0;

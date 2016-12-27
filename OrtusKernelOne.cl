@@ -148,13 +148,13 @@ __kernel void OrtusKernel(__global float *voltages_matrix,
                     cs_weight *= -1; // make positive, for below computation
                     float preToEq = fabs(their_v_curr - inhibitRevPot);
                     float vDiff = inhibitRevPot - my_v_current;
-                    conductance = (2.0 - (2.0/(1.0 + exp(-5.0*(preToEq/vRange))))) - .0134;
+                    conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/vRange))))) - .0134;
                     added_v = cs_weight * conductance * vDiff;
                 }
                 else { // excite
                     float preToEq = fabs(their_v_curr - exciteRevPot);
                     float vDiff = exciteRevPot - my_v_current;
-                    conductance = (2.0 - (2.0/(1.0 + exp(-5.0*(preToEq/vRange))))) - .0134;
+                    conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/vRange))))) - .0134;
                     added_v = cs_weight * conductance * vDiff;
                 }
                 if (shouldProbe == 1){
