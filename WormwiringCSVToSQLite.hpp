@@ -15,6 +15,7 @@
 #include "ElementInfoModule.hpp"
 #include "NeuronInfoModule.hpp"
 #include "MuscleInfoModule.hpp"
+#include <unordered_map>
 
 
 using std::string;
@@ -24,5 +25,6 @@ using std::string;
 
 
 void get_conns(std::vector<ElementInfoModule*>& elements);
+bool write_connectome(std::string csv_name, float** gaps, float** chems, std::vector<std::string> elements);
 
 #endif /* WormwiringCSVToSQLite_hpp */

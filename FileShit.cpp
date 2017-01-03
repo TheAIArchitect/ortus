@@ -25,6 +25,7 @@ std::string FileShit::sphereObjFile = "resources/meshes/worm_parts/Sphere.obj";
 std::string FileShit::cameraConfigFile = "resources/camera_config.cfg";
 
 std::string FileShit::ortus_basic_connectome = "csv/ortus_basic_connectome.csv";
+std::string FileShit::ortus_basic_connectome_test = "csv/ortus_basic_connectome_test.csv";
 
 
 std::vector<std::string> FileShit::parse_on_comma(std::string line){

@@ -74,6 +74,15 @@ float *DataSteward::convert_2d_to_1d(float **matrix, size_t num_rows, size_t num
     return flat_arr;
 }
 
+void DataSteward::saveCurrentConnectome(){
+    std::vector<std::string> elementNames;
+    int numEN = NUM_ELEMS;
+    for (int i = 0; i < numEN; ++i){
+        elementNames.push_back(bioElements[i]->name);
+    }
+    write_connectome("poooOOoOOOoOOOop.csv", gj_matrix, cs_matrix, elementNames);
+}
+
 float* DataSteward::get_polarity_vector(size_t num_rows){
     PolarityConfigurator polarityConfigurator;
     return polarityConfigurator.makePolarityVector(&bioElements,num_rows);

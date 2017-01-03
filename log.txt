@@ -645,3 +645,15 @@
 2016-12-21 16:14:47 DEBUG    Logger TP disabled while searching for an OSX bug
 2016-12-21 16:15:08 DEBUG    Logger TP disabled while searching for an OSX bug
 2016-12-27 03:37:13 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-02 22:40:02 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-02 22:41:37 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-02 23:04:47 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-02 23:05:28 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-02 23:07:05 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-02 23:50:24 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-03 00:53:45 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-03 04:49:35 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-03 05:07:04 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-03 05:08:40 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-03 05:12:11 DEBUG    Logger TP disabled while searching for an OSX bug
+2017-01-03 05:12:48 DEBUG    Logger TP disabled while searching for an OSX bug

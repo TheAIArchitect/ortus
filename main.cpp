@@ -26,6 +26,8 @@ int main(int argc, char** argv){
     vector<vector<float>> kernel_voltages;
     
     
+    core.stewie.saveCurrentConnectome();
+    exit(0);
     
     for(auto i = 0; i < Core::numMainLoops; ++i){
         // Runs the kernel
@@ -96,8 +98,10 @@ int main(int argc, char** argv){
     core.stewie.kernelVoltages = kernel_voltages;
     DataVisualizer vizzer = DataVisualizer(&core.stewie);
     // NOTE: must create set
-    vizzer.plotAll();
-    //vizzer.plotSet(startingSet, startingSetSize);
+    const int plotSetSize = 6;
+    std::string plotSet[plotSetSize] = {"SO2","SCO2","IPO2", "INO2", "MINHALE", "MEXHALE"};
+    //vizzer.plotAll();
+    vizzer.plotSet(plotSet, plotSetSize);
     initGraphics(&core);
     exit(89);
 

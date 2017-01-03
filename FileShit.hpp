@@ -52,6 +52,7 @@ class FileShit{
         static std::string sphereObjFile;
     
         static std::string ortus_basic_connectome;
+        static std::string ortus_basic_connectome_test;
     
     
         static std::string open_sans_ttf;

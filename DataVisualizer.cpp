@@ -15,7 +15,6 @@ DataVisualizer::DataVisualizer(DataSteward* stewie){
 
 void DataVisualizer::plotAll(){
 
-    
     int numWindows = stewie->kernelVoltages.size();
     std::vector<double> xVals;// windows
     std::vector<double> yVals;// neuron voltages

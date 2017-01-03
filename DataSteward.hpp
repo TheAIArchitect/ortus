@@ -62,6 +62,7 @@ public:
     /* NOTE NOTE NOTE: core should probably hold these.. not DataSteward... */
     vector<vector<float>> kernelVoltages;
     
+    
     // Don't use the below constructor yet...it's for future library integration
     //DataSetup(float **matrix, size_t num_rows, size_t num_cols);
     
@@ -88,6 +89,7 @@ public:
     float *get_polarity_vector(size_t num_rows);
     bool read_data_csv_files();
     bool mapNeuronsToMuscles();
+    void saveCurrentConnectome();
     //unordered_map<string, ElementType> typesMap;
     unordered_map<string, vector<MuscleWeight>> n2mGjMap;
     unordered_map<string, vector<MuscleWeight>> n2mCsMap;

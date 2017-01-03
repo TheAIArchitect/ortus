@@ -103,6 +103,92 @@ void read_csv(std::string csv_name, std::vector<std::vector<std::string>>& dat){
     }
 }
 
+
+/* 
+ * NOTE: this assumes the connectome has NOT been transposed!!!
+ *
+ */
+bool write_connectome(std::string csv_name, float** gaps, float** chems, std::vector<std::string> elements){
+    
+    // the first row is complicated, it starts with "gap/chem" (as a 'key' of sorts),
+    // then has an empty column, and then 'SENSORY', because we start with sensory neurons.
+    std::string firstRow = "gap/chem,,";
+    // before we continue, we need to create a map that holds the indices that the SENSORY, INTER, MOTOR, etc..
+    // elements start at, so that we know what columns to put the SENSORY/INTER/MOTOR headings in on the firstRow
+    std::unordered_map<std::string,int> columnHeadingMap;
+    // start at 2, (see 'firstRow' to see why)
+    int colOffset = 2;
+    int currentColIndex = colOffset;
+    int numElements = elements.size();
+    std::string headings[4] = {"SENSORY", "INTER", "MOTOR","BUFFER"}; // "BUFFER" allows us to keep accessing the array after we've used all headings (after 'MOTOR', we have to add all motor neurons, but headingNum has been incremented, and we still check the array)
+    int headingNum = 0;
+    //columnHeadingMap[headings[headingNum]] = currentColIndex;
+    //headingNum++;
+    // now we run through the list of element names (elements) until the first letter stops being "S",
+    // and becomes "I", (and then "M", for motor). At the time of this, motors and muscles are used as the same thing.
+    std::string nextKey = headings[headingNum];
+    headingNum++;
+    char firstLetter = nextKey[0];
+    // we can also build the second row, which is the offset, and then all the element names
+    std::string secondRow = ",,";
+    for (int i = 0; i < numElements; ++i){
+        // if the element's name starts with firstLetter and nextKey isn't in the map
+        if (elements[i][0] == firstLetter && !columnHeadingMap.count(nextKey)){
+            columnHeadingMap[nextKey] = i; // don't add the colOffset to this, because we'll use it to check against the elements' actual indices later on
+            firstRow += nextKey + ",";
+            nextKey = headings[headingNum];
+            headingNum++;
+            firstLetter = nextKey[0];
+        }
+        else {
+            firstRow += ",";
+        }
+        secondRow += elements[i] + ",";
+        
+    }
+    firstRow += "placeholder\n";
+    secondRow += "placeholder\n";
+    // AND, we can do the last row, which is the same as the secondRow
+    std::string lastRow = secondRow;
+    // now we have something that looks somewhat like:
+    // (for firstRow): "gap/chem,,SENSORY,,,,,,INTER,,,,,,MOTOR,,,,,,placeholder"
+    // (for secondRow): ",,e1,e2,e3,...,eN,placeholder"
+    
+    // next, we create the 'main' rows, that are the actual connectome.
+    // formula: <space>,<name>,<either connection or blank for all elements>,<name>,<newline>
+    // NOTE: this assumes the connectome has NOT been transposed!!!
+    std::string actualConnectome = "";
+    // also, we need to set headingNum to zero, because we need to check if a heading is supposed to be there
+    headingNum = 0;
+    for (int i = 0; i < numElements; ++i){
+        // check to see if we're at a point that we need to add a 'type' heading
+        if (columnHeadingMap[headings[headingNum]] == i){
+            actualConnectome += headings[headingNum] + ",";
+            headingNum++;
+        }
+        else {
+            actualConnectome += ",";
+        }
+        actualConnectome += elements[i] + ",";
+        for (int j = 0; j < numElements; ++j){
+            if (gaps[i][j] == 0 && chems[i][j] == 0){
+               actualConnectome += ","; // there's no connection
+            }
+            else {
+                actualConnectome += std::to_string((int)gaps[i][j]) + "/" + std::to_string((int)chems[i][j]) + ",";
+            }
+        }
+        actualConnectome += elements[i] + "\n";
+    }
+    std::ofstream newConnectome = FileShit::wopen(FileShit::ortus_basic_connectome_test);
+    newConnectome.write(firstRow.c_str(), firstRow.size());
+    newConnectome.write(secondRow.c_str(), secondRow.size());
+    newConnectome.write(actualConnectome.c_str(), actualConnectome.size());
+    newConnectome.write(secondRow.c_str(), secondRow.size());
+    newConnectome.close();
+    return true;
+}
+
 /*
 bool insert_element(Element* element, std::string table){
     std::string statment = "insert into "+table+" (name, type) values ("+element->name+", "+element->etype+")";
