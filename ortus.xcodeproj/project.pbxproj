@@ -56,6 +56,7 @@
 		49C754C01E125CEB000D0A00 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75C61D0B1AF000F6B561 /* GLUT.framework */; };
 		49C754C11E125CF8000D0A00 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */; };
 		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
+		49EB41EE1E1D28FB00E98215 /* Blade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49EB41EC1E1D28FB00E98215 /* Blade.cpp */; };
 		666FF3941D19A23F001972D4 /* libutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666FF3931D19A23F001972D4 /* libutil.a */; };
 /* End PBXBuildFile section */
 
@@ -202,6 +203,8 @@
 		44FDA2EF1DCC7B51005897DB /* Interpreter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interpreter.hpp; sourceTree = "<group>"; };
 		49C754C31E125D07000D0A00 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		49C754C51E125D15000D0A00 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		49EB41EC1E1D28FB00E98215 /* Blade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Blade.cpp; sourceTree = "<group>"; };
+		49EB41ED1E1D28FB00E98215 /* Blade.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Blade.hpp; sourceTree = "<group>"; };
 		663A75931D0B193D00F6B561 /* ortus */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ortus; sourceTree = BUILT_PRODUCTS_DIR; };
 		663A759D1D0B198D00F6B561 /* bullet-build */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "bullet-build"; sourceTree = "<group>"; };
 		663A75BC1D0B1A6800F6B561 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
@@ -356,6 +359,8 @@
 				443247B31DB60187001D153B /* AblationStation.hpp */,
 				444DE3EF1D8A5D7F00247E36 /* Artist.cpp */,
 				444DE3F01D8A5D7F00247E36 /* Artist.hpp */,
+				49EB41EC1E1D28FB00E98215 /* Blade.cpp */,
+				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
 				444DE4291D8A717300247E36 /* BodyParameterSet.cpp */,
 				444DE42A1D8A717300247E36 /* BodyParameterSet.hpp */,
 				44B6E6321D9A6CB300A8DB7B /* Camera.cpp */,
@@ -500,6 +505,7 @@
 				44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */,
 				44E542941E09FD1C00D3BF7A /* ElementStimulator.cpp in Sources */,
 				44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */,
+				49EB41EE1E1D28FB00E98215 /* Blade.cpp in Sources */,
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,
 				444DE4031D8A5D7F00247E36 /* MuscleInfoModule.cpp in Sources */,
 				444DE4701D8A717500247E36 /* README.md in Sources */,

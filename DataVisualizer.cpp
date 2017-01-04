@@ -25,7 +25,7 @@ void DataVisualizer::plotAll(){
     Plotr plt;
     std::map<std::string, std::string> kwArgs;
     for (int i = 0; i < DataSteward::NUM_ELEMS; ++i){
-        kwArgs["label"] = stewie->bioElements[i]->name;
+        kwArgs["label"] = stewie->elements[i]->name();
         yVals.clear();
         for (int j = 0; j < numWindows; ++j){
             yVals.push_back(stewie->kernelVoltages[j][i]);

@@ -8,7 +8,8 @@
 
 #include "ElementInfoModule.hpp"
 
-ElementInfoModule::ElementInfoModule(){};
+ElementInfoModule::ElementInfoModule(){
+};
 
 ElementInfoModule::~ElementInfoModule(){};
 
@@ -22,6 +23,18 @@ std::string ElementInfoModule::getSType(){
 
 float ElementInfoModule::getFType(){
     return ftype;
+}
+
+std::string ElementInfoModule::name(){
+    return *namep;
+}
+
+int ElementInfoModule::id(){
+    return *idp;
+}
+
+float ElementInfoModule::vCurr(){
+    return *vCurrp;
 }
 
 /*

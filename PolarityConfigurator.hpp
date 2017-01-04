@@ -22,7 +22,7 @@ class PolarityConfigurator {
 public:
     PolarityConfigurator();
     Polarity getPolarity(Connection* conn);
-    float* makePolarityVector(std::vector<ElementInfoModule*>* bioElements, int num_rows);
+    float* makePolarityVector(std::vector<ElementInfoModule*>* elements, int num_rows);
     void initMap();
     bool setPolarityIfExists(std::string name,float** polVec, int index);
     

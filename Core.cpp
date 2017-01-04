@@ -38,12 +38,12 @@ void Core::init(size_t number_of_loops){
     probe = new Probe(&stewie);
     // connectome error check
     printf("Running connectome error check...\n");
-    int numElems = stewie.bioElements.size();
+    int numElems = stewie.elements.size();
     for (int i = 0; i < numElems; i++){
-        int numOuts = stewie.bioElements[i]->out_conns.size();
-        printf("Neuron %s => ",stewie.bioElements[i]->name.c_str());
+        int numOuts = stewie.elements[i]->out_conns.size();
+        printf("Neuron %s => ",stewie.elements[i]->name().c_str());
         for (int j = 0; j < numOuts; j++){
-            Connection* tConn = &stewie.bioElements[i]->out_conns[j];
+            Connection* tConn = &stewie.elements[i]->out_conns[j];
             printf("%s, ",tConn->toString().c_str());
             // NOTE NOTE NOTE: INSERT CHECK for connectome -- random line or something
         }
@@ -66,18 +66,18 @@ void Core::init(size_t number_of_loops){
         printf("]\n");
     }
     for (int i = 0; i < numElems; i++){
-        int numOuts = stewie.bioElements[i]->out_conns.size();
-        printf("Neuron %s => ",stewie.bioElements[i]->name.c_str());
+        int numOuts = stewie.elements[i]->out_conns.size();
+        printf("Neuron %s => ",stewie.elements[i]->name().c_str());
         for (int j = 0; j < numOuts; j++){
-            Connection* tConn = &stewie.bioElements[i]->out_conns[j];
-            if (tConn->conntype == GAP){
-                if (tConn->weight != gj_2d_matrix[tConn->pre->element_id][tConn->post->element_id]){
+            Connection* tConn = &stewie.elements[i]->out_conns[j];
+            if (tConn->type == GAP){
+                if (tConn->weight() != gj_2d_matrix[tConn->pre->id()][tConn->post->id()]){
                     printf("Error found in gap junction 2D matrix. Remedy situation in order to proceed.\n");
                     exit(94);
                 }
             }
             else{
-                if (tConn->weight != cs_2d_matrix[tConn->pre->element_id][tConn->post->element_id]){
+                if (tConn->weight() != cs_2d_matrix[tConn->pre->id()][tConn->post->id()]){
                     printf("Error found in chemical synapse 2D matrix. Remedy situation in order to proceed.\n");
                     exit(94);
                 }
@@ -261,7 +261,7 @@ void Core::pushVoltageBuffer(bool isFirst){
 void Core::push_buffers(){
     ExeTimer et;
     et.start_timer();
-    
+   
     // Buffer that holds the initial voltages, and then gets the updated voltages each iteration
     neuron_voltages = clCreateBuffer(clhc.context, CL_MEM_READ_WRITE, sizeof(float) * DataSteward::NUM_ELEMS * _number_of_loops, NULL, &clhc.err);
     clhc.check_and_print_cl_err(clhc.err);

@@ -34,8 +34,6 @@
 #include "WormwiringCSVToSQLite.hpp"
 #include "Geometrician.hpp"
 #include "PolarityConfigurator.hpp"
-#include "AblationStation.hpp"
-#include "Blade.hpp"
 
 using std::vector;
 using std::string;
@@ -68,6 +66,7 @@ public:
     // Don't use the below constructor yet...it's for future library integration
     //DataSetup(float **matrix, size_t num_rows, size_t num_cols);
     
+    enum ElementType {SENSORY, MOTOR, INTER, SENSORYMOTOR, WFK};
     
     // It's cool, they get inlined
     inline size_t get_1d_index(size_t arr_width, int row_num, int col_num);
@@ -154,30 +153,8 @@ public:
     const float CENTER_CYLINDER_DIAM = .05; // meters, so, 5cm
     
     
-    
     int num_cc_mass_points;
     MassPoint** centerCylinderMassPoints;
 /* END BioData */
-    
-    //////////////////// NEW ///////////////////
-public:
-    static int CSV_OFFSET;
-    static int CSV_ROWS;
-    static int CSV_COLS;
-    const static int MAX_ELEMENTS = 200;
-    void createElements();
-    std::vector<std::vector<std::string>> csvDat;
-    AblationStation ablator;
-    void createConnections();
-    std::unordered_map<std::string,int> officialNameToIndexMap;
-    std::unordered_map<int,std::string> officialIndexToNameMap;
-    std::vector<std::string> officialNameVector;
-    Blade* inputVoltages;
-    Blade* outputVoltages;
-    Blade* gaps;
-    Blade* chems;
-    Blade* chemContrib;
-    Blade* gapContrib;
-    
     
 };

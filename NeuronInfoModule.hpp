@@ -34,7 +34,6 @@ public:
     //glm::vec3 soma_position; // now massPoint->center
     MassPoint* massPoint;
     float soma_diameter;
-    int polarity;
     int neuron_id;
     static int NUM_NIMS; // number of neuron info modules. gets set in BioData::makeNeuronModules()
     static float AVG_NEURON_DIAM; // this is set in FileShit, when neurons are read in. Used to allow the bezier drawing function to draw the bezier 'points' roughly the same size as the neurons

@@ -83,7 +83,7 @@ void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::m
             // if we don't want to show muscles, and it's not marked, then we don't want to show it
             continue;
         }
-        int eid = fakeStewie->mim[k]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
+        int eid = fakeStewie->mim[k]->id();// we need to access the voltage array by the element_id, **NOT** by k.
         
         model = glm::scale(model, MuscleInfoModule::MUSCLE_SIZE_SCALE*glm::vec3(1.f, 1.f, MuscleInfoModule::length_z_scale));
         model = glm::translate(model,(MuscleInfoModule::MUSCLE_TRANS_SCALE*fakeStewie->mim[k]->centerMassPoint->center)*glm::vec3(1.f, 1.f,MuscleInfoModule::trans_z_scale));// 2.5 is half of the night of the muscle model (i think)
@@ -257,7 +257,7 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
             // if we don't want to show all neurons, and it's not marked, then we don't want to show it
             continue;
         }
-        int eid = fakeStewie->nim[k]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
+        int eid = fakeStewie->nim[k]->id();// we need to access the voltage array by the element_id, **NOT** by k.
         float diam = fakeStewie->nim[k]->soma_diameter;
         model = glm::translate(model,(scale2*fakeStewie->nim[k]->massPoint->center));
         model = glm::scale(model, (scale1*glm::vec3(diam/2.0f, diam/2.0f, diam/2.0f)));
@@ -445,11 +445,11 @@ void Artist::draw_neuron_names(Shader textShader, Camera camera, glm::mat4* proj
     for (int i = 0; i < fakeStewie->NUM_ELEMS; ++i){
         glm::mat4 billboard_mat(1.0f);
         glm::vec3 pos;
-        if (fakeStewie->bioElements[i]->getEType() == MUSCLE){
-            if (!OptionForewoman::WormOpts[SHOW_MUSCLES] && !fakeStewie->bioElements[i]->marked){
+        if (fakeStewie->elements[i]->getEType() == MUSCLE){
+            if (!OptionForewoman::WormOpts[SHOW_MUSCLES] && !fakeStewie->elements[i]->marked){
                 continue;
             }
-            MuscleInfoModule* tmim = (MuscleInfoModule*)fakeStewie->bioElements[i];
+            MuscleInfoModule* tmim = (MuscleInfoModule*)fakeStewie->elements[i];
             pos = tmim->centerMassPoint->center;
             
             billboard_mat = glm::scale(billboard_mat, MuscleInfoModule::MUSCLE_SIZE_SCALE*glm::vec3(1.f, 1.f, MuscleInfoModule::length_z_scale));
@@ -462,10 +462,10 @@ void Artist::draw_neuron_names(Shader textShader, Camera camera, glm::mat4* proj
             //billboard_mat = glm::translate(billboard_mat, pos+(MuscleInfoModule::MUSCLE_SIZE_SCALE*2.f/2.f)); // translate and then offset from center of neuron
         }
         else {
-            if (!OptionForewoman::WormOpts[SHOW_ALL_NEURONS] && !fakeStewie->bioElements[i]->marked){
+            if (!OptionForewoman::WormOpts[SHOW_ALL_NEURONS] && !fakeStewie->elements[i]->marked){
                 continue;
             }
-            NeuronInfoModule* tnim = (NeuronInfoModule*)fakeStewie->bioElements[i];
+            NeuronInfoModule* tnim = (NeuronInfoModule*)fakeStewie->elements[i];
             glm::vec3 pos = tnim->massPoint->center;// - (nim[i].soma_diameter/2.0f);
             billboard_mat = glm::translate(billboard_mat, ((NeuronInfoModule::NEURON_TRANS_SCALE*pos) + (NeuronInfoModule::NEURON_SIZE_SCALE*tnim->soma_diameter/2.f))); // translate and then offset from center of neuron
         }
@@ -479,14 +479,14 @@ void Artist::draw_neuron_names(Shader textShader, Camera camera, glm::mat4* proj
         std::string label = "";
         if (OptionForewoman::WormOpts[SHOW_ACTIVATION]){
             // get activation
-            int eid = fakeStewie->bioElements[i]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
+            int eid = fakeStewie->elements[i]->id();// we need to access the voltage array by the element_id, **NOT** by k.
             float currentActivation = (*voltages)[Camera::voltageFrame][eid];
-            label =fakeStewie->bioElements[i]->graphicalName + ": "+std::to_string(currentActivation);
+            label =fakeStewie->elements[i]->graphicalName + ": "+std::to_string(currentActivation);
         }
         else {
-            label = fakeStewie->bioElements[i]->graphicalName;
+            label = fakeStewie->elements[i]->graphicalName;
         }
-        if (fakeStewie->bioElements[i]->getEType() == MUSCLE){ // maybe we want a different scale or something for muscle labels
+        if (fakeStewie->elements[i]->getEType() == MUSCLE){ // maybe we want a different scale or something for muscle labels
             textMaker.make_text(textShader, label, pos, .01f/MuscleInfoModule::MUSCLE_TRANS_SCALE, glm::vec3(1.0f, 1.0f, 1.0f));
         }
         else{
@@ -858,15 +858,15 @@ void Artist::draw_conn_weights(Shader textShader, ConnectionComrade* commie, Cam
     int numConns = commie->currentlyUsedConns.size();
     for (int i = 0; i < numConns; ++i){
         /*
-        if ((!OptionForewoman::WormOpts[SHOW_ALL_NEURONS] && !fakeStewie->bioElements[i]->marked) || (!OptionForewoman::WormOpts[SHOW_MUSCLES] && !fakeStewie->bioElements[i]->marked)){
+        if ((!OptionForewoman::WormOpts[SHOW_ALL_NEURONS] && !fakeStewie->elements[i]->marked) || (!OptionForewoman::WormOpts[SHOW_MUSCLES] && !fakeStewie->elements[i]->marked)){
             // if we don't want to show all neurons, and it's not marked, then we don't want to show it
             continue;
         }
          */
         glm::mat4 billboard_mat(1.0f);
         glm::vec3 pos;
-       // if (fakeStewie->bioElements[i]->getEType() == MUSCLE){
-       //     MuscleInfoModule* tmim = (MuscleInfoModule*)fakeStewie->bioElements[i];
+       // if (fakeStewie->elements[i]->getEType() == MUSCLE){
+       //     MuscleInfoModule* tmim = (MuscleInfoModule*)fakeStewie->elements[i];
         //    pos = tmim->centerMassPoint->center;
             
          //   billboard_mat = glm::scale(billboard_mat, MuscleInfoModule::MUSCLE_SIZE_SCALE*glm::vec3(1.f, 1.f, MuscleInfoModule::length_z_scale));
@@ -880,7 +880,7 @@ void Artist::draw_conn_weights(Shader textShader, ConnectionComrade* commie, Cam
         //}
         //else {
         /*
-            NeuronInfoModule* tnim = (NeuronInfoModule*)fakeStewie->bioElements[i];
+            NeuronInfoModule* tnim = (NeuronInfoModule*)fakeStewie->elements[i];
             glm::vec3 pos = tnim->massPoint->center;// - (nim[i].soma_diameter/2.0f);
             billboard_mat = glm::translate(billboard_mat, ((NEURON_TRANS_SCALE*pos) + (NEURON_SIZE_SCALE*tnim->soma_diameter/2.f))); // translate and then offset from center of neuron
         }
@@ -897,15 +897,15 @@ void Artist::draw_conn_weights(Shader textShader, ConnectionComrade* commie, Cam
         /*
         if (OptionForewoman::WormOpts[SHOW_ACTIVATION]){
             // get activation
-            int eid = fakeStewie->bioElements[i]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
+            int eid = fakeStewie->elements[i]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
             float currentActivation = (*voltages)[Camera::voltageFrame][eid];
-            label =fakeStewie->bioElements[i]->graphicalName + ": "+std::to_string(currentActivation);
+            label =fakeStewie->elements[i]->graphicalName + ": "+std::to_string(currentActivation);
         }
         else {
-            label = fakeStewie->bioElements[i]->graphicalName;
+            label = fakeStewie->elements[i]->graphicalName;
         }
         */
-        //if (fakeStewie->bioElements[i]->getEType() == MUSCLE){ // maybe we want a different scale or something for muscle labels
+        //if (fakeStewie->elements[i]->getEType() == MUSCLE){ // maybe we want a different scale or something for muscle labels
         textMaker.make_text(textShader, commie->currentlyUsedConns[i]->weightLabel, pos, 1.f/NeuronInfoModule::NEURON_TRANS_SCALE, glm::vec3(1.0f, 1.0f, 1.0f));
         //}
         //else{

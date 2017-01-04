@@ -14,8 +14,8 @@ PolarityConfigurator::PolarityConfigurator(){
     initMap();
 }
 
-float* PolarityConfigurator::makePolarityVector(std::vector<ElementInfoModule*>* bioElements, int num_rows){
-    int numElems = bioElements->size();
+float* PolarityConfigurator::makePolarityVector(std::vector<ElementInfoModule*>* elements, int num_rows){
+    int numElems = elements->size();
     if (num_rows != numElems){
         printf("This is wrong.\n");
         exit(3);
@@ -29,10 +29,10 @@ float* PolarityConfigurator::makePolarityVector(std::vector<ElementInfoModule*>*
     // EDIT: hack... check the polarityMap... if we have an entry, we use that. if not, sensory are excite, inter are inhibit, and motor are excite.
     //
     for (int i = 0; i < numElems; ++i){
-        if (setPolarityIfExists((*bioElements)[i]->name, &pol_vec, i)){ // if true, we just set the polarity, so we just go on. otherwise, we set a generic polarity
+        if (setPolarityIfExists((*elements)[i]->name(), &pol_vec, i)){ // if true, we just set the polarity, so we just go on. otherwise, we set a generic polarity
             continue;
         }
-        switch ((*bioElements)[i]->getEType()){
+        switch ((*elements)[i]->getEType()){
             case SENSORY:
                 pol_vec[i] = 1;
                 break;

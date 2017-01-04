@@ -59,94 +59,53 @@ std::ofstream FileShit::wopen(std::string s){
     return output;
 }
 
-void FileShit::get_neuron_data(MassPoint*** neuronMassPoints, int* num_neuron_mass_points, int* num_neurons_in_json, std::vector<ElementInfoModule*>* elements) {
-    // 1. Parse a JSON string into DOM.
-    //const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
-    
-    std::ifstream input =  FileShit::open(FileShit::neuron_physical_info_json);
-    std::string poo;
-    std::string json_in;
-    while(getline(input, poo)){
-        json_in.append(poo);
-    }
-    //std::cout << json_in << std::endl;
-    
-    rapidjson::Document d;
-    d.Parse(json_in.c_str());
-    rapidjson::Value& v = d[0];
-    int num_members = d.Size();
-    *num_neurons_in_json = num_members;
-    *neuronMassPoints = new MassPoint*[num_members];
-    int massPoint_index = 0;
-    *num_neuron_mass_points = num_members;
-    //(*neuron_info) = new NeuronInfoModule[num_members];
-    std::cout << "Member count: " << d.Size() << std::endl;
-    int member_number = 0;
-    float total_soma_diam = 0.f;
-    int num_somas = 0;
-    for (int i = 0; i < num_members; i++){
-        rapidjson::Value& v = d[member_number];
-        rapidjson::Value::ConstMemberIterator itr = v.MemberBegin();
-        std::string neuron_name = itr->name.GetString();
-        printf("%s\n",neuron_name.c_str());
-        rapidjson::Value& neuron_dat = v[neuron_name.c_str()];
-        float x = (float) neuron_dat[0]["soma"]["proximal"][0].GetDouble();
-        float y = (float) neuron_dat[0]["soma"]["proximal"][1].GetDouble();
-        float z = (float) neuron_dat[0]["soma"]["proximal"][2].GetDouble();
-        float diam = (float) neuron_dat[0]["soma"]["proximal"][3].GetDouble();
-        std::string stype = neuron_dat[2]["type"].GetString();
-        float ftype = str_type_to_float(stype);
-        ElementType etype = str_type_to_enum(stype);
-        // std::string temp_s =
-        //        neuron_dat[0]["soma"]["id"][0];
-        //std::cout << neuron_dat[1]["segments"][0]["id"][0].GetInt() << std::endl;
-        //float color_index = str_type_to_int(temp_s);
-        //glm::vec4 temp_neuron = glm::vec4(x, y, z, diam);
-        //neuron_positions[i] = temp_neuron;
-        
-        for (int k = 0; k < elements->size(); k++){
-            if ((*elements)[k]->name == neuron_name){
-                NeuronInfoModule* tnimp = (NeuronInfoModule*) (*elements)[k];
-                //(*neuronMassPoints)[massPoint_index] = new MassPoint(glm::vec3(x, y, z), tnimp->name);
-                (*neuronMassPoints)[massPoint_index] = new MassPoint(glm::vec3(-x,z , y), tnimp->name); //mirror x, swap y and z.
-                //tnimp->soma_position = glm::vec3(x, y, z);
-                tnimp->massPoint = (*neuronMassPoints)[massPoint_index];
-                tnimp->soma_diameter = diam;
-                total_soma_diam += diam;
-                num_somas++;
-                tnimp->name = neuron_name;
-                tnimp->setElementType(etype);
-                tnimp->neuron_id = i;// NOTE: ortus might need this
-                tnimp->massPoint_id = (*neuronMassPoints)[massPoint_index]->id;
-                massPoint_index++;
-                break;
-            }
+
+void FileShit::readConnectomeCSV(std::string csv_name, std::vector<std::vector<std::string>>& dat){
+    std::ifstream input = FileShit::open(csv_name);
+    std::string line;
+    //std::vector<std::vector<std::string>> dat;
+    int count = 0;
+    int len = 0, plen = 0;
+    while (getline(input,line)){
+        //printf("%s\n",line.c_str());
+        std::vector<std::string> split = FileShit::parse_on_comma(line);
+        len = (int) split.size(); //
+        if (count && (plen != len)){ // makes sure we're not at count == 0, and then cehcks prev len against current len
+            throw std::runtime_error("incorrect row size in "+csv_name+"!!!\n");
         }
-        member_number++;
-        //(*neuron_info)[member_number] = nim;
-        //(*neuron_positions)[i+4] = color_index;
-        //printf("%d\n",(int)color_index);
-        //neuron_dat["id"];
-        //neuron_dat["proximal"];
+        plen = len;
+        split = StrUtils::trimStringVector(split);
+        dat.push_back(split);
+        count++;
     }
-    //for (Value::ConstMemberIterator itr = v.MemberBegin(); itr != v.MemberEnd(); ++itr){
-    //    std::cout << itr->name.GetString()  << std::endl;
-    //<< itr->value.GetType()
-    //}
-    /*
-     // 2. Modify it by DOM.
-     Value& s = d["stars"];
-     s.SetInt(s.GetInt() + 1);
-     
-     // 3. Stringify the DOM
-     StringBuffer buffer;
-     Writer<StringBuffer> writer(buffer);
-     d.Accept(writer);
-     
-     // Output {"project":"rapidjson","stars":11}
-     std::cout << buffer.GetString() << std::endl;
-     */
-    NeuronInfoModule::AVG_NEURON_DIAM = total_soma_diam/num_somas;
+}
+
+/*
+ * graphical identifier is either "-(I)", "-(S)", "-(M)", or "-<M>" -- inter, sensory, motor, or muscle
+ */
+ElementType FileShit::string_to_etype(std::string s, std::string& graphical_identifier){
+    std::string string_types[] = {"SENSORY", "INTER",  "MOTOR", "MUSCLE"};
+    if (s.find(string_types[0]) != std::string::npos){
+        //printf("stype: %s\n",string_types[0].c_str());
+        graphical_identifier = "-(S)";
+        return INTER;
+    }
+    if (s.find(string_types[1]) != std::string::npos){
+        //printf("stype: %s\n",string_types[1].c_str());
+        graphical_identifier = "-(I)";
+        return SENSORY;
+    }
+    if (s.find(string_types[2]) != std::string::npos){
+        //printf("stype: %s\n",string_types[2].c_str());
+        graphical_identifier = "-(M)";
+        return MOTOR;
+    }
+    if (s.find(string_types[3]) != std::string::npos){
+        //printf("stype: %s\n",string_types[3].c_str());
+        graphical_identifier = "-<M>";
+        return MUSCLE;
+    }
+    throw std::runtime_error("Unable to convert string to ElementType");
 }
 
 float FileShit::str_type_to_float(std::string str){

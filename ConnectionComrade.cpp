@@ -63,6 +63,8 @@ bool ConnectionComrade::resetConns(){
 }
 
 
+/* this is all going to have to be redone for the 1D matrix representation
+ */
 std::queue<Connection*> ConnectionComrade::enqueueDesiredConns(int arg){
     
     std::queue<Connection*> cq;
@@ -76,7 +78,7 @@ std::queue<Connection*> ConnectionComrade::enqueueDesiredConns(int arg){
         
         for (int i = 0; i < elements.size(); i++){
             for (int j = 0; j < numStartingNeurons; j++){ // NOTE: we can probably get rid of this by using the name to index map in DataSteward
-                if (elements[i]->name == startingNeurons[j]){
+                if (elements[i]->name() == startingNeurons[j]){
                     startingIndices.push_back(i);
                 }
             }
@@ -105,13 +107,13 @@ std::queue<Connection*> ConnectionComrade::enqueueDesiredConns(int arg){
                         continue;
                     }
                     ///////////////// END TEMP == MUSCLE CHECK
-                    if (!(*connVec)[j].marked && (*connVec)[j].weight >= minWeight){ // if we haven't already gone through it, and it's at least our minimum weight, go on
+                    if (!(*connVec)[j].marked && (*connVec)[j].weight() >= minWeight){ // if we haven't already gone through it, and it's at least our minimum weight, go on
                         (*connVec)[j].path_len = curPathLen; // obviously relative to our set of starting neurons.
                         (*connVec)[j].marked = true;
                         // add it to the set of next layer start indices if we haven't reached our max path length yet
                         if (curPathLen < pathLenCeiling){
                             // add the post (pre is the one we are looping through) to the set of start indices, and increment num_starts_found
-                            nextLayerIndices.push_back((*connVec)[j].post->element_id);
+                            nextLayerIndices.push_back((*connVec)[j].post->id());
                         }
                         cq.push(&(*connVec)[j]);
                     }
@@ -132,7 +134,7 @@ std::queue<Connection*> ConnectionComrade::enqueueDesiredConns(int arg){
                 std::vector<Connection>* theseConns = &elements[i]->out_conns;
                 int numConns = theseConns->size();
                 for (int j = 0; j < numConns; j++){ // NOTE: we can probably get rid of this by using the name to index map in DataSteward
-                    if ((*theseConns)[j].post->getEType() == MUSCLE && !(*theseConns)[j].marked && ((*theseConns)[j].weight >= minWeight || ANY_MUSCLE_WEIGHT)){
+                    if ((*theseConns)[j].post->getEType() == MUSCLE && !(*theseConns)[j].marked && ((*theseConns)[j].weight() >= minWeight || ANY_MUSCLE_WEIGHT)){
                         (*theseConns)[j].marked = true;
                         cq.push(&(*theseConns)[j]);
                     }
@@ -190,58 +192,58 @@ void ConnectionComrade::populateConnArray(std::queue<Connection*>& cq){
          */
         // we want to mark the neurons so that we can show/hide neurons without connections (this is done in Artist, under draw_neurons and draw_neuron_names)
         
-        if (cur->conntype == GAP && doGaps){
+        if (cur->type == GAP && doGaps){
             if (preIsNeuron && postIsNeuron){
                 NeuronInfoModule* premod = (NeuronInfoModule*)prevoid;
                 NeuronInfoModule* postmod = (NeuronInfoModule*)postvoid;
-                printf("<<GAP>> conn: %s-> %s (%.2f)\n", premod->name.c_str(), postmod->name.c_str(), cur->weight);
+                printf("<<GAP>> conn: %s-> %s (%.2f)\n", premod->name().c_str(), postmod->name().c_str(), cur->weight());
                 num_gap_indices += addConn(gap_conns, num_gap_indices, premod, postmod, preHalfSomaScaled, postHalfSomaScaled);
             }
             else if (!preIsNeuron && postIsNeuron){
                 MuscleInfoModule* premod = (MuscleInfoModule*)prevoid;
                 NeuronInfoModule* postmod = (NeuronInfoModule*)postvoid;
-                printf("<<GAP>> conn: %s-> %s (%.2f)\n", premod->name.c_str(), postmod->name.c_str(), cur->weight);
+                printf("<<GAP>> conn: %s-> %s (%.2f)\n", premod->name().c_str(), postmod->name().c_str(), cur->weight());
                 num_gap_indices += addConn(gap_conns, num_gap_indices, premod, postmod, preHalfSomaScaled, postHalfSomaScaled);
             }
             else if (preIsNeuron && !postIsNeuron){
                 NeuronInfoModule* premod = (NeuronInfoModule*)prevoid;
                 MuscleInfoModule* postmod = (MuscleInfoModule*)postvoid;
-                printf("<<GAP>> conn: %s-> %s (%.2f)\n", premod->name.c_str(), postmod->name.c_str(), cur->weight);
+                printf("<<GAP>> conn: %s-> %s (%.2f)\n", premod->name().c_str(), postmod->name().c_str(), cur->weight());
                 num_gap_indices += addConn(gap_conns, num_gap_indices, premod, postmod, preHalfSomaScaled, postHalfSomaScaled);
             }
             
             else if (!preIsNeuron && !postIsNeuron){
                 MuscleInfoModule* premod = (MuscleInfoModule*)prevoid;
                 MuscleInfoModule* postmod = (MuscleInfoModule*)postvoid;
-                printf("<<GAP>> conn: %s-> %s (%.2f)\n", premod->name.c_str(), postmod->name.c_str(), cur->weight);
+                printf("<<GAP>> conn: %s-> %s (%.2f)\n", premod->name().c_str(), postmod->name().c_str(), cur->weight());
                 num_gap_indices += addConn(gap_conns, num_gap_indices, premod, postmod, preHalfSomaScaled, postHalfSomaScaled);
             }
             num_total_gaps++;
         }
-        else if (cur->conntype == CHEM && doChems){
+        else if (cur->type == CHEM && doChems){
             if (preIsNeuron && postIsNeuron){
                 NeuronInfoModule* premod = (NeuronInfoModule*)prevoid;
                 NeuronInfoModule* postmod = (NeuronInfoModule*)postvoid;
-                printf("<<CHEM>> conn: %s-> %s (%.2f)\n", premod->name.c_str(), postmod->name.c_str(), cur->weight);
+                printf("<<CHEM>> conn: %s-> %s (%.2f)\n", premod->name().c_str(), postmod->name().c_str(), cur->weight());
                 num_chem_indices += addConn(chem_conns, num_chem_indices, premod, postmod, preHalfSomaScaled, -postHalfSomaScaled);
             }
             else if (!preIsNeuron && postIsNeuron){
                 MuscleInfoModule* premod = (MuscleInfoModule*)prevoid;
                 NeuronInfoModule* postmod = (NeuronInfoModule*)postvoid;
-                printf("<<CHEM>> conn: %s-> %s (%.2f)\n", premod->name.c_str(), postmod->name.c_str(), cur->weight);
+                printf("<<CHEM>> conn: %s-> %s (%.2f)\n", premod->name().c_str(), postmod->name().c_str(), cur->weight());
                 num_chem_indices += addConn(chem_conns, num_chem_indices, premod, postmod, preHalfSomaScaled, -postHalfSomaScaled);
             }
             else if (preIsNeuron && !postIsNeuron){
                 NeuronInfoModule* premod = (NeuronInfoModule*)prevoid;
                 MuscleInfoModule* postmod = (MuscleInfoModule*)postvoid;
-                printf("<<CHEM>> conn: %s-> %s (%.2f)\n", premod->name.c_str(), postmod->name.c_str(), cur->weight);
+                printf("<<CHEM>> conn: %s-> %s (%.2f)\n", premod->name().c_str(), postmod->name().c_str(), cur->weight());
                 num_chem_indices += addConn(chem_conns, num_chem_indices, premod, postmod, preHalfSomaScaled, -postHalfSomaScaled);
             }
             
             else if (!preIsNeuron && !postIsNeuron){
                 MuscleInfoModule* premod = (MuscleInfoModule*)prevoid;
                 MuscleInfoModule* postmod = (MuscleInfoModule*)postvoid;
-                printf("<<CHEM>> conn: %s-> %s (%.2f)\n", premod->name.c_str(), postmod->name.c_str(), cur->weight);
+                printf("<<CHEM>> conn: %s-> %s (%.2f)\n", premod->name().c_str(), postmod->name().c_str(), cur->weight());
                 num_chem_indices += addConn(chem_conns, num_chem_indices, premod, postmod, preHalfSomaScaled, -postHalfSomaScaled);
             }
             num_total_chems++;
@@ -263,7 +265,7 @@ void ConnectionComrade::populateConnArray(std::queue<Connection*>& cq){
     for (i = 0; i < num_all_indices; i += 6){
         currentlyUsedConns[connNum]->midpoint = (glm::vec3(all_conns[i], all_conns[i+1],all_conns[i+2])+glm::vec3(all_conns[i+3], all_conns[i+4],all_conns[i+5]))/2.f;
         char buf[10]; // why not. don't want it too small...
-        snprintf(buf, sizeof(buf), "%.2f",currentlyUsedConns[connNum]->weight);
+        snprintf(buf, sizeof(buf), "%.2f",currentlyUsedConns[connNum]->weight());
         currentlyUsedConns[connNum]->weightLabel = std::string(buf);
         connNum++;
     }

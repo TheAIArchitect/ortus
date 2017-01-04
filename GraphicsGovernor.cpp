@@ -142,7 +142,7 @@ int initGraphics(Core* core)
     const int startingSetSize = 2;
     std::string startingSet[startingSetSize] = {"ASEL","ASER"};
     
-    ConnectionComrade comrade = ConnectionComrade(core->stewie.bioElements, startingSet, startingSetSize);
+    ConnectionComrade comrade = ConnectionComrade(core->stewie.elements, startingSet, startingSetSize);
     if (OptionForewoman::WormOpts[SHOW_MUSCLES]){
         comrade.generateConns(ConnectionComrade::MUSCLES | ConnectionComrade::STARTING_SET);
     }

@@ -43,7 +43,7 @@ class BioData {
     MassPoint** neuronMassPoints;
     int num_neuron_mass_points;
     int num_neurons_in_json;
-    std::vector<ElementInfoModule*> bioElements;
+    std::vector<ElementInfoModule*> elements;
     
     const int NUM_MUSCLES = 95;
     const int NUM_CC = 26;

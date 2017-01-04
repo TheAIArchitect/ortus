@@ -21,7 +21,7 @@
 #include "NeuronInfoModule.hpp"
 #include "ElementInfoModule.hpp"
 #include <regex>
-
+#include "StrUtils.hpp"
 
 #include "MassPoint.hpp"
 
@@ -68,7 +68,9 @@ class FileShit{
         static std::ofstream wopen(std::string s);
     
     
-    static void get_neuron_data(MassPoint*** neuronMassPoints, int* num_neuron_mass_points, int* num_neurons_in_json, std::vector<ElementInfoModule*>* elements);
+        static void readConnectomeCSV(std::string csv_name, std::vector<std::vector<std::string>>& dat);
+        static ElementType string_to_etype(std::string s, std::string& graphical_identifier);
+        static void get_neuron_data(MassPoint*** neuronMassPoints, int* num_neuron_mass_points, int* num_neurons_in_json, std::vector<ElementInfoModule*>* elements);
         static std::vector<std::string> parse_on_comma(std::string line);
     
         static float str_type_to_float(std::string str);

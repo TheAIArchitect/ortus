@@ -9,13 +9,20 @@
 #include "Connection.hpp"
 
 Connection::Connection(){
-    polarity = 0;// initialize poliarity to 0. if it's not a gap junction, we'll change it to -1 or 1.
+    *polarityp = 0;// initialize poliarity to 0. if it's not a gap junction, we'll change it to -1 or 1.
 };
 
+float Connection::weight(){
+    return *weightp;
+}
+
+float Connection::polarity(){
+    return *polarityp;
+}
 
 std::string Connection::toString(){
     int max = 512;
     char buffer[max];
-    snprintf(buffer, max,"(%s->%s : %.2f : %d)",preName.c_str(),postName.c_str(),weight,polarity);
+    snprintf(buffer, max,"(%s->%s : %.2f : %.2f)",preName.c_str(),postName.c_str(),weight(),polarity());
     return std::string(buffer);
 }

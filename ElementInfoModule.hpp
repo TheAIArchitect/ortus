@@ -34,9 +34,9 @@ public:
     float getFType();
     glm::vec3 getCenterPoint(); // allows us to use muscles and neurons for creating graphical connections
     
-    std::string name;
+    std::string* namep;
     std::string graphicalName; // name used in graphics -- with 'graphical identifier": either "-(I)", "-(S)", "-(M)", or "-<M>" -- inter, sensory, motor, or muscle
-    int element_id; // the id of this element with respect to all other elements
+    int* idp; // the id of this element with respect to all other elements
     int massPoint_id = -1; // -1 means no mass point
     
     std::vector<Connection> out_conns; // will all have same pre (this)
@@ -44,7 +44,12 @@ public:
     bool marked = false; // used for stack
     bool ablated = false; // if true, we treat the element as non-existent
     float v_0 = 0; // initial voltage
-    float v_c; // current voltage
+    float* vCurrp; // current voltage
+    
+    std::string name();
+    float vCurr();
+    int id();
+    
     
 private:
     ElementType element_type;

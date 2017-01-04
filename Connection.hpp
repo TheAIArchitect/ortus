@@ -18,30 +18,33 @@
 
 enum ConnectionType {GAP, CHEM};
 
-enum NeuroTransmitter {POS, NEG};
-
 class ElementInfoModule;
 
 class Connection {
     
 public:
     Connection();
+    float polarity();
+    float weight();
+    
+    
     ElementInfoModule* pre;
-    std::string preName;
+    std::string preName; // leave it for this for now
     ElementInfoModule* post;
     std::string postName;
-    ConnectionType conntype;
-    std::string sConntype;
-    int polarity;
-    std::vector<NeuroTransmitter> neroTransmitters;
+    ConnectionType type;
+    std::string sType;
+    float* polarityp; // perhaps we can 'model' different neurotransmitters by non-integer valued polarities?
     std::string toString();
 
-    float weight;
+    float* weightp;
     
     std::string weightLabel;
     bool marked = false; // used for search
     int path_len = -1; // used for search
     glm::vec3 midpoint; // used to for the label's location
+    
+    
     
 };
 

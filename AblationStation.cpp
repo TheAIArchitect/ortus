@@ -34,20 +34,20 @@ AblationStation::AblationStation(){
 bool AblationStation::setAblationStatus(ElementInfoModule* eim){
     int i;
     for (i = 0; i < NUM_NEURONS_FOR_ABLATION; ++i){
-        if (NEURONS_FOR_ABLATION[i] == eim->name){
+        if (NEURONS_FOR_ABLATION[i] == eim->name()){
             eim->ablated = true;
             return true;
         }
     }
     for (i = 0; i < NUM_MUSCLES_FOR_ABLATION; ++i){
-        if (MUSCLES_FOR_ABLATION[i] == eim->name){
+        if (MUSCLES_FOR_ABLATION[i] == eim->name()){
             eim->ablated = true;
             return true;
         }
     }
     for (i = 0; i < NUM_PARTIALS_FOR_ABLATION; ++i){
         std::string wtf(PARTIALS_FOR_ABLATION[i]);
-        size_t found = eim->name.find(wtf);
+        size_t found = eim->name().find(wtf);
         size_t huh = std::string::npos;
         if (found != std::string::npos){
             eim->ablated = true;

@@ -43,9 +43,9 @@ Probe::Probe(DataSteward* ds){
 void Probe::printAll(int window){
     std::string thisWindow = "(" + std::to_string(window) + ") [";
     for (int i = 0; i < numElemsMinusOne; ++i){
-        thisWindow += stewie->bioElements[i]->name + ":" + std::to_string(stewie->kernelVoltages[window][i]) + ", ";
+        thisWindow += stewie->elements[i]->name() + ":" + std::to_string(stewie->kernelVoltages[window][i]) + ", ";
     }
-    thisWindow += stewie->bioElements[numElemsMinusOne]->name + ":" + std::to_string(stewie->kernelVoltages[window][numElemsMinusOne]) + "]";
+    thisWindow += stewie->elements[numElemsMinusOne]->name() + ":" + std::to_string(stewie->kernelVoltages[window][numElemsMinusOne]) + "]";
     printf("%s\n",thisWindow.c_str());
 }
 
@@ -58,13 +58,13 @@ void Probe::printCurrentProbe(int window){
     printf("CS: ");
     for (int i = 0; i < DataSteward::NUM_ELEMS; ++i){
         if (csContribVec[window][row][i] != 0.f){
-            printf("[%s <idx: %d>: %.4f] ",stewie->bioElements[i]->name.c_str(), i, csContribVec[window][row][i]);
+            printf("[%s <idx: %d>: %.4f] ",stewie->elements[i]->name().c_str(), i, csContribVec[window][row][i]);
         }
     }
     printf("\n---------------------------------------------------------------------------------------------\nGJ: ");
     for (int i = 0; i < DataSteward::NUM_ELEMS; ++i){
         if (gjContribVec[window][row][i] != 0.f){
-            printf("[%s <idx: %d>: %.4f] ",stewie->bioElements[i]->name.c_str(), i, gjContribVec[window][row][i]);
+            printf("[%s <idx: %d>: %.4f] ",stewie->elements[i]->name().c_str(), i, gjContribVec[window][row][i]);
         }
     }
     printf("\n==============================================================================================\n");
@@ -91,10 +91,10 @@ std::string Probe::setNewElementToProbe(){
     }
     std::string temps;
     for (int i = 0; i < stewie->NUM_ELEMS; ++i){
-        temps = stewie->bioElements[i]->name;
+        temps = stewie->elements[i]->name();
         StrUtils::toUpper(temps);
         if (temps == newElementToProbe){
-            elementToProbe = stewie->bioElements[i]->name; // don't use the 'newElementToProbe' because as of this writing, it's all caps..
+            elementToProbe = stewie->elements[i]->name(); // don't use the 'newElementToProbe' because as of this writing, it's all caps..
             newElementToProbe = "";
             newElementToProbeRequested = false;
             return "Now probing '"+elementToProbe+"'.";
