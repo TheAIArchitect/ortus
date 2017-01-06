@@ -21,10 +21,8 @@
     --> the reason for this, is so that we can pass data to and from opencl without constantly having to re-intitalize the 1D representations of data. It keeps things simple.
  
  
- //////////////// NOTE: MUST GO BACK TO WORMWIRINGCSVTOSQLITE.CPP AND FINISH get_conns(..) and writeConnectome(..) /////////////////
  
     //////////////// NOTE 2: fix bad pointer usage: http://stackoverflow.com/questions/22146094/why-should-i-use-a-pointer-rather-than-the-object-itself
- 
  
  */
 
@@ -105,12 +103,6 @@ void DataSteward::readOpenCLBuffers(){
 
 
 
-void DataSteward::cleanUp(){
-    cleanUpOpenCL();
-    // clean up other stuff...
-    total_timer_.stop_timer();
-    total_run_time = total_timer_.get_exe_time_in_ms();
-}
 
 
 // NOTE: store the global and local... stop passing.
@@ -176,32 +168,10 @@ void DataSteward::setupOpenCL(size_t global, size_t local){
     enqueueKernel(global, local);
 }
 
-/* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
-void DataSteward::initializeOpenCL(){
-    clhelper.setup_opencl();
-    clhelper.read_kernels_from_file("OrtusKernelOne.cl", &programBuffer);
-    program = clCreateProgramWithSource(clhelper.context, 1, (const char**) &programBuffer, NULL, &clhelper.err);
-    clhelper.check_and_print_cl_err(clhelper.err);
-    clhelper.err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
-    clhelper.check_and_print_cl_program_build_err(clhelper.err, &program);
-    kernel = clCreateKernel(program, "OrtusKernel", &clhelper.err);
-    clhelper.check_and_print_cl_err(clhelper.err);
-}
 
-void DataSteward::initializeData(){
-    createElements();
-    createConnections();
-    NUM_ELEMS = elements.size();
-    NUM_ROWS = NUM_ELEMS;
-    int modEight = NUM_ELEMS % 8;
-    NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
-    initializeBlades();
-    rowCount = NUM_ELEMS; // cl_uint, for current row count
-    colCount = NUM_ELEMS; // cl_uint, for current col count
-    probe = new Probe(); // NOTE: probe not working right now. needs to be re-worked.
-    gapNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-    chemNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-}
+
+
+
 
 /* initializes the Blades that aren't used for the gj or cs weights */
 void DataSteward::initializeBlades(){
@@ -219,80 +189,7 @@ void DataSteward::fillInputVoltageBlade(){
    // this doesn't do anything at the moment, because v_0 is 0...
 }
 
-void DataSteward::createElements(){
-    csvDat = std::vector<std::vector<std::string>>();
-    FileAssistant::readConnectomeCSV(FileAssistant::ortus_basic_connectome,csvDat);
-    int count = csvDat.size(); // total row count
-    int len = csvDat[0].size(); // total col count
-    /*
-     * First we want to go through and create structs for all the neurons and muscles
-     */
-    // absolute_index_mapping takes the original index in the csv file for the neuron or muscle,
-    // and gives the index in the neuron or muscle struct vector. if negative, it's a muscle index.
-    std::vector<int> absolute_index_mapping;
-    
-    int csv_rows =(int) csvDat.size()-1;// last row is the same as row 1 (not row 0... row 1)
-    // all columns should be the same length if we've gotten here. NOTE: last column is same as col 1 (not col 0..)
-    int csv_cols = len - 1;
-    if (csv_rows != csv_cols){
-        printf("ERROR! Connectome row count != col count.\n");
-        exit(8);
-    }
-    CSV_ROWS = csv_rows;
-    CSV_COLS = csv_cols;
-    CONNECTOME_ROWS = csv_rows - CSV_OFFSET;
-    CONNECTOME_COLS = csv_cols - CSV_OFFSET;
-    
-    std::string curr_type = "";
-    ElementType etype;
-    std::string graphicalIdentifier;
-    // NOTE: All NIM and MIM objects are EIMs, so the element_id increases each loop.
-    // neuron_id increases if it's a neuron, muscle_id increases if it's a muscle
-    int element_id = 0;
-    int neuron_id = 0;
-    int muscle_id = 0;
-    for (int i = CSV_OFFSET; i < csv_rows; i++){
-        if (!(csvDat[i][0] == "")){ // else, we keep the same etype
-            etype = FileAssistant::string_to_etype(csvDat[i][0], graphicalIdentifier);
-        }
-        std::string* temp_namep = new std::string(csvDat[i][1]);
-        FileAssistant::remove_leading_zero_from_anywhere(temp_namep);
-        officialNamepVector.push_back(temp_namep);
-        officialNameToIndexMap[*temp_namep] = element_id;
-        if (etype != MUSCLE){
-            NeuronInfoModule* nim = new NeuronInfoModule();
-            nim->namep = officialNamepVector[element_id];
-            nim->graphicalName = *temp_namep+graphicalIdentifier;
-            nim->idp = &officialNameToIndexMap[*temp_namep];
-            nim->setElementType(etype);
-            ablator.setAblationStatus(nim);
-            if (!nim->ablated){ // only keep it if it isn't ablated
-                nim->neuron_id = neuron_id;
-                neuron_id++;
-            }
-            elements.push_back(nim);// must add ablated neurons to elements array so that we can find them when we do chems
-        }
-        else {
-            MuscleInfoModule* mim = new MuscleInfoModule();
-            mim->namep = officialNamepVector[element_id];
-            mim->graphicalName = *temp_namep+graphicalIdentifier;
-            mim->idp = &officialNameToIndexMap[*temp_namep];
-            mim->setElementType(etype);
-            mim->centerMassPoint = NULL;
-            ablator.setAblationStatus(mim);
-            if (!mim->ablated){ // only keep it if it isn't ablated
-                mim->muscle_id = muscle_id;
-                muscle_id++;
-            }
-            elements.push_back(mim); // must add ablated muscles to elements array so that we can find them when we do chems
-        }
-        element_id++;
-    }
-    for(int i = 0; i < officialNamepVector. size(); i++){
-        printf("%s -> ",(*officialNamepVector[i]).c_str());
-        printf("%d\n",officialNameToIndexMap[*officialNamepVector[i]]);
-    }
-}
+
 
 void DataSteward::createConnections(){
     printf("connectome_rows, connectome_cols: %d. %d\n",CONNECTOME_ROWS, CONNECTOME_COLS);
@@ -370,29 +267,116 @@ void DataSteward::createConnections(){
     }
 }
 
-void DataSteward::feedProbe(){
+
+
+
+
+
+
+
+
+void DataSteward::createElements(){
+    csvDat = std::vector<std::vector<std::string>>();
+    FileAssistant::readConnectomeCSV(FileAssistant::ortus_basic_connectome,csvDat);
+    int count = csvDat.size(); // total row count
+    int len = csvDat[0].size(); // total col count
     /*
-    // cs contrib
-    clhc.err = clEnqueueReadBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, (sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS), cs_1d_contrib, 0, NULL, NULL);
-    clhc.check_and_print_cl_err(clhc.err);
-    // gj contrib
-    clhc.err = clEnqueueReadBuffer(clhc.commands, gj_contrib, CL_TRUE, 0, (sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS), gj_1d_contrib, 0, NULL, NULL);
-    clhc.check_and_print_cl_err(clhc.err);
-    
-    
-    cs_2d_contrib_t = stewie.convert_1d_to_2d(cs_1d_contrib, DataSteward::NUM_ELEMS, DataSteward::NUM_ELEMS);
-    gj_2d_contrib_t = stewie.convert_1d_to_2d(gj_1d_contrib, DataSteward::NUM_ELEMS, DataSteward::NUM_ELEMS);
-    probe->csContribVec.push_back(cs_2d_contrib_t);
-    probe->gjContribVec.push_back(gj_2d_contrib_t);
-    
-    // clear the cs_contrib buffer
-    clhc.err = clEnqueueWriteBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS, zeros1D, 0, NULL, NULL);
-    clhc.check_and_print_cl_err(clhc.err);
-    // do the same with the gj_contrib buffer
-    clhc.err = clEnqueueWriteBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS, zeros1D, 0, NULL, NULL);
-    clhc.check_and_print_cl_err(clhc.err);
-    
+     * First we want to go through and create structs for all the neurons and muscles
      */
+    // absolute_index_mapping takes the original index in the csv file for the neuron or muscle,
+    // and gives the index in the neuron or muscle struct vector. if negative, it's a muscle index.
+    std::vector<int> absolute_index_mapping;
+    
+    int csv_rows =(int) csvDat.size()-1;// last row is the same as row 1 (not row 0... row 1)
+    // all columns should be the same length if we've gotten here. NOTE: last column is same as col 1 (not col 0..)
+    int csv_cols = len - 1;
+    if (csv_rows != csv_cols){
+        printf("ERROR! Connectome row count != col count.\n");
+        exit(8);
+    }
+    CSV_ROWS = csv_rows;
+    CSV_COLS = csv_cols;
+    CONNECTOME_ROWS = csv_rows - CSV_OFFSET;
+    CONNECTOME_COLS = csv_cols - CSV_OFFSET;
+    
+    std::string curr_type = "";
+    ElementType etype;
+    std::string graphicalIdentifier;
+    // NOTE: All NIM and MIM objects are EIMs, so the element_id increases each loop.
+    // neuron_id increases if it's a neuron, muscle_id increases if it's a muscle
+    int element_id = 0;
+    int neuron_id = 0;
+    int muscle_id = 0;
+    for (int i = CSV_OFFSET; i < csv_rows; i++){
+        if (!(csvDat[i][0] == "")){ // else, we keep the same etype
+            etype = FileAssistant::string_to_etype(csvDat[i][0], graphicalIdentifier);
+        }
+        std::string* temp_namep = new std::string(csvDat[i][1]);
+        FileAssistant::remove_leading_zero_from_anywhere(temp_namep);
+        officialNamepVector.push_back(temp_namep);
+        officialNameToIndexMap[*temp_namep] = element_id;
+        if (etype != MUSCLE){
+            NeuronInfoModule* nim = new NeuronInfoModule();
+            nim->namep = officialNamepVector[element_id];
+            nim->graphicalName = *temp_namep+graphicalIdentifier;
+            nim->idp = &officialNameToIndexMap[*temp_namep];
+            nim->setElementType(etype);
+            ablator.setAblationStatus(nim);
+            if (!nim->ablated){ // only keep it if it isn't ablated
+                nim->neuron_id = neuron_id;
+                neuron_id++;
+            }
+            elements.push_back(nim);// must add ablated neurons to elements array so that we can find them when we do chems
+        }
+        else {
+            MuscleInfoModule* mim = new MuscleInfoModule();
+            mim->namep = officialNamepVector[element_id];
+            mim->graphicalName = *temp_namep+graphicalIdentifier;
+            mim->idp = &officialNameToIndexMap[*temp_namep];
+            mim->setElementType(etype);
+            mim->centerMassPoint = NULL;
+            ablator.setAblationStatus(mim);
+            if (!mim->ablated){ // only keep it if it isn't ablated
+                mim->muscle_id = muscle_id;
+                muscle_id++;
+            }
+            elements.push_back(mim); // must add ablated muscles to elements array so that we can find them when we do chems
+        }
+        element_id++;
+    }
+    for(int i = 0; i < officialNamepVector. size(); i++){
+        printf("%s -> ",(*officialNamepVector[i]).c_str());
+        printf("%d\n",officialNameToIndexMap[*officialNamepVector[i]]);
+    }
+}
+
+
+
+void DataSteward::initializeData(){
+    createElements();
+    createConnections();
+    NUM_ELEMS = elements.size();
+    NUM_ROWS = NUM_ELEMS;
+    int modEight = NUM_ELEMS % 8;
+    NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
+    initializeBlades();
+    rowCount = NUM_ELEMS; // cl_uint, for current row count
+    colCount = NUM_ELEMS; // cl_uint, for current col count
+    probe = new Probe(); // NOTE: probe not working right now. needs to be re-worked.
+    gapNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
+    chemNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
+}
+
+/* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
+void DataSteward::initializeOpenCL(){
+    clhelper.setup_opencl();
+    clhelper.read_kernels_from_file("OrtusKernelOne.cl", &programBuffer);
+    program = clCreateProgramWithSource(clhelper.context, 1, (const char**) &programBuffer, NULL, &clhelper.err);
+    clhelper.check_and_print_cl_err(clhelper.err);
+    clhelper.err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+    clhelper.check_and_print_cl_program_build_err(clhelper.err, &program);
+    kernel = clCreateKernel(program, "OrtusKernel", &clhelper.err);
+    clhelper.check_and_print_cl_err(clhelper.err);
 }
 
 void DataSteward::cleanUpOpenCL(){
@@ -401,24 +385,30 @@ void DataSteward::cleanUpOpenCL(){
     clReleaseCommandQueue(clhelper.commands);
     clReleaseContext(clhelper.context);
 }
-    
-    
+
+void DataSteward::cleanUp(){
+    cleanUpOpenCL();
+    // clean up other stuff...
+    total_timer_.stop_timer();
+    total_run_time = total_timer_.get_exe_time_in_ms();
+}
+
+
 void DataSteward::printReport(int num_runs){
-    cout << "\n\n\n";
+    std::cout << "\n\n\n";
     total_run_time += opencl_run_time;
-    //cout << "Number of iterations: " << _number_of_loops << ".\n";
-    cout << "Total run time: " << total_run_time << " ms" << endl;
-    cout << "Setup run time: " << setup_run_time << " ms" << endl;
-    cout << "OpenCL processing time: " << opencl_run_time << " ms" << endl;
-    cout << "OpenCL memory transer time: " << opencl_mem_time << " ms" << endl;
-    cout << "Reset vector time: " << reset_time << " ms" << endl;
+    //std::cout << "Number of iterations: " << _number_of_loops << ".\n";
+    std::cout << "Total run time: " << total_run_time << " ms" << std::endl;
+    std::cout << "Setup run time: " << setup_run_time << " ms" << std::endl;
+    std::cout << "OpenCL processing time: " << opencl_run_time << " ms" << std::endl;
+    std::cout << "OpenCL memory transer time: " << opencl_mem_time << " ms" << std::endl;
+    std::cout << "Reset vector time: " << reset_time << " ms" << std::endl;
     
     
 }
 
 
-
-/* writes the connectome. as of this comment, it will write it by **DE-TRANSPOSING** it. 
+/* writes the connectome. as of this comment, it will write it by **DE-TRANSPOSING** it.
  * NOTE: currently, this assumes neurons are ordered. */
 bool DataSteward::writeConnectome(std::string csv_name){
     
@@ -501,6 +491,32 @@ bool DataSteward::writeConnectome(std::string csv_name){
     newConnectome.write(secondRow.c_str(), secondRow.size());
     newConnectome.close();
     return true;
+}
+
+
+void DataSteward::feedProbe(){
+    /*
+     // cs contrib
+     clhc.err = clEnqueueReadBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, (sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS), cs_1d_contrib, 0, NULL, NULL);
+     clhc.check_and_print_cl_err(clhc.err);
+     // gj contrib
+     clhc.err = clEnqueueReadBuffer(clhc.commands, gj_contrib, CL_TRUE, 0, (sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS), gj_1d_contrib, 0, NULL, NULL);
+     clhc.check_and_print_cl_err(clhc.err);
+     
+     
+     cs_2d_contrib_t = stewie.convert_1d_to_2d(cs_1d_contrib, DataSteward::NUM_ELEMS, DataSteward::NUM_ELEMS);
+     gj_2d_contrib_t = stewie.convert_1d_to_2d(gj_1d_contrib, DataSteward::NUM_ELEMS, DataSteward::NUM_ELEMS);
+     probe->csContribVec.push_back(cs_2d_contrib_t);
+     probe->gjContribVec.push_back(gj_2d_contrib_t);
+     
+     // clear the cs_contrib buffer
+     clhc.err = clEnqueueWriteBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS, zeros1D, 0, NULL, NULL);
+     clhc.check_and_print_cl_err(clhc.err);
+     // do the same with the gj_contrib buffer
+     clhc.err = clEnqueueWriteBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS, zeros1D, 0, NULL, NULL);
+     clhc.check_and_print_cl_err(clhc.err);
+     
+     */
 }
 
 /*

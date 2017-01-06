@@ -116,7 +116,7 @@ public:
     float* allConns;
     
     
-    vector<vector<float>>* voltages;
+    std::vector<std::vector<float>>* voltages;
     
 public:
     Artist(DataSteward* fakeStewie);
