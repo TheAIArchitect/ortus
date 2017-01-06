@@ -7,6 +7,41 @@
 // Copyright © 2017
 //
 
+// SEAN START HERE
+/**********************************************************************
+
+
+For overall system design, perhaps reate a "Steward" class, that will contorl ortus' core functionaility
+ => i don't think this qualifies as a 'design pattern' other than general modularity...maybe there's a word i don't know.
+ => should this Steward class be a superclass, so that everything else is a 'steward' subclass?
+    -> asking because certain data, like the Blades, and kernelVoltages, among other things, must be accessed all over the place, and would need to be accessed by every other 'steward'
+    -> so, really, maybe DataSteward should be the superclass... idk, it seems stupid to use a superclass 'pattern' for that... i sense im missing something here.
+    -> another option is to leave DataSteward as it is, which is to contain all data and compute related code, but that creates a bit of a problem for other things that will need to use the data...
+ 
+ <Here is a potential layout>
+ -> DataSteward
+    -> this class. it will control ortus' actual data -- that is, the Blades, and other ortus specific data.
+ -> ComputeSteward
+    -> controls the OpenCL, will need access to all data contained in DataSteward
+ -> StimulationSteward <<THIS IS THE OTHER BIG QUESTION>>
+    -> MAYBE use either a *decorator* or *builder* (am i missing anything els?) for this
+        -> I want to be able to create different stimuli that have different signals, potentially composed of a number of more 'primitive' signals (e.g., 'eatAndNoAir' should stimulate food and starve of oxygen) 
+        -> what's the best design pattern to go with here?
+ -> DevelopmentSteward
+    -> this will add neurons, and adjusts weights and connections
+        => so, it must have direct access to the Blade objects.
+ -> ThinkingSteward
+    -> would generate thoughts, by stimulating interneurons
+ -> ActionSteward
+    -> take outputs and graph, or activate a physics simulation, maybe pass data back to StimulationSteward from the physics simulation
+    -> obviously would need access to the Blades
+
+
+***********************************************************************/
+// SEAN END HERE (if desired)
+
+/* below are my design notes for myself, but they may help you understanding the new system */
+
 /* we want everything stored in opencl-compatible datatypes. data will go directly from here, to opencl buffers.
  
   ** At the moment, we are going to ignore the issue of physical proximity with respect to how it impacts computation (e.g., greater time delay for neuron C because it's farther from A than B is, despite both being directly connected to A), or signal decay.
