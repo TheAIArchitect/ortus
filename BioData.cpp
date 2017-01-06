@@ -20,7 +20,7 @@ void BioDataDecoder::makeGraph(std::vector<GapJunction> gaps, std::vector<ChemSy
 
 BioData::BioData(){
     get_conns(elements);
-    FileShit::get_neuron_data(&neuronMassPoints, &num_neuron_mass_points, &num_neurons_in_json, &elements);
+    FileAssistant::get_neuron_data(&neuronMassPoints, &num_neuron_mass_points, &num_neurons_in_json, &elements);
     generateBodyMassPoints();
     generateCenterCylinderMassPoints();
 }

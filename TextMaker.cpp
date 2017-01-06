@@ -48,7 +48,7 @@ void TextMaker::prep_text(){
     if (FT_Init_FreeType(&ft))
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
     
-    if (FT_New_Face(ft, FileShit::open_sans_ttf.c_str(), 0, &ft_face))
+    if (FT_New_Face(ft, FileAssistant::open_sans_ttf.c_str(), 0, &ft_face))
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
     
     FT_Set_Pixel_Sizes(ft_face, 0, 48);

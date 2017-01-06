@@ -1,9 +1,10 @@
 //
 //  DataSteward.cpp
-//  delegans
+// ortus
 //
-//  Created by Sean Grimes on 11/10/15.
-//  Copyright © 2015 delegans group. All rights reserved.
+// Andrew W.E. McDonald
+// Sean Grimes
+// Copyright © 2017
 //
 
 /* we want everything stored in opencl-compatible datatypes. data will go directly from here, to opencl buffers.
@@ -31,7 +32,6 @@
 
 #include "DataSteward.hpp"
 
-int MAX_MUSCLES = 200;// with allllll muscles, im pretty sure it's 150 (149, actually), but right now, it doesn't much matter if we say 200 or 150... NOTE: this is taking into account muscles in addition to body wall
 
 int DataSteward::CSV_ROWS;
 int DataSteward::CSV_COLS;
@@ -76,160 +76,12 @@ void DataSteward::saveCurrentConnectome(){
     for (int i = 0; i < numEN; ++i){
         elementNames.push_back(elements[i]->name());
     }
-    write_connectome("poooOOoOOOoOOOop.csv", gj_matrix, cs_matrix, elementNames);
+    //write_connectome("poooOOoOOOoOOOop.csv", gj_matrix, cs_matrix, elementNames);
 }
 
 
 
 
-/**
- * Also creates the neuron name to index map, stored in Core.cpp
- */
-void DataSteward::populate_cs_gj_matricies(float **cs_matrix, float **gj_matrix, unordered_map<string,int>& neuron_names_to_index_map, size_t num_rows, size_t num_cols){
-    for(int i = 0; i < num_rows; ++i){
-        for(int j = 0; j < num_cols; ++j){
-            cs_matrix[i][j] = 0.0f;
-            gj_matrix[i][j] = 0.0f;
-        }
-    }
-    
-    float maxGapWeight = -1.f;
-    float maxChemWeight = -1.f;
-    // Get a <map> that allows one to look up an id for a neuron based on name for easy array indexing
-    unordered_map<string, int> name_to_id = map_name_to_id();
-   
-    for (int i = 0; i < NeuronInfoModule::NUM_NIMS; ++i){
-        printf("neuron id - %d, neuron name - %s\n", nim[i]->neuron_id, nim[i]->name().c_str());
-    }
-    
-    int numElems = elements.size();
-    for (int i = 0; i < numElems; ++i){
-        int numConns = elements[i]->out_conns.size();
-        std::vector<Connection> tempConns = elements[i]->out_conns;
-        for (int j = 0; j < numConns; ++j){
-            if ((tempConns[j].pre->ablated == true) || (tempConns[j].post->ablated == true)){
-                // then something is very wrong, because in the CSV importer that created the connections, conns with one or more ablations were supposed to be removed.
-                printf("(%d, %d) %s (ablated - %d) <=> %s (ablated - %d) -- no ablated cells should have connections...\n",i,j, tempConns[j].pre->name().c_str(), tempConns[j].pre->ablated, tempConns[j].post->name().c_str(), tempConns[j].post->ablated);
-                exit(81);
-            }
-            int pre_id = tempConns[j].pre->id();
-            int post_id = tempConns[j].post->id();
-            if (tempConns[j].type == GAP){
-                gj_matrix[pre_id][post_id] = tempConns[j].weight();
-                if (fabs(tempConns[j].weight()) > maxGapWeight){
-                    maxGapWeight = fabs(tempConns[j].weight());
-                }
-            }
-            else if (tempConns[j].type == CHEM){
-                cs_matrix[pre_id][post_id] = tempConns[j].weight();
-                if (fabs(tempConns[j].weight()) > maxChemWeight){
-                    maxChemWeight = fabs(tempConns[j].weight());
-                }
-            }
-            
-        }
-        
-        
-    }
-   
-    // these are just going to be hard-coded into the kernel for now....
-    this->maxGapWeight = maxGapWeight;
-    this->maxChemWeight = maxChemWeight;
-    printf("maximum gap weight: %.2f, maximum chem weight: %.2f\n", maxGapWeight, maxChemWeight);
-    this->gj_matrix = gj_matrix;
-    this->cs_matrix = cs_matrix;
-    n2idxMap = name_to_id;
-    neuron_names_to_index_map = name_to_id;
-    // so now we have our complete connectome in the form of an X by X matrix.
-    // now we need to:
-    // - pull out all motor neurons and put them in a map (name -> id),
-    // - pull out all muscles and put them in a map (name -> id)
-    // - find all connections between motor neurons and muscles and put them in a map (mn name -> muscle id list)
-    // - figure out which muscles should get feedback from mechanosensory neurons and put them in a map (muscle name -> sensory neuron id)
-    // as well as other mappings of that nature.
-    
-    
-    
-    
-}
-
-/**
- * This populates the n2m map, and adds muscles to the typesMap.
- * 
- * Should be called after read_data_csv_files
- * 
- * NOTE NOTE: this needs to be redone using the ElementInfoModules (elements)
- */
-bool DataSteward::mapNeuronsToMuscles(){
-    unordered_map<string, int>::iterator iter;
-    iter = n2idxMap.begin();
-    muscles;
-    int i;
-    while (iter != n2idxMap.end()){
-        string elem_name = iter->first;
-        int idx = iter->second;
-        if (elem_name.find("BWM") != std::string::npos){ // NOTE: map these to enum'ed muscles for faster traversal.
-            muscles.push_back(elem_name);
-            for (i = 0; i < NUM_ELEMS; ++i){
-                if (gj_matrix[i][idx] > 0){ // then we have a gj connection
-                    MuscleWeight tempMW = {elem_name, gj_matrix[i][idx]};
-                    n2mGjMap[idx2nMap[i]].push_back(tempMW);
-                }
-                if (cs_matrix[i][idx] > 0){ // then we have a gj connection
-                    MuscleWeight tempMW = {elem_name, gj_matrix[i][idx]};
-                    n2mCsMap[idx2nMap[i]].push_back(tempMW);
-                }
-            }
-        }
-        iter++;
-    }
-    printf("MUSCLES:\n");
-    for (auto m : muscles){
-        printf("\t%s\n",m.c_str());
-    }
-    unordered_map<string, vector<MuscleWeight>>::iterator iterTwo;
-    iterTwo = n2mGjMap.begin();
-    printf("GJ to Muscles:\n");
-    while (iterTwo != n2mGjMap.end()){
-        string name = iterTwo->first;
-        vector<MuscleWeight> vec = iterTwo->second;
-        printf("\t%s -> ",name.c_str());
-        for (int i = 0; i < vec.size(); ++i){
-            printf("(%s, %.2f) ",vec[i].name.c_str(), vec[i].weight);
-        }
-        printf("\n");
-        iterTwo++;
-    }
-    return true;
-}
-
-
-
-unordered_map<string, int> DataSteward::map_name_to_id(){
-    unordered_map<string, int> name_to_id_map;
-
-    int unique_id_counter = 0;
-    // Run through the items and put together a name --> id mapping
-    int numElems = elements.size();
-    for(int i = 0; i < numElems; ++i){
-        // Grab the name from the DB return
-        string name = elements[i]->name();
-        unordered_map<string, int>::iterator it;
-     
-        // Check to see if the name is already in the map
-        it = name_to_id_map.find(name);
-        if(it == name_to_id_map.end()){
-            // The name does not exist in the map yet, so add it and an id
-            name_to_id_map[name] = elements[i]->id();
-        }
-        else{
-            printf("Why do you have duplicates in the elements array? '%s' exists at least twice... \n",name.c_str());
-            exit(82);
-        }
-    }
-    return name_to_id_map;
-}
-//////////////////////////// NEW ////////////////////////
 
 std::vector<float> DataSteward::getOutputVoltageVector(){
     return outputVoltageVector;
@@ -398,7 +250,7 @@ void DataSteward::fillInputVoltageBlade(){
 
 void DataSteward::createElements(){
     csvDat = std::vector<std::vector<std::string>>();
-    FileShit::readConnectomeCSV(FileShit::ortus_basic_connectome,csvDat);
+    FileAssistant::readConnectomeCSV(FileAssistant::ortus_basic_connectome,csvDat);
     int count = csvDat.size(); // total row count
     int len = csvDat[0].size(); // total col count
     /*
@@ -430,10 +282,10 @@ void DataSteward::createElements(){
     int muscle_id = 0;
     for (int i = CSV_OFFSET; i < csv_rows; i++){
         if (!(csvDat[i][0] == "")){ // else, we keep the same etype
-            etype = FileShit::string_to_etype(csvDat[i][0], graphicalIdentifier);
+            etype = FileAssistant::string_to_etype(csvDat[i][0], graphicalIdentifier);
         }
         std::string* temp_namep = new std::string(csvDat[i][1]);
-        FileShit::remove_leading_zero_from_anywhere(temp_namep);
+        FileAssistant::remove_leading_zero_from_anywhere(temp_namep);
         officialNamepVector.push_back(temp_namep);
         officialNameToIndexMap[*temp_namep] = element_id;
         if (etype != MUSCLE){
@@ -592,3 +444,195 @@ void DataSteward::printReport(int num_runs){
     
     
 }
+
+
+
+/*
+// NOTE: this assumes the connectome has NOT been transposed!!!
+bool write_connectome(std::string csv_name, float** gaps, float** chems, std::vector<std::string> elements){
+    
+    // the first row is complicated, it starts with "gap/chem" (as a 'key' of sorts),
+    // then has an empty column, and then 'SENSORY', because we start with sensory neurons.
+    std::string firstRow = "gap/chem,,";
+    // before we continue, we need to create a map that holds the indices that the SENSORY, INTER, MOTOR, etc..
+    // elements start at, so that we know what columns to put the SENSORY/INTER/MOTOR headings in on the firstRow
+    std::unordered_map<std::string,int> columnHeadingMap;
+    // start at 2, (see 'firstRow' to see why)
+    int colOffset = 2;
+    int currentColIndex = colOffset;
+    int numElements = elements.size();
+    std::string headings[4] = {"SENSORY", "INTER", "MOTOR","BUFFER"}; // "BUFFER" allows us to keep accessing the array after we've used all headings (after 'MOTOR', we have to add all motor neurons, but headingNum has been incremented, and we still check the array)
+    int headingNum = 0;
+    //columnHeadingMap[headings[headingNum]] = currentColIndex;
+    //headingNum++;
+    // now we run through the list of element names (elements) until the first letter stops being "S",
+    // and becomes "I", (and then "M", for motor). At the time of this, motors and muscles are used as the same thing.
+    std::string nextKey = headings[headingNum];
+    headingNum++;
+    char firstLetter = nextKey[0];
+    // we can also build the second row, which is the offset, and then all the element names
+    std::string secondRow = ",,";
+    for (int i = 0; i < numElements; ++i){
+        // if the element's name starts with firstLetter and nextKey isn't in the map
+        if (elements[i][0] == firstLetter && !columnHeadingMap.count(nextKey)){
+            columnHeadingMap[nextKey] = i; // don't add the colOffset to this, because we'll use it to check against the elements' actual indices later on
+            firstRow += nextKey + ",";
+            nextKey = headings[headingNum];
+            headingNum++;
+            firstLetter = nextKey[0];
+        }
+        else {
+            firstRow += ",";
+        }
+        secondRow += elements[i] + ",";
+        
+    }
+    firstRow += "placeholder\n";
+    secondRow += "placeholder\n";
+    // AND, we can do the last row, which is the same as the secondRow
+    std::string lastRow = secondRow;
+    // now we have something that looks somewhat like:
+    // (for firstRow): "gap/chem,,SENSORY,,,,,,INTER,,,,,,MOTOR,,,,,,placeholder"
+    // (for secondRow): ",,e1,e2,e3,...,eN,placeholder"
+    
+    // next, we create the 'main' rows, that are the actual connectome.
+    // formula: <space>,<name>,<either connection or blank for all elements>,<name>,<newline>
+    // NOTE: this assumes the connectome has NOT been transposed!!!
+    std::string actualConnectome = "";
+    // also, we need to set headingNum to zero, because we need to check if a heading is supposed to be there
+    headingNum = 0;
+    for (int i = 0; i < numElements; ++i){
+        // check to see if we're at a point that we need to add a 'type' heading
+        if (columnHeadingMap[headings[headingNum]] == i){
+            actualConnectome += headings[headingNum] + ",";
+            headingNum++;
+        }
+        else {
+            actualConnectome += ",";
+        }
+        actualConnectome += elements[i] + ",";
+        for (int j = 0; j < numElements; ++j){
+            if (gaps[i][j] == 0 && chems[i][j] == 0){
+                actualConnectome += ","; // there's no connection
+            }
+            else {
+                actualConnectome += std::to_string((int)gaps[i][j]) + "/" + std::to_string((int)chems[i][j]) + ",";
+            }
+        }
+        actualConnectome += elements[i] + "\n";
+    }
+    std::ofstream newConnectome = FileAssistant::wopen(FileAssistant::ortus_basic_connectome_test);
+    newConnectome.write(firstRow.c_str(), firstRow.size());
+    newConnectome.write(secondRow.c_str(), secondRow.size());
+    newConnectome.write(actualConnectome.c_str(), actualConnectome.size());
+    newConnectome.write(secondRow.c_str(), secondRow.size());
+    newConnectome.close();
+    return true;
+}
+*/
+
+/*
+void get_conns(std::vector<ElementInfoModule*>& elements){
+    std::vector<ElementInfoModule*> tempElements; // after we get the gaps and chems, we need to fill the real elements vector with only the elements we want (as of now, all neurons and body wall muscles)
+    //createElements(tempElements);
+    //ortus//parse_chems(tempElements);
+    // now we need to go through the tempElements and only add the non-ablated ones to the 'real' elements vector.
+    int numTemps = tempElements.size();
+    int realIndex = 0; // this is the index for the 'real' elements (the ones that we care about, that aren't ablated)
+    int round;
+    int maxRounds = 2;
+    for (round = 0; round < maxRounds; ++round){ // we want to go through the elements array once for neurons, then muscles, so that in the kernel we can apply a different rule if it's a muscle (e.g., if row > 302, do something specific for muscles).
+        for( int i = 0; i < numTemps; ++i){
+            if (!tempElements[i]->ablated){
+                // change the element_id such that the elements we actually use are indexed consecutively. this allows us to use the element_id as the index when working with arrays/vectors (open cl)
+                if (round == 0 && tempElements[i]->getEType() != MUSCLE){ // neuron
+                    /////////////// NEED OFFICIAL IDS                    tempElements[i]->idp = realIndex;
+                    elements.push_back(tempElements[i]);
+                    realIndex++;
+                }
+                else if (round == 1 && tempElements[i]->getEType() == MUSCLE){ // neuron
+                    /////////////// NEED OFFICIAL IDS                    tempElements[i]->idp = realIndex;
+                    elements.push_back(tempElements[i]);
+                    realIndex++;
+                }
+            }
+            else if (tempElements[i]->ablated && round == 1){ // it's safe to delete once we know we won't access the element again (i.e., we're on our second time through)
+                delete tempElements[i];
+                tempElements[i] = NULL;
+            }
+        }
+    }
+    // now we must check to ensure that all neurons are in order of id, as are all muscles
+    // this is both a sanity check and a check to ensure that the order of neurons in the elements array is the same as the order in the nim array, and same for mim array and elements array (though the muscles will be offset by the number of neurons in the elements arrray)
+    bool muscleFound = false;
+    int numNeurons = 0;
+    int numMuscles = 0;
+    for (int i = 0; i < realIndex; ++i){
+        if (elements[i]->getEType() != MUSCLE && muscleFound){ // if we've seen at least one muscle, and then a neuron, that's not good.
+            printf("The order of the elements is not such that all neurons come before all muscles.\n");
+            exit(5);
+        }
+        if (elements[i]->getEType() == MUSCLE && !muscleFound){ // if we see a muscle, acknowledge this.
+            muscleFound = true;
+        }
+        if (!muscleFound){// check element_id against neuron_id
+            if (((NeuronInfoModule*)elements[i])->neuron_id != elements[i]->id()){
+                printf("We have a problem. neuron_id != element_id, during sanity check.\n");
+                exit(6);
+            }
+            numNeurons++;
+        }
+        if (muscleFound){ // check element_id against numNeurons+muscle_id (due to offset)
+            if ((numNeurons + ((MuscleInfoModule*)elements[i])->muscle_id) != elements[i]->id()){
+                printf("We have a problem. (numNeurons + muscle_id) != element_id, during sanity check.\n");
+                exit(7);
+            }
+            numMuscles++;
+        }
+        //printf("EIM: %s, %d\n",elements[i]->name.c_str(),elements[i]->element_type);
+    }
+    printf("number of neurons in model: %d, number of muscles in model: %d\n",numNeurons, numMuscles);
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+/* // this is code to check ablation status and get the maximium weights for gaps and chems
+    int numElems = elements.size();
+    for (int i = 0; i < numElems; ++i){
+        int numConns = elements[i]->out_conns.size();
+        std::vector<Connection> tempConns = elements[i]->out_conns;
+        for (int j = 0; j < numConns; ++j){
+            if ((tempConns[j].pre->ablated == true) || (tempConns[j].post->ablated == true)){
+                // then something is very wrong, because in the CSV importer that created the connections, conns with one or more ablations were supposed to be removed.
+                printf("(%d, %d) %s (ablated - %d) <=> %s (ablated - %d) -- no ablated cells should have connections...\n",i,j, tempConns[j].pre->name().c_str(), tempConns[j].pre->ablated, tempConns[j].post->name().c_str(), tempConns[j].post->ablated);
+                exit(81);
+            }
+            int pre_id = tempConns[j].pre->id();
+            int post_id = tempConns[j].post->id();
+            if (tempConns[j].type == GAP){
+                gj_matrix[pre_id][post_id] = tempConns[j].weight();
+                if (fabs(tempConns[j].weight()) > maxGapWeight){
+                    maxGapWeight = fabs(tempConns[j].weight());
+                }
+            }
+            else if (tempConns[j].type == CHEM){
+                cs_matrix[pre_id][post_id] = tempConns[j].weight();
+                if (fabs(tempConns[j].weight()) > maxChemWeight){
+                    maxChemWeight = fabs(tempConns[j].weight());
+                }
+            }
+            
+        }
+        
+        
+    }
+     */ // end code to check ablation status

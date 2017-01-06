@@ -6,10 +6,8 @@
 //  Copyright © 2016 delegans group. All rights reserved.
 //
 
-//#include "Core.hpp"
 #include "DataSteward.hpp"
 #include "TSQueue.hpp"
-#include "TheRealDeal.hpp"
 #include "GraphicsGovernor.hpp"
 #include "DataVisualizer.hpp"
 using std::cout;
@@ -18,35 +16,24 @@ using std::endl;
 
 int main(int argc, char** argv){
     
-    //Core core;
-    // Initialization...details in Core class
-    //core.init(Core::numKernelLoops);
-    //TSQueue<vector<float>> queue;
     size_t global_size = 512;
     size_t local_size = 64;
     DataSteward stewie;
     stewie.init();
     vector<vector<float>> kernel_voltages;
     
-    
-    //core.stewie.saveCurrentConnectome();
-    //exit(0);
+    //stewie.saveCurrentConnectome();
     
     for(int i = 0; i < DataSteward::numMainLoops; ++i){
         // Runs the kernel
         //core.run(global_size, local_size);
         stewie.run(global_size, local_size);
         
-        // Get a vector<vector<float>> of voltages, each vector<float> is a
-        // single iteration
-        //kernel_voltages = core.get_voltage_vector();
-        
-        // NOTE: This will be done by a background thread in core in the future
-        kernel_voltages.push_back(stewie.getOutputVoltageVector()); // NOTE: this can be just the first index because we return after each iteration
+        // perhaps this will be done by a background thread in core in the future
+        kernel_voltages.push_back(stewie.getOutputVoltageVector()); 
         
     }
-    // Cleans up CPU related memory, GPU memory handled automatically
-    //core.clean_up();
+    stewie.cleanUp();
     
     // Just a basic runtime report and small sample of elements
     stewie.printReport(DataSteward::numKernelLoops);

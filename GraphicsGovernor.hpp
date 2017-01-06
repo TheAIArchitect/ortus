@@ -31,7 +31,6 @@
 
 
 #include "Core.hpp"
-#include "Playground.hpp"
 #include "OptionForewoman.hpp"
 
 #include "ConnectionComrade.hpp"

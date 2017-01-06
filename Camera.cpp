@@ -46,9 +46,9 @@ float Camera::MAX_RAD = 45.f;
 
 Camera::Camera(GLFWwindow* window): window (window){
     
-    std::vector<std::string> configVec = FileShit::readCameraConfig();
+    std::vector<std::string> configVec = FileAssistant::readCameraConfig();
     if (configVec.size() == 4){// config found
-        std::vector<std::string> target = FileShit::parse_on_comma(configVec[0]);
+        std::vector<std::string> target = FileAssistant::parse_on_comma(configVec[0]);
         m_target = glm::vec3(stof(target[0]), stof(target[1]), stof(target[2]));
         m_theta = stof(configVec[1]);
         m_phi = stof(configVec[2]);
@@ -147,7 +147,7 @@ void Camera::updateStatus(){
         sprintf(buf,"%.5f",m_radius);
         temp = std::string(buf);
         configVec.push_back(buf);
-        FileShit::writeCameraConfig(configVec);
+        FileAssistant::writeCameraConfig(configVec);
         printf("CAMERA == target: (%.5f, %.5f, %.5f), theta: %.5f, phi: %.5f, radius: %.5f\n",m_target.x, m_target.y, m_target.z, m_theta, m_phi, m_radius);
         Camera::space_pressed = false;
         

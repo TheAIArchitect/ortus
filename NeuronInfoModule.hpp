@@ -36,7 +36,7 @@ public:
     float soma_diameter;
     int neuron_id;
     static int NUM_NIMS; // number of neuron info modules. gets set in BioData::makeNeuronModules()
-    static float AVG_NEURON_DIAM; // this is set in FileShit, when neurons are read in. Used to allow the bezier drawing function to draw the bezier 'points' roughly the same size as the neurons
+    static float AVG_NEURON_DIAM; // this is set in FileAssistant, when neurons are read in. Used to allow the bezier drawing function to draw the bezier 'points' roughly the same size as the neurons
     
     
     static float NEURON_TRANS_SCALE;

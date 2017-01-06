@@ -111,7 +111,7 @@ void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::m
 void Artist::prep_muscles(){
     mesher.muscleShapes;
     mesher.muscleMaterials;
-    mesher.loadMesh(FileShit::muscleObjFile, mesher.muscleShapes, mesher.muscleMaterials);
+    mesher.loadMesh(FileAssistant::muscleObjFile, mesher.muscleShapes, mesher.muscleMaterials);
     num_muscles_verts = mesher.muscleShapes[0].mesh.positions.size();
     num_muscles_indices = mesher.muscleShapes[0].mesh.indices.size();
     num_muscles_normals = mesher.muscleShapes[0].mesh.normals.size();
@@ -175,7 +175,6 @@ void Artist::prep_muscles(){
 
 /**
  * Neurons
- */
 
 void Artist::prep_neurons(){
     //glm::vec4* neuron_positions = new glm::vec4[302];
@@ -208,7 +207,8 @@ void Artist::prep_neurons(){
     glVertexAttribPointer(1,3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (GLvoid*) (3*sizeof(GLfloat)));
     glBindVertexArray(0);
 }
-
+*/
+/*
 void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::mat4* view_ptr,  glm::mat4* model_ptr, Camera camera){
     
     neuronShader.Use();
@@ -245,11 +245,11 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
     //////// model_ptr IS NOT BEING USED!!!!
     //////////////////////////////////////////////////////////////////////
     for (int k = 0; k < fakeStewie->num_neuron_mass_points; k++){
-        /** this should be 'pushed' -- MatrixStack !!!! */
+        /////////// this should be 'pushed' -- MatrixStack !!!!
         //glm::mat4 model = glm::rotate(pmodel,(float) (-M_PI/2.0f),glm::vec3(0.0f,1.0f,0.0f));
         //model = glm::rotate(model,(float) (M_PI/2.0f),glm::vec3(1.0f,0.0f,0.0f));
         glm::mat4 model(1.0f);
-        /* end push */
+        /////////// end push
         int start = 0;
         float scale1 = NeuronInfoModule::NEURON_SIZE_SCALE;
         float scale2 = NeuronInfoModule::NEURON_TRANS_SCALE;
@@ -266,11 +266,7 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
         //printf("frame: %d\n",Camera::voltageFrame);
         //glUniform4f(colorLoc,(*voltages)[Camera::voltageFrame][k],(*voltages)[Camera::voltageFrame][k],(*voltages)[Camera::voltageFrame][k],1.0f);
         float currentActivation = (*voltages)[Camera::voltageFrame][eid];
-        /*
-        if (fakeStewie->nim[k]->name == "ASEL"){
-            printf("ASEL (%d): %.4f\n", Camera::voltageFrame, currentActivation);
-        }
-         */
+
         glm::vec4 currentColor = colorByActivation((*voltages)[Camera::voltageFrame][eid]);
         glUniform4f(colorLoc,currentColor[0],currentColor[1],currentColor[2],currentColor[3]);
         color_step += 4;
@@ -280,11 +276,7 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
             glDrawArrays(GL_TRIANGLE_STRIP,start, num_verts);
             start += num_verts;
         }
-        /*
-         if (k > 10){
-         break;
-         }
-         */
+ 
     }
     
     //glDrawArrays(GL_TRIANGLE_STRIP,1, 202);
@@ -293,6 +285,7 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
     
     glBindVertexArray(0);
 }
+*/
 /**
  * Axes
  */
@@ -499,7 +492,7 @@ void Artist::draw_neuron_names(Shader textShader, Camera camera, glm::mat4* proj
 void Artist::prep_center_cylinder(){
     mesher.centerCylinderShapes;
     mesher.centerCylinderMaterials;
-    mesher.loadMesh(FileShit::centerCylinderObjFile, mesher.centerCylinderShapes, mesher.centerCylinderMaterials);
+    mesher.loadMesh(FileAssistant::centerCylinderObjFile, mesher.centerCylinderShapes, mesher.centerCylinderMaterials);
     num_cc_verts = mesher.centerCylinderShapes[0].mesh.positions.size();
     num_cc_indices = mesher.centerCylinderShapes[0].mesh.indices.size();
     num_cc_normals = mesher.centerCylinderShapes[0].mesh.normals.size();
@@ -562,6 +555,7 @@ void Artist::prep_center_cylinder(){
     
 }
 
+/*
 void Artist::draw_center_cylinder(Shader cc_shader,glm::mat4* projection_ptr, glm::mat4* view_ptr, Camera camera){
     cc_shader.Use();
     glBindVertexArray(cc_vao);
@@ -588,9 +582,10 @@ void Artist::draw_center_cylinder(Shader cc_shader,glm::mat4* projection_ptr, gl
         glDrawElements(GL_TRIANGLES, num_cc_indices, GL_UNSIGNED_INT, NULL);
     }
 }
+*/
 
 void Artist::prep_petriDish(){
-    mesher.loadMesh(FileShit::petriDishObjFile, mesher.petriDishShapes, mesher.petriDishMaterials);
+    mesher.loadMesh(FileAssistant::petriDishObjFile, mesher.petriDishShapes, mesher.petriDishMaterials);
     num_petriDish_verts = mesher.petriDishShapes[0].mesh.positions.size();
     num_petriDish_indices = mesher.petriDishShapes[0].mesh.indices.size();
     num_petriDish_normals = mesher.petriDishShapes[0].mesh.normals.size();
@@ -659,7 +654,7 @@ void Artist::draw_petriDish(Shader petriDish_shader,glm::mat4* projection_ptr, g
 
 
 void Artist::prep_shroom(){
-    mesher.loadMesh(FileShit::mushroomObjFile, mesher.shroomShapes, mesher.shroomMaterials);
+    mesher.loadMesh(FileAssistant::mushroomObjFile, mesher.shroomShapes, mesher.shroomMaterials);
     num_shroom_verts = mesher.shroomShapes[0].mesh.positions.size();
     num_shroom_indices = mesher.shroomShapes[0].mesh.indices.size();
     num_shroom_normals = mesher.shroomShapes[0].mesh.normals.size();

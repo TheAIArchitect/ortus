@@ -30,7 +30,7 @@ void DataSteward::init(){
     LEN = NUM_ROWS * NUM_ELEMS;
     // set the mass points in the elements, and also keep separate references to the mass points for easy access
     // NOTE NOTE NOTE -- FIXME -- change this 
-    //FileShit::get_neuron_data(&neuronMassPoints, &num_neuron_mass_points, &num_neurons_in_json, &elements);
+    //FileAssistant::get_neuron_data(&neuronMassPoints, &num_neuron_mass_points, &num_neurons_in_json, &elements);
     //geometrician.straighten(neuronMassPoints, num_neuron_mass_points, &bezPts, &numBezPts);
     // NOTE: come back to this stuff later... it's going to have to be merged into TheRealDeal.cpp 
     //generateBodyMassPoints();
