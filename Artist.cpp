@@ -35,6 +35,7 @@ Artist::~Artist(){
 
 
 
+/*
 void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::mat4* view_ptr,  glm::mat4* model_ptr, Camera camera){
     muscleShader.Use();
     glBindVertexArray(muscles_vao);
@@ -67,12 +68,12 @@ void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::m
     float xshift = .01f;
     float zshift = .1f;
     for (int k = 0; k < 95; k+=1){
-        /** this should be 'pushed' -- MatrixStack !!!! */
+        /// this should be 'pushed' -- MatrixStack !!!!
         glm::mat4 model(1.0f);
         //glm::mat4 model = glm::rotate(pmodel,(float) (-M_PI/2.0f),glm::vec3(0.0f,1.0f,0.0f));
         //model = glm::translate(model,glm::vec3(1.0f,0.0f,-1.0f));
         //model = glm::rotate(model,(float) (M_PI/2.0f),glm::vec3(1.0f,0.0f,0.0f));
-        /* end push */
+        /// end push
         int start = 0;
         //glm::vec3 cur = fakeStewie->mim[k]->centerMassPoint->center;
         //model = glm::translate(model,cur);
@@ -105,6 +106,7 @@ void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::m
     
     glBindVertexArray(0);
 }
+*/
 
 
 

@@ -22,7 +22,8 @@ int main(int argc, char** argv){
     stewie.init();
     vector<vector<float>> kernel_voltages;
     
-    //stewie.saveCurrentConnectome();
+    stewie.writeConnectome("notused");
+    exit(0);
     
     for(int i = 0; i < DataSteward::numMainLoops; ++i){
         // Runs the kernel

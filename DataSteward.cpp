@@ -38,20 +38,14 @@ int DataSteward::CSV_COLS;
 int DataSteward::CONNECTOME_ROWS;
 int DataSteward::CONNECTOME_COLS;
 
-vector<unordered_map<string,float>> DataSteward::muscleActivationsGJ;
-vector<unordered_map<string,float>> DataSteward::muscleActivationsCS;
 unsigned int DataSteward::NUM_ELEMS = 0;
 unsigned int DataSteward::NUM_ROWS = 0;
-unsigned int DataSteward::LEN = 0; // this isn't a very good variable name... it refers to the length of the 1D array for opencl (created when prepping the connection matricies for opencl)
 unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
 
 int DataSteward::numMainLoops = 1000;
 int DataSteward::numKernelLoops = 1;
 
 DataSteward::DataSteward(){}
-
-
-
 
 
 void DataSteward::init(){
@@ -62,43 +56,6 @@ void DataSteward::init(){
     currentIteration = 0;
     setup_timer_.stop_timer();
     setup_run_time = setup_timer_.get_exe_time_in_ms();
-    
-   
-}
-
-
-
-
-
-void DataSteward::saveCurrentConnectome(){
-    std::vector<std::string> elementNames;
-    int numEN = NUM_ELEMS;
-    for (int i = 0; i < numEN; ++i){
-        elementNames.push_back(elements[i]->name());
-    }
-    //write_connectome("poooOOoOOOoOOOop.csv", gj_matrix, cs_matrix, elementNames);
-}
-
-
-
-
-
-std::vector<float> DataSteward::getOutputVoltageVector(){
-    return outputVoltageVector;
-}
-
-/* updates outputVoltageVector with a *COPY* of the voltage data, NOT a reference to the actual data, nor its location. */
-void DataSteward::updateOutputVoltageVector(){
-    outputVoltageVector.clear();
-    for (int i = 0; i < outputVoltages->currentSize; ++i){
-        outputVoltageVector.push_back(outputVoltages->data[i]);
-    }
-}
-
-void DataSteward::readOpenCLBuffers(){
-    // get output voltages
-    outputVoltages->readCLBuffer();
-    
 }
 
 void DataSteward::run(size_t global, size_t local, int numIterations){
@@ -127,6 +84,27 @@ void DataSteward::run(size_t global, size_t local, int numIterations){
     currentIteration++;
 }
 
+
+std::vector<float> DataSteward::getOutputVoltageVector(){
+    return outputVoltageVector;
+}
+
+/* updates outputVoltageVector with a *COPY* of the voltage data, NOT a reference to the actual data, nor its location. */
+void DataSteward::updateOutputVoltageVector(){
+    outputVoltageVector.clear();
+    for (int i = 0; i < outputVoltages->currentSize; ++i){
+        outputVoltageVector.push_back(outputVoltages->data[i]);
+    }
+}
+
+void DataSteward::readOpenCLBuffers(){
+    // get output voltages
+    outputVoltages->readCLBuffer();
+    
+}
+
+
+
 void DataSteward::cleanUp(){
     cleanUpOpenCL();
     // clean up other stuff...
@@ -134,6 +112,8 @@ void DataSteward::cleanUp(){
     total_run_time = total_timer_.get_exe_time_in_ms();
 }
 
+
+// NOTE: store the global and local... stop passing.
 void DataSteward::enqueueKernel(size_t global, size_t local){
     cl_event timing_event;
     
@@ -185,23 +165,15 @@ void DataSteward::pushOpenCLBuffers(){
 
 /* Prepare to run OpenCL */
 void DataSteward::setupOpenCL(size_t global, size_t local){
-    // Setup the kernel using Andrew's CLHelper code
     
-    fprintf(stderr,"init_cl() passed\n");
-    
-    // Push the required buffers to the GPU
     pushOpenCLBuffers();
-    fprintf(stderr, "push_buffers() passed\n");
+    printf("Pushed OpenCL Buffers\n");
     
-    // Self explanatory
     setOpenCLKernelArgs();
-    fprintf(stderr, "set_kernel_args() passed\n");
+    printf("Set OpenCL Kernel Args\n");
     
-    // Get the kernel running
+    // run kernel
     enqueueKernel(global, local);
-    fprintf(stderr, "enqueue_kernel() passed\n");
-    
-
 }
 
 /* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
@@ -221,7 +193,6 @@ void DataSteward::initializeData(){
     createConnections();
     NUM_ELEMS = elements.size();
     NUM_ROWS = NUM_ELEMS;
-    LEN = NUM_ROWS * NUM_ELEMS;
     int modEight = NUM_ELEMS % 8;
     NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
     initializeBlades();
@@ -447,9 +418,9 @@ void DataSteward::printReport(int num_runs){
 
 
 
-/*
-// NOTE: this assumes the connectome has NOT been transposed!!!
-bool write_connectome(std::string csv_name, float** gaps, float** chems, std::vector<std::string> elements){
+/* writes the connectome. as of this comment, it will write it by **DE-TRANSPOSING** it. 
+ * NOTE: currently, this assumes neurons are ordered. */
+bool DataSteward::writeConnectome(std::string csv_name){
     
     // the first row is complicated, it starts with "gap/chem" (as a 'key' of sorts),
     // then has an empty column, and then 'SENSORY', because we start with sensory neurons.
@@ -460,7 +431,7 @@ bool write_connectome(std::string csv_name, float** gaps, float** chems, std::ve
     // start at 2, (see 'firstRow' to see why)
     int colOffset = 2;
     int currentColIndex = colOffset;
-    int numElements = elements.size();
+    int numElements = NUM_ELEMS;
     std::string headings[4] = {"SENSORY", "INTER", "MOTOR","BUFFER"}; // "BUFFER" allows us to keep accessing the array after we've used all headings (after 'MOTOR', we have to add all motor neurons, but headingNum has been incremented, and we still check the array)
     int headingNum = 0;
     //columnHeadingMap[headings[headingNum]] = currentColIndex;
@@ -474,7 +445,7 @@ bool write_connectome(std::string csv_name, float** gaps, float** chems, std::ve
     std::string secondRow = ",,";
     for (int i = 0; i < numElements; ++i){
         // if the element's name starts with firstLetter and nextKey isn't in the map
-        if (elements[i][0] == firstLetter && !columnHeadingMap.count(nextKey)){
+        if ((*officialNamepVector[i])[0] == firstLetter && !columnHeadingMap.count(nextKey)){
             columnHeadingMap[nextKey] = i; // don't add the colOffset to this, because we'll use it to check against the elements' actual indices later on
             firstRow += nextKey + ",";
             nextKey = headings[headingNum];
@@ -484,7 +455,7 @@ bool write_connectome(std::string csv_name, float** gaps, float** chems, std::ve
         else {
             firstRow += ",";
         }
-        secondRow += elements[i] + ",";
+        secondRow += (*officialNamepVector[i]) + ",";
         
     }
     firstRow += "placeholder\n";
@@ -501,7 +472,7 @@ bool write_connectome(std::string csv_name, float** gaps, float** chems, std::ve
     std::string actualConnectome = "";
     // also, we need to set headingNum to zero, because we need to check if a heading is supposed to be there
     headingNum = 0;
-    for (int i = 0; i < numElements; ++i){
+    for (int i = 0; i < NUM_ELEMS; ++i){
         // check to see if we're at a point that we need to add a 'type' heading
         if (columnHeadingMap[headings[headingNum]] == i){
             actualConnectome += headings[headingNum] + ",";
@@ -510,16 +481,18 @@ bool write_connectome(std::string csv_name, float** gaps, float** chems, std::ve
         else {
             actualConnectome += ",";
         }
-        actualConnectome += elements[i] + ",";
+        actualConnectome += (*officialNamepVector[i]) + ",";
         for (int j = 0; j < numElements; ++j){
-            if (gaps[i][j] == 0 && chems[i][j] == 0){
+            /* NOTE NOTE NOTE: THIS IS ONE SPOT WHERE THE 'i' and 'j' ARE SWITCHED, TO DE-TRANSPOSE */
+            if (gaps->getv(j,i) == 0 && chems->getv(j,i) == 0){
                 actualConnectome += ","; // there's no connection
             }
             else {
-                actualConnectome += std::to_string((int)gaps[i][j]) + "/" + std::to_string((int)chems[i][j]) + ",";
+                /* NOTE NOTE NOTE: THIS IS THE OTHER SPOT WHERE THE 'i' and 'j' ARE SWITCHED, TO DE-TRANSPOSE */
+                actualConnectome += std::to_string((int)gaps->getv(j,i)) + "/" + std::to_string((int)chems->getv(j,i)) + ",";
             }
         }
-        actualConnectome += elements[i] + "\n";
+        actualConnectome += (*officialNamepVector[i]) + "\n";
     }
     std::ofstream newConnectome = FileAssistant::wopen(FileAssistant::ortus_basic_connectome_test);
     newConnectome.write(firstRow.c_str(), firstRow.size());
@@ -529,7 +502,6 @@ bool write_connectome(std::string csv_name, float** gaps, float** chems, std::ve
     newConnectome.close();
     return true;
 }
-*/
 
 /*
 void get_conns(std::vector<ElementInfoModule*>& elements){

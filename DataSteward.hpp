@@ -57,8 +57,6 @@ public:
     DataSteward();
     void init();
    
-    static vector<unordered_map<string,float>> muscleActivationsGJ;
-    static vector<unordered_map<string,float>> muscleActivationsCS;
     
     /* NOTE NOTE NOTE: core should probably hold these.. not DataSteward... */
     vector<vector<float>> kernelVoltages;
@@ -71,7 +69,6 @@ public:
     float maxChemWeight;
     
 
-    void saveCurrentConnectome();
   
 public:
     static double constexpr CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000;
@@ -81,8 +78,8 @@ public:
     static unsigned int LEN;
     
    
-    MuscleInfoModule** mim;
-    NeuronInfoModule** nim;
+   // MuscleInfoModule** mim;
+    //NeuronInfoModule** nim;
     std::vector<ElementInfoModule*> elements;
     
    
@@ -139,6 +136,8 @@ public:
     static int numMainLoops;
     static int numKernelLoops;
     Gymnasium gym;
+    
+    bool writeConnectome(std::string csv_name);
     
     
     // Timing variables
