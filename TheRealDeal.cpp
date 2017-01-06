@@ -277,7 +277,7 @@ void newPTCB(btDynamicsWorld* world, btScalar timeStep){
         iterThree++;
     }
     muscleActivationsIndex++;
-    if (muscleActivationsIndex >= Core::numMainLoops){
+    if (muscleActivationsIndex >= DataSteward::numMainLoops){
        printf("REPLAY REPLAY REPLAY\n");
        muscleActivationsIndex = 0;
    }

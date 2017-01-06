@@ -13,7 +13,7 @@
 #include "CLHelperClass.hpp"
 #include <stdio.h>
 #include <vector>
-#include "DataSteward.hpp"
+//#include "DataSteward.hpp"
 #include "StrUtils.hpp"
 #include <string>
 
@@ -24,8 +24,9 @@ private:
     std::string elementToProbe;
     
 public:
-    Probe(DataSteward* ds);
-    DataSteward* stewie;
+    Probe();
+    //Probe(DataSteward& ds);
+    //DataSteward* stewie;
     static bool toggleProbe();
     static cl_uint shouldProbe;
     static bool probeAll;

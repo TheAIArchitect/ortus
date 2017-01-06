@@ -8,8 +8,10 @@
 
 #include "Connection.hpp"
 
+float Connection::ZEROF = 0.f;
+
 Connection::Connection(){
-    *polarityp = 0;// initialize poliarity to 0. if it's not a gap junction, we'll change it to -1 or 1.
+    polarityp = &ZEROF; // if it's a gap junction, nothing is assigned on creation.
 };
 
 float Connection::weight(){

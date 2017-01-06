@@ -75,6 +75,7 @@ void FileShit::readConnectomeCSV(std::string csv_name, std::vector<std::vector<s
         }
         plen = len;
         split = StrUtils::trimStringVector(split);
+        //printf("(count: %d) >%s\n", split.size(), line.c_str());
         dat.push_back(split);
         count++;
     }
@@ -88,12 +89,12 @@ ElementType FileShit::string_to_etype(std::string s, std::string& graphical_iden
     if (s.find(string_types[0]) != std::string::npos){
         //printf("stype: %s\n",string_types[0].c_str());
         graphical_identifier = "-(S)";
-        return INTER;
+        return SENSORY;
     }
     if (s.find(string_types[1]) != std::string::npos){
         //printf("stype: %s\n",string_types[1].c_str());
         graphical_identifier = "-(I)";
-        return SENSORY;
+        return INTER;
     }
     if (s.find(string_types[2]) != std::string::npos){
         //printf("stype: %s\n",string_types[2].c_str());
@@ -138,14 +139,14 @@ ElementType FileShit::str_type_to_enum(std::string str){
     return UH_OH;
 }
 
-void FileShit::remove_leading_zero_from_anywhere(std::string& in){
+void FileShit::remove_leading_zero_from_anywhere(std::string* in){
     // any character, any number of times, followed by a zero, then a digit, and then any character any number of times
     std::regex r("(.*)(0)([[:digit:]])(.*)");
     std::smatch regres;
-    regex_search(in,regres, r);
+    regex_search(*in,regres, r);
     if (regres.size() == 5){ // then there's a zero
         // group 0 -> full match, group 1 -> before zero, group 2 -> zero, group 3 -> digit after zero, group 4 -> everything after digit
-        in = regres[1].str() + regres[3].str() + regres[4].str();
+        *in = regres[1].str() + regres[3].str() + regres[4].str();
     }
     return;
 }

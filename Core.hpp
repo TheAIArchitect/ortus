@@ -13,7 +13,7 @@
 #include <string>
 #include <time.h>
 #include <unordered_map>
-#include "DataSteward.hpp"
+//#include "DataSteward.hpp"
 #include "CLHelperClass.hpp"
 #include "Logger.hpp"
 #include "NumUtils.hpp"
@@ -114,7 +114,7 @@ private:
     unordered_map<string, vector<string>> motorneurons_to_muscles_map;
     
     // OpenCL Variables
-    static unsigned int NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8;
+    
     cl_program program;
     cl_kernel kernel;
     char *programBuffer;

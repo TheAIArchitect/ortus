@@ -26,7 +26,7 @@ public:
     Connection();
     float polarity();
     float weight();
-    
+    static float ZEROF;
     
     ElementInfoModule* pre;
     std::string preName; // leave it for this for now

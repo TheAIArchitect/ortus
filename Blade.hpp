@@ -21,22 +21,26 @@
 class Blade {
    
 public:
-    Blade(int currentRows, int currentCols, int maxRows, int maxCols);
+    Blade(CLHelperClass* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols);
     ~Blade();
     float* getp(int row, int col);
     float getv(int row, int col);
     bool set(int row, int col, float value);
+    bool set(int col, float value); // only valid if the Blade is a vector
+    bool add(int col, float value); // only valid if the Blade is a vector
     int addEntry();
-    void createCLBuffer(CLHelperClass& clhelper, cl_mem_flags flags);
-    bool copyData(Blade& otherBlade);
-    void setCLArgIndex(int argIndex);
+    void createCLBuffer();
+    bool copyData(Blade* otherBlade);
+    void setCLArgIndex(cl_uint argIndex, cl_kernel* kernel);
     void pushCLBuffer();
+    bool readCLBuffer();
     void clearCLBuffer();
     bool square;
     int currentRows;
     int maxRows;
     int currentCols;
     int maxCols;
+    cl_mem_flags memFlags;
     size_t currentSize;
     size_t maxSize;
     float* data;

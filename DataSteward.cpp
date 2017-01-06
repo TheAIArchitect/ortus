@@ -22,6 +22,9 @@
  
  //////////////// NOTE: MUST GO BACK TO WORMWIRINGCSVTOSQLITE.CPP AND FINISH get_conns(..) and writeConnectome(..) /////////////////
  
+    //////////////// NOTE 2: fix bad pointer usage: http://stackoverflow.com/questions/22146094/why-should-i-use-a-pointer-rather-than-the-object-itself
+ 
+ 
  */
 
 
@@ -29,14 +32,21 @@
 #include "DataSteward.hpp"
 
 int MAX_MUSCLES = 200;// with allllll muscles, im pretty sure it's 150 (149, actually), but right now, it doesn't much matter if we say 200 or 150... NOTE: this is taking into account muscles in addition to body wall
-int DataSteward::CSV_OFFSET = 2;// first two rows and columns in both csv files are column/row information
-int DataSteward::CSV_ROWS = 0;
-int DataSteward::CSV_COLS = 0;
+
+int DataSteward::CSV_ROWS;
+int DataSteward::CSV_COLS;
+int DataSteward::CONNECTOME_ROWS;
+int DataSteward::CONNECTOME_COLS;
+
 vector<unordered_map<string,float>> DataSteward::muscleActivationsGJ;
 vector<unordered_map<string,float>> DataSteward::muscleActivationsCS;
 unsigned int DataSteward::NUM_ELEMS = 0;
 unsigned int DataSteward::NUM_ROWS = 0;
 unsigned int DataSteward::LEN = 0; // this isn't a very good variable name... it refers to the length of the 1D array for opencl (created when prepping the connection matricies for opencl)
+unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
+
+int DataSteward::numMainLoops = 1000;
+int DataSteward::numKernelLoops = 1;
 
 DataSteward::DataSteward(){}
 
@@ -45,60 +55,20 @@ DataSteward::DataSteward(){}
 
 
 void DataSteward::init(){
-    // set up initial elements and set gaps and chems
-    // NOTE: we should separate the element creation from connection creation
-    //get_conns(elements);
-    createElements();
-    createConnections();
-    NUM_ELEMS = elements.size();
-    NUM_ROWS = NUM_ELEMS;
-    LEN = NUM_ROWS * NUM_ELEMS;
+    total_timer_.start_timer();
+    setup_timer_.start_timer();
+    initializeOpenCL();
+    initializeData();
+    currentIteration = 0;
+    setup_timer_.stop_timer();
+    setup_run_time = setup_timer_.get_exe_time_in_ms();
     
-    // set the mass points in the elements, and also keep separate references to the mass points for easy access
-    // NOTE NOTE NOTE -- FIXME -- change this 
-    //FileShit::get_neuron_data(&neuronMassPoints, &num_neuron_mass_points, &num_neurons_in_json, &elements);
-    //geometrician.straighten(neuronMassPoints, num_neuron_mass_points, &bezPts, &numBezPts);
-    // NOTE: come back to this stuff later... it's going to have to be merged into TheRealDeal.cpp 
-    //generateBodyMassPoints();
-    //generateCenterCylinderMassPoints();
-    //addElementInfoToModules();
+   
 }
 
-void DataSteward::addElementInfoToModules(){
-    for (int k = 0; k < elements.size(); k++){
-        NeuronInfoModule* tnimp = (NeuronInfoModule*) elements[k];
-        //(*neuronMassPoints)[massPoint_index] = new MassPoint(glm::vec3(-x,z , y), tnimp->name); //mirror x, swap y and z.
-        //tnimp->massPoint_id = (*neuronMassPoints)[massPoint_index]->id;
-    }
-}
 
-size_t DataSteward::get_1d_index(size_t arr_width, int row_num, int col_num){
-    return arr_width * row_num + col_num;
-}
 
-void DataSteward::set_1d_element(float *arr, size_t arr_width, int row_num, int col_num, float value){
-    arr[get_1d_index(arr_width, row_num, col_num)] = value;
-}
 
-float *DataSteward::get_init_vector(size_t num_rows){
-    float *vec = new float[num_rows]();
-    int numElems = elements.size();
-    for( int i = 0; i < numElems; ++i){
-        vec[i] = elements[i]->v_0;
-    }
-    return vec;
-}
-
-float *DataSteward::convert_2d_to_1d(float **matrix, size_t num_rows, size_t num_cols){
-    size_t len = num_rows * num_cols;
-    float *flat_arr = new float[len](); // Note the "()", init to zeroed.
-    for(int i = 0; i < num_rows; ++i){
-        for(int j = 0; j < num_cols; ++j){
-            set_1d_element(flat_arr, num_cols, i, j, matrix[i][j]);
-        }
-    }
-    return flat_arr;
-}
 
 void DataSteward::saveCurrentConnectome(){
     std::vector<std::string> elementNames;
@@ -109,45 +79,8 @@ void DataSteward::saveCurrentConnectome(){
     write_connectome("poooOOoOOOoOOOop.csv", gj_matrix, cs_matrix, elementNames);
 }
 
-float* DataSteward::get_polarity_vector(size_t num_rows){
-    PolarityConfigurator polarityConfigurator;
-    return polarityConfigurator.makePolarityVector(&elements,num_rows);
-}
 
-float **DataSteward::convert_1d_to_2d(float *matrix, size_t num_rows, size_t num_cols){
-    float **matrix_re = new float*[num_rows];
-    for(int i = 0; i < num_rows; ++i){
-        matrix_re[i] = new float[num_cols]();
-    }
-    
-    for(int i = 0; i < num_rows; ++i){
-        for(int j = 0; j < num_cols; ++j){
-            matrix_re[i][j] = matrix[get_1d_index(num_cols, i, j)];
-        }
-    }
-    
-    return matrix_re;
-}
 
-void DataSteward::transpose(float **matrix, float **matrix_t, size_t num_rows, size_t num_cols){
-    size_t i, j;
-    for(i = 0; i < num_rows; ++i){
-        for(j = 0; j < num_cols; ++j){
-            matrix_t[i][j] = matrix[j][i];
-        }
-    }
-}
-
-float **DataSteward::transpose(float **matrix, size_t num_rows, size_t num_cols){
-    float **trans;
-    trans = new float*[num_rows];
-    for(int i = 0; i < num_rows; ++i){
-        trans[i] = new float[num_cols]();
-    }
-    
-    transpose(matrix, trans, num_rows, num_cols);
-    return trans;
-}
 
 /**
  * Also creates the neuron name to index map, stored in Core.cpp
@@ -298,7 +231,173 @@ unordered_map<string, int> DataSteward::map_name_to_id(){
 }
 //////////////////////////// NEW ////////////////////////
 
+std::vector<float> DataSteward::getOutputVoltageVector(){
+    return outputVoltageVector;
+}
+
+/* updates outputVoltageVector with a *COPY* of the voltage data, NOT a reference to the actual data, nor its location. */
+void DataSteward::updateOutputVoltageVector(){
+    outputVoltageVector.clear();
+    for (int i = 0; i < outputVoltages->currentSize; ++i){
+        outputVoltageVector.push_back(outputVoltages->data[i]);
+    }
+}
+
+void DataSteward::readOpenCLBuffers(){
+    // get output voltages
+    outputVoltages->readCLBuffer();
+    
+}
+
+void DataSteward::run(size_t global, size_t local, int numIterations){
+    if (numIterations > 0 && currentIteration == 0){
+        setupOpenCL(global, local); // this calls 'enqueueKernel', which causes first run.
+    }
+    // now, we've run once, so, start the loop off with any modificiations
+   // NOTE: DO THE LOOP! // for (int i = 1; i < numIterations; ++i){ // start at 1, we already did the first one.
+    else {
+        // copy the ouput data (which has been updated, see below) into the input data
+        inputVoltages->copyData(outputVoltages);
+        // then, stimulate the sensors 
+        gym.stimulateSensors(*inputVoltages, officialNameToIndexMap);
+        // now we need to re-push that buffer
+        inputVoltages->pushCLBuffer();
+        setOpenCLKernelArgs();
+        enqueueKernel(global, local);
+    }
+    readOpenCLBuffers();
+    updateOutputVoltageVector();// this is a copy of the data.
+    for (int i = 0; i < outputVoltageVector.size(); ++i){
+        printf("%.2f, ",outputVoltageVector[i]);
+    }
+    printf("\n");
+    
+    currentIteration++;
+}
+
+void DataSteward::cleanUp(){
+    cleanUpOpenCL();
+    // clean up other stuff...
+    total_timer_.stop_timer();
+    total_run_time = total_timer_.get_exe_time_in_ms();
+}
+
+void DataSteward::enqueueKernel(size_t global, size_t local){
+    cl_event timing_event;
+    
+    size_t g, l;
+    g = global;
+    l = local;
+    clhelper.err = clEnqueueNDRangeKernel(clhelper.commands, kernel, 1, NULL, &g, &l, 0, NULL, &timing_event);
+    clhelper.check_and_print_cl_err(clhelper.err);
+    
+    clFinish(clhelper.commands);
+    cl_ulong starttime;
+    cl_ulong endtime;
+    clhelper.check_and_print_cl_err(clGetEventProfilingInfo(timing_event, CL_PROFILING_COMMAND_START, sizeof(cl_ulong), &starttime, NULL));
+    clhelper.check_and_print_cl_err(clGetEventProfilingInfo(timing_event, CL_PROFILING_COMMAND_END, sizeof(cl_ulong), &endtime, NULL));
+    opencl_run_time += ((endtime - starttime) / 1000000.0);
+}
+
+void DataSteward::setOpenCLKernelArgs(){
+    inputVoltages->setCLArgIndex(0, &kernel);
+    outputVoltages->setCLArgIndex(1, &kernel);
+    gaps->setCLArgIndex(2, &kernel);
+    chems->setCLArgIndex(3, &kernel);
+    gapContrib->setCLArgIndex(4, &kernel);
+    chemContrib->setCLArgIndex(5, &kernel);
+    clhelper.err = clSetKernelArg(kernel, 6, sizeof(cl_uint), &rowCount);
+    clhelper.check_and_print_cl_err(clhelper.err);
+    clhelper.err = clSetKernelArg(kernel, 7, sizeof(cl_uint), &colCount);
+    clhelper.check_and_print_cl_err(clhelper.err);
+    clhelper.err = clSetKernelArg(kernel, 8, sizeof(cl_uint), &Probe::shouldProbe);
+    clhelper.check_and_print_cl_err(clhelper.err);
+    clhelper.err = clSetKernelArg(kernel, 9, sizeof(cl_float), &gapNormalizer);
+    clhelper.check_and_print_cl_err(clhelper.err);
+    clhelper.err = clSetKernelArg(kernel, 10, sizeof(cl_float), &chemNormalizer);
+    clhelper.check_and_print_cl_err(clhelper.err);
+}
+
+void DataSteward::pushOpenCLBuffers(){
+    ExeTimer et;
+    et.start_timer();
+    inputVoltages->pushCLBuffer();
+    outputVoltages->pushCLBuffer();
+    gaps->pushCLBuffer();
+    chems->pushCLBuffer();
+    chemContrib->pushCLBuffer();
+    gapContrib->pushCLBuffer();
+    et.stop_timer();
+    opencl_mem_time += et.get_exe_time_in_ms();
+}
+
+/* Prepare to run OpenCL */
+void DataSteward::setupOpenCL(size_t global, size_t local){
+    // Setup the kernel using Andrew's CLHelper code
+    
+    fprintf(stderr,"init_cl() passed\n");
+    
+    // Push the required buffers to the GPU
+    pushOpenCLBuffers();
+    fprintf(stderr, "push_buffers() passed\n");
+    
+    // Self explanatory
+    setOpenCLKernelArgs();
+    fprintf(stderr, "set_kernel_args() passed\n");
+    
+    // Get the kernel running
+    enqueueKernel(global, local);
+    fprintf(stderr, "enqueue_kernel() passed\n");
+    
+
+}
+
+/* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
+void DataSteward::initializeOpenCL(){
+    clhelper.setup_opencl();
+    clhelper.read_kernels_from_file("OrtusKernelOne.cl", &programBuffer);
+    program = clCreateProgramWithSource(clhelper.context, 1, (const char**) &programBuffer, NULL, &clhelper.err);
+    clhelper.check_and_print_cl_err(clhelper.err);
+    clhelper.err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+    clhelper.check_and_print_cl_program_build_err(clhelper.err, &program);
+    kernel = clCreateKernel(program, "OrtusKernel", &clhelper.err);
+    clhelper.check_and_print_cl_err(clhelper.err);
+}
+
+void DataSteward::initializeData(){
+    createElements();
+    createConnections();
+    NUM_ELEMS = elements.size();
+    NUM_ROWS = NUM_ELEMS;
+    LEN = NUM_ROWS * NUM_ELEMS;
+    int modEight = NUM_ELEMS % 8;
+    NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
+    initializeBlades();
+    rowCount = NUM_ELEMS; // cl_uint, for current row count
+    colCount = NUM_ELEMS; // cl_uint, for current col count
+    probe = new Probe(); // NOTE: probe not working right now. needs to be re-worked.
+    gapNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
+    chemNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
+}
+
+/* initializes the Blades that aren't used for the gj or cs weights */
+void DataSteward::initializeBlades(){
+    // need a gj and cs contrib (one of each) -- these are NxN
+    chemContrib = new Blade(&clhelper, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    gapContrib = new Blade(&clhelper, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    // now we initialize the voltage vectors -- one row.
+    // ideally, we'd have one that gets read from and written to -- should get around to fixing that shortly.
+    inputVoltages = new Blade(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
+    outputVoltages = new Blade(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
+    //fillInputVoltageBlade(); // will probably be used at some point
+}
+
+void DataSteward::fillInputVoltageBlade(){
+   // this doesn't do anything at the moment, because v_0 is 0...
+}
+
 void DataSteward::createElements(){
+    csvDat = std::vector<std::vector<std::string>>();
     FileShit::readConnectomeCSV(FileShit::ortus_basic_connectome,csvDat);
     int count = csvDat.size(); // total row count
     int len = csvDat[0].size(); // total col count
@@ -309,13 +408,17 @@ void DataSteward::createElements(){
     // and gives the index in the neuron or muscle struct vector. if negative, it's a muscle index.
     std::vector<int> absolute_index_mapping;
     
-    CSV_ROWS =(int) csvDat.size()-1;// last row is the same as row 1 (not row 0... row 1)
+    int csv_rows =(int) csvDat.size()-1;// last row is the same as row 1 (not row 0... row 1)
     // all columns should be the same length if we've gotten here. NOTE: last column is same as col 1 (not col 0..)
-    CSV_COLS = len - 1;
-    if (CSV_ROWS != CSV_COLS){
+    int csv_cols = len - 1;
+    if (csv_rows != csv_cols){
         printf("ERROR! Connectome row count != col count.\n");
         exit(8);
     }
+    CSV_ROWS = csv_rows;
+    CSV_COLS = csv_cols;
+    CONNECTOME_ROWS = csv_rows - CSV_OFFSET;
+    CONNECTOME_COLS = csv_cols - CSV_OFFSET;
     
     std::string curr_type = "";
     ElementType etype;
@@ -325,19 +428,19 @@ void DataSteward::createElements(){
     int element_id = 0;
     int neuron_id = 0;
     int muscle_id = 0;
-    for (int i = CSV_OFFSET; i < CSV_ROWS; i++){
+    for (int i = CSV_OFFSET; i < csv_rows; i++){
         if (!(csvDat[i][0] == "")){ // else, we keep the same etype
             etype = FileShit::string_to_etype(csvDat[i][0], graphicalIdentifier);
         }
-        std::string temp_name = csvDat[i][1];
-        FileShit::remove_leading_zero_from_anywhere(temp_name);
-        officialNameVector.push_back(temp_name);
-        officialNameToIndexMap[temp_name] = element_id;
+        std::string* temp_namep = new std::string(csvDat[i][1]);
+        FileShit::remove_leading_zero_from_anywhere(temp_namep);
+        officialNamepVector.push_back(temp_namep);
+        officialNameToIndexMap[*temp_namep] = element_id;
         if (etype != MUSCLE){
             NeuronInfoModule* nim = new NeuronInfoModule();
-            nim->namep = &officialNameVector[i];
-            nim->graphicalName = temp_name+graphicalIdentifier;
-            nim->idp = &officialNameToIndexMap[temp_name];
+            nim->namep = officialNamepVector[element_id];
+            nim->graphicalName = *temp_namep+graphicalIdentifier;
+            nim->idp = &officialNameToIndexMap[*temp_namep];
             nim->setElementType(etype);
             ablator.setAblationStatus(nim);
             if (!nim->ablated){ // only keep it if it isn't ablated
@@ -348,9 +451,9 @@ void DataSteward::createElements(){
         }
         else {
             MuscleInfoModule* mim = new MuscleInfoModule();
-            mim->namep = &officialNameVector[i];
-            mim->graphicalName = temp_name+graphicalIdentifier;
-            mim->idp = &officialNameToIndexMap[temp_name];
+            mim->namep = officialNamepVector[element_id];
+            mim->graphicalName = *temp_namep+graphicalIdentifier;
+            mim->idp = &officialNameToIndexMap[*temp_namep];
             mim->setElementType(etype);
             mim->centerMassPoint = NULL;
             ablator.setAblationStatus(mim);
@@ -362,12 +465,16 @@ void DataSteward::createElements(){
         }
         element_id++;
     }
+    for(int i = 0; i < officialNamepVector. size(); i++){
+        printf("%s -> ",(*officialNamepVector[i]).c_str());
+        printf("%d\n",officialNameToIndexMap[*officialNamepVector[i]]);
+    }
 }
 
 void DataSteward::createConnections(){
-    printf("CSV_ROWS, CSV_COLS: %d. %d\n",CSV_ROWS, CSV_COLS);
-    gaps = new Blade(CSV_ROWS-CSV_OFFSET, CSV_COLS-CSV_OFFSET,MAX_ELEMENTS, MAX_ELEMENTS);
-    chems = new Blade(CSV_ROWS-CSV_OFFSET, CSV_COLS-CSV_OFFSET,MAX_ELEMENTS, MAX_ELEMENTS);
+    printf("connectome_rows, connectome_cols: %d. %d\n",CONNECTOME_ROWS, CONNECTOME_COLS);
+    gaps = new Blade(&clhelper, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    chems = new Blade(&clhelper, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
     int start_at = CSV_OFFSET; // it's a square matrix, with the same information on each side of the diagonal (but flipped)... could do one 'side' and add same connection pointer to each pre, but let's hold off... would need to switch the out_conns vector to hold Connection object pointers.
     for (int i = CSV_OFFSET; i < CSV_ROWS; i++){
         
@@ -375,6 +482,8 @@ void DataSteward::createConnections(){
         int post_id = -1;
         
         for (int j = CSV_OFFSET; j < CSV_COLS; j++){
+            //printf("(%d, %d) >>%s<<\n",i,j,csvDat[i][j].c_str());
+            
             if (csvDat[i][j] == ""){
                 continue;// no connection between i and j
             }
@@ -417,6 +526,7 @@ void DataSteward::createConnections(){
                 c.postName = elements[post_id]->name();
                 c.type = GAP;
                 c.weightp = gaps->getp(post_id, pre_id);
+                printf("%s\n",c.toString().c_str());
                 elements[pre_id]->out_conns.push_back(c);
             }
             if (chemWeight != 0){ // could be negative or positive
@@ -428,11 +538,57 @@ void DataSteward::createConnections(){
                 c.postName = elements[post_id]->name();
                 c.type = CHEM;
                 c.weightp = chems->getp(post_id, pre_id);
+                printf("%s\n",c.toString().c_str());
                 elements[pre_id]->out_conns.push_back(c);
             }
         }
         //printf("i = %d\n",i);
         ++start_at;
     }
-    //kinput.seekg(0);
+}
+
+void DataSteward::feedProbe(){
+    /*
+    // cs contrib
+    clhc.err = clEnqueueReadBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, (sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS), cs_1d_contrib, 0, NULL, NULL);
+    clhc.check_and_print_cl_err(clhc.err);
+    // gj contrib
+    clhc.err = clEnqueueReadBuffer(clhc.commands, gj_contrib, CL_TRUE, 0, (sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS), gj_1d_contrib, 0, NULL, NULL);
+    clhc.check_and_print_cl_err(clhc.err);
+    
+    
+    cs_2d_contrib_t = stewie.convert_1d_to_2d(cs_1d_contrib, DataSteward::NUM_ELEMS, DataSteward::NUM_ELEMS);
+    gj_2d_contrib_t = stewie.convert_1d_to_2d(gj_1d_contrib, DataSteward::NUM_ELEMS, DataSteward::NUM_ELEMS);
+    probe->csContribVec.push_back(cs_2d_contrib_t);
+    probe->gjContribVec.push_back(gj_2d_contrib_t);
+    
+    // clear the cs_contrib buffer
+    clhc.err = clEnqueueWriteBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS, zeros1D, 0, NULL, NULL);
+    clhc.check_and_print_cl_err(clhc.err);
+    // do the same with the gj_contrib buffer
+    clhc.err = clEnqueueWriteBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS, zeros1D, 0, NULL, NULL);
+    clhc.check_and_print_cl_err(clhc.err);
+    
+     */
+}
+
+void DataSteward::cleanUpOpenCL(){
+    clReleaseProgram(program);
+    clReleaseKernel(kernel);
+    clReleaseCommandQueue(clhelper.commands);
+    clReleaseContext(clhelper.context);
+}
+    
+    
+void DataSteward::printReport(int num_runs){
+    cout << "\n\n\n";
+    total_run_time += opencl_run_time;
+    //cout << "Number of iterations: " << _number_of_loops << ".\n";
+    cout << "Total run time: " << total_run_time << " ms" << endl;
+    cout << "Setup run time: " << setup_run_time << " ms" << endl;
+    cout << "OpenCL processing time: " << opencl_run_time << " ms" << endl;
+    cout << "OpenCL memory transer time: " << opencl_mem_time << " ms" << endl;
+    cout << "Reset vector time: " << reset_time << " ms" << endl;
+    
+    
 }

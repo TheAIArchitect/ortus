@@ -10,5 +10,16 @@
 #define Gymnasium_hpp
 
 #include <stdio.h>
+#include "Blade.hpp"
+#include <unordered_map>
+#include <string>
+
+class Gymnasium {
+public:
+    Gymnasium();
+    void stimulateSensors(Blade& voltageBlade, std::unordered_map<std::string,int>& nameToIndexMap);
+};
+
+
 
 #endif /* Gymnasium_hpp */

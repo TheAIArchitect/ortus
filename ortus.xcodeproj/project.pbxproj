@@ -30,7 +30,6 @@
 		444DE4241D8A642700247E36 /* image_helper.c in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4211D8A642700247E36 /* image_helper.c */; };
 		444DE4651D8A717500247E36 /* BodyParameterSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4291D8A717300247E36 /* BodyParameterSet.cpp */; };
 		444DE4661D8A717500247E36 /* GraphicsGovernor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE42C1D8A717300247E36 /* GraphicsGovernor.cpp */; };
-		444DE4671D8A717500247E36 /* Core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE42D1D8A717300247E36 /* Core.cpp */; };
 		444DE4691D8A717500247E36 /* DarwinEffectuator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4341D8A717300247E36 /* DarwinEffectuator.cpp */; };
 		444DE46A1D8A717500247E36 /* DataSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4361D8A717300247E36 /* DataSteward.cpp */; };
 		444DE46B1D8A717500247E36 /* GeneticUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE43C1D8A717300247E36 /* GeneticUtils.cpp */; };
@@ -138,8 +137,6 @@
 		444DE4291D8A717300247E36 /* BodyParameterSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BodyParameterSet.cpp; sourceTree = "<group>"; };
 		444DE42A1D8A717300247E36 /* BodyParameterSet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BodyParameterSet.hpp; sourceTree = "<group>"; };
 		444DE42C1D8A717300247E36 /* GraphicsGovernor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsGovernor.cpp; sourceTree = "<group>"; };
-		444DE42D1D8A717300247E36 /* Core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Core.cpp; sourceTree = "<group>"; };
-		444DE42E1D8A717300247E36 /* Core.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Core.hpp; sourceTree = "<group>"; };
 		444DE4311D8A717300247E36 /* cs_matrix_transpose.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cs_matrix_transpose.txt; sourceTree = "<group>"; };
 		444DE4321D8A717300247E36 /* cs_matrix.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cs_matrix.txt; sourceTree = "<group>"; };
 		444DE4331D8A717300247E36 /* csv */ = {isa = PBXFileReference; lastKnownFileType = folder; path = csv; sourceTree = "<group>"; };
@@ -369,8 +366,6 @@
 				443247B01DB059CE001D153B /* Connection.hpp */,
 				443247A91DAE5B33001D153B /* ConnectionComrade.cpp */,
 				443247AA1DAE5B33001D153B /* ConnectionComrade.hpp */,
-				444DE42D1D8A717300247E36 /* Core.cpp */,
-				444DE42E1D8A717300247E36 /* Core.hpp */,
 				444DE4341D8A717300247E36 /* DarwinEffectuator.cpp */,
 				444DE4351D8A717300247E36 /* DarwinEffectuator.hpp */,
 				444DE4361D8A717300247E36 /* DataSteward.cpp */,
@@ -532,7 +527,6 @@
 				444DE4691D8A717500247E36 /* DarwinEffectuator.cpp in Sources */,
 				443247AB1DAE5B33001D153B /* ConnectionComrade.cpp in Sources */,
 				444DE4661D8A717500247E36 /* GraphicsGovernor.cpp in Sources */,
-				444DE4671D8A717500247E36 /* Core.cpp in Sources */,
 				443247B11DB059CE001D153B /* Connection.cpp in Sources */,
 				444DE4711D8A717500247E36 /* SignalBuilder.cpp in Sources */,
 				443247B41DB60187001D153B /* AblationStation.cpp in Sources */,

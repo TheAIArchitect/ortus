@@ -10,7 +10,6 @@
 
 int Core::numMainLoops = 1000;
 int Core::numKernelLoops = 1;
-unsigned int Core::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
 
 void Core::init(size_t number_of_loops){
     total_timer_.start_timer();
@@ -25,9 +24,7 @@ void Core::init(size_t number_of_loops){
     
     // Use the DataSteward class to load and setup neuron data
     stewie.init();
-    // this can *only* be set after DataSteward is initialized, because NUM_ELEMS isn't set until then.
-    int modEight = DataSteward::NUM_ELEMS % 8;
-    NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
+    
     //stewie.makeModules(); // NOTE NOTE NOTE: this was for the worm, though part of it was a repeat of what was going on in the csv reader (creating NIMs and MIMs), due to a sloppy code combination. the function that makes muscle modules that is called by this could be useful, though.
     zeros1D = new float[DataSteward::NUM_ELEMS*DataSteward::NUM_ELEMS];
     for (int i = 0; i < DataSteward::NUM_ELEMS; ++i){
@@ -56,6 +53,7 @@ void Core::init(size_t number_of_loops){
     init_data_containers();
     fill_data_containers();
     transpose_and_fill_1d_representation();
+    exit(23);
     // CHECK for matrix connectome
     for (int i = 0; i < DataSteward::NUM_ELEMS; i++){
         printf("[");
@@ -126,16 +124,8 @@ void Core::clean_up(){
 
 /* Matrix Functions */
 void Core::init_data_containers(){
-    setup_timer_.start_timer();
+    setup_timer_.start_timer(); // NOTE -- come back to timer.
     
-    cs_2d_matrix = new float*[DataSteward::NUM_ELEMS];
-    gj_2d_matrix = new float*[DataSteward::NUM_ELEMS];
-    cs_2d_matrix_t = new float*[DataSteward::NUM_ELEMS];
-    gj_2d_matrix_t = new float*[DataSteward::NUM_ELEMS];
-    cs_2d_contrib = new float*[DataSteward::NUM_ELEMS];
-    gj_2d_contrib = new float*[DataSteward::NUM_ELEMS];
-    cs_2d_contrib_t = new float*[DataSteward::NUM_ELEMS];
-    gj_2d_contrib_t = new float*[DataSteward::NUM_ELEMS];
     for(int i = 0; i < DataSteward::NUM_ROWS; ++i){
         // DataSteward::NUM_ELEMS for rows and cols b/c this needs to be a square matrix
         cs_2d_matrix[i] = new float[DataSteward::NUM_ELEMS]();

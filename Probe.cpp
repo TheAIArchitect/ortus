@@ -13,15 +13,18 @@
 // the reason for this is simply poor planning... hopefully will be fixed soon...
 std::string Probe::newElementToProbe = "";
 bool Probe::newElementToProbeRequested = false;
-bool Probe::probeEnabled = true;
+bool Probe::probeEnabled = false;
 bool Probe::update = false;
-cl_uint Probe::shouldProbe = 1;
+cl_uint Probe::shouldProbe = 0;// should be set to 1 in order to probe.
 bool Probe::probeAll = true;
 
 
+Probe::Probe(){};
+
+/*
 // c'tor assumes square matrix.
-Probe::Probe(DataSteward* ds){
-    stewie = ds;
+Probe::Probe(DataSteward& ds){
+    stewie = &ds;
     float** firstWindow = new float*[DataSteward::NUM_ELEMS]; // numelements is supplied by DataSteward::NUM_ELEMS
     for (int i = 0; i < DataSteward::NUM_ELEMS; ++i){
         firstWindow[i] = new float[DataSteward::NUM_ELEMS];
@@ -39,17 +42,21 @@ Probe::Probe(DataSteward* ds){
     elementToProbe = "SO2";
     numElemsMinusOne = DataSteward::NUM_ELEMS  - 1;
 }
+*/
 
 void Probe::printAll(int window){
+    /*
     std::string thisWindow = "(" + std::to_string(window) + ") [";
     for (int i = 0; i < numElemsMinusOne; ++i){
         thisWindow += stewie->elements[i]->name() + ":" + std::to_string(stewie->kernelVoltages[window][i]) + ", ";
     }
     thisWindow += stewie->elements[numElemsMinusOne]->name() + ":" + std::to_string(stewie->kernelVoltages[window][numElemsMinusOne]) + "]";
     printf("%s\n",thisWindow.c_str());
+     */
 }
 
 void Probe::printCurrentProbe(int window){
+    /*
     int row = stewie->n2idxMap[elementToProbe];
     float voltage = stewie->kernelVoltages[window][row];
     printf("==============================================================================================\n");
@@ -69,6 +76,7 @@ void Probe::printCurrentProbe(int window){
     }
     printf("\n==============================================================================================\n");
     
+     */
 }
 
 bool Probe::toggleProbe(){
@@ -86,6 +94,7 @@ bool Probe::toggleProbe(){
 
 
 std::string Probe::setNewElementToProbe(){
+    /*
     if (newElementToProbe == ""){
         return "";
     }
@@ -104,4 +113,6 @@ std::string Probe::setNewElementToProbe(){
     newElementToProbe = "";
     newElementToProbeRequested = false;
     return response;
+     */
+    return nullptr;
 }

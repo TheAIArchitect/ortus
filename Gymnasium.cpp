@@ -72,3 +72,21 @@
  
  
 */
+
+Gymnasium::Gymnasium(){
+    
+}
+
+/* simple, temporary -- want a modular approach -- 'Stimulator' superclass, for example */
+void Gymnasium::stimulateSensors(Blade& voltageBlade, std::unordered_map<std::string,int>& nameToIndexMap){
+    // SCO2
+    int sco2Idx = nameToIndexMap["SCO2"];
+    float CO2_addition = 2.5f;
+    voltageBlade.add(sco2Idx, CO2_addition);
+    // MINHALE
+    //int minhaleIdx = nameToIndexMap["MINHALE"];
+    // SO2
+    //int so2Idx = nameToIndexMap["SO2"];
+    
+    return;
+}

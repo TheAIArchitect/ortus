@@ -53,7 +53,7 @@ void DataVisualizer::plotSet(std::string* names, int numNames){
     Plotr plt;
     std::map<std::string, std::string> kwArgs;
     for (int i = 0; i < numNames; ++i){
-        int idx = stewie->n2idxMap[names[i]];
+        int idx = stewie->officialNameToIndexMap[names[i]];
         kwArgs["label"] = names[i]; 
         yVals.clear();
         for (int j = 0; j < max; ++j){

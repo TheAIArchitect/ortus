@@ -75,7 +75,7 @@ class FileShit{
     
         static float str_type_to_float(std::string str);
         static ElementType str_type_to_enum(std::string str);
-        static void remove_leading_zero_from_anywhere(std::string& in);
+        static void remove_leading_zero_from_anywhere(std::string* in);
     
     
         static std::vector<std::string> readCameraConfig();
