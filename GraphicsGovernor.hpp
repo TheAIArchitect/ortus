@@ -30,14 +30,13 @@
 #include "Artist.hpp"
 
 
-#include "Core.hpp"
 #include "OptionForewoman.hpp"
 
 #include "ConnectionComrade.hpp"
 #include "Probe.hpp"
 
 
-int initGraphics(Core* core); // im not happy about doing this... graphics shouldn't hold core... something bigger should hold them both. and core should be called ComputeCore or something
+int initGraphics(DataSteward* stewie); // im not happy about doing this... graphics shouldn't hold core... something bigger should hold them both. and core should be called ComputeCore or something
 
 
 #endif /* Chief_h */

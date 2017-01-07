@@ -20,7 +20,7 @@ int main(int argc, char** argv){
     size_t local_size = 64;
     DataSteward stewie;
     stewie.init();
-    vector<vector<float>> kernel_voltages;
+    std::vector<std::vector<float>> kernel_voltages;
     
     //stewie.writeConnectome("notused");
     //exit(0);

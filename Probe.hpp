@@ -10,7 +10,7 @@
 #define Probe_hpp
 
 
-#include "CLHelperClass.hpp"
+#include "CLHelper.hpp"
 #include <stdio.h>
 #include <vector>
 //#include "DataSteward.hpp"

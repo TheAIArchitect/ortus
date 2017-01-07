@@ -31,8 +31,9 @@
 #include "AblationStation.hpp"
 #include "Blade.hpp"
 #include "Probe.hpp"
-#include "ExeTimer.hpp"
+#include "Timer.hpp"
 #include "Gymnasium.hpp"
+#include "CLHelper.hpp"
 
 
 class DataSteward{
@@ -91,7 +92,7 @@ public:
     
     
     // OpenCL related variables
-    CLHelperClass clhelper;
+    CLHelper clhelper;
     cl_program program;
     cl_kernel kernel;
     char *programBuffer;
@@ -134,8 +135,8 @@ public:
     double opencl_run_time{0};
     double opencl_mem_time{0};
     double reset_time{0};
-    ExeTimer total_timer_;
-    ExeTimer setup_timer_;
+    Timer total_timer_;
+    Timer setup_timer_;
     
     
     

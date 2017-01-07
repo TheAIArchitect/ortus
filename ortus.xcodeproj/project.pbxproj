@@ -46,7 +46,6 @@
 		49C754C11E125CF8000D0A00 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */; };
 		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
 		49EB41EE1E1D28FB00E98215 /* Blade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49EB41EC1E1D28FB00E98215 /* Blade.cpp */; };
-		666FF3941D19A23F001972D4 /* libutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666FF3931D19A23F001972D4 /* libutil.a */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 /* End PBXBuildFile section */
 
@@ -160,10 +159,9 @@
 		663A75BC1D0B1A6800F6B561 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		663A75C61D0B1AF000F6B561 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		663A75C81D0B1C5C00F6B561 /* spglib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = spglib; sourceTree = "<group>"; };
-		666FF3931D19A23F001972D4 /* libutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libutil.a; path = spglib/lib/libutil.a; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
+		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,7 +177,6 @@
 				44B6E6261D8A793A00A8DB7B /* LinearMath.framework in Frameworks */,
 				44B6E6241D8A792300A8DB7B /* BulletCollision.framework in Frameworks */,
 				44B6E6221D8A790200A8DB7B /* BulletDynamics.framework in Frameworks */,
-				666FF3941D19A23F001972D4 /* libutil.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,11 +264,10 @@
 				444DE4111D8A5F6500247E36 /* glm */,
 				44B6E62A1D8B455900A8DB7B /* rapidjson */,
 				444DE4511D8A717400247E36 /* resources */,
-				663A75C81D0B1C5C00F6B561 /* spglib */,
+				F7E7A0911E20C1FB0068BD3E /* cppcommon */,
 				44B6E6231D8A792300A8DB7B /* BulletCollision.framework */,
 				44B6E6211D8A790200A8DB7B /* BulletDynamics.framework */,
 				663A75C61D0B1AF000F6B561 /* GLUT.framework */,
-				666FF3931D19A23F001972D4 /* libutil.a */,
 				44B6E6251D8A793A00A8DB7B /* LinearMath.framework */,
 				663A75BC1D0B1A6800F6B561 /* OpenCL.framework */,
 				663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */,
@@ -549,17 +545,17 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"bullet-build/",
-					spglib/include,
 					/usr/local/include/freetype2,
 					"$(SRCROOT)",
 					/usr/local/include,
+					"$(PROJECT_DIR)/cppcommon",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"bullet-build/BulletDynamics",
 					"bullet-build/BulletCollision",
 					"bullet-build/LinearMath",
-					"$(PROJECT_DIR)/spglib/lib",
+					"$(PROJECT_DIR)/cppcommon",
 					/usr/local/lib,
 					"$(PROJECT_DIR)/bullet-build/BulletDynamics",
 					"$(PROJECT_DIR)/bullet-build/LinearMath",
@@ -584,17 +580,17 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"bullet-build/",
-					spglib/include,
 					/usr/local/include/freetype2,
 					"$(SRCROOT)",
 					/usr/local/include,
+					"$(PROJECT_DIR)/cppcommon",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"bullet-build/BulletDynamics",
 					"bullet-build/BulletCollision",
 					"bullet-build/LinearMath",
-					"$(PROJECT_DIR)/spglib/lib",
+					"$(PROJECT_DIR)/cppcommon",
 					/usr/local/lib,
 					"$(PROJECT_DIR)/bullet-build/BulletDynamics",
 					"$(PROJECT_DIR)/bullet-build/LinearMath",

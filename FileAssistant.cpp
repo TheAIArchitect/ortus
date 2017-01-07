@@ -73,7 +73,7 @@ void FileAssistant::readConnectomeCSV(std::string csv_name, std::vector<std::vec
             throw std::runtime_error("incorrect row size in "+csv_name+"!!!\n");
         }
         plen = len;
-        split = StrUtils::trimStringVector(split);
+        split = StrUtils::trimStrVec(split);
         //printf("(count: %d) >%s\n", split.size(), line.c_str());
         dat.push_back(split);
         count++;

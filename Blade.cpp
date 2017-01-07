@@ -13,7 +13,7 @@
 // look into making the float* private, but allowing 'getter' access to the pointer -- see if that will prevent changes without using a setter
 /* Allows creation of a 1D array that allows accessing like a 2D array, and allows quick 'growth'.
  */
-Blade::Blade(CLHelperClass* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols){
+Blade::Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols){
     square = false;
     if (currentRows == currentCols){ // it's square
         square = true;

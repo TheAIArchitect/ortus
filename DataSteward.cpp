@@ -88,7 +88,7 @@ void DataSteward::init(){
     initializeData();
     currentIteration = 0;
     setup_timer_.stop_timer();
-    setup_run_time = setup_timer_.get_exe_time_in_ms();
+    setup_run_time = setup_timer_.milliseconds();
 }
 
 void DataSteward::run(size_t global, size_t local, int numIterations){
@@ -178,7 +178,7 @@ void DataSteward::setOpenCLKernelArgs(){
 }
 
 void DataSteward::pushOpenCLBuffers(){
-    ExeTimer et;
+    Timer et;
     et.start_timer();
     inputVoltages->pushCLBuffer();
     outputVoltages->pushCLBuffer();
@@ -187,7 +187,7 @@ void DataSteward::pushOpenCLBuffers(){
     chemContrib->pushCLBuffer();
     gapContrib->pushCLBuffer();
     et.stop_timer();
-    opencl_mem_time += et.get_exe_time_in_ms();
+    opencl_mem_time += et.milliseconds();
 }
 
 /* Prepare to run OpenCL */
@@ -425,7 +425,7 @@ void DataSteward::cleanUp(){
     cleanUpOpenCL();
     // clean up other stuff...
     total_timer_.stop_timer();
-    total_run_time = total_timer_.get_exe_time_in_ms();
+    total_run_time = total_timer_.milliseconds();
 }
 
 

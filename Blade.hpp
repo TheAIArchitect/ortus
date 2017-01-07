@@ -10,7 +10,7 @@
 #define Blade_hpp
 
 #include <stdio.h>
-#include "CLHelperClass.hpp"
+#include "CLHelper.hpp"
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
@@ -21,7 +21,7 @@
 class Blade {
    
 public:
-    Blade(CLHelperClass* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols);
+    Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols);
     ~Blade();
     float* getp(int row, int col);
     float getv(int row, int col);
@@ -47,7 +47,7 @@ public:
     float* zeros;
     cl_mem clData;
     cl_uint clArgIndex;
-    CLHelperClass* clhelper;
+    CLHelper* clhelper;
     
 };
 
