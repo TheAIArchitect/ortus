@@ -75,47 +75,23 @@ unsigned int DataSteward::NUM_ELEMS = 0;
 unsigned int DataSteward::NUM_ROWS = 0;
 unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
 
-int DataSteward::numMainLoops = 1000;
-int DataSteward::numKernelLoops = 1;
 
 DataSteward::DataSteward(){}
 
 
 void DataSteward::init(){
-    total_timer_.start_timer();
-    setup_timer_.start_timer();
-    initializeOpenCL();
     initializeData();
-    currentIteration = 0;
-    setup_timer_.stop_timer();
-    setup_run_time = setup_timer_.milliseconds();
 }
 
-void DataSteward::run(size_t global, size_t local, int numIterations){
-    if (numIterations > 0 && currentIteration == 0){
-        setupOpenCL(global, local); // this calls 'enqueueKernel', which causes first run.
-    }
-    // now, we've run once, so, start the loop off with any modificiations
-   // NOTE: DO THE LOOP! // for (int i = 1; i < numIterations; ++i){ // start at 1, we already did the first one.
-    else {
-        // copy the ouput data (which has been updated, see below) into the input data
-        inputVoltages->copyData(outputVoltages);
-        // then, stimulate the sensors 
-        gym.stimulateSensors(*inputVoltages, officialNameToIndexMap);
-        // now we need to re-push that buffer
-        inputVoltages->pushCLBuffer();
-        setOpenCLKernelArgs();
-        enqueueKernel(global, local);
-    }
-    readOpenCLBuffers();
-    updateOutputVoltageVector();// this is a copy of the data.
-    for (int i = 0; i < outputVoltageVector.size(); ++i){
-        printf("%.2f, ",outputVoltageVector[i]);
-    }
-    printf("\n");
-    
-    currentIteration++;
+void DataSteward::setKernelp(cl_kernel* kp){
+    kernelp = kp;
 }
+
+void DataSteward::setCLHelperp(CLHelper* clhp){
+    clHelperp = clhp;
+}
+
+
 
 
 std::vector<float> DataSteward::getOutputVoltageVector(){
@@ -140,64 +116,36 @@ void DataSteward::readOpenCLBuffers(){
 
 
 
-// NOTE: store the global and local... stop passing.
-void DataSteward::enqueueKernel(size_t global, size_t local){
-    cl_event timing_event;
-    
-    size_t g, l;
-    g = global;
-    l = local;
-    clhelper.err = clEnqueueNDRangeKernel(clhelper.commands, kernel, 1, NULL, &g, &l, 0, NULL, &timing_event);
-    clhelper.check_and_print_cl_err(clhelper.err);
-    
-    clFinish(clhelper.commands);
-    cl_ulong starttime;
-    cl_ulong endtime;
-    clhelper.check_and_print_cl_err(clGetEventProfilingInfo(timing_event, CL_PROFILING_COMMAND_START, sizeof(cl_ulong), &starttime, NULL));
-    clhelper.check_and_print_cl_err(clGetEventProfilingInfo(timing_event, CL_PROFILING_COMMAND_END, sizeof(cl_ulong), &endtime, NULL));
-    opencl_run_time += ((endtime - starttime) / 1000000.0);
-}
+
 
 void DataSteward::setOpenCLKernelArgs(){
-    inputVoltages->setCLArgIndex(0, &kernel);
-    outputVoltages->setCLArgIndex(1, &kernel);
-    gaps->setCLArgIndex(2, &kernel);
-    chems->setCLArgIndex(3, &kernel);
-    gapContrib->setCLArgIndex(4, &kernel);
-    chemContrib->setCLArgIndex(5, &kernel);
-    rowCount->setCLArgIndex(6, &kernel);
-    colCount->setCLArgIndex(7, &kernel);
-    clhelper.err = clSetKernelArg(kernel, 8, sizeof(cl_uint), &Probe::shouldProbe);
-    clhelper.check_and_print_cl_err(clhelper.err);
-    gapNormalizer->setCLArgIndex(9, &kernel);
-    chemNormalizer->setCLArgIndex(10, &kernel);
+    inputVoltages->setCLArgIndex(0, kernelp);
+    outputVoltages->setCLArgIndex(1, kernelp);
+    gaps->setCLArgIndex(2, kernelp);
+    chems->setCLArgIndex(3, kernelp);
+    gapContrib->setCLArgIndex(4, kernelp);
+    chemContrib->setCLArgIndex(5, kernelp);
+    rowCount->setCLArgIndex(6, kernelp);
+    colCount->setCLArgIndex(7, kernelp);
+    clHelperp->err = clSetKernelArg(*kernelp, 8, sizeof(cl_uint), &Probe::shouldProbe);
+    clHelperp->check_and_print_cl_err(clHelperp->err);
+    gapNormalizer->setCLArgIndex(9, kernelp);
+    chemNormalizer->setCLArgIndex(10, kernelp);
 }
 
 void DataSteward::pushOpenCLBuffers(){
-    Timer et;
-    et.start_timer();
+    //Timer et;
+    //et.start_timer();
     inputVoltages->pushCLBuffer();
     outputVoltages->pushCLBuffer();
     gaps->pushCLBuffer();
     chems->pushCLBuffer();
     chemContrib->pushCLBuffer();
     gapContrib->pushCLBuffer();
-    et.stop_timer();
-    opencl_mem_time += et.milliseconds();
+    //et.stop_timer();
 }
 
-/* Prepare to run OpenCL */
-void DataSteward::setupOpenCL(size_t global, size_t local){
-    
-    pushOpenCLBuffers();
-    printf("Pushed OpenCL Buffers\n");
-    
-    setOpenCLKernelArgs();
-    printf("Set OpenCL Kernel Args\n");
-    
-    // run kernel
-    enqueueKernel(global, local);
-}
+
 
 
 
@@ -207,21 +155,21 @@ void DataSteward::setupOpenCL(size_t global, size_t local){
 /* initializes the Blades that aren't used for the gj or cs weights */
 void DataSteward::initializeBlades(){
     // need a gj and cs contrib (one of each) -- these are NxN
-    chemContrib = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
-    gapContrib = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    chemContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    gapContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
     // now we initialize the voltage vectors -- one row.
     // ideally, we'd have one that gets read from and written to -- should get around to fixing that shortly.
-    inputVoltages = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
-    outputVoltages = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
+    inputVoltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
+    outputVoltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
     //fillInputVoltageBlade(); // will probably be used at some point
     //////// NOTE: add a new constructor for Blade that gets rid of the need for this....
-    rowCount = new Blade<cl_uint>(&clhelper, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    rowCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY, 1, 1, 1, 1);
     rowCount->set(NUM_ELEMS); // cl_uint, for current row count
-    colCount = new Blade<cl_uint>(&clhelper, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    colCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY, 1, 1, 1, 1);
     colCount->set(NUM_ELEMS); // cl_uint, for current col count
-    gapNormalizer = new Blade<cl_float>(&clhelper, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    gapNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_ONLY, 1, 1, 1, 1);
     gapNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-    chemNormalizer = new Blade<cl_float>(&clhelper, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    chemNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_ONLY, 1, 1, 1, 1);
     chemNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
     
 }
@@ -234,8 +182,8 @@ void DataSteward::fillInputVoltageBlade(){
 
 void DataSteward::createConnections(){
     printf("connectome_rows, connectome_cols: %d. %d\n",CONNECTOME_ROWS, CONNECTOME_COLS);
-    gaps = new Blade<float>(&clhelper, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
-    chems = new Blade<float>(&clhelper, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    gaps = new Blade<float>(clHelperp, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    chems = new Blade<float>(clHelperp, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
     int start_at = CSV_OFFSET; // it's a square matrix, with the same information on each side of the diagonal (but flipped)... could do one 'side' and add same connection pointer to each pre, but let's hold off... would need to switch the out_conns vector to hold Connection object pointers.
     for (int i = CSV_OFFSET; i < CSV_ROWS; i++){
         
@@ -408,45 +356,10 @@ void DataSteward::initializeData(){
 //    chemNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
 }
 
-/* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
-void DataSteward::initializeOpenCL(){
-    clhelper.setup_opencl();
-    clhelper.read_kernels_from_file("OrtusKernelOne.cl", &programBuffer);
-    program = clCreateProgramWithSource(clhelper.context, 1, (const char**) &programBuffer, NULL, &clhelper.err);
-    clhelper.check_and_print_cl_err(clhelper.err);
-    clhelper.err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
-    clhelper.check_and_print_cl_program_build_err(clhelper.err, &program);
-    kernel = clCreateKernel(program, "OrtusKernel", &clhelper.err);
-    clhelper.check_and_print_cl_err(clhelper.err);
-}
-
-void DataSteward::cleanUpOpenCL(){
-    clReleaseProgram(program);
-    clReleaseKernel(kernel);
-    clReleaseCommandQueue(clhelper.commands);
-    clReleaseContext(clhelper.context);
-}
-
-void DataSteward::cleanUp(){
-    cleanUpOpenCL();
-    // clean up other stuff...
-    total_timer_.stop_timer();
-    total_run_time = total_timer_.milliseconds();
-}
 
 
-void DataSteward::printReport(int num_runs){
-    std::cout << "\n\n\n";
-    total_run_time += opencl_run_time;
-    //std::cout << "Number of iterations: " << _number_of_loops << ".\n";
-    std::cout << "Total run time: " << total_run_time << " ms" << std::endl;
-    std::cout << "Setup run time: " << setup_run_time << " ms" << std::endl;
-    std::cout << "OpenCL processing time: " << opencl_run_time << " ms" << std::endl;
-    std::cout << "OpenCL memory transer time: " << opencl_mem_time << " ms" << std::endl;
-    std::cout << "Reset vector time: " << reset_time << " ms" << std::endl;
-    
-    
-}
+
+
 
 
 /* writes the connectome. as of this comment, it will write it by **DE-TRANSPOSING** it.

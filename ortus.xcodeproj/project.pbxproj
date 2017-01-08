@@ -38,7 +38,6 @@
 		44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B6E6321D9A6CB300A8DB7B /* Camera.cpp */; };
 		44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */ = {isa = PBXBuildFile; fileRef = 44E5428D1E091D0E00D3BF7A /* OrtusKernelOne.cl */; };
 		44E542911E09FCE000D3BF7A /* Gymnasium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44E5428F1E09FCE000D3BF7A /* Gymnasium.cpp */; };
-		44E542941E09FD1C00D3BF7A /* Stimulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44E542921E09FD1C00D3BF7A /* Stimulator.cpp */; };
 		44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FDA2EA1DCC7995005897DB /* DataVisualizer.cpp */; };
 		496841931E125FB1008AF250 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C31E125D07000D0A00 /* CoreVideo.framework */; };
 		49C754BF1E121DA7000D0A00 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BC1D0B1A6800F6B561 /* OpenCL.framework */; };
@@ -46,11 +45,14 @@
 		49C754C11E125CF8000D0A00 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */; };
 		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
-		F7E7A0941E219A0F0068BD3E /* Stimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */; };
-		F7E7A0971E21C0A60068BD3E /* PrimitiveStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0951E21C0A60068BD3E /* PrimitiveStimulus.cpp */; };
-		F7E7A09A1E21C16B0068BD3E /* ComplexStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
+		F7E7A0B31E2260350068BD3E /* ComplexStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AB1E2260350068BD3E /* ComplexStimulus.cpp */; };
+		F7E7A0B41E2260350068BD3E /* PrimitiveStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AD1E2260350068BD3E /* PrimitiveStimulus.cpp */; };
+		F7E7A0B51E2260350068BD3E /* Stimulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AF1E2260350068BD3E /* Stimulator.cpp */; };
+		F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0B11E2260350068BD3E /* Stimulus.cpp */; };
+		F7E7A0BA1E2260C70068BD3E /* Steward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0B81E2260C70068BD3E /* Steward.cpp */; };
+		F7E7A0BD1E22611F0068BD3E /* ComputeSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0BB1E22611F0068BD3E /* ComputeSteward.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -149,8 +151,6 @@
 		44E5428D1E091D0E00D3BF7A /* OrtusKernelOne.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = OrtusKernelOne.cl; sourceTree = "<group>"; };
 		44E5428F1E09FCE000D3BF7A /* Gymnasium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gymnasium.cpp; sourceTree = "<group>"; };
 		44E542901E09FCE000D3BF7A /* Gymnasium.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Gymnasium.hpp; sourceTree = "<group>"; };
-		44E542921E09FD1C00D3BF7A /* Stimulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Stimulator.cpp; sourceTree = "<group>"; };
-		44E542931E09FD1C00D3BF7A /* Stimulator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Stimulator.hpp; sourceTree = "<group>"; };
 		44FDA2EA1DCC7995005897DB /* DataVisualizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataVisualizer.cpp; sourceTree = "<group>"; };
 		44FDA2EB1DCC7995005897DB /* DataVisualizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DataVisualizer.hpp; sourceTree = "<group>"; };
 		44FDA2EE1DCC7B51005897DB /* Plotr.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Plotr.hpp; sourceTree = "<group>"; };
@@ -165,16 +165,22 @@
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
-		F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Stimulus.cpp; sourceTree = "<group>"; };
-		F7E7A0931E219A0F0068BD3E /* Stimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Stimulus.hpp; sourceTree = "<group>"; };
-		F7E7A0951E21C0A60068BD3E /* PrimitiveStimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrimitiveStimulus.cpp; sourceTree = "<group>"; };
-		F7E7A0961E21C0A60068BD3E /* PrimitiveStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PrimitiveStimulus.hpp; sourceTree = "<group>"; };
-		F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComplexStimulus.cpp; sourceTree = "<group>"; };
-		F7E7A0991E21C16B0068BD3E /* ComplexStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ComplexStimulus.hpp; sourceTree = "<group>"; };
 		F7E7A09E1E2204B20068BD3E /* Signal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Signal.cpp; path = signals/Signal.cpp; sourceTree = "<group>"; };
 		F7E7A09F1E2204B20068BD3E /* Signal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Signal.hpp; path = signals/Signal.hpp; sourceTree = "<group>"; };
 		F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConstantSignal.cpp; path = signals/ConstantSignal.cpp; sourceTree = "<group>"; };
 		F7E7A0A61E2205BF0068BD3E /* ConstantSignal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ConstantSignal.hpp; path = signals/ConstantSignal.hpp; sourceTree = "<group>"; };
+		F7E7A0AB1E2260350068BD3E /* ComplexStimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComplexStimulus.cpp; path = stimuli/ComplexStimulus.cpp; sourceTree = "<group>"; };
+		F7E7A0AC1E2260350068BD3E /* ComplexStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComplexStimulus.hpp; path = stimuli/ComplexStimulus.hpp; sourceTree = "<group>"; };
+		F7E7A0AD1E2260350068BD3E /* PrimitiveStimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrimitiveStimulus.cpp; path = stimuli/PrimitiveStimulus.cpp; sourceTree = "<group>"; };
+		F7E7A0AE1E2260350068BD3E /* PrimitiveStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = PrimitiveStimulus.hpp; path = stimuli/PrimitiveStimulus.hpp; sourceTree = "<group>"; };
+		F7E7A0AF1E2260350068BD3E /* Stimulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Stimulator.cpp; path = stimuli/Stimulator.cpp; sourceTree = "<group>"; };
+		F7E7A0B01E2260350068BD3E /* Stimulator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Stimulator.hpp; path = stimuli/Stimulator.hpp; sourceTree = "<group>"; };
+		F7E7A0B11E2260350068BD3E /* Stimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Stimulus.cpp; path = stimuli/Stimulus.cpp; sourceTree = "<group>"; };
+		F7E7A0B21E2260350068BD3E /* Stimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Stimulus.hpp; path = stimuli/Stimulus.hpp; sourceTree = "<group>"; };
+		F7E7A0B81E2260C70068BD3E /* Steward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Steward.cpp; sourceTree = "<group>"; };
+		F7E7A0B91E2260C70068BD3E /* Steward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Steward.hpp; sourceTree = "<group>"; };
+		F7E7A0BB1E22611F0068BD3E /* ComputeSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComputeSteward.cpp; sourceTree = "<group>"; };
+		F7E7A0BC1E22611F0068BD3E /* ComputeSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ComputeSteward.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -300,12 +306,11 @@
 		666FF3951D19A2C0001972D4 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				F7E7A0B71E2260620068BD3E /* stimuli */,
 				444DE4451D8A717400247E36 /* main.cpp */,
 				443247B21DB60187001D153B /* AblationStation.cpp */,
 				443247B31DB60187001D153B /* AblationStation.hpp */,
 				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
-				F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */,
-				F7E7A0991E21C16B0068BD3E /* ComplexStimulus.hpp */,
 				443247AF1DB059CE001D153B /* Connection.cpp */,
 				443247B01DB059CE001D153B /* Connection.hpp */,
 				444DE4361D8A717300247E36 /* DataSteward.cpp */,
@@ -315,10 +320,6 @@
 				444DE3E51D8A5D7F00247E36 /* ElementInfoModule.cpp */,
 				444DE3E61D8A5D7F00247E36 /* ElementInfoModule.hpp */,
 				F7E7A0A11E2204D00068BD3E /* signals */,
-				44E542921E09FD1C00D3BF7A /* Stimulator.cpp */,
-				44E542931E09FD1C00D3BF7A /* Stimulator.hpp */,
-				F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */,
-				F7E7A0931E219A0F0068BD3E /* Stimulus.hpp */,
 				F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */,
 				F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */,
 				444DE42C1D8A717300247E36 /* GraphicsGovernor.cpp */,
@@ -332,14 +333,16 @@
 				444DE44B1D8A717400247E36 /* myDebug.hpp */,
 				444DE3E31D8A5D7F00247E36 /* NeuronInfoModule.cpp */,
 				444DE3E41D8A5D7F00247E36 /* NeuronInfoModule.hpp */,
-				F7E7A0951E21C0A60068BD3E /* PrimitiveStimulus.cpp */,
-				F7E7A0961E21C0A60068BD3E /* PrimitiveStimulus.hpp */,
 				449019C61DBA13CE00569854 /* Probe.cpp */,
 				449019C71DBA13CF00569854 /* Probe.hpp */,
 				444DE3F51D8A5D7F00247E36 /* std_graphics_header.hpp */,
 				44AF538B1DA46F89009546BC /* OptionForewoman.cpp */,
 				44AF538C1DA46F89009546BC /* OptionForewoman.hpp */,
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
+				F7E7A0B81E2260C70068BD3E /* Steward.cpp */,
+				F7E7A0B91E2260C70068BD3E /* Steward.hpp */,
+				F7E7A0BB1E22611F0068BD3E /* ComputeSteward.cpp */,
+				F7E7A0BC1E22611F0068BD3E /* ComputeSteward.hpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -389,6 +392,21 @@
 				F7E7A0A61E2205BF0068BD3E /* ConstantSignal.hpp */,
 			);
 			name = signals;
+			sourceTree = "<group>";
+		};
+		F7E7A0B71E2260620068BD3E /* stimuli */ = {
+			isa = PBXGroup;
+			children = (
+				F7E7A0AB1E2260350068BD3E /* ComplexStimulus.cpp */,
+				F7E7A0AC1E2260350068BD3E /* ComplexStimulus.hpp */,
+				F7E7A0AD1E2260350068BD3E /* PrimitiveStimulus.cpp */,
+				F7E7A0AE1E2260350068BD3E /* PrimitiveStimulus.hpp */,
+				F7E7A0AF1E2260350068BD3E /* Stimulator.cpp */,
+				F7E7A0B01E2260350068BD3E /* Stimulator.hpp */,
+				F7E7A0B11E2260350068BD3E /* Stimulus.cpp */,
+				F7E7A0B21E2260350068BD3E /* Stimulus.hpp */,
+			);
+			name = stimuli;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -450,15 +468,17 @@
 				F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */,
 				444DE4231D8A642700247E36 /* image_DXT.c in Sources */,
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
+				F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
 				44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */,
-				44E542941E09FD1C00D3BF7A /* Stimulator.cpp in Sources */,
+				F7E7A0B31E2260350068BD3E /* ComplexStimulus.cpp in Sources */,
 				44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */,
-				F7E7A09A1E21C16B0068BD3E /* ComplexStimulus.cpp in Sources */,
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,
 				444DE4031D8A5D7F00247E36 /* MuscleInfoModule.cpp in Sources */,
 				444DE4701D8A717500247E36 /* README.md in Sources */,
 				444DE4041D8A5D7F00247E36 /* NeuronInfoModule.cpp in Sources */,
+				F7E7A0B51E2260350068BD3E /* Stimulator.cpp in Sources */,
+				F7E7A0BA1E2260C70068BD3E /* Steward.cpp in Sources */,
 				444DE4061D8A5D7F00247E36 /* ShapeCreator.cpp in Sources */,
 				444DE4101D8A5D7F00247E36 /* Geometrician.cpp in Sources */,
 				444DE4181D8A63AC00247E36 /* SOIL.c in Sources */,
@@ -466,11 +486,12 @@
 				F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */,
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE46C1D8A717500247E36 /* main.cpp in Sources */,
-				F7E7A0971E21C0A60068BD3E /* PrimitiveStimulus.cpp in Sources */,
 				444DE40C1D8A5D7F00247E36 /* Shader.cpp in Sources */,
 				444DE46A1D8A717500247E36 /* DataSteward.cpp in Sources */,
 				444DE46E1D8A717500247E36 /* makefile in Sources */,
 				444DE40D1D8A5D7F00247E36 /* MassPoint.cpp in Sources */,
+				F7E7A0B41E2260350068BD3E /* PrimitiveStimulus.cpp in Sources */,
+				F7E7A0BD1E22611F0068BD3E /* ComputeSteward.cpp in Sources */,
 				44AF538D1DA46F89009546BC /* OptionForewoman.cpp in Sources */,
 				44E542911E09FCE000D3BF7A /* Gymnasium.cpp in Sources */,
 				444DE4091D8A5D7F00247E36 /* Artist.cpp in Sources */,
@@ -482,7 +503,6 @@
 				F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */,
 				444DE40E1D8A5D7F00247E36 /* Mesher.cpp in Sources */,
 				444DE40A1D8A5D7F00247E36 /* TextMaker.cpp in Sources */,
-				F7E7A0941E219A0F0068BD3E /* Stimulus.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
