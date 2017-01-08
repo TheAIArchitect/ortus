@@ -47,6 +47,10 @@
 		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
 		49EB41EE1E1D28FB00E98215 /* Blade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49EB41EC1E1D28FB00E98215 /* Blade.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
+		F7E7A0941E219A0F0068BD3E /* Stimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */; };
+		F7E7A0971E21C0A60068BD3E /* PrimitiveStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0951E21C0A60068BD3E /* PrimitiveStimulus.cpp */; };
+		F7E7A09A1E21C16B0068BD3E /* ComplexStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */; };
+		F7E7A09D1E21F2FD0068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09B1E21F2FD0068BD3E /* Signal.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -162,6 +166,14 @@
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
+		F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Stimulus.cpp; sourceTree = "<group>"; };
+		F7E7A0931E219A0F0068BD3E /* Stimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Stimulus.hpp; sourceTree = "<group>"; };
+		F7E7A0951E21C0A60068BD3E /* PrimitiveStimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrimitiveStimulus.cpp; sourceTree = "<group>"; };
+		F7E7A0961E21C0A60068BD3E /* PrimitiveStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PrimitiveStimulus.hpp; sourceTree = "<group>"; };
+		F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComplexStimulus.cpp; sourceTree = "<group>"; };
+		F7E7A0991E21C16B0068BD3E /* ComplexStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ComplexStimulus.hpp; sourceTree = "<group>"; };
+		F7E7A09B1E21F2FD0068BD3E /* Signal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Signal.cpp; sourceTree = "<group>"; };
+		F7E7A09C1E21F2FD0068BD3E /* Signal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Signal.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -292,6 +304,8 @@
 				443247B31DB60187001D153B /* AblationStation.hpp */,
 				49EB41EC1E1D28FB00E98215 /* Blade.cpp */,
 				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
+				F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */,
+				F7E7A0991E21C16B0068BD3E /* ComplexStimulus.hpp */,
 				443247AF1DB059CE001D153B /* Connection.cpp */,
 				443247B01DB059CE001D153B /* Connection.hpp */,
 				444DE4361D8A717300247E36 /* DataSteward.cpp */,
@@ -300,8 +314,12 @@
 				44FDA2EB1DCC7995005897DB /* DataVisualizer.hpp */,
 				444DE3E51D8A5D7F00247E36 /* ElementInfoModule.cpp */,
 				444DE3E61D8A5D7F00247E36 /* ElementInfoModule.hpp */,
+				F7E7A09B1E21F2FD0068BD3E /* Signal.cpp */,
+				F7E7A09C1E21F2FD0068BD3E /* Signal.hpp */,
 				44E542921E09FD1C00D3BF7A /* Stimulator.cpp */,
 				44E542931E09FD1C00D3BF7A /* Stimulator.hpp */,
+				F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */,
+				F7E7A0931E219A0F0068BD3E /* Stimulus.hpp */,
 				F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */,
 				F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */,
 				444DE42C1D8A717300247E36 /* GraphicsGovernor.cpp */,
@@ -315,6 +333,8 @@
 				444DE44B1D8A717400247E36 /* myDebug.hpp */,
 				444DE3E31D8A5D7F00247E36 /* NeuronInfoModule.cpp */,
 				444DE3E41D8A5D7F00247E36 /* NeuronInfoModule.hpp */,
+				F7E7A0951E21C0A60068BD3E /* PrimitiveStimulus.cpp */,
+				F7E7A0961E21C0A60068BD3E /* PrimitiveStimulus.hpp */,
 				449019C61DBA13CE00569854 /* Probe.cpp */,
 				449019C71DBA13CF00569854 /* Probe.hpp */,
 				444DE3F51D8A5D7F00247E36 /* std_graphics_header.hpp */,
@@ -423,18 +443,21 @@
 				44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */,
 				44E542941E09FD1C00D3BF7A /* Stimulator.cpp in Sources */,
 				44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */,
+				F7E7A09A1E21C16B0068BD3E /* ComplexStimulus.cpp in Sources */,
 				49EB41EE1E1D28FB00E98215 /* Blade.cpp in Sources */,
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,
 				444DE4031D8A5D7F00247E36 /* MuscleInfoModule.cpp in Sources */,
 				444DE4701D8A717500247E36 /* README.md in Sources */,
 				444DE4041D8A5D7F00247E36 /* NeuronInfoModule.cpp in Sources */,
 				444DE4061D8A5D7F00247E36 /* ShapeCreator.cpp in Sources */,
+				F7E7A09D1E21F2FD0068BD3E /* Signal.cpp in Sources */,
 				444DE4101D8A5D7F00247E36 /* Geometrician.cpp in Sources */,
 				444DE4181D8A63AC00247E36 /* SOIL.c in Sources */,
 				444DE4241D8A642700247E36 /* image_helper.c in Sources */,
 				F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */,
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE46C1D8A717500247E36 /* main.cpp in Sources */,
+				F7E7A0971E21C0A60068BD3E /* PrimitiveStimulus.cpp in Sources */,
 				444DE40C1D8A5D7F00247E36 /* Shader.cpp in Sources */,
 				444DE46A1D8A717500247E36 /* DataSteward.cpp in Sources */,
 				444DE46E1D8A717500247E36 /* makefile in Sources */,
@@ -449,6 +472,7 @@
 				444DE41E1D8A63F800247E36 /* stb_image_aug.c in Sources */,
 				444DE40E1D8A5D7F00247E36 /* Mesher.cpp in Sources */,
 				444DE40A1D8A5D7F00247E36 /* TextMaker.cpp in Sources */,
+				F7E7A0941E219A0F0068BD3E /* Stimulus.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

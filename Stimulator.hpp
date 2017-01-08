@@ -12,14 +12,18 @@
 #include <stdio.h>
 #include <vector>
 #include "Blade.hpp"
+#include "Stimulus.hpp"
+#include "PrimitiveStimulus.hpp"
+#include "ComplexStimulus.hpp"
+
 
 class Stimulator {
     
 public:
     Stimulator();
-    std::vector<float> signal;
-    int timeStep;
-    void stimulate(Blade* activationVector); // what's the best way to do this??
+    std::vector<Stimulus> stimuli;
+    
 };
 
 #endif /* ElementStimulator_hpp */
+
