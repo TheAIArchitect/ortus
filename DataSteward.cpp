@@ -211,12 +211,12 @@ void DataSteward::setupOpenCL(size_t global, size_t local){
 /* initializes the Blades that aren't used for the gj or cs weights */
 void DataSteward::initializeBlades(){
     // need a gj and cs contrib (one of each) -- these are NxN
-    chemContrib = new Blade(&clhelper, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
-    gapContrib = new Blade(&clhelper, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    chemContrib = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    gapContrib = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
     // now we initialize the voltage vectors -- one row.
     // ideally, we'd have one that gets read from and written to -- should get around to fixing that shortly.
-    inputVoltages = new Blade(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
-    outputVoltages = new Blade(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
+    inputVoltages = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
+    outputVoltages = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
     //fillInputVoltageBlade(); // will probably be used at some point
 }
 
@@ -228,8 +228,8 @@ void DataSteward::fillInputVoltageBlade(){
 
 void DataSteward::createConnections(){
     printf("connectome_rows, connectome_cols: %d. %d\n",CONNECTOME_ROWS, CONNECTOME_COLS);
-    gaps = new Blade(&clhelper, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
-    chems = new Blade(&clhelper, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    gaps = new Blade<float>(&clhelper, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    chems = new Blade<float>(&clhelper, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
     int start_at = CSV_OFFSET; // it's a square matrix, with the same information on each side of the diagonal (but flipped)... could do one 'side' and add same connection pointer to each pre, but let's hold off... would need to switch the out_conns vector to hold Connection object pointers.
     for (int i = CSV_OFFSET; i < CSV_ROWS; i++){
         

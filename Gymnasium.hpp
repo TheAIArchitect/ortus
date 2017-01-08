@@ -17,7 +17,7 @@
 class Gymnasium {
 public:
     Gymnasium();
-    void stimulateSensors(Blade& voltageBlade, std::unordered_map<std::string,int>& nameToIndexMap);
+    void stimulateSensors(Blade<float>& voltageBlade, std::unordered_map<std::string,int>& nameToIndexMap);
 };
 
 

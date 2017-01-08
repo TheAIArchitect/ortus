@@ -75,13 +75,8 @@ __kernel void OrtusKernel( __global float *inputVoltages,
     float total_incoming_current = 0.0f;
     float total_incoming_voltage = 0.0f;
     //if(gid == 1)printf("Running from mainKernel.cl\n");
-    /*
-     * Since out array of neurons is a shitty number, we're probably not going to have
-     * a proper multiple for work-group size...
-     *  We could pad the array, but then we're doing calculations on bullshit
-     *  Therefore, best option seems to be to just skip the work when we're out
-     *  of range and let the thread(s) get back to something that is in range (if still available)
-     */
+    
+    // Don't do anything if we're out of range.
     if(gid <= (rowCount - 1)){
         // using 0 for the row_num, because right now inputVoltages is just a vector
         size_t my_v_curr_idx = getIndex(0, gid, colCount);
@@ -124,19 +119,11 @@ __kernel void OrtusKernel( __global float *inputVoltages,
             float added_v = 0;
             float conductance = 0;
             if(cs_weight != 0.0){
-                /*************************
-                 *********** NOTE: maybe we should multiply the added_v by '(1-(v_max - v_cur))*<some constant>' -- that way, as voltage increases, it absorbs less... we should make this nonlinear though. (this is to simulate conductance)
                  
-                 ... potentially something we should do for both GJ and CS...
-                 *********************/
-                /*
+                // - starting conductance is .5 -- similar to wicks' work, just simplified.
+                // -> according to sigmoidal function it increases or decreases with neuron's potential
+                //    -> as it nears max, conductance tends to 0, and as it nears min, conductance tends to 1
                  
-                 
-                 - starting conductance is .5 -- similar to wicks' work, just simplified.
-                 -> according to sigmoidal function it increases or decreases with neuron's potential
-                    -> as it nears max, conductance tends to 0, and as it nears min, conductance tends to 1
-                 
-                 */
                 // if their_v_curr == 0, conductance will be .5.... also, the -5 comes from wicks' paper... almost.
                  //no conductance at the moment...
                 //added_v = cs_weight * conductance * their_v_curr;
@@ -204,6 +191,8 @@ __kernel void OrtusKernel( __global float *inputVoltages,
             }
             printf("\nEND CLPRINT\n");
         }
-        */
+         */
     }
+    //printf("hi\n");
+    
 }

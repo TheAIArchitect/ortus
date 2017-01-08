@@ -45,13 +45,13 @@
 		49C754C01E125CEB000D0A00 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75C61D0B1AF000F6B561 /* GLUT.framework */; };
 		49C754C11E125CF8000D0A00 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */; };
 		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
-		49EB41EE1E1D28FB00E98215 /* Blade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49EB41EC1E1D28FB00E98215 /* Blade.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0941E219A0F0068BD3E /* Stimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */; };
 		F7E7A0971E21C0A60068BD3E /* PrimitiveStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0951E21C0A60068BD3E /* PrimitiveStimulus.cpp */; };
 		F7E7A09A1E21C16B0068BD3E /* ComplexStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
+		F7E7A0AA1E2211BC0068BD3E /* Punch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A81E2211BC0068BD3E /* Punch.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -158,7 +158,6 @@
 		44FDA2EF1DCC7B51005897DB /* Interpreter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interpreter.hpp; sourceTree = "<group>"; };
 		49C754C31E125D07000D0A00 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		49C754C51E125D15000D0A00 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		49EB41EC1E1D28FB00E98215 /* Blade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Blade.cpp; sourceTree = "<group>"; };
 		49EB41ED1E1D28FB00E98215 /* Blade.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Blade.hpp; sourceTree = "<group>"; };
 		663A75931D0B193D00F6B561 /* ortus */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ortus; sourceTree = BUILT_PRODUCTS_DIR; };
 		663A75BC1D0B1A6800F6B561 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
@@ -177,6 +176,8 @@
 		F7E7A09F1E2204B20068BD3E /* Signal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Signal.hpp; path = signals/Signal.hpp; sourceTree = "<group>"; };
 		F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConstantSignal.cpp; path = signals/ConstantSignal.cpp; sourceTree = "<group>"; };
 		F7E7A0A61E2205BF0068BD3E /* ConstantSignal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ConstantSignal.hpp; path = signals/ConstantSignal.hpp; sourceTree = "<group>"; };
+		F7E7A0A81E2211BC0068BD3E /* Punch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Punch.cpp; sourceTree = "<group>"; };
+		F7E7A0A91E2211BC0068BD3E /* Punch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Punch.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -305,7 +306,6 @@
 				444DE4451D8A717400247E36 /* main.cpp */,
 				443247B21DB60187001D153B /* AblationStation.cpp */,
 				443247B31DB60187001D153B /* AblationStation.hpp */,
-				49EB41EC1E1D28FB00E98215 /* Blade.cpp */,
 				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
 				F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */,
 				F7E7A0991E21C16B0068BD3E /* ComplexStimulus.hpp */,
@@ -343,6 +343,8 @@
 				44AF538B1DA46F89009546BC /* OptionForewoman.cpp */,
 				44AF538C1DA46F89009546BC /* OptionForewoman.hpp */,
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
+				F7E7A0A81E2211BC0068BD3E /* Punch.cpp */,
+				F7E7A0A91E2211BC0068BD3E /* Punch.hpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -454,11 +456,11 @@
 				444DE4231D8A642700247E36 /* image_DXT.c in Sources */,
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
+				F7E7A0AA1E2211BC0068BD3E /* Punch.cpp in Sources */,
 				44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */,
 				44E542941E09FD1C00D3BF7A /* Stimulator.cpp in Sources */,
 				44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */,
 				F7E7A09A1E21C16B0068BD3E /* ComplexStimulus.cpp in Sources */,
-				49EB41EE1E1D28FB00E98215 /* Blade.cpp in Sources */,
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,
 				444DE4031D8A5D7F00247E36 /* MuscleInfoModule.cpp in Sources */,
 				444DE4701D8A717500247E36 /* README.md in Sources */,

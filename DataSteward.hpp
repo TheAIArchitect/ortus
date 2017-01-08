@@ -42,12 +42,12 @@ public: // super important variables
     std::unordered_map<std::string,int> officialNameToIndexMap;
     std::unordered_map<int,std::string> officialIndexToNameMap;
     std::vector<std::string*> officialNamepVector; // change name to master
-    Blade* inputVoltages;
-    Blade* outputVoltages;
-    Blade* gaps;
-    Blade* chems;
-    Blade* chemContrib;
-    Blade* gapContrib;
+    Blade<float>* inputVoltages;
+    Blade<float>* outputVoltages;
+    Blade<float>* gaps;
+    Blade<float>* chems;
+    Blade<float>* chemContrib;
+    Blade<float>* gapContrib;
     
 public:
     

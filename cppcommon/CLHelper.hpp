@@ -17,24 +17,33 @@
 #include <iostream>
 
 /**
-    \brief Removing some OpenCL setup boiler plate
-    \author Andrew McDonald
-    \date 11-21-15
-    \note Currently under development, no guarantees made. 
-*/
+ \brief Removing some OpenCL setup boiler plate
+ \author Andrew McDonald
+ \date 11-21-15
+ \note Currently under development, no guarantees made.
+ */
 class CLHelper{
 public:
     
     /**
-        \brief See details
-        \details Setup opencp device(s), context, and commandQueue
-        @return True...well at the moment it's always true
-    */
+     \brief See details
+     \details Sets index of OpenCL device number to use. Default is 3.
+     @return True...well at the moment it's always true
+     */
+    void setDeviceToUse(int deviceNum){
+        deviceToUse = deviceNum;
+    }
+    
+    
+    /**
+     \brief See details
+     \details Setup opencp device(s), context, and commandQueue
+     @return True...well at the moment it's always true
+     */
     bool setup_opencl(void){
-        int device_to_use = 0;
         num_devices = 0;
         if(num_devices == 0){
-            err = clGetDeviceIDs(nullptr, CL_DEVICE_TYPE_ALL, 1, device_ids, &num_devices);
+            err = clGetDeviceIDs(nullptr, CL_DEVICE_TYPE_ALL, maxDevices, device_ids, &num_devices);
             check_and_print_cl_err(err);
 #ifdef PRINT_LIB_ERRORS
             fprintf(stderr, "num_devices: %d\n", num_devices);
@@ -44,8 +53,8 @@ public:
         fprintf(stderr, "num_devices: %d\n", num_devices);
 #endif
         
-        device_id = device_ids[device_to_use];
-        print_selected_device_info(device_id, device_to_use);
+        device_id = device_ids[deviceToUse];
+        print_selected_device_info(device_id, deviceToUse);
         
         context = clCreateContext(0, 1, &device_id, nullptr, nullptr, &err);
         check_and_print_cl_err(err);
@@ -56,10 +65,10 @@ public:
     }
     
     /**
-        \brief Read kernel source into program buffer
-        @param fname Path to kernel source
-        @param programBuffer The buffer for kernel source
-    */
+     \brief Read kernel source into program buffer
+     @param fname Path to kernel source
+     @param programBuffer The buffer for kernel source
+     */
     void read_kernels_from_file(const char *fname, char **programBuffer){
         //////* AweM - Read kernel source as an array of char's */
         /* FROM:
@@ -79,9 +88,9 @@ public:
     }
     
     /**
-        \brief Checks OpenCL errors and prints a more descriptive error message
-        @param err The error code
-    */
+     \brief Checks OpenCL errors and prints a more descriptive error message
+     @param err The error code
+     */
     void check_and_print_cl_err(int err){
         if (err == CL_SUCCESS) return;
         
@@ -93,10 +102,10 @@ public:
     }
     
     /**
-        \brief error checking specific to building the kernel ('program')
-        @param err The error code
-        @param program Pointer to the cl_program
-    */
+     \brief error checking specific to building the kernel ('program')
+     @param err The error code
+     @param program Pointer to the cl_program
+     */
     void check_and_print_cl_program_build_err(int err, cl_program *program){
         if (err != CL_SUCCESS){
             size_t len;
@@ -107,10 +116,10 @@ public:
     }
     
     /**
-        \brief Print device information
-        @param cdi The cl_device_id
-        @param device_num The OpenCL device number
-    */
+     \brief Print device information
+     @param cdi The cl_device_id
+     @param device_num The OpenCL device number
+     */
     void print_selected_device_info(cl_device_id cdi, int device_num){
         
         char* value;
@@ -151,10 +160,10 @@ public:
     }
     
     /**
-        \brief Convert numeric error code to text
-        @param err The error code
-        @return The error string based on err
-    */
+     \brief Convert numeric error code to text
+     @param err The error code
+     @return The error string based on err
+     */
     std::string get_opencl_error(int err){
         
         switch (err) {
@@ -282,8 +291,8 @@ public:
     }
     
     /**
-        \brief A relic from our less politically correct days
-    */
+     \brief A relic from our less politically correct days
+     */
     void print_dferr(const char *opt){
         fprintf(stderr, "ASCII art has been removed\n");
         if (!(opt == NULL)) {
@@ -295,9 +304,12 @@ public:
 public:
     int err;
     unsigned int correct;
-    cl_device_id *device_ids = new cl_device_id[2];
+    int maxDevices = 3; // on MBP, 0 is CPU, 1 is integrated GPU, 2 is Discrete.
+    int deviceToUse = 2; // discrete GPU on MBP
+    cl_device_id *device_ids = new cl_device_id[maxDevices];
     cl_device_id device_id;
     cl_context context;
     cl_command_queue commands;
     cl_uint num_devices;
 };
+
