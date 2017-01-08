@@ -11,13 +11,14 @@
 
 #include <stdio.h>
 #include <vector>
+#include <string>
 
 class Stimulus {
 public:
     Stimulus();
     
-    std::vector<float> signal;
-    virtual float stimulate();
+    std::string name;
+    virtual float getStimulus();
     void setDuration(int numSteps);
     int getTimeStep();
     void resetTime();
@@ -25,7 +26,7 @@ public:
     int delay; // delay signal start by this number of time steps
     
 protected:
-    virtual float getStimulus();
+    virtual float getDerivedStimulus();
     int duration; // the number of steps the signal lasts
     
 private:

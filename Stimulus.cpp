@@ -17,13 +17,13 @@ Stimulus::Stimulus(){
     delay = 0;
 }
 
-float Stimulus::stimulate(){
+float Stimulus::getStimulus(){
     if (delay > 0){ // causes function to return zero until we've gone 'delay' timesteps.
         delay--; // maybe --delay...
         return 0.f;
     }
-    float stimulus = getStimulus();
-    stepTime(); 
+    float derivedStimulus = getDerivedStimulus();
+    stepTime();
     if (timeStep >= duration){
         if (loop){
             resetTime();
@@ -32,7 +32,12 @@ float Stimulus::stimulate(){
             finish();
         }
     }
-    return stimulus;
+    return derivedStimulus;
+}
+
+/* needs to be implemented by all derived classes */
+float Stimulus::getDerivedStimulus(){
+    return 0.f;
 }
 
 void Stimulus::stepTime(){

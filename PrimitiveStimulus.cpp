@@ -8,6 +8,9 @@
 
 #include "PrimitiveStimulus.hpp"
 
-PrimitiveStimulus::PrimitiveStimulus(){
+PrimitiveStimulus::PrimitiveStimulus(std::string name){
+    Stimulus();
+    
     
 }
+

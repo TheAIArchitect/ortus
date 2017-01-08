@@ -21,6 +21,7 @@ class Stimulator {
     
 public:
     Stimulator();
+    bool stimulate(std::string elementName, Stimulus& stimulus);
     std::vector<Stimulus> stimuli;
     
 };

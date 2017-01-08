@@ -15,7 +15,7 @@
 class PrimitiveStimulus : public Stimulus {
     
 public:
-    PrimitiveStimulus();
+    PrimitiveStimulus(std::string name);
 };
 
 #endif /* PrimitiveStimulus_hpp */

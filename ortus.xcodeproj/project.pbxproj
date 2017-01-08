@@ -50,7 +50,8 @@
 		F7E7A0941E219A0F0068BD3E /* Stimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */; };
 		F7E7A0971E21C0A60068BD3E /* PrimitiveStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0951E21C0A60068BD3E /* PrimitiveStimulus.cpp */; };
 		F7E7A09A1E21C16B0068BD3E /* ComplexStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */; };
-		F7E7A09D1E21F2FD0068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09B1E21F2FD0068BD3E /* Signal.cpp */; };
+		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
+		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -172,8 +173,10 @@
 		F7E7A0961E21C0A60068BD3E /* PrimitiveStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PrimitiveStimulus.hpp; sourceTree = "<group>"; };
 		F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComplexStimulus.cpp; sourceTree = "<group>"; };
 		F7E7A0991E21C16B0068BD3E /* ComplexStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ComplexStimulus.hpp; sourceTree = "<group>"; };
-		F7E7A09B1E21F2FD0068BD3E /* Signal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Signal.cpp; sourceTree = "<group>"; };
-		F7E7A09C1E21F2FD0068BD3E /* Signal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Signal.hpp; sourceTree = "<group>"; };
+		F7E7A09E1E2204B20068BD3E /* Signal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Signal.cpp; path = signals/Signal.cpp; sourceTree = "<group>"; };
+		F7E7A09F1E2204B20068BD3E /* Signal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Signal.hpp; path = signals/Signal.hpp; sourceTree = "<group>"; };
+		F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConstantSignal.cpp; path = signals/ConstantSignal.cpp; sourceTree = "<group>"; };
+		F7E7A0A61E2205BF0068BD3E /* ConstantSignal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ConstantSignal.hpp; path = signals/ConstantSignal.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -314,8 +317,7 @@
 				44FDA2EB1DCC7995005897DB /* DataVisualizer.hpp */,
 				444DE3E51D8A5D7F00247E36 /* ElementInfoModule.cpp */,
 				444DE3E61D8A5D7F00247E36 /* ElementInfoModule.hpp */,
-				F7E7A09B1E21F2FD0068BD3E /* Signal.cpp */,
-				F7E7A09C1E21F2FD0068BD3E /* Signal.hpp */,
+				F7E7A0A11E2204D00068BD3E /* signals */,
 				44E542921E09FD1C00D3BF7A /* Stimulator.cpp */,
 				44E542931E09FD1C00D3BF7A /* Stimulator.hpp */,
 				F7E7A0921E219A0F0068BD3E /* Stimulus.cpp */,
@@ -381,6 +383,17 @@
 			name = CurrentlyUnused;
 			sourceTree = "<group>";
 		};
+		F7E7A0A11E2204D00068BD3E /* signals */ = {
+			isa = PBXGroup;
+			children = (
+				F7E7A09E1E2204B20068BD3E /* Signal.cpp */,
+				F7E7A09F1E2204B20068BD3E /* Signal.hpp */,
+				F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */,
+				F7E7A0A61E2205BF0068BD3E /* ConstantSignal.hpp */,
+			);
+			name = signals;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -437,6 +450,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */,
 				444DE4231D8A642700247E36 /* image_DXT.c in Sources */,
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
@@ -450,7 +464,6 @@
 				444DE4701D8A717500247E36 /* README.md in Sources */,
 				444DE4041D8A5D7F00247E36 /* NeuronInfoModule.cpp in Sources */,
 				444DE4061D8A5D7F00247E36 /* ShapeCreator.cpp in Sources */,
-				F7E7A09D1E21F2FD0068BD3E /* Signal.cpp in Sources */,
 				444DE4101D8A5D7F00247E36 /* Geometrician.cpp in Sources */,
 				444DE4181D8A63AC00247E36 /* SOIL.c in Sources */,
 				444DE4241D8A642700247E36 /* image_helper.c in Sources */,
@@ -470,6 +483,7 @@
 				443247B11DB059CE001D153B /* Connection.cpp in Sources */,
 				443247B41DB60187001D153B /* AblationStation.cpp in Sources */,
 				444DE41E1D8A63F800247E36 /* stb_image_aug.c in Sources */,
+				F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */,
 				444DE40E1D8A5D7F00247E36 /* Mesher.cpp in Sources */,
 				444DE40A1D8A5D7F00247E36 /* TextMaker.cpp in Sources */,
 				F7E7A0941E219A0F0068BD3E /* Stimulus.cpp in Sources */,
