@@ -51,7 +51,6 @@
 		F7E7A09A1E21C16B0068BD3E /* ComplexStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0981E21C16B0068BD3E /* ComplexStimulus.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
-		F7E7A0AA1E2211BC0068BD3E /* Punch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A81E2211BC0068BD3E /* Punch.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -176,8 +175,6 @@
 		F7E7A09F1E2204B20068BD3E /* Signal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Signal.hpp; path = signals/Signal.hpp; sourceTree = "<group>"; };
 		F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConstantSignal.cpp; path = signals/ConstantSignal.cpp; sourceTree = "<group>"; };
 		F7E7A0A61E2205BF0068BD3E /* ConstantSignal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ConstantSignal.hpp; path = signals/ConstantSignal.hpp; sourceTree = "<group>"; };
-		F7E7A0A81E2211BC0068BD3E /* Punch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Punch.cpp; sourceTree = "<group>"; };
-		F7E7A0A91E2211BC0068BD3E /* Punch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Punch.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -343,8 +340,6 @@
 				44AF538B1DA46F89009546BC /* OptionForewoman.cpp */,
 				44AF538C1DA46F89009546BC /* OptionForewoman.hpp */,
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
-				F7E7A0A81E2211BC0068BD3E /* Punch.cpp */,
-				F7E7A0A91E2211BC0068BD3E /* Punch.hpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -456,7 +451,6 @@
 				444DE4231D8A642700247E36 /* image_DXT.c in Sources */,
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
-				F7E7A0AA1E2211BC0068BD3E /* Punch.cpp in Sources */,
 				44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */,
 				44E542941E09FD1C00D3BF7A /* Stimulator.cpp in Sources */,
 				44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */,

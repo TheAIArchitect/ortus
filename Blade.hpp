@@ -35,7 +35,9 @@ public:
     //void pushCLBuffer();
     //bool readCLBuffer();
     //void clearCLBuffer();
-    bool square;
+    bool squareAndNotScalar;
+    bool scalar;
+    bool readOnly;
     int currentRows;
     int maxRows;
     int currentCols;
@@ -43,14 +45,13 @@ public:
     cl_mem_flags memFlags;
     size_t currentSize;
     size_t maxSize;
-    //float* data;
-    //float* zeros;
     T* data;
     T* zeros;
     cl_mem clData;
     cl_uint clArgIndex;
     CLHelper* clhelper;
     
+    /////////////// TODO: add two more constructors (scalar, vector) to make it easier to create non-matrix Blades
 public:
     
     /* NOTE: row access starts from 0, but the number of rows must be at least 1 */
@@ -59,15 +60,20 @@ public:
     /* Allows creation of a 1D array that allows accessing like a 2D array, and allows quick 'growth'.
      */
     Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols){
-        square = false;
+        squareAndNotScalar = false;
+        scalar = false;
         if (currentRows == currentCols){ // it's square
-            square = true;
+            squareAndNotScalar = true;
+            if ((maxRows == maxCols) && (maxRows == 1)){ // it's a scalar
+                scalar = true;
+                squareAndNotScalar = false;
+            }
         }
         else if ((currentRows == maxRows) && (maxRows == 1)) { // it's a vector, not a 2D matrix
-            square = false;
+            squareAndNotScalar = false;
         }
         else { // this is not something we are equipped to handle.
-            printf("ERROR! 'Blade' can only handle square matricies and 1D vectors.\n");
+            printf("ERROR! 'Blade' can only handle square matricies, 1D vectors, and scalars.\n");
             exit(5);
         }
         currentSize = currentRows*currentCols;
@@ -81,7 +87,13 @@ public:
         // OpenCL buffer creation
         this->clhelper = clhelper;
         memFlags = flags;
-        createCLBuffer();
+        printf("ro - %d... memFlags, scalar: %d, %d\n",CL_MEM_READ_ONLY, memFlags, scalar);
+        if ((memFlags & CL_MEM_READ_ONLY) && scalar){ // then we don't need to create a buffer
+            readOnly = true;
+            printf("booyahkasha\n");
+        } else {
+            createCLBuffer();
+        }
     }
     
     ~Blade(){
@@ -89,15 +101,55 @@ public:
         delete zeros;
     }
     
-    /* returns the location of data at row, col */
+    /* returns a pointer to the data at row, col. nullptr if out of range. */
     T* getp(int row, int col){
-        return &data[(currentCols*row)+col];
+        if (row < maxRows && col < maxCols){
+            return &data[(currentCols*row)+col];
+        }
+        return nullptr;
     }
     
-    /* returns the value of data at row, col */
-    T getv(int row, int col){
-        return data[(currentCols*row)+col];
+    /* only valid for vectors. returns a pointer to the data at col. nullptr if out of range */
+    T* getp(int col){
+        if (maxRows == 1 && col < currentCols){
+            return &data[col];
+        }
+        return nullptr;
     }
+    
+    /* only valid for scalars. returns a pointer to the data*/
+    T* getp(){
+        if (scalar){
+            return data;
+        }
+        return nullptr;
+    }
+    
+    /* returns the data at row, col. NULL if out of range. */
+    T getv(int row, int col){
+        if (row < maxRows && col < maxCols){
+            return data[(currentCols*row)+col];
+        }
+        return NULL;
+    }
+    
+    /* only valid for vectors. returns the data at col. nullptr if out of range */
+    T getv(int col){
+        if (maxRows == 1 && col < currentCols){
+            return data[col];
+        }
+        return nullptr;
+    }
+    
+    /* only valid for scalars. returns the data*/
+    T getv(){
+        if (scalar){
+            return *data;
+        }
+        return NULL;
+    }
+    
+    
     
     /* updates the value of data at row, col. This function won't stop you from trying to access a negative index.
      * Note that row access starts from 0 -- the first row, is row 0 (same for columns).*/
@@ -119,6 +171,15 @@ public:
         return false;
     }
     
+    /* only valid for a scalar */
+    bool set(T value){
+        if (scalar){
+            data[0] = value;
+            return true;
+        }
+        return false;
+    }
+    
     bool add(int col, T value){
         if (maxRows == 1 && col < currentCols){
             data[col] += value;
@@ -130,8 +191,8 @@ public:
     
     /* returns the new width if successful, -1 if not */
     int addEntry(){
-        if (currentCols < maxCols){ // we always increase the cols, so this is enough of a check.
-            if(square){ // increment cols and rows
+        if (currentCols < maxCols){ // if not scalar, we always increase the cols, so this is enough of a check (scalar values won't pass this).
+            if(squareAndNotScalar){ // increment cols and rows
                 currentRows++;
                 currentCols++;
                 currentSize = currentRows * currentCols;
@@ -161,7 +222,12 @@ public:
     /* sets the openCL kernel argument index, to be used when calling clSetKernelArg */
     void setCLArgIndex(cl_uint argIndex, cl_kernel* kernel){
         clArgIndex = argIndex;
-        this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(cl_mem), &clData);
+        if (scalar && readOnly){ // then we don't need a buffer, and just send the data over (which is already a pointer... don't send a reference to it.
+            this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(T), data);
+        }
+        else {
+            this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(cl_mem), &clData);
+        }
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
     }
     
@@ -180,7 +246,7 @@ public:
     /* reads data from the OpenCL buffer into data. This will overwrite anything in data.
      * NOTE: if the cl_mem_flags variable set during buffer creation does not permit writing (for OpenCL), nothing will be read, and readCLBuffer will return false. */
     bool readCLBuffer(){
-        if (!((memFlags | CL_MEM_READ_WRITE) || (memFlags | CL_MEM_WRITE_ONLY))){
+        if (!((memFlags & CL_MEM_READ_WRITE) || (memFlags & CL_MEM_WRITE_ONLY))){
             return false;
         }
         this->clhelper->err = clEnqueueReadBuffer(this->clhelper->commands, clData, CL_TRUE, 0, sizeof(T) * currentSize, data, 0, NULL, NULL);

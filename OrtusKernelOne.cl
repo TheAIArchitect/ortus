@@ -75,7 +75,7 @@ __kernel void OrtusKernel( __global float *inputVoltages,
     float total_incoming_current = 0.0f;
     float total_incoming_voltage = 0.0f;
     //if(gid == 1)printf("Running from mainKernel.cl\n");
-    
+    //printf("rowCount, colCount: %u, %u\n", rowCount, colCount);
     // Don't do anything if we're out of range.
     if(gid <= (rowCount - 1)){
         // using 0 for the row_num, because right now inputVoltages is just a vector

@@ -48,6 +48,10 @@ public: // super important variables
     Blade<float>* chems;
     Blade<float>* chemContrib;
     Blade<float>* gapContrib;
+    Blade<cl_uint>* rowCount;
+    Blade<cl_uint>* colCount;
+    Blade<cl_float>* gapNormalizer; // we divide gap weights by this
+    Blade<cl_float>* chemNormalizer; // we divide chem weights by this
     
 public:
     
@@ -96,10 +100,6 @@ public:
     cl_program program;
     cl_kernel kernel;
     char *programBuffer;
-    cl_uint rowCount;
-    cl_uint colCount;
-    cl_float gapNormalizer; // we divide gap weights by this
-    cl_float chemNormalizer; // we divide chem weights by this
     
     
     

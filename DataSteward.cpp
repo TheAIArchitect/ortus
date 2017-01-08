@@ -165,16 +165,12 @@ void DataSteward::setOpenCLKernelArgs(){
     chems->setCLArgIndex(3, &kernel);
     gapContrib->setCLArgIndex(4, &kernel);
     chemContrib->setCLArgIndex(5, &kernel);
-    clhelper.err = clSetKernelArg(kernel, 6, sizeof(cl_uint), &rowCount);
-    clhelper.check_and_print_cl_err(clhelper.err);
-    clhelper.err = clSetKernelArg(kernel, 7, sizeof(cl_uint), &colCount);
-    clhelper.check_and_print_cl_err(clhelper.err);
+    rowCount->setCLArgIndex(6, &kernel);
+    colCount->setCLArgIndex(7, &kernel);
     clhelper.err = clSetKernelArg(kernel, 8, sizeof(cl_uint), &Probe::shouldProbe);
     clhelper.check_and_print_cl_err(clhelper.err);
-    clhelper.err = clSetKernelArg(kernel, 9, sizeof(cl_float), &gapNormalizer);
-    clhelper.check_and_print_cl_err(clhelper.err);
-    clhelper.err = clSetKernelArg(kernel, 10, sizeof(cl_float), &chemNormalizer);
-    clhelper.check_and_print_cl_err(clhelper.err);
+    gapNormalizer->setCLArgIndex(9, &kernel);
+    chemNormalizer->setCLArgIndex(10, &kernel);
 }
 
 void DataSteward::pushOpenCLBuffers(){
@@ -218,6 +214,16 @@ void DataSteward::initializeBlades(){
     inputVoltages = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
     outputVoltages = new Blade<float>(&clhelper, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
     //fillInputVoltageBlade(); // will probably be used at some point
+    //////// NOTE: add a new constructor for Blade that gets rid of the need for this....
+    rowCount = new Blade<cl_uint>(&clhelper, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    rowCount->set(NUM_ELEMS); // cl_uint, for current row count
+    colCount = new Blade<cl_uint>(&clhelper, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    colCount->set(NUM_ELEMS); // cl_uint, for current col count
+    gapNormalizer = new Blade<cl_float>(&clhelper, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    gapNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
+    chemNormalizer = new Blade<cl_float>(&clhelper, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    chemNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
+    
 }
 
 void DataSteward::fillInputVoltageBlade(){
@@ -395,11 +401,11 @@ void DataSteward::initializeData(){
     int modEight = NUM_ELEMS % 8;
     NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
     initializeBlades();
-    rowCount = NUM_ELEMS; // cl_uint, for current row count
-    colCount = NUM_ELEMS; // cl_uint, for current col count
     probe = new Probe(); // NOTE: probe not working right now. needs to be re-worked.
-    gapNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-    chemNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
+//    rowCount = NUM_ELEMS; // cl_uint, for current row count
+//    colCount = NUM_ELEMS; // cl_uint, for current col count
+//    gapNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
+//    chemNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
 }
 
 /* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
