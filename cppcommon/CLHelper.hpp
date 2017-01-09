@@ -17,29 +17,113 @@
 #include <iostream>
 
 /**
- \brief Removing some OpenCL setup boiler plate
- \author Andrew McDonald
- \date 11-21-15
- \note Currently under development, no guarantees made.
- */
+    \brief Removing some OpenCL setup boiler plate
+    \author Andrew McDonald
+    \author Sean Grimes
+    \date 11-21-15
+    \note Currently under development, no guarantees made. 
+*/
 class CLHelper{
 public:
     
     /**
-     \brief See details
-     \details Sets index of OpenCL device number to use. Default is 3.
-     @return True...well at the moment it's always true
-     */
-    void setDeviceToUse(int deviceNum){
-        deviceToUse = deviceNum;
-    }
-    
+        \brief default c'tor, setup for use with MBP on macOS
+        \details Will default to 3 possible devices, selecting the discrete GPU by default
+    */
+    CLHelper() : CLHelper(3, 2) {}
     
     /**
-     \brief See details
-     \details Setup opencp device(s), context, and commandQueue
-     @return True...well at the moment it's always true
-     */
+        \brief c'tor to select which compute device to attempt to use
+        \details Will try to use 'deviceToUse', on a MBP the devices are:\n
+        0 == CPU \n
+        1 == Integrated GPU \n
+        2 == Discrete GPU
+        @param maxDevices The number of OpenCL compute devices on the machine
+        @param deviceToUse The OpenCL device to use
+    */
+    CLHelper(int maxDevices, int deviceToUse)
+        : err{}
+        , correct{}
+        , maxDevices{maxDevices}
+        , deviceToUse{deviceToUse}
+    {
+        device_ids = new cl_device_id[maxDevices];
+    }
+
+    /**
+        \brief Move c'tor
+    */
+    CLHelper(CLHelper &&clh) 
+        : CLHelper() 
+    {
+        swap(*this, clh);
+    }
+
+    /**
+        \brief Move assignment
+    */
+    CLHelper &operator=(CLHelper &&clh){
+        swap(*this, clh);
+        return *this;
+    }
+
+    /**
+        \brief Copy c'tor
+    */
+    CLHelper(const CLHelper &clh) 
+        : err{clh.err}
+        , correct{clh.correct}
+        , maxDevices{clh.maxDevices}
+        , device_ids(maxDevices ? new cl_device_id[maxDevices] : nullptr)
+        , deviceToUse{clh.deviceToUse}
+        , device_id{clh.device_id}
+        , context{clh.context}
+        , commands{clh.commands}
+        , num_devices{clh.num_devices}
+    {
+        std::copy(clh.device_ids, clh.device_ids + maxDevices, device_ids);
+    }
+
+    /**
+        \brief Copy assignment
+    */
+    CLHelper &operator=(CLHelper clh){
+        swap(*this, clh);
+        return *this;
+    }
+
+    /**
+        \brief d'tor
+    */
+    ~CLHelper(){delete[] device_ids;}
+
+    void swap(CLHelper &l, CLHelper &r){
+        using std::swap;
+        swap(l.err, r.err);
+        swap(l.correct, r.correct);
+        swap(l.maxDevices, r.maxDevices);
+        swap(l.deviceToUse, r.deviceToUse);
+        swap(l.device_ids, r.device_ids);
+        swap(l.device_id, r.device_id);
+        swap(l.context, r.context);
+        swap(l.commands, r.commands);
+        swap(l.num_devices, r.num_devices);
+    }
+
+
+    /**
+        \brief See details
+        \details Sets index of OpenCL device number to use. Default is 3.
+    */
+    void setDeviceToUse(int deviceNum){
+        deviceToUse = deviceNum;
+    }   
+    
+    /**
+        \brief See details
+        \details Setup opencp device(s), context, and commandQueue
+        @return True...well at the moment it's always true
+    */
     bool setup_opencl(void){
         num_devices = 0;
         if(num_devices == 0){
@@ -65,10 +149,10 @@ public:
     }
     
     /**
-     \brief Read kernel source into program buffer
-     @param fname Path to kernel source
-     @param programBuffer The buffer for kernel source
-     */
+        \brief Read kernel source into program buffer
+        @param fname Path to kernel source
+        @param programBuffer The buffer for kernel source
+    */
     void read_kernels_from_file(const char *fname, char **programBuffer){
         //////* AweM - Read kernel source as an array of char's */
         /* FROM:
@@ -88,9 +172,9 @@ public:
     }
     
     /**
-     \brief Checks OpenCL errors and prints a more descriptive error message
-     @param err The error code
-     */
+        \brief Checks OpenCL errors and prints a more descriptive error message
+        @param err The error code
+    */
     void check_and_print_cl_err(int err){
         if (err == CL_SUCCESS) return;
         
@@ -102,10 +186,10 @@ public:
     }
     
     /**
-     \brief error checking specific to building the kernel ('program')
-     @param err The error code
-     @param program Pointer to the cl_program
-     */
+        \brief error checking specific to building the kernel ('program')
+        @param err The error code
+        @param program Pointer to the cl_program
+    */
     void check_and_print_cl_program_build_err(int err, cl_program *program){
         if (err != CL_SUCCESS){
             size_t len;
@@ -116,10 +200,10 @@ public:
     }
     
     /**
-     \brief Print device information
-     @param cdi The cl_device_id
-     @param device_num The OpenCL device number
-     */
+        \brief Print device information
+        @param cdi The cl_device_id
+        @param device_num The OpenCL device number
+    */
     void print_selected_device_info(cl_device_id cdi, int device_num){
         
         char* value;
@@ -160,10 +244,10 @@ public:
     }
     
     /**
-     \brief Convert numeric error code to text
-     @param err The error code
-     @return The error string based on err
-     */
+        \brief Convert numeric error code to text
+        @param err The error code
+        @return The error string based on err
+    */
     std::string get_opencl_error(int err){
         
         switch (err) {
@@ -291,8 +375,8 @@ public:
     }
     
     /**
-     \brief A relic from our less politically correct days
-     */
+        \brief A relic from our less politically correct days
+    */
     void print_dferr(const char *opt){
         fprintf(stderr, "ASCII art has been removed\n");
         if (!(opt == NULL)) {
@@ -304,12 +388,11 @@ public:
 public:
     int err;
     unsigned int correct;
-    int maxDevices = 3; // on MBP, 0 is CPU, 1 is integrated GPU, 2 is Discrete.
-    int deviceToUse = 2; // discrete GPU on MBP
+    int maxDevices; 
+    int deviceToUse;
     cl_device_id *device_ids = new cl_device_id[maxDevices];
     cl_device_id device_id;
     cl_context context;
     cl_command_queue commands;
     cl_uint num_devices;
 };
-

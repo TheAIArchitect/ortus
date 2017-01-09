@@ -75,6 +75,11 @@ public:
     }
     
     /**
+        \brief Default d'tor
+    */
+    ~TSQueue(){}
+    
+    /**
         \brief Swap
     */
     void swap(TSQueue &left, TSQueue &right){
@@ -107,7 +112,7 @@ public:
         
         // Prevent spurious wakes from ruining everything
         // then release lock and wait
-       while(queue_.empty())
+        while(queue_.empty())
             condVar_.wait(mlock);
         
         // Same queue operations as normal
