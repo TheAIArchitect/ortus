@@ -25,7 +25,6 @@
 		444DE4231D8A642700247E36 /* image_DXT.c in Sources */ = {isa = PBXBuildFile; fileRef = 444DE41F1D8A642700247E36 /* image_DXT.c */; };
 		444DE4241D8A642700247E36 /* image_helper.c in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4211D8A642700247E36 /* image_helper.c */; };
 		444DE4661D8A717500247E36 /* GraphicsGovernor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE42C1D8A717300247E36 /* GraphicsGovernor.cpp */; };
-		444DE46A1D8A717500247E36 /* DataSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4361D8A717300247E36 /* DataSteward.cpp */; };
 		444DE46C1D8A717500247E36 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4451D8A717400247E36 /* main.cpp */; };
 		444DE46E1D8A717500247E36 /* makefile in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4471D8A717400247E36 /* makefile */; };
 		444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE44A1D8A717400247E36 /* myDebug.cpp */; };
@@ -44,6 +43,9 @@
 		49C754C01E125CEB000D0A00 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75C61D0B1AF000F6B561 /* GLUT.framework */; };
 		49C754C11E125CF8000D0A00 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */; };
 		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
+		F74880401E2448A00083763E /* ComputeSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803A1E2448A00083763E /* ComputeSteward.cpp */; };
+		F74880411E2448A00083763E /* DataSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803C1E2448A00083763E /* DataSteward.cpp */; };
+		F74880421E2448A00083763E /* Steward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803E1E2448A00083763E /* Steward.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
@@ -51,8 +53,6 @@
 		F7E7A0B41E2260350068BD3E /* PrimitiveStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AD1E2260350068BD3E /* PrimitiveStimulus.cpp */; };
 		F7E7A0B51E2260350068BD3E /* Stimulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AF1E2260350068BD3E /* Stimulator.cpp */; };
 		F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0B11E2260350068BD3E /* Stimulus.cpp */; };
-		F7E7A0BA1E2260C70068BD3E /* Steward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0B81E2260C70068BD3E /* Steward.cpp */; };
-		F7E7A0BD1E22611F0068BD3E /* ComputeSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0BB1E22611F0068BD3E /* ComputeSteward.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -121,8 +121,6 @@
 		444DE4281D8A717300247E36 /* bird_compile_clang */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bird_compile_clang; sourceTree = "<group>"; };
 		444DE42C1D8A717300247E36 /* GraphicsGovernor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsGovernor.cpp; sourceTree = "<group>"; };
 		444DE4331D8A717300247E36 /* csv */ = {isa = PBXFileReference; lastKnownFileType = folder; path = csv; sourceTree = "<group>"; };
-		444DE4361D8A717300247E36 /* DataSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataSteward.cpp; sourceTree = "<group>"; };
-		444DE4371D8A717300247E36 /* DataSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DataSteward.hpp; sourceTree = "<group>"; };
 		444DE4401D8A717400247E36 /* havePhun.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = havePhun.sh; sourceTree = "<group>"; };
 		444DE4411D8A717400247E36 /* kill_all_worms.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = kill_all_worms.sh; sourceTree = "<group>"; };
 		444DE4421D8A717400247E36 /* killWorm_local.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = killWorm_local.sh; sourceTree = "<group>"; };
@@ -162,6 +160,12 @@
 		663A75BC1D0B1A6800F6B561 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		663A75C61D0B1AF000F6B561 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		F748803A1E2448A00083763E /* ComputeSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComputeSteward.cpp; path = stewards/ComputeSteward.cpp; sourceTree = "<group>"; };
+		F748803B1E2448A00083763E /* ComputeSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComputeSteward.hpp; path = stewards/ComputeSteward.hpp; sourceTree = "<group>"; };
+		F748803C1E2448A00083763E /* DataSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataSteward.cpp; path = stewards/DataSteward.cpp; sourceTree = "<group>"; };
+		F748803D1E2448A00083763E /* DataSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DataSteward.hpp; path = stewards/DataSteward.hpp; sourceTree = "<group>"; };
+		F748803E1E2448A00083763E /* Steward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Steward.cpp; path = stewards/Steward.cpp; sourceTree = "<group>"; };
+		F748803F1E2448A00083763E /* Steward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Steward.hpp; path = stewards/Steward.hpp; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -177,10 +181,6 @@
 		F7E7A0B01E2260350068BD3E /* Stimulator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Stimulator.hpp; path = stimuli/Stimulator.hpp; sourceTree = "<group>"; };
 		F7E7A0B11E2260350068BD3E /* Stimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Stimulus.cpp; path = stimuli/Stimulus.cpp; sourceTree = "<group>"; };
 		F7E7A0B21E2260350068BD3E /* Stimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Stimulus.hpp; path = stimuli/Stimulus.hpp; sourceTree = "<group>"; };
-		F7E7A0B81E2260C70068BD3E /* Steward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Steward.cpp; sourceTree = "<group>"; };
-		F7E7A0B91E2260C70068BD3E /* Steward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Steward.hpp; sourceTree = "<group>"; };
-		F7E7A0BB1E22611F0068BD3E /* ComputeSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComputeSteward.cpp; sourceTree = "<group>"; };
-		F7E7A0BC1E22611F0068BD3E /* ComputeSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ComputeSteward.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +306,7 @@
 		666FF3951D19A2C0001972D4 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				F74880391E2448510083763E /* stewards */,
 				F7E7A0B71E2260620068BD3E /* stimuli */,
 				444DE4451D8A717400247E36 /* main.cpp */,
 				443247B21DB60187001D153B /* AblationStation.cpp */,
@@ -313,8 +314,6 @@
 				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
 				443247AF1DB059CE001D153B /* Connection.cpp */,
 				443247B01DB059CE001D153B /* Connection.hpp */,
-				444DE4361D8A717300247E36 /* DataSteward.cpp */,
-				444DE4371D8A717300247E36 /* DataSteward.hpp */,
 				44FDA2EA1DCC7995005897DB /* DataVisualizer.cpp */,
 				44FDA2EB1DCC7995005897DB /* DataVisualizer.hpp */,
 				444DE3E51D8A5D7F00247E36 /* ElementInfoModule.cpp */,
@@ -339,12 +338,21 @@
 				44AF538B1DA46F89009546BC /* OptionForewoman.cpp */,
 				44AF538C1DA46F89009546BC /* OptionForewoman.hpp */,
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
-				F7E7A0B81E2260C70068BD3E /* Steward.cpp */,
-				F7E7A0B91E2260C70068BD3E /* Steward.hpp */,
-				F7E7A0BB1E22611F0068BD3E /* ComputeSteward.cpp */,
-				F7E7A0BC1E22611F0068BD3E /* ComputeSteward.hpp */,
 			);
 			name = src;
+			sourceTree = "<group>";
+		};
+		F74880391E2448510083763E /* stewards */ = {
+			isa = PBXGroup;
+			children = (
+				F748803A1E2448A00083763E /* ComputeSteward.cpp */,
+				F748803B1E2448A00083763E /* ComputeSteward.hpp */,
+				F748803C1E2448A00083763E /* DataSteward.cpp */,
+				F748803D1E2448A00083763E /* DataSteward.hpp */,
+				F748803E1E2448A00083763E /* Steward.cpp */,
+				F748803F1E2448A00083763E /* Steward.hpp */,
+			);
+			name = stewards;
 			sourceTree = "<group>";
 		};
 		F7DA053C1E1FC943009FA734 /* CurrentlyUnused */ = {
@@ -468,6 +476,7 @@
 				F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */,
 				444DE4231D8A642700247E36 /* image_DXT.c in Sources */,
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
+				F74880421E2448A00083763E /* Steward.cpp in Sources */,
 				F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
 				44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */,
@@ -476,9 +485,9 @@
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,
 				444DE4031D8A5D7F00247E36 /* MuscleInfoModule.cpp in Sources */,
 				444DE4701D8A717500247E36 /* README.md in Sources */,
+				F74880401E2448A00083763E /* ComputeSteward.cpp in Sources */,
 				444DE4041D8A5D7F00247E36 /* NeuronInfoModule.cpp in Sources */,
 				F7E7A0B51E2260350068BD3E /* Stimulator.cpp in Sources */,
-				F7E7A0BA1E2260C70068BD3E /* Steward.cpp in Sources */,
 				444DE4061D8A5D7F00247E36 /* ShapeCreator.cpp in Sources */,
 				444DE4101D8A5D7F00247E36 /* Geometrician.cpp in Sources */,
 				444DE4181D8A63AC00247E36 /* SOIL.c in Sources */,
@@ -487,11 +496,10 @@
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE46C1D8A717500247E36 /* main.cpp in Sources */,
 				444DE40C1D8A5D7F00247E36 /* Shader.cpp in Sources */,
-				444DE46A1D8A717500247E36 /* DataSteward.cpp in Sources */,
 				444DE46E1D8A717500247E36 /* makefile in Sources */,
 				444DE40D1D8A5D7F00247E36 /* MassPoint.cpp in Sources */,
 				F7E7A0B41E2260350068BD3E /* PrimitiveStimulus.cpp in Sources */,
-				F7E7A0BD1E22611F0068BD3E /* ComputeSteward.cpp in Sources */,
+				F74880411E2448A00083763E /* DataSteward.cpp in Sources */,
 				44AF538D1DA46F89009546BC /* OptionForewoman.cpp in Sources */,
 				44E542911E09FCE000D3BF7A /* Gymnasium.cpp in Sources */,
 				444DE4091D8A5D7F00247E36 /* Artist.cpp in Sources */,

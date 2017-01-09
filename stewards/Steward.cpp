@@ -38,6 +38,7 @@ void Steward::run(){
     for (int i = 0; i < numIterations; ++i){
         computeSteward->run();
         
+        
         dataSteward->readOpenCLBuffers();
         dataSteward->updateOutputVoltageVector();// this is a copy of the data.
         for (int j = 0; j < dataSteward->outputVoltageVector.size(); ++j){
