@@ -22,8 +22,8 @@ void Steward::initialize(){
     computeStewardp->dStewiep = dataStewardp;
     computeStewardp->initializeOpenCL();
     dataStewardp->init();
-    stimulationStewardp = new StimulationSteward(dataStewardp);
-    stimulationStewardp->setStimuli();
+    sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
+    sensoryStimulationStewardp->setStimuli();
     
 }
 
@@ -42,20 +42,16 @@ void Steward::run(){
         computeStewardp->run();
         computeStewardp->executePostRunOperations();
         
+        // Stimulate the sensors 
+        sensoryStimulationStewardp->performSensoryStimulation();
+        
         // temporary print statement
-        for (int j = 0; j < dataStewardp->outputVoltageVector.size(); ++j){
-            printf("%.2f, ",dataStewardp->outputVoltageVector[j]);
-        }
-        printf("\n");
+        //for (int j = 0; j < dataStewardp->outputVoltageVector.size(); ++j){
+        //    printf("%.2f, ",dataStewardp->outputVoltageVector[j]);
+        //}
+        //printf("\n");
         
-        // Stimulate the sensors << THIS WILL BE A STEWARD >>
-        stimulationStewardp->performSensoryStimulation();
         //dataStewardp->gym.stimulateSensors(*(dataStewardp->inputVoltages), dataStewardp->officialNameToIndexMap);
-        
-        // now we need to re-push that buffer
-    
-        
-    
     }
 
     // Just a basic runtime report and small sample of elements
@@ -85,6 +81,7 @@ void Steward::cleanUp(){
     // do in reverse order of allocation? might not matter.
     delete computeStewardp;
     delete dataStewardp;
+    delete sensoryStimulationStewardp;
     
     
 }

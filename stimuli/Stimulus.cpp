@@ -15,6 +15,21 @@ Stimulus::Stimulus(){
     duration = 0;
     iterationNumber = 0;
     delay = 0;
+    signalp = NULL;
+}
+
+Stimulus::~Stimulus(){
+    if (signalp != NULL){
+        delete signalp;
+    }
+}
+
+/* needs to be implemented by all derived classes
+ *
+ * dont want to make pure virtual, maybe for no good reason.
+ * */
+float Stimulus::getDerivedStimulus(int timeStep){
+    return 0.f;
 }
 
 float Stimulus::getStimulus(){
@@ -35,10 +50,10 @@ float Stimulus::getStimulus(){
     return derivedStimulus;
 }
 
-/* needs to be implemented by all derived classes */
-float Stimulus::getDerivedStimulus(int timeStep){
-    return 0.f;
+void Stimulus::setSignal(Signal* signalp){
+    this->signalp = signalp;
 }
+
 
 void Stimulus::stepTime(){
     timeStep++;

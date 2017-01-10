@@ -13,7 +13,7 @@
 #include "DataSteward.hpp"
 #include "ComputeSteward.hpp"
 #include "DataVisualizer.hpp"
-#include "StimulationSteward.hpp"
+#include "SensoryStimulationSteward.hpp"
 
 class Steward {
 public:
@@ -26,7 +26,7 @@ public:
     DataSteward* dataStewardp;
     ComputeSteward* computeStewardp;
     // maybe call it a sensoryStimulationSteward, and use another instance for the 'thinking' one that stimulates interneurons? (might be better to have a separate class though... yeah, i think so)
-    StimulationSteward* stimulationStewardp;
+    SensoryStimulationSteward* sensoryStimulationStewardp;
     
     int numIterations;
     

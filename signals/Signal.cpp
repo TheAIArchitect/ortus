@@ -10,7 +10,12 @@
 
 float Signal::ZEROF = 0.f;
 
-/* move semantics: http://blog.smartbear.com/c-plus-plus/c11-tutorial-introducing-the-move-constructor-and-the-move-assignment-operator/ */
+/* move semantics: http://blog.smartbear.com/c-plus-plus/c11-tutorial-introducing-the-move-constructor-and-the-move-assignment-operator/ 
+ *
+ * --> apparently, not necessary to 'reset' old object, 
+ * other than ensuring the pointer is set to null so that the destructor isn't called,
+ * and memory that hasn't been allocated gets free'd.
+ */
 
 /* if initialize, make sure signal points to something. if not, don't. */
 Signal::Signal(bool initialize){

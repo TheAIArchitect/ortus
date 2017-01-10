@@ -12,22 +12,25 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include "Signal.hpp"
 
 class Stimulus {
 public:
     Stimulus();
-    
+    ~Stimulus();
     std::string name;
     virtual float getStimulus();
     void setDuration(int numSteps);
     int getTimeStep();
     void resetTime();
+    void setSignal(Signal* signalp);
     bool loop;
     int delay; // delay signal start by this number of time steps
     
 protected:
     virtual float getDerivedStimulus(int timeStep);
     int duration; // the number of steps the signal lasts
+    Signal* signalp;
     
 private:
     int iterationNumber;

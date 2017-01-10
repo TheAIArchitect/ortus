@@ -13,7 +13,7 @@ PrimitiveStimulus::PrimitiveStimulus(std::string name) : Stimulus(){
 }
 
 float PrimitiveStimulus::getDerivedStimulus(int timeStep){
-    return signal->getValueAtIndex(timeStep);
+    return signalp->getValueAtIndex(timeStep);
 }
 
 
