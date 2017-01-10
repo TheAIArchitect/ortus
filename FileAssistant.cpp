@@ -27,15 +27,6 @@ std::string FileAssistant::ortus_basic_connectome = "csv/ortus_basic_connectome.
 std::string FileAssistant::ortus_basic_connectome_test = "csv/ortus_basic_connectome_test.csv";
 
 
-std::vector<std::string> FileAssistant::parse_on_comma(std::string line){
-    std::vector<std::string> shit_fuck;
-    std::stringstream ss{line};
-    std::string tmp;
-    while(getline(ss, tmp, ',')){
-        shit_fuck.push_back(tmp);
-    }
-    return shit_fuck;
-}
 
 /**
  * returns an open ifstream object
@@ -67,7 +58,7 @@ void FileAssistant::readConnectomeCSV(std::string csv_name, std::vector<std::vec
     int len = 0, plen = 0;
     while (getline(input,line)){
         //printf("%s\n",line.c_str());
-        std::vector<std::string> split = FileAssistant::parse_on_comma(line);
+        std::vector<std::string> split = StrUtils::parseOnCharDelim(line,',');
         len = (int) split.size(); //
         if (count && (plen != len)){ // makes sure we're not at count == 0, and then cehcks prev len against current len
             throw std::runtime_error("incorrect row size in "+csv_name+"!!!\n");

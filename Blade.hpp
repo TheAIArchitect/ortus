@@ -103,24 +103,24 @@ public:
     Blade(CLHelper* clhelper, cl_mem_flags flags) : Blade(clhelper, flags, 1, 1, 1, 1) {};
     
     ~Blade(){
-        delete data;
-        delete zeros;
+        delete[] data;
+        delete[] zeros;
     }
     
-    /* returns a pointer to the data at row, col. nullptr if out of range. */
+    /* returns a pointer to the data at row, col. NULL if out of range. */
     T* getp(int row, int col){
         if (row < maxRows && col < maxCols){
             return &data[(currentCols*row)+col];
         }
-        return nullptr;
+        return NULL;
     }
     
-    /* only valid for vectors. returns a pointer to the data at col. nullptr if out of range */
+    /* only valid for vectors. returns a pointer to the data at col. NULL if out of range */
     T* getp(int col){
         if (maxRows == 1 && col < currentCols){
             return &data[col];
         }
-        return nullptr;
+        return NULL;
     }
     
     /* only valid for scalars. returns a pointer to the data*/
@@ -128,7 +128,7 @@ public:
         if (scalar){
             return data;
         }
-        return nullptr;
+        return NULL;
     }
     
     /* returns the data at row, col. NULL if out of range. */
@@ -139,12 +139,12 @@ public:
         return NULL;
     }
     
-    /* only valid for vectors. returns the data at col. nullptr if out of range */
+    /* only valid for vectors. returns the data at col. NULL if out of range */
     T getv(int col){
         if (maxRows == 1 && col < currentCols){
             return data[col];
         }
-        return nullptr;
+        return NULL;
     }
     
     /* only valid for scalars. returns the data*/

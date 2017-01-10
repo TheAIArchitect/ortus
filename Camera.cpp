@@ -48,7 +48,7 @@ Camera::Camera(GLFWwindow* window): window (window){
     
     std::vector<std::string> configVec = FileAssistant::readCameraConfig();
     if (configVec.size() == 4){// config found
-        std::vector<std::string> target = FileAssistant::parse_on_comma(configVec[0]);
+        std::vector<std::string> target = StrUtils::parseOnCharDelim(configVec[0],',');
         m_target = glm::vec3(stof(target[0]), stof(target[1]), stof(target[2]));
         m_theta = stof(configVec[1]);
         m_phi = stof(configVec[2]);
