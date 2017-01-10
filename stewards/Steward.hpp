@@ -18,15 +18,15 @@ class Steward {
 public:
     Steward();
     void initialize();
+    void cleanUp();
     
     void run();
     
-    DataSteward* dataSteward;
-    ComputeSteward* computeSteward;
+    DataSteward* dataStewardp;
+    ComputeSteward* computeStewardp;
     
     
     int numIterations;
-    std::vector<std::vector<float>> kernel_voltages;
     
 };
 

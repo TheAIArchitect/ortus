@@ -14,10 +14,10 @@
 
 class ConstantSignal : public Signal {
 public:
-    ConstantSignal(int magnitude, int startTime, int endTime, int length);
-    int magnitude;
+    ConstantSignal(float magnitude, int startTime, int endTime, int length);
+    float magnitude;
     ~ConstantSignal();
-    void generateFullSignalDerived(float startTime, float endTime, int length);
+    virtual void generateFullSignalDerived(float startTime, float endTime, int length);
 };
 
 #endif /* ConstantSignal_hpp */

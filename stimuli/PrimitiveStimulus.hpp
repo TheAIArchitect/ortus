@@ -11,11 +11,14 @@
 
 #include <stdio.h>
 #include "Stimulus.hpp"
+#include "Signal.hpp"
 
 class PrimitiveStimulus : public Stimulus {
     
 public:
     PrimitiveStimulus(std::string name);
+    Signal* signalp;
+    
 };
 
 #endif /* PrimitiveStimulus_hpp */

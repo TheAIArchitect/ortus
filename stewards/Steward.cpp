@@ -17,12 +17,11 @@ void Steward::initialize(){
     size_t globalSize = 512;
     size_t localSize = 64;
     
-    dataSteward = new DataSteward();
-    computeSteward = new ComputeSteward(globalSize, localSize);
-    computeSteward->dStewiep = dataSteward;
-    computeSteward->initializeOpenCL();
-    dataSteward->init();
-    computeSteward->setupOpenCL();
+    dataStewardp = new DataSteward();
+    computeStewardp = new ComputeSteward(globalSize, localSize);
+    computeStewardp->dStewiep = dataStewardp;
+    computeStewardp->initializeOpenCL();
+    dataStewardp->init();
 }
 
 /****************** NOTES:
@@ -36,53 +35,53 @@ void Steward::run(){
     
     numIterations = 1000;
     for (int i = 0; i < numIterations; ++i){
-        computeSteward->run();
+        computeStewardp->executePreRunOperations();
+        computeStewardp->run();
+        computeStewardp->executePostRunOperations();
         
-        
-        dataSteward->readOpenCLBuffers();
-        dataSteward->updateOutputVoltageVector();// this is a copy of the data.
-        for (int j = 0; j < dataSteward->outputVoltageVector.size(); ++j){
-            printf("%.2f, ",dataSteward->outputVoltageVector[j]);
+        // temporary print statement
+        for (int j = 0; j < dataStewardp->outputVoltageVector.size(); ++j){
+            printf("%.2f, ",dataStewardp->outputVoltageVector[j]);
         }
         printf("\n");
         
-        // copy the ouput data (which has been updated, see below) into the input data
-        dataSteward->inputVoltages->copyData(dataSteward->outputVoltages);
-        // then, stimulate the sensors << THIS WILL BE A STEWARD >>
-        dataSteward->gym.stimulateSensors(*(dataSteward->inputVoltages), dataSteward->officialNameToIndexMap);
+        // Stimulate the sensors << THIS WILL BE A STEWARD >>
+        dataStewardp->gym.stimulateSensors(*(dataStewardp->inputVoltages), dataStewardp->officialNameToIndexMap);
+        
         // now we need to re-push that buffer
-        dataSteward->inputVoltages->pushCLBuffer();
-        dataSteward->setOpenCLKernelArgs();
     
         
     
-        kernel_voltages.push_back(dataSteward->getOutputVoltageVector());
     }
-    ///// NOTE: TODO: re-do cleanup and printReport code
-    //stewie.cleanUp();
 
     // Just a basic runtime report and small sample of elements
     //stewie.printReport(DataSteward::numKernelLoops);
-        
-    int numKVs = kernel_voltages.size();
+    
+    // temporaray print statement(s)
+    int numKVs = dataStewardp->kernelVoltages.size();
     printf("size of 'kernel_voltages': %d\n", numKVs);
     for (int i = 0; i < numKVs; ++i){
-        for (int j = 0; j < kernel_voltages[i].size(); ++j){
-            printf("%.2f, ",kernel_voltages[i][j]);
+        for (int j = 0; j < dataStewardp->kernelVoltages[i].size(); ++j){
+            printf("%.2f, ",dataStewardp->kernelVoltages[i][j]);
         }
         printf("\n");
     }
-    //printf("info: %d, %d\n", aselIdx, core.stewie.bioElements[aselIdx]->element_id);
-    dataSteward->kernelVoltages = kernel_voltages;
-    DataVisualizer vizzer = DataVisualizer(dataSteward);
-    // NOTE: must create set
+    DataVisualizer vizzer = DataVisualizer(dataStewardp);
     const int plotSetSize = 6;
     std::string plotSet[plotSetSize] = {"SO2","SCO2","IPO2", "INO2", "MINHALE", "MEXHALE"};
     //vizzer.plotAll();
     vizzer.plotSet(plotSet, plotSetSize);
     //initGraphics(&core);
+    cleanUp();
     exit(89);   
     
 }
 
+void Steward::cleanUp(){
+    // do in reverse order of allocation? might not matter.
+    delete computeStewardp;
+    delete dataStewardp;
+    
+    
+}
 

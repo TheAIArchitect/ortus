@@ -60,10 +60,12 @@ public:
     
     
     DataSteward();
+    ~DataSteward();
     void init();
     void createElements();
     void createConnections();
     void initializeData();
+    void executePostRunMemoryTransfers();
     bool writeConnectome(std::string csv_name);
     
     void setKernelp(cl_kernel* kp);

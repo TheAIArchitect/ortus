@@ -27,11 +27,12 @@ class ComputeSteward {
 public:
     ComputeSteward(size_t globalSize, size_t localSize);
     void enqueueKernel();
-    void setupOpenCL();
     void printReport(int num_runs);
     
     void initializeOpenCL();
-    void run(int numIterations = 1);
+    void executePreRunOperations();
+    void run();
+    void executePostRunOperations();
     void cleanUpOpenCL();
     void cleanUp();
     

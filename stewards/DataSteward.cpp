@@ -78,6 +78,25 @@ unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
 
 DataSteward::DataSteward(){}
 
+DataSteward::~DataSteward(){
+    for (int i = 0; i < NUM_ELEMS; ++i){
+        delete officialNamepVector[i];
+        delete elements[i];
+    }
+    delete inputVoltages;
+    delete outputVoltages;
+    delete gaps;
+    delete chems;
+    delete chemContrib;
+    delete gapContrib;
+    delete rowCount;
+    delete colCount;
+    delete gapNormalizer;
+    delete chemNormalizer;
+    
+    delete probe;
+    
+}
 
 void DataSteward::init(){
     initializeData();
@@ -91,7 +110,20 @@ void DataSteward::setCLHelperp(CLHelper* clhp){
     clHelperp = clhp;
 }
 
+void DataSteward::executePostRunMemoryTransfers(){
+    readOpenCLBuffers();
+    updateOutputVoltageVector();
+    // copy the ouput data into the input data
+    // NOTE: FIX THIS SO THAT WE USE ONE BUFFER!!!
+    inputVoltages->copyData(outputVoltages);
+}
 
+
+void DataSteward::readOpenCLBuffers(){
+    // get output voltages
+    outputVoltages->readCLBuffer();
+    
+}
 
 
 std::vector<float> DataSteward::getOutputVoltageVector(){
@@ -104,19 +136,9 @@ void DataSteward::updateOutputVoltageVector(){
     for (int i = 0; i < outputVoltages->currentSize; ++i){
         outputVoltageVector.push_back(outputVoltages->data[i]);
     }
+    // push current voltage vector into vector of all output voltages
+    kernelVoltages.push_back(outputVoltageVector);
 }
-
-void DataSteward::readOpenCLBuffers(){
-    // get output voltages
-    outputVoltages->readCLBuffer();
-    
-}
-
-
-
-
-
-
 
 void DataSteward::setOpenCLKernelArgs(){
     inputVoltages->setCLArgIndex(0, kernelp);
@@ -146,12 +168,6 @@ void DataSteward::pushOpenCLBuffers(){
 }
 
 
-
-
-
-
-
-
 /* initializes the Blades that aren't used for the gj or cs weights */
 void DataSteward::initializeBlades(){
     // need a gj and cs contrib (one of each) -- these are NxN
@@ -159,17 +175,16 @@ void DataSteward::initializeBlades(){
     gapContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
     // now we initialize the voltage vectors -- one row.
     // ideally, we'd have one that gets read from and written to -- should get around to fixing that shortly.
-    inputVoltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
-    outputVoltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, 1, CONNECTOME_COLS, 1, MAX_ELEMENTS);
+    inputVoltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_COLS, MAX_ELEMENTS);
+    outputVoltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_COLS, MAX_ELEMENTS);
     //fillInputVoltageBlade(); // will probably be used at some point
-    //////// NOTE: add a new constructor for Blade that gets rid of the need for this....
-    rowCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    rowCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY);
     rowCount->set(NUM_ELEMS); // cl_uint, for current row count
-    colCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    colCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY);
     colCount->set(NUM_ELEMS); // cl_uint, for current col count
-    gapNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    gapNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_ONLY);
     gapNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-    chemNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_ONLY, 1, 1, 1, 1);
+    chemNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_ONLY);
     chemNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
     
 }

@@ -46,6 +46,7 @@
 		F74880401E2448A00083763E /* ComputeSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803A1E2448A00083763E /* ComputeSteward.cpp */; };
 		F74880411E2448A00083763E /* DataSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803C1E2448A00083763E /* DataSteward.cpp */; };
 		F74880421E2448A00083763E /* Steward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803E1E2448A00083763E /* Steward.cpp */; };
+		F74880451E245C930083763E /* StimulationSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F74880431E245C930083763E /* StimulationSteward.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
@@ -166,6 +167,8 @@
 		F748803D1E2448A00083763E /* DataSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DataSteward.hpp; path = stewards/DataSteward.hpp; sourceTree = "<group>"; };
 		F748803E1E2448A00083763E /* Steward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Steward.cpp; path = stewards/Steward.cpp; sourceTree = "<group>"; };
 		F748803F1E2448A00083763E /* Steward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Steward.hpp; path = stewards/Steward.hpp; sourceTree = "<group>"; };
+		F74880431E245C930083763E /* StimulationSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StimulationSteward.cpp; path = stewards/StimulationSteward.cpp; sourceTree = "<group>"; };
+		F74880441E245C930083763E /* StimulationSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = StimulationSteward.hpp; path = stewards/StimulationSteward.hpp; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -306,9 +309,10 @@
 		666FF3951D19A2C0001972D4 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				444DE4451D8A717400247E36 /* main.cpp */,
+				F7E7A0A11E2204D00068BD3E /* signals */,
 				F74880391E2448510083763E /* stewards */,
 				F7E7A0B71E2260620068BD3E /* stimuli */,
-				444DE4451D8A717400247E36 /* main.cpp */,
 				443247B21DB60187001D153B /* AblationStation.cpp */,
 				443247B31DB60187001D153B /* AblationStation.hpp */,
 				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
@@ -318,7 +322,6 @@
 				44FDA2EB1DCC7995005897DB /* DataVisualizer.hpp */,
 				444DE3E51D8A5D7F00247E36 /* ElementInfoModule.cpp */,
 				444DE3E61D8A5D7F00247E36 /* ElementInfoModule.hpp */,
-				F7E7A0A11E2204D00068BD3E /* signals */,
 				F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */,
 				F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */,
 				444DE42C1D8A717300247E36 /* GraphicsGovernor.cpp */,
@@ -351,6 +354,8 @@
 				F748803D1E2448A00083763E /* DataSteward.hpp */,
 				F748803E1E2448A00083763E /* Steward.cpp */,
 				F748803F1E2448A00083763E /* Steward.hpp */,
+				F74880431E245C930083763E /* StimulationSteward.cpp */,
+				F74880441E245C930083763E /* StimulationSteward.hpp */,
 			);
 			name = stewards;
 			sourceTree = "<group>";
@@ -487,6 +492,7 @@
 				444DE4701D8A717500247E36 /* README.md in Sources */,
 				F74880401E2448A00083763E /* ComputeSteward.cpp in Sources */,
 				444DE4041D8A5D7F00247E36 /* NeuronInfoModule.cpp in Sources */,
+				F74880451E245C930083763E /* StimulationSteward.cpp in Sources */,
 				F7E7A0B51E2260350068BD3E /* Stimulator.cpp in Sources */,
 				444DE4061D8A5D7F00247E36 /* ShapeCreator.cpp in Sources */,
 				444DE4101D8A5D7F00247E36 /* Geometrician.cpp in Sources */,

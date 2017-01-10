@@ -14,33 +14,33 @@ ComputeSteward::ComputeSteward(size_t globalSize, size_t localSize){
     currentIteration = 0;
 }
 
-void ComputeSteward::run(int numIterations){
-    if (numIterations > 0 && currentIteration == 0){
-        setupOpenCL(); // this calls 'enqueueKernel', which causes first run.
-    }
-    // now, we've run once, so, start the loop off with any modificiations
-    // NOTE: DO THE LOOP! // for (int i = 1; i < numIterations; ++i){ // start at 1, we already did the first one.
-    else {
-        enqueueKernel();
-    }
-    
-    
+void ComputeSteward::run(){
+    enqueueKernel();
     currentIteration++;
 }
 
-
-/* Prepare to run OpenCL */
-void ComputeSteward::setupOpenCL(){
-    
-    dStewiep->pushOpenCLBuffers();
-    printf("Pushed OpenCL Buffers\n");
+void ComputeSteward::executePreRunOperations(){
     
     dStewiep->setOpenCLKernelArgs();
     printf("Set OpenCL Kernel Args\n");
     
-    // run kernel
-    enqueueKernel();
+    if (currentIteration == 0){
+        // this only happens for all buffers prior to the first run
+        dStewiep->pushOpenCLBuffers();
+        printf("Pushed OpenCL Buffers\n");
+    }
+    else {// just push the ones we want to push on each iteration (so, the ones that we made changes to)
+        
+        // soon: gaps, chems
+        dStewiep->inputVoltages->pushCLBuffer();
+    }
 }
+
+
+void ComputeSteward::executePostRunOperations(){
+    dStewiep->executePostRunMemoryTransfers();
+}
+
 
 
 /* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */

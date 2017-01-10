@@ -10,7 +10,11 @@
 
 PrimitiveStimulus::PrimitiveStimulus(std::string name){
     Stimulus();
+    this->name = name;
+    //this->signalp = signalp;
     
     
 }
+
+
 

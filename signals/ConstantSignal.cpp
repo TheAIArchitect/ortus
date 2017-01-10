@@ -9,7 +9,7 @@
 #include "ConstantSignal.hpp"
 
 
-ConstantSignal::ConstantSignal(int magnitude, int startTime, int endTime, int length) : Signal(false){
+ConstantSignal::ConstantSignal(float magnitude, int startTime, int endTime, int length) : Signal(false){
     this->magnitude = magnitude;
     generateFullSignal(startTime, endTime, length);
 }

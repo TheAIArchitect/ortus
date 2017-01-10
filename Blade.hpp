@@ -96,6 +96,12 @@ public:
         }
     }
     
+    /* Simplified constructor for a vector (1D) */
+    Blade(CLHelper* clhelper, cl_mem_flags flags, int currentCols, int maxCols) : Blade(clhelper, flags, 1, currentCols, 1, maxCols) {};
+    
+    /* Simplified constructor for a scalar */
+    Blade(CLHelper* clhelper, cl_mem_flags flags) : Blade(clhelper, flags, 1, 1, 1, 1) {};
+    
     ~Blade(){
         delete data;
         delete zeros;
