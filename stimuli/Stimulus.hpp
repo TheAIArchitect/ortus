@@ -26,7 +26,7 @@ public:
     int delay; // delay signal start by this number of time steps
     
 protected:
-    virtual float getDerivedStimulus();
+    virtual float getDerivedStimulus(int timeStep);
     int duration; // the number of steps the signal lasts
     
 private:

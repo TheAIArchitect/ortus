@@ -8,13 +8,15 @@
 
 #include "PrimitiveStimulus.hpp"
 
-PrimitiveStimulus::PrimitiveStimulus(std::string name){
-    Stimulus();
+PrimitiveStimulus::PrimitiveStimulus(std::string name) : Stimulus(){
     this->name = name;
-    //this->signalp = signalp;
-    
-    
 }
+
+float PrimitiveStimulus::getDerivedStimulus(int timeStep){
+    return signal->getValueAtIndex(timeStep);
+}
+
+
 
 
 

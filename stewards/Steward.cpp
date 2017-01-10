@@ -22,6 +22,9 @@ void Steward::initialize(){
     computeStewardp->dStewiep = dataStewardp;
     computeStewardp->initializeOpenCL();
     dataStewardp->init();
+    stimulationStewardp = new StimulationSteward(dataStewardp);
+    stimulationStewardp->setStimuli();
+    
 }
 
 /****************** NOTES:
@@ -46,7 +49,8 @@ void Steward::run(){
         printf("\n");
         
         // Stimulate the sensors << THIS WILL BE A STEWARD >>
-        dataStewardp->gym.stimulateSensors(*(dataStewardp->inputVoltages), dataStewardp->officialNameToIndexMap);
+        stimulationStewardp->performSensoryStimulation();
+        //dataStewardp->gym.stimulateSensors(*(dataStewardp->inputVoltages), dataStewardp->officialNameToIndexMap);
         
         // now we need to re-push that buffer
     

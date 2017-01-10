@@ -17,7 +17,8 @@ class PrimitiveStimulus : public Stimulus {
     
 public:
     PrimitiveStimulus(std::string name);
-    Signal* signalp;
+    virtual float getDerivedStimulus(int timeStep);
+    Signal* signal;
     
 };
 

@@ -15,6 +15,7 @@
 #include "Stimulus.hpp"
 #include "PrimitiveStimulus.hpp"
 #include "ComplexStimulus.hpp"
+#include <unordered_map>
 
 
 class Stimulator {
@@ -22,7 +23,9 @@ class Stimulator {
 public:
     Stimulator();
     bool stimulate(std::string elementName, Stimulus& stimulus);
-    std::vector<Stimulus> stimuli;
+    
+    /* maps element ids to a vector of stimuli */
+    std::unordered_map<int,std::vector<Stimulus*>> stimuliMap;
     
 };
 

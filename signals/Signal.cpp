@@ -61,6 +61,7 @@ Signal::Signal(Signal&& s){
 
 /* move assignment operator...
  * http://stackoverflow.com/questions/5481539/what-does-t-double-ampersand-mean-in-c11
+ 
  */
 Signal& Signal::operator=(Signal&& s){
     if (this != &s){

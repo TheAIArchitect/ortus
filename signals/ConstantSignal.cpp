@@ -12,6 +12,8 @@
  * http://stackoverflow.com/questions/1226634/how-to-use-base-classs-constructors-and-assignment-operator-in-c
  *
  * I assumed that one could do the same thing with move constructors and operators...
+ *
+ * look into 'using' keyword: http://en.cppreference.com/w/cpp/language/using_declaration
  */
 
 ConstantSignal::ConstantSignal(float magnitude, int startTime, int endTime, int length) : Signal(false){

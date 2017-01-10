@@ -9,7 +9,7 @@
 #include "Stimulus.hpp"
 
 Stimulus::Stimulus(){
-    timeStep = -1;
+    timeStep = 0;
     finished = false; // true when timeStep == duration, iff loop == false
     loop = false;
     duration = 0;
@@ -22,7 +22,7 @@ float Stimulus::getStimulus(){
         delay--; // maybe --delay...
         return 0.f;
     }
-    float derivedStimulus = getDerivedStimulus();
+    float derivedStimulus = getDerivedStimulus(timeStep);
     stepTime();
     if (timeStep >= duration){
         if (loop){
@@ -36,7 +36,7 @@ float Stimulus::getStimulus(){
 }
 
 /* needs to be implemented by all derived classes */
-float Stimulus::getDerivedStimulus(){
+float Stimulus::getDerivedStimulus(int timeStep){
     return 0.f;
 }
 
