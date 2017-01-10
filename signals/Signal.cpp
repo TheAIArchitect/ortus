@@ -10,6 +10,8 @@
 
 float Signal::ZEROF = 0.f;
 
+/* move semantics: http://blog.smartbear.com/c-plus-plus/c11-tutorial-introducing-the-move-constructor-and-the-move-assignment-operator/ */
+
 /* if initialize, make sure signal points to something. if not, don't. */
 Signal::Signal(bool initialize){
     if (initialize){
@@ -19,9 +21,71 @@ Signal::Signal(bool initialize){
     callDeleteOnSignal = false;
 }
 
+Signal::Signal(const Signal& s){
+    // we don't want to worry whether or not the old one had data or anything...
+    // just create a new float array. it's safer this way.
+    signal = new float[s.signalLength];
+    callDeleteOnSignal = true;
+    for (int i = 0; i < s.signalLength; ++i){
+        signal[i] = s.signal[i];
+    }
+    signalLength = s.signalLength;
+}
+
+/* copy assignment operator
+ * copy-and-swap idiom: http://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
+ */
+Signal& Signal::operator=(Signal s){
+    swap(*this, s);
+    return *this;
+}
+
+/* swap -- see link in assignment operator function's description */
+void Signal::swap(Signal& to, Signal& from){
+    std::swap(to.signal, from.signal);
+    std::swap(to.signalLength, from.signalLength);
+    std::swap(to.callDeleteOnSignal, from.callDeleteOnSignal);
+}
+
+/* move constructor */
+Signal::Signal(Signal&& s){
+    // first take from 's'
+    signal = s.signal;
+    signalLength = s.signalLength;
+    callDeleteOnSignal = s.callDeleteOnSignal;
+    // then reset s
+    signal = NULL;
+    signalLength = 0;
+    callDeleteOnSignal = false;
+}
+
+/* move assignment operator...
+ * http://stackoverflow.com/questions/5481539/what-does-t-double-ampersand-mean-in-c11
+ */
+Signal& Signal::operator=(Signal&& s){
+    if (this != &s){
+        // first release anything current object ('this') has..
+        if (callDeleteOnSignal){
+            delete[] signal;
+        }
+        signalLength = 0;
+        callDeleteOnSignal = false;
+        // then take from 's'
+        signal = s.signal;
+        signalLength = s.signalLength;
+        callDeleteOnSignal = s.callDeleteOnSignal;
+        // reset 's'
+        s.signal = NULL;
+        s.signalLength = 0;
+        s.callDeleteOnSignal = false;
+    }
+    return *this;
+}
+
 Signal::~Signal(){
     if (callDeleteOnSignal){
-        delete signal;
+        delete[] signal;
+        callDeleteOnSignal = false;
     }
 }
 
@@ -48,7 +112,16 @@ float Signal::getValueAtIndex(int index){
     return 0.f;
 }
 
-void Signal::generateFullSignalDerived(float startTime, float increment, int length){
-    return;
+
+void Signal::generateFullSignalDerived(float startTime, float increment, int length){}
+
+
+float Signal::getValueAtTime(float t){
+    return 0.f;
 }
 
+void Signal::invert(){
+    for (int i = 0; i < signalLength; ++i){
+        signal[i] = -1*signal[i];
+    }
+}

@@ -12,12 +12,19 @@
 #include <stdio.h>
 #include "Signal.hpp"
 
+
 class ConstantSignal : public Signal {
 public:
     ConstantSignal(float magnitude, int startTime, int endTime, int length);
+    ConstantSignal(const ConstantSignal& cs);
+    ConstantSignal(ConstantSignal&& cs);
+    ConstantSignal& operator=(ConstantSignal cs);
+    void swap(ConstantSignal& to, ConstantSignal& from);
+    ConstantSignal& operator=(ConstantSignal&& cs);
     float magnitude;
     ~ConstantSignal();
-    virtual void generateFullSignalDerived(float startTime, float endTime, int length);
+protected:
+    virtual void generateFullSignalDerived(float startTime, float increment, int length);
 };
 
 #endif /* ConstantSignal_hpp */

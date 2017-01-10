@@ -13,6 +13,7 @@
 #include "DataSteward.hpp"
 #include "Stimulator.hpp"
 #include "ConstantSignal.hpp"
+#include "Signal.hpp"
 
 class StimulationSteward {
 public:

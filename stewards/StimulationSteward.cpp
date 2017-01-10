@@ -21,7 +21,7 @@ StimulationSteward::~StimulationSteward(){
 void StimulationSteward::setStimuli(){
    
     // note: this is a very rough, initial implementation of how this whole system will work...
-    //ConstantSignal co2Signal = ConstantSignal(2.5f, 0, 499, 500);
+    ConstantSignal co2Signal = ConstantSignal(2.5f, 0, 499, 500);
     
 }
 
