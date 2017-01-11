@@ -35,7 +35,6 @@
 		44B6E6241D8A792300A8DB7B /* BulletCollision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B6E6231D8A792300A8DB7B /* BulletCollision.framework */; };
 		44B6E6261D8A793A00A8DB7B /* LinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B6E6251D8A793A00A8DB7B /* LinearMath.framework */; };
 		44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B6E6321D9A6CB300A8DB7B /* Camera.cpp */; };
-		44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */ = {isa = PBXBuildFile; fileRef = 44E5428D1E091D0E00D3BF7A /* OrtusKernelOne.cl */; };
 		44E542911E09FCE000D3BF7A /* Gymnasium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44E5428F1E09FCE000D3BF7A /* Gymnasium.cpp */; };
 		44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FDA2EA1DCC7995005897DB /* DataVisualizer.cpp */; };
 		496841931E125FB1008AF250 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C31E125D07000D0A00 /* CoreVideo.framework */; };
@@ -49,6 +48,8 @@
 		F74880451E245C930083763E /* SensoryStimulationSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F74880431E245C930083763E /* SensoryStimulationSteward.cpp */; };
 		F74880481E25AA760083763E /* StimuliSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F74880461E25AA760083763E /* StimuliSteward.cpp */; };
 		F748804C1E25B7020083763E /* DevelopmentSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748804A1E25B7020083763E /* DevelopmentSteward.cpp */; };
+		F74880501E25FB1E0083763E /* OrtusKernelOne.cl in Sources */ = {isa = PBXBuildFile; fileRef = F748804E1E25FB1E0083763E /* OrtusKernelOne.cl */; };
+		F74880511E25FB1E0083763E /* OrtusKernelTwo.cl in Sources */ = {isa = PBXBuildFile; fileRef = F748804F1E25FB1E0083763E /* OrtusKernelTwo.cl */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
@@ -148,7 +149,6 @@
 		44B6E62A1D8B455900A8DB7B /* rapidjson */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rapidjson; sourceTree = "<group>"; };
 		44B6E6321D9A6CB300A8DB7B /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		44B6E6331D9A6CB300A8DB7B /* Camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
-		44E5428D1E091D0E00D3BF7A /* OrtusKernelOne.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = OrtusKernelOne.cl; sourceTree = "<group>"; };
 		44E5428F1E09FCE000D3BF7A /* Gymnasium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gymnasium.cpp; sourceTree = "<group>"; };
 		44E542901E09FCE000D3BF7A /* Gymnasium.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Gymnasium.hpp; sourceTree = "<group>"; };
 		44FDA2EA1DCC7995005897DB /* DataVisualizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataVisualizer.cpp; sourceTree = "<group>"; };
@@ -176,6 +176,8 @@
 		F748804A1E25B7020083763E /* DevelopmentSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DevelopmentSteward.cpp; path = stewards/DevelopmentSteward.cpp; sourceTree = "<group>"; };
 		F748804B1E25B7020083763E /* DevelopmentSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DevelopmentSteward.hpp; path = stewards/DevelopmentSteward.hpp; sourceTree = "<group>"; };
 		F748804D1E25EF860083763E /* correlationNotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = correlationNotes.txt; path = notes/correlationNotes.txt; sourceTree = "<group>"; };
+		F748804E1E25FB1E0083763E /* OrtusKernelOne.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = OrtusKernelOne.cl; path = kernels/OrtusKernelOne.cl; sourceTree = "<group>"; };
+		F748804F1E25FB1E0083763E /* OrtusKernelTwo.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = OrtusKernelTwo.cl; path = kernels/OrtusKernelTwo.cl; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -255,7 +257,8 @@
 		44B6E62E1D8B48CA00A8DB7B /* kernels */ = {
 			isa = PBXGroup;
 			children = (
-				44E5428D1E091D0E00D3BF7A /* OrtusKernelOne.cl */,
+				F748804E1E25FB1E0083763E /* OrtusKernelOne.cl */,
+				F748804F1E25FB1E0083763E /* OrtusKernelTwo.cl */,
 			);
 			name = kernels;
 			sourceTree = "<group>";
@@ -491,11 +494,11 @@
 				444DE4231D8A642700247E36 /* image_DXT.c in Sources */,
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
 				F74880421E2448A00083763E /* Steward.cpp in Sources */,
+				F74880511E25FB1E0083763E /* OrtusKernelTwo.cl in Sources */,
 				F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
 				44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */,
 				F7E7A0B31E2260350068BD3E /* ComplexStimulus.cpp in Sources */,
-				44E5428E1E091D0E00D3BF7A /* OrtusKernelOne.cl in Sources */,
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,
 				444DE4031D8A5D7F00247E36 /* MuscleInfoModule.cpp in Sources */,
 				444DE4701D8A717500247E36 /* README.md in Sources */,
@@ -519,6 +522,7 @@
 				44E542911E09FCE000D3BF7A /* Gymnasium.cpp in Sources */,
 				444DE4091D8A5D7F00247E36 /* Artist.cpp in Sources */,
 				443247AB1DAE5B33001D153B /* ConnectionComrade.cpp in Sources */,
+				F74880501E25FB1E0083763E /* OrtusKernelOne.cl in Sources */,
 				444DE4661D8A717500247E36 /* GraphicsGovernor.cpp in Sources */,
 				443247B11DB059CE001D153B /* Connection.cpp in Sources */,
 				443247B41DB60187001D153B /* AblationStation.cpp in Sources */,

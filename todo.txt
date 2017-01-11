@@ -11,6 +11,8 @@ ortus todo
 * implement StimuliSteward::normalizeStimuli
 * subplots for DataVisualizer (see "Plotr" below)
 * consider smart pointers.
+* fix read/write buffer issue with opencl
+
 
 
 

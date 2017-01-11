@@ -47,7 +47,7 @@ void ComputeSteward::executePostRunOperations(){
 /* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
 void ComputeSteward::initializeOpenCL(){
     clHelper.setup_opencl();
-    clHelper.read_kernels_from_file("OrtusKernelOne.cl", &programBuffer);
+    clHelper.read_kernels_from_file("kernels/OrtusKernelTwo.cl", &programBuffer);
     program = clCreateProgramWithSource(clHelper.context, 1, (const char**) &programBuffer, NULL, &clHelper.err);
     clHelper.check_and_print_cl_err(clHelper.err);
     clHelper.err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
