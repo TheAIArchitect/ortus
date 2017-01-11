@@ -25,17 +25,16 @@ int getIndex(int row_num, int col_num, int arr_width){
  
  *** THIS WILL NEED TO BE MODIFIED IF WE DO MORE THAN ONE 'ITERATION' PER CALL ***
  */
-__kernel void OrtusKernel( __global float *inputVoltages,
-                         __global float *outputVoltages,
-                         __global float *gapWeights,
-                         __global float *chemWeights,
-                          __global float* gapContrib,
-                          __global float* chemContrib,
-                         const unsigned int rowCount,
-                         const unsigned int colCount,
-                          const unsigned int shouldProbe,
-                          float gapNormalizer,
-                          float chemNormalizer){
+__kernel void OrtusKernel( __global float *voltages, // read and write
+                         __global float *outputVoltageHistory, // read and write
+                         __global float *gapWeights, // read and write
+                         __global float *chemWeights, // read and write
+                          __global float* gapContrib, // read and write
+                          __global float* chemContrib, // read and write
+                          const int shouldProbe, // read only
+                          float gapNormalizer, // read and write
+                          float chemNormalizer, // read and write
+                          __global int* metadata){ // read only... for now?
     
     // iteration_number_for_row_access:
     //  Tells us what iteration we're on, 0 indexed.
@@ -45,13 +44,26 @@ __kernel void OrtusKernel( __global float *inputVoltages,
     //  The column numbers of the CS / GJ matrix that we get v_current values from
     //  on row = gid. So any given v_current comes from:
     //      idx = getIndex(iteration_number_for_row_access, loop_iter, colCount)
-    //      float v_current = inputVoltages[idx]
+    //      float v_current = voltages[idx]
     // Any given connection weight comes from:
     //  idx = getIndex(gid, loop_iter, colCount)
     //  {cs, gj}_matrix[idx]
     
     // current row
     int gid = get_global_id(0);
+    
+    // can i declare these as global??
+    // NOTE: perhaps these should be unsigned ints... but there seems to be a bug with apple's...something.
+    __local int rowCount;
+    __local int colCount;
+    __local int kernelIterationNum;
+    __local int voltageHistorySize;
+//    rowCount = 0;//metadata[0];
+    rowCount = metadata[0];
+    colCount = metadata[1];
+    kernelIterationNum = metadata[2];
+    voltageHistorySize = metadata[3]; // this is one larger than we use for the xcorr -- the last one is the staging one.
+    
     
     // NOTE: Apparently you can't declare and initialize in 1 statement...huh.
     // Well, regardless, these should be shared amoung the work-groups
@@ -77,10 +89,13 @@ __kernel void OrtusKernel( __global float *inputVoltages,
     //if(gid == 1)printf("Running from mainKernel.cl\n");
     //printf("rowCount, colCount: %u, %u\n", rowCount, colCount);
     // Don't do anything if we're out of range.
+    
+    //printf("<<pre check>> ROW COUNT, GID %u, %d, %d\n", rowCount, gid, (gid <= (rowCount - 1)));
     if(gid <= (rowCount - 1)){
-        // using 0 for the row_num, because right now inputVoltages is just a vector
+        //printf(">> post check: ROW COUNT, GID %u, %d, %d\n", rowCount, gid, (gid <= (rowCount - 1)));
+        // using 0 for the row_num, because right now voltages is just a vector
         size_t my_v_curr_idx = getIndex(0, gid, colCount);
-        float my_v_current = inputVoltages[my_v_curr_idx];
+        float my_v_current = voltages[my_v_curr_idx];
         float v_decay = computeDecay(my_v_current, v_decay_constant, v_init);
         size_t voltage_idx;
         size_t weight_idx;
@@ -106,7 +121,7 @@ __kernel void OrtusKernel( __global float *inputVoltages,
             if(chemWeights[weight_idx] == 0.0 && gapWeights[weight_idx] == 0.0)
                 continue;
             // Get v_current for the incoming spurt / shocker
-            float their_v_curr = inputVoltages[voltage_idx];
+            float their_v_curr = voltages[voltage_idx];
             if (fabs(their_v_curr) < thresh){ // nothing happens if it's less than thresh.
                 continue;
             }
@@ -170,29 +185,53 @@ __kernel void OrtusKernel( __global float *inputVoltages,
         
         
         // Reset the value in the voltage vec
-        // Write the value back to the inputVoltages, but 1 row ahead
+        // Write the value back to the voltages, but 1 row ahead
         //size_t w_idx = getIndex(iteration_number_for_row_access + 1, gid, colCount);
-        //inputVoltages[w_idx] = v_curr_finished;
+        //voltages[w_idx] = v_curr_finished;
         
         size_t fin_idx = getIndex(0, gid, colCount);
         
-        outputVoltages[fin_idx] = v_curr_finished;
+        //voltages[fin_idx] = v_curr_finished;
+        voltages[fin_idx] = v_curr_finished;
+        
+        // update the outputVoltageHistory
+        int i;
+        int ovhSizeMinusOne = voltageHistorySize - 1;
+        // push all the existing output voltages down one (losing the oldest)
+        for(i = 0; i < ovhSizeMinusOne; ++i){
+            // NOTE: calling getIndex with row and col flipped, because we're doing row-by-row (e.g., element 0 uses 0-5, if we have an ovh of size 6).
+            size_t ovhIndex = getIndex(gid, i, voltageHistorySize);
+            size_t ovhIndexPlusOne = getIndex(gid, i+1, voltageHistorySize);
+            outputVoltageHistory[ovhIndex] = outputVoltageHistory[ovhIndexPlusOne];
+        }
+        // then set the most recent one in the 'staging' area
+        outputVoltageHistory[getIndex(gid,ovhSizeMinusOne, voltageHistorySize)] = v_curr_finished;
+        
+        if (kernelIterationNum >= ovhSizeMinusOne){ // then we know we have a full outputVoltageHistory
+            // do xcorr
+            // do gap and chem work
+            if (gid == 0){
+                printf("ovhs: %d, v_curr_finished: %.2f\n", voltageHistorySize, v_curr_finished);
+            printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",outputVoltageHistory[0],outputVoltageHistory[1],outputVoltageHistory[2],outputVoltageHistory[3],outputVoltageHistory[4],outputVoltageHistory[5]);
+            }
+        }
         
         /*
         if (gid == 1){
             printf("START CLPRINT:\ninputs: ");
             int i;
             for (i = 0; i < rowCount; ++i){
-                printf("%.2f, ",inputVoltages[i]);
+                printf("%.2f, ",voltages[i]);
             }
             printf("\noutputs: ");
             for (i = 0; i < rowCount; ++i){
-                printf("%.2f, ",outputVoltages[i]);
+                printf("%.2f, ",voltages[i]);
             }
             printf("\nEND CLPRINT\n");
         }
          */
     }
-    //printf("hi\n");
     
 }
+
+

@@ -50,13 +50,9 @@ void Steward::run(){
         // Stimulate the sensors 
         sensoryStimulationStewardp->performSensoryStimulation();
         
-        // temporary print statement
-        //for (int j = 0; j < dataStewardp->outputVoltageVector.size(); ++j){
-        //    printf("%.2f, ",dataStewardp->outputVoltageVector[j]);
-        //}
-        //printf("\n");
-        
     }
+    // temporary placement...
+    dataStewardp->writeConnectome("doesn't matter yet");
 
     // Just a basic runtime report and small sample of elements
     //stewie.printReport(DataSteward::numKernelLoops);

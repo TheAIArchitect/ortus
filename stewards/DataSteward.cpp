@@ -49,16 +49,17 @@ DataSteward::~DataSteward(){
         delete officialNamepVector[i];
         delete elements[i];
     }
-    delete inputVoltages;
-    delete outputVoltages;
+    delete voltages;
+    delete outputVoltageHistory;
     delete gaps;
     delete chems;
     delete chemContrib;
     delete gapContrib;
-    delete rowCount;
-    delete colCount;
+    //delete rowCount;
+    //delete colCount;
     delete gapNormalizer;
     delete chemNormalizer;
+    delete metadata;
     
     delete probe;
     
@@ -81,14 +82,14 @@ void DataSteward::executePostRunMemoryTransfers(){
     updateOutputVoltageVector();
     // copy the ouput data into the input data
     // NOTE: FIX THIS SO THAT WE USE ONE BUFFER!!!
-    inputVoltages->copyData(outputVoltages);
+    //inputVoltages->copyData(outputVoltages);
 }
 
 
 void DataSteward::readOpenCLBuffers(){
     // get output voltages
-    outputVoltages->readCLBuffer();
-    
+    voltages->readCLBuffer();
+    outputVoltageHistory->readCLBuffer();
 }
 
 void DataSteward::growConnectome(){
@@ -157,37 +158,47 @@ std::vector<float> DataSteward::getOutputVoltageVector(){
 /* updates outputVoltageVector with a *COPY* of the voltage data, NOT a reference to the actual data, nor its location. */
 void DataSteward::updateOutputVoltageVector(){
     outputVoltageVector.clear();
-    for (int i = 0; i < outputVoltages->currentSize; ++i){
-        outputVoltageVector.push_back(outputVoltages->data[i]);
+    for (int i = 0; i < voltages->currentSize; ++i){
+        outputVoltageVector.push_back(voltages->data[i]);
     }
     // push current voltage vector into vector of all output voltages
     kernelVoltages.push_back(outputVoltageVector);
 }
 
+/* this must be called for each kernel iteration... */
+void DataSteward::updateMetadataBlade(int kernelIterationNum){
+    metadata->set(0, CONNECTOME_ROWS);
+    metadata->set(1, CONNECTOME_COLS);
+    metadata->set(2, kernelIterationNum);
+    metadata->set(3, VOLTAGE_HISTORY_SIZE);
+}
+
 void DataSteward::setOpenCLKernelArgs(){
-    inputVoltages->setCLArgIndex(0, kernelp);
-    outputVoltages->setCLArgIndex(1, kernelp);
+    voltages->setCLArgIndex(0, kernelp);
+    outputVoltageHistory->setCLArgIndex(1, kernelp);
     gaps->setCLArgIndex(2, kernelp);
     chems->setCLArgIndex(3, kernelp);
     gapContrib->setCLArgIndex(4, kernelp);
     chemContrib->setCLArgIndex(5, kernelp);
-    rowCount->setCLArgIndex(6, kernelp);
-    colCount->setCLArgIndex(7, kernelp);
-    clHelperp->err = clSetKernelArg(*kernelp, 8, sizeof(cl_uint), &Probe::shouldProbe);
+    //rowCount->setCLArgIndex(6, kernelp);
+    //colCount->setCLArgIndex(7, kernelp);
+    clHelperp->err = clSetKernelArg(*kernelp, 6, sizeof(cl_int), &Probe::shouldProbe);
     clHelperp->check_and_print_cl_err(clHelperp->err);
-    gapNormalizer->setCLArgIndex(9, kernelp);
-    chemNormalizer->setCLArgIndex(10, kernelp);
+    gapNormalizer->setCLArgIndex(7, kernelp);
+    chemNormalizer->setCLArgIndex(8, kernelp);
+    metadata->setCLArgIndex(9, kernelp);
 }
 
 void DataSteward::pushOpenCLBuffers(){
     //Timer et;
     //et.start_timer();
-    inputVoltages->pushCLBuffer();
-    outputVoltages->pushCLBuffer();
+    voltages->pushCLBuffer();
+    outputVoltageHistory->pushCLBuffer();
     gaps->pushCLBuffer();
     chems->pushCLBuffer();
     chemContrib->pushCLBuffer();
     gapContrib->pushCLBuffer();
+    metadata->pushCLBuffer();
     //et.stop_timer();
 }
 
@@ -197,20 +208,20 @@ void DataSteward::initializeBlades(){
     // need a gj and cs contrib (one of each) -- these are NxN
     chemContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
     gapContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
-    // now we initialize the voltage vectors -- one row.
-    // ideally, we'd have one that gets read from and written to -- should get around to fixing that shortly.
-    inputVoltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_COLS, MAX_ELEMENTS);
-    outputVoltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_COLS, MAX_ELEMENTS);
+    // now we initialize the voltage Blade (one row)
+    voltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_COLS, MAX_ELEMENTS);
+    // then the output voltage history Blade -- THIS IS ORGANIZED SUCH THAT EACH ROW CONTAINS A NEURON'S VOLTAGES
+    outputVoltageHistory = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, VOLTAGE_HISTORY_SIZE, MAX_ELEMENTS, VOLTAGE_HISTORY_SIZE);// can't grow column-wise
     //fillInputVoltageBlade(); // will probably be used at some point
-    rowCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY);
-    rowCount->set(NUM_ELEMS); // cl_uint, for current row count
-    colCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY);
-    colCount->set(NUM_ELEMS); // cl_uint, for current col count
-    gapNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_ONLY);
+    //rowCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY);
+    //rowCount->set(NUM_ELEMS); // cl_uint, for current row count
+    //colCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY);
+    //colCount->set(NUM_ELEMS); // cl_uint, for current col count
+    gapNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_WRITE);
     gapNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-    chemNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_ONLY);
+    chemNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_WRITE);
     chemNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-    
+    metadata = new Blade<cl_int>(clHelperp, CL_MEM_READ_ONLY, METADATA_COUNT, METADATA_COUNT);
 }
 
 void DataSteward::fillInputVoltageBlade(){
@@ -221,8 +232,8 @@ void DataSteward::fillInputVoltageBlade(){
 
 void DataSteward::createConnections(){
     printf("connectome_rows, connectome_cols: %d. %d\n",CONNECTOME_ROWS, CONNECTOME_COLS);
-    gaps = new Blade<float>(clHelperp, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
-    chems = new Blade<float>(clHelperp, CL_MEM_READ_ONLY, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    gaps = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
+    chems = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
     int start_at = CSV_OFFSET; // it's a square matrix, with the same information on each side of the diagonal (but flipped)... could do one 'side' and add same connection pointer to each pre, but let's hold off... would need to switch the out_conns vector to hold Connection object pointers.
     for (int i = CSV_OFFSET; i < CSV_ROWS; i++){
         

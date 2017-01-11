@@ -42,6 +42,7 @@ void SensoryStimulationSteward::performSensoryStimulation(){
     for (auto& vecIter : elementsToStimulate){
         int elementIndex = dStewiep->officialNameToIndexMap[vecIter];
         float finalStimulus = stimuliStewardp->getStimuliForElement(elementIndex);
-        dStewiep->inputVoltages->add(elementIndex, finalStimulus);
+        // ... this call should *probably* really tell DataSteward to do it... we probably shouldn't do it ourselves....
+        dStewiep->voltages->add(elementIndex, finalStimulus);
     }
 }

@@ -15,7 +15,7 @@ std::string Probe::newElementToProbe = "";
 bool Probe::newElementToProbeRequested = false;
 bool Probe::probeEnabled = false;
 bool Probe::update = false;
-cl_uint Probe::shouldProbe = 0;// should be set to 1 in order to probe.
+cl_int Probe::shouldProbe = 0;// should be set to 1 in order to probe.
 bool Probe::probeAll = true;
 
 

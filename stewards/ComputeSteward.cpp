@@ -21,9 +21,9 @@ void ComputeSteward::run(){
 }
 
 void ComputeSteward::executePreRunOperations(){
-    
+    dStewiep->updateMetadataBlade(currentIteration);
     dStewiep->setOpenCLKernelArgs();
-    printf("Set OpenCL Kernel Args\n");
+    //printf("Set OpenCL Kernel Args\n");
     
     if (currentIteration == 0){
         // this only happens for all buffers prior to the first run
@@ -32,8 +32,9 @@ void ComputeSteward::executePreRunOperations(){
     }
     else {// just push the ones we want to push on each iteration (so, the ones that we made changes to)
         
-        // soon: gaps, chems
-        dStewiep->inputVoltages->pushCLBuffer();
+        dStewiep->voltages->pushCLBuffer();
+        dStewiep->metadata->pushCLBuffer();
+        dStewiep->outputVoltageHistory->pushCLBuffer();
     }
 }
 

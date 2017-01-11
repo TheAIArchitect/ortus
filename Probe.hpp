@@ -28,7 +28,7 @@ public:
     //Probe(DataSteward& ds);
     //DataSteward* stewie;
     static bool toggleProbe();
-    static cl_uint shouldProbe;
+    static cl_int shouldProbe;
     static bool probeAll;
     static bool probeEnabled;
     static bool update;

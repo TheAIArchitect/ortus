@@ -21,8 +21,8 @@ template<class T>
 class Blade {
    
 public:
-    bool squareAndNotScalar;
     bool scalar;
+    bool vector;
     bool readOnly;
     int currentRows;
     int maxRows;
@@ -44,21 +44,13 @@ public:
     /* Allows creation of a 1D array that allows accessing like a 2D array, and allows quick 'growth'.
      */
     Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols){
-        squareAndNotScalar = false;
         scalar = false;
-        if (currentRows == currentCols){ // it's square
-            squareAndNotScalar = true;
-            if ((maxRows == maxCols) && (maxRows == 1)){ // it's a scalar
-                scalar = true;
-                squareAndNotScalar = false;
-            }
+        vector = false;
+        if ((maxRows == maxCols) && (maxRows == 1)){ // it's a scalar
+            scalar = true;
         }
         else if ((currentRows == maxRows) && (maxRows == 1)) { // it's a vector, not a 2D matrix
-            squareAndNotScalar = false;
-        }
-        else { // this is not something we are equipped to handle.
-            printf("ERROR! 'Blade' can only handle square matricies, 1D vectors, and scalars.\n");
-            exit(5);
+            vector = true;
         }
         currentSize = currentRows*currentCols;
         maxSize = maxRows * maxCols;
@@ -176,22 +168,34 @@ public:
         return false;
     }
     
-    
-    /* returns the new width if successful, -1 if not */
-    int addEntry(){
-        if (currentCols < maxCols){ // if not scalar, we always increase the cols, so this is enough of a check (scalar values won't pass this).
-            if(squareAndNotScalar){ // increment cols and rows
-                currentRows++;
-                currentCols++;
-                currentSize = currentRows * currentCols;
-            }
-            else { // increment cols
-                currentCols++;
-                currentSize = currentRows * currentCols;
-            }
-            return currentCols;
+    /* adds a row, if currentRows < maxRows, and returns new row count (will be unchanged if check fails) */
+    int addRow(){
+        if(currentRows < maxRows){
+            currentRows++;
         }
-        return -1;
+        return currentRows;
+    }
+    
+    /* adds a col, if currentCols < maxCols, and returns new col count (will be unchanged if check fails) */
+    int addCol(){
+        if(currentCols < maxCols){
+            currentCols++;
+        }
+        return currentCols;
+    }
+    
+    /* adds a row and col if possible. if either fail, nothing changes. */
+    void addRowAndCol(int& newRowCount, int& newColCount){
+        int oldRowCount = currentRows;
+        int oldColCount = currentCols;
+        newRowCount = addRow();
+        newColCount = addCol();
+        if (oldRowCount == newRowCount){// if adding a row failed, reset cols (easier to just do it, than to check to see if we need to first)
+            currentCols = oldColCount;
+        }
+        else if (oldColCount == newColCount){
+            currentRows = oldRowCount; // same as above
+        }
     }
     
     /* copys the data array from otherBlade to this blade's data, overwriting the contents.
