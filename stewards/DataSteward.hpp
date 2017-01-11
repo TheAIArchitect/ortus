@@ -58,7 +58,6 @@ public: // super important variables
     Blade<cl_float>* chemNormalizer; // we divide chem weights by this
     
     // (zero indexed): [rowCount, colCount, kernelIterationNum, voltageHistorySize ]
-    // used to be cl_uint... apple has a bug.
     Blade<cl_int>* metadata;
     
 protected: // private?

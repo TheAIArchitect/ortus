@@ -9,6 +9,7 @@ ortus todo
 * implement StimuliSteward::normalizeStimuli
 * subplots for DataVisualizer (see "Plotr" below)
 * consider smart pointers.
+* kernel could use some clean-up
 
 
 
@@ -16,3 +17,12 @@ ortus todo
 Plotr
 * subplots
 
+
+/////////////////////
+
+next:
+
+- make sure this is the best way, but, create global buffer for 'scratch pad' so that xcorr can be computer in opencl
+- apply rules to modify gaps and chems, based upon xcorr computation
+- modify writeConnectome
+- add h20 stimulus and play with results.

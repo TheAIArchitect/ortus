@@ -53,12 +53,10 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
     int gid = get_global_id(0);
     
     // can i declare these as global??
-    // NOTE: perhaps these should be unsigned ints... but there seems to be a bug with apple's...something.
     __local int rowCount;
     __local int colCount;
     __local int kernelIterationNum;
     __local int voltageHistorySize;
-//    rowCount = 0;//metadata[0];
     rowCount = metadata[0];
     colCount = metadata[1];
     kernelIterationNum = metadata[2];
@@ -89,10 +87,7 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
     //if(gid == 1)printf("Running from mainKernel.cl\n");
     //printf("rowCount, colCount: %u, %u\n", rowCount, colCount);
     // Don't do anything if we're out of range.
-    
-    //printf("<<pre check>> ROW COUNT, GID %u, %d, %d\n", rowCount, gid, (gid <= (rowCount - 1)));
     if(gid <= (rowCount - 1)){
-        //printf(">> post check: ROW COUNT, GID %u, %d, %d\n", rowCount, gid, (gid <= (rowCount - 1)));
         // using 0 for the row_num, because right now voltages is just a vector
         size_t my_v_curr_idx = getIndex(0, gid, colCount);
         float my_v_current = voltages[my_v_curr_idx];
@@ -242,7 +237,7 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
 #include <string>
 #include <cmath>
 
-// created by Andrew McDonald, 1/10/17, Copyright 2017, All Rights Reserved 
+// created by Andrew McDonald, 1/10/17, Copyright 2017, All Rights Reserved
 
 // implements the window part of the sliding window.
 //
