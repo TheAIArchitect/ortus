@@ -47,12 +47,12 @@
 		F74880411E2448A00083763E /* DataSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803C1E2448A00083763E /* DataSteward.cpp */; };
 		F74880421E2448A00083763E /* Steward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803E1E2448A00083763E /* Steward.cpp */; };
 		F74880451E245C930083763E /* SensoryStimulationSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F74880431E245C930083763E /* SensoryStimulationSteward.cpp */; };
+		F74880481E25AA760083763E /* StimuliSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F74880461E25AA760083763E /* StimuliSteward.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
 		F7E7A0B31E2260350068BD3E /* ComplexStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AB1E2260350068BD3E /* ComplexStimulus.cpp */; };
 		F7E7A0B41E2260350068BD3E /* PrimitiveStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AD1E2260350068BD3E /* PrimitiveStimulus.cpp */; };
-		F7E7A0B51E2260350068BD3E /* StimuliSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AF1E2260350068BD3E /* StimuliSteward.cpp */; };
 		F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0B11E2260350068BD3E /* Stimulus.cpp */; };
 /* End PBXBuildFile section */
 
@@ -169,6 +169,9 @@
 		F748803F1E2448A00083763E /* Steward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Steward.hpp; path = stewards/Steward.hpp; sourceTree = "<group>"; };
 		F74880431E245C930083763E /* SensoryStimulationSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SensoryStimulationSteward.cpp; path = stewards/SensoryStimulationSteward.cpp; sourceTree = "<group>"; };
 		F74880441E245C930083763E /* SensoryStimulationSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SensoryStimulationSteward.hpp; path = stewards/SensoryStimulationSteward.hpp; sourceTree = "<group>"; };
+		F74880461E25AA760083763E /* StimuliSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StimuliSteward.cpp; path = stewards/StimuliSteward.cpp; sourceTree = "<group>"; };
+		F74880471E25AA760083763E /* StimuliSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = StimuliSteward.hpp; path = stewards/StimuliSteward.hpp; sourceTree = "<group>"; };
+		F74880491E25AE210083763E /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -180,8 +183,6 @@
 		F7E7A0AC1E2260350068BD3E /* ComplexStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComplexStimulus.hpp; path = stimuli/ComplexStimulus.hpp; sourceTree = "<group>"; };
 		F7E7A0AD1E2260350068BD3E /* PrimitiveStimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrimitiveStimulus.cpp; path = stimuli/PrimitiveStimulus.cpp; sourceTree = "<group>"; };
 		F7E7A0AE1E2260350068BD3E /* PrimitiveStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = PrimitiveStimulus.hpp; path = stimuli/PrimitiveStimulus.hpp; sourceTree = "<group>"; };
-		F7E7A0AF1E2260350068BD3E /* StimuliSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StimuliSteward.cpp; path = stimuli/StimuliSteward.cpp; sourceTree = "<group>"; };
-		F7E7A0B01E2260350068BD3E /* StimuliSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = StimuliSteward.hpp; path = stimuli/StimuliSteward.hpp; sourceTree = "<group>"; };
 		F7E7A0B11E2260350068BD3E /* Stimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Stimulus.cpp; path = stimuli/Stimulus.cpp; sourceTree = "<group>"; };
 		F7E7A0B21E2260350068BD3E /* Stimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Stimulus.hpp; path = stimuli/Stimulus.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -210,6 +211,7 @@
 			children = (
 				444DE4611D8A717500247E36 /* workstations.txt */,
 				444DE44F1D8A717400247E36 /* README.md */,
+				F74880491E25AE210083763E /* todo.txt */,
 			);
 			name = notes;
 			sourceTree = "<group>";
@@ -352,10 +354,12 @@
 				F748803B1E2448A00083763E /* ComputeSteward.hpp */,
 				F748803C1E2448A00083763E /* DataSteward.cpp */,
 				F748803D1E2448A00083763E /* DataSteward.hpp */,
-				F748803E1E2448A00083763E /* Steward.cpp */,
-				F748803F1E2448A00083763E /* Steward.hpp */,
 				F74880431E245C930083763E /* SensoryStimulationSteward.cpp */,
 				F74880441E245C930083763E /* SensoryStimulationSteward.hpp */,
+				F748803E1E2448A00083763E /* Steward.cpp */,
+				F748803F1E2448A00083763E /* Steward.hpp */,
+				F74880461E25AA760083763E /* StimuliSteward.cpp */,
+				F74880471E25AA760083763E /* StimuliSteward.hpp */,
 			);
 			name = stewards;
 			sourceTree = "<group>";
@@ -414,8 +418,6 @@
 				F7E7A0AC1E2260350068BD3E /* ComplexStimulus.hpp */,
 				F7E7A0AD1E2260350068BD3E /* PrimitiveStimulus.cpp */,
 				F7E7A0AE1E2260350068BD3E /* PrimitiveStimulus.hpp */,
-				F7E7A0AF1E2260350068BD3E /* StimuliSteward.cpp */,
-				F7E7A0B01E2260350068BD3E /* StimuliSteward.hpp */,
 				F7E7A0B11E2260350068BD3E /* Stimulus.cpp */,
 				F7E7A0B21E2260350068BD3E /* Stimulus.hpp */,
 			);
@@ -493,11 +495,11 @@
 				F74880401E2448A00083763E /* ComputeSteward.cpp in Sources */,
 				444DE4041D8A5D7F00247E36 /* NeuronInfoModule.cpp in Sources */,
 				F74880451E245C930083763E /* SensoryStimulationSteward.cpp in Sources */,
-				F7E7A0B51E2260350068BD3E /* StimuliSteward.cpp in Sources */,
 				444DE4061D8A5D7F00247E36 /* ShapeCreator.cpp in Sources */,
 				444DE4101D8A5D7F00247E36 /* Geometrician.cpp in Sources */,
 				444DE4181D8A63AC00247E36 /* SOIL.c in Sources */,
 				444DE4241D8A642700247E36 /* image_helper.c in Sources */,
+				F74880481E25AA760083763E /* StimuliSteward.cpp in Sources */,
 				F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */,
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE46C1D8A717500247E36 /* main.cpp in Sources */,

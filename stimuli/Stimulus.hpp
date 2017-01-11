@@ -19,7 +19,7 @@ public:
     Stimulus();
     ~Stimulus();
     std::string name;
-    virtual float getStimulus();
+    float getStimulus();
     void setDuration(int numSteps);
     int getTimeStep();
     void resetTime();

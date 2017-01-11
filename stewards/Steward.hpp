@@ -25,7 +25,6 @@ public:
     
     DataSteward* dataStewardp;
     ComputeSteward* computeStewardp;
-    // maybe call it a sensoryStimulationSteward, and use another instance for the 'thinking' one that stimulates interneurons? (might be better to have a separate class though... yeah, i think so)
     SensoryStimulationSteward* sensoryStimulationStewardp;
     
     int numIterations;

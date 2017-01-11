@@ -59,9 +59,9 @@ Signal::Signal(Signal&& s){
     signalLength = s.signalLength;
     callDeleteOnSignal = s.callDeleteOnSignal;
     // then reset s
-    signal = NULL;
-    signalLength = 0;
-    callDeleteOnSignal = false;
+    s.signal = NULL;
+    s.signalLength = 0;
+    s.callDeleteOnSignal = false;
 }
 
 /* move assignment operator...
@@ -95,7 +95,7 @@ Signal::~Signal(){
     }
 }
 
-/* generates a signal, inclusive: [startTime, endTime], of specified length */
+/* generates a signal, inclusive of startTime, but exclusive of endTime: [startTime, endTime), of specified length */
 void Signal::generateFullSignal(float startTime, float endTime, int length){
     // to make this easier for the individual signals,
     // we compute the increment size:
@@ -104,7 +104,7 @@ void Signal::generateFullSignal(float startTime, float endTime, int length){
     // so, we would start at .05, and finish at .75, with 12 values (so, this is inclusive)
     signalLength = length;
     int numDivisions = signalLength - 1;
-    float domain = endTime - startTime;
+    float domain = (endTime-1) - startTime; // endTime not inclusive
     float increment = domain/((float)numDivisions);
     signal = new float[length];
     callDeleteOnSignal = true;

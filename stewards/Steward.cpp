@@ -27,13 +27,6 @@ void Steward::initialize(){
     
 }
 
-/****************** NOTES:
- *
- * 1) A lot of the stuff with poitner acces to dataSteward should probably go directly into datastward.
- * 2) What is the deal with that Timer error? it's odd.
- * 3) All three of these classes need to be cleaned up before introducing the stimuli.
- ********************************/
-
 void Steward::run(){
     
     numIterations = 1000;

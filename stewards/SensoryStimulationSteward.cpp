@@ -26,7 +26,7 @@ void SensoryStimulationSteward::setStimuli(){
 
 Stimulus* SensoryStimulationSteward::createCO2Generator(){
     // NOTE: this also must be a pointer, not a reference...
-    ConstantSignal* co2Signal = new ConstantSignal(2.5f, 0, 499, 500);
+    ConstantSignal* co2Signal = new ConstantSignal(2.5f, 0, 500, 500);
     // NOTE: this must be a pointer, not a reference...
     PrimitiveStimulus* co2Generator = new PrimitiveStimulus("co2Generator");
     co2Generator->setSignal(co2Signal);
