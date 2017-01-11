@@ -235,3 +235,94 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
 }
 
 
+
+/* c++ xcorr implementation for reference when doing an opencl implementation: */
+/*
+#include <stdio.h>
+#include <string>
+#include <cmath>
+
+// created by Andrew McDonald, 1/10/17, Copyright 2017, All Rights Reserved 
+
+// implements the window part of the sliding window.
+//
+// NOTE: this requires A and B have the same length.
+//
+float xcorrMultiply(float* A, float* B, int len, int windowNum){
+    if ((windowNum < 0) || ((windowNum + 1) >= (2 * len))){// see "aStartingIndex = (windowNum - len) + 1" line for reasoning
+        return 0.f;  // out of range
+    }
+    int lastIndex = len - 1;
+    int iterations = 0;
+    int aStartingIndex = 0;
+    int bStartingIndex = 0;
+    if (windowNum >= len){ // then we change our approach, because B[0] is under A[1] (assuming we are sliding B)
+        bStartingIndex = 0; // always start at the beginning of B
+        aStartingIndex = (windowNum - len) + 1; // at (6 - 4) + 1, we're done (if windowNum == 7, we have a problem)... that's the reasoning for the check above.
+        iterations = len - aStartingIndex;
+    }
+    else {
+        bStartingIndex = lastIndex - windowNum; // also, windowNum can't be less than 0, or we go past the end of B.
+        aStartingIndex = 0; // always start at the beginning of A
+        iterations = len - bStartingIndex;
+    }
+    float result = 0;
+    int aIndex = aStartingIndex;
+    int bIndex = bStartingIndex;
+    //printf("window: %d\n",windowNum);
+    for (int i = 0; i < iterations; ++i){
+        //printf("\raIndex, bIndex: %d (%.2f), %d (%.2f)\n",aIndex, A[aIndex], bIndex, B[bIndex]);
+        result += A[aIndex] * B[bIndex];
+        aIndex++;
+        bIndex++;
+    }
+    return result;
+}
+
+int computeXCorrNumWindows(int len){
+    // see xcorrMulitply for computation reasoning
+    return ((2*len)-1);
+}
+
+// normalizer should be 1, unless being called form normalizedXCorr, in which case, it will pass the appropriate value 
+float* xcorr(float* A, int aLen, float* B, int bLen, float normalizer){
+    if ((aLen != bLen) || (aLen == 0)){
+        printf("xcorr requires two non-zero arrays of equal length.\n");
+    }
+    int len = aLen;
+    int maxWindows = computeXCorrNumWindows(len);
+    float* xcorrResults = new float[maxWindows];
+    // note, signals are on top of eachother at (windowNum = len - 1)
+    printf("note, signals are on top of eachother at (windowNum = len - 1) => %d:\n",len-1);
+    for (int i = 0; i < maxWindows; ++i){
+        xcorrResults[i] = (xcorrMultiply(A, B, len, i))/normalizer;
+        printf("window %d: %.2f\n",i, xcorrResults[i]);
+    }
+    return xcorrResults;
+}
+
+float* normalizedXCorr(float* A, int aLen, float* B, int bLen){
+    if ((aLen != bLen) || (aLen == 0)){
+        printf("xcorr requires two non-zero arrays of equal length.\n");
+    }
+    float autoCorrA = xcorrMultiply(A, A, aLen, aLen - 1 ); // windowNum 'len - 1' (if first windowNum is 0), gives signals on top of each other (time 0)
+    float autoCorrB = xcorrMultiply(B, B, bLen, bLen - 1 );
+    float divisor = sqrt(autoCorrA*autoCorrB);
+    printf("DIVISOR: %.2f\n", divisor);
+    return  xcorr(A, aLen, B, bLen, divisor);
+}
+
+int main(int argc, char** argv){
+    int len = 11;
+    float A[] = {0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0};
+    float B[] = {0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0};
+    //int len = 4;
+    //float A[] = {0, 1, 0, 0};
+    //float B[] = {0, 1, 0, 0};
+    float* results = xcorr(A, len, B, len, 1.f);
+    float* normalizedResults = normalizedXCorr(A, len, B, len);
+    delete[] results;
+    delete[] normalizedResults;
+    return 0;
+}
+*/
