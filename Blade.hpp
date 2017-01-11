@@ -21,20 +21,6 @@ template<class T>
 class Blade {
    
 public:
-    //Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols);
-    //~Blade();
-    //T* getp(int row, int col);
-    //T getv(int row, int col);
-    //bool set(int row, int col, T value);
-    //bool set(int col, T value); // only valid if the Blade is a vector
-    //bool add(int col, T value); // only valid if the Blade is a vector
-    //int addEntry();
-    //void createCLBuffer();
-    //bool copyData(Blade* otherBlade);
-    //void setCLArgIndex(cl_uint argIndex, cl_kernel* kernel);
-    //void pushCLBuffer();
-    //bool readCLBuffer();
-    //void clearCLBuffer();
     bool squareAndNotScalar;
     bool scalar;
     bool readOnly;
@@ -51,12 +37,10 @@ public:
     cl_uint clArgIndex;
     CLHelper* clhelper;
     
-    /////////////// TODO: add two more constructors (scalar, vector) to make it easier to create non-matrix Blades
 public:
     
     /* NOTE: row access starts from 0, but the number of rows must be at least 1 */
     
-    // look into making the float* private, but allowing 'getter' access to the pointer -- see if that will prevent changes without using a setter
     /* Allows creation of a 1D array that allows accessing like a 2D array, and allows quick 'growth'.
      */
     Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols){
@@ -87,10 +71,8 @@ public:
         // OpenCL buffer creation
         this->clhelper = clhelper;
         memFlags = flags;
-        printf("ro - %d... memFlags, scalar: %d, %d\n",CL_MEM_READ_ONLY, memFlags, scalar);
         if ((memFlags & CL_MEM_READ_ONLY) && scalar){ // then we don't need to create a buffer
             readOnly = true;
-            printf("booyahkasha\n");
         } else {
             createCLBuffer();
         }

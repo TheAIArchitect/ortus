@@ -7,45 +7,11 @@
 // Copyright © 2017
 //
 
-// SEAN START HERE
-/**********************************************************************
-
-
-For overall system design, perhaps reate a "Steward" class, that will contorl ortus' core functionaility
- => i don't think this qualifies as a 'design pattern' other than general modularity...maybe there's a word i don't know.
- => should this Steward class be a superclass, so that everything else is a 'steward' subclass?
-    -> asking because certain data, like the Blades, and kernelVoltages, among other things, must be accessed all over the place, and would need to be accessed by every other 'steward'
-    -> so, really, maybe DataSteward should be the superclass... idk, it seems stupid to use a superclass 'pattern' for that... i sense im missing something here.
-    -> another option is to leave DataSteward as it is, which is to contain all data and compute related code, but that creates a bit of a problem for other things that will need to use the data...
- 
- <Here is a potential layout>
- -> DataSteward
-    -> this class. it will control ortus' actual data -- that is, the Blades, and other ortus specific data.
- -> ComputeSteward
-    -> controls the OpenCL, will need access to all data contained in DataSteward
- -> StimulationSteward <<THIS IS THE OTHER BIG QUESTION>>
-    -> MAYBE use either a *decorator* or *builder* (am i missing anything els?) for this
-        -> I want to be able to create different stimuli that have different signals, potentially composed of a number of more 'primitive' signals (e.g., 'eatAndNoAir' should stimulate food and starve of oxygen) 
-        -> what's the best design pattern to go with here?
- -> DevelopmentSteward
-    -> this will add neurons, and adjusts weights and connections
-        => so, it must have direct access to the Blade objects.
- -> ThinkingSteward
-    -> would generate thoughts, by stimulating interneurons
- -> ActionSteward
-    -> take outputs and graph, or activate a physics simulation, maybe pass data back to StimulationSteward from the physics simulation
-    -> obviously would need access to the Blades
-
-
-***********************************************************************/
-// SEAN END HERE (if desired)
-
-/* below are my design notes for myself, but they may help you understanding the new system */
 
 /* we want everything stored in opencl-compatible datatypes. data will go directly from here, to opencl buffers.
  
   ** At the moment, we are going to ignore the issue of physical proximity with respect to how it impacts computation (e.g., greater time delay for neuron C because it's farther from A than B is, despite both being directly connected to A), or signal decay.
-    *** This is because it will add complexity to the computation, as well as the system that enables neurons to be added. 
+    *** This is because it will add complexity to the computation, as well as the system that enables neurons to be added.
  
   * we will have extra space at the end of each row, in 2D arrays (from now on, 2D means a 1D array being used as a 2D array), meaning that under normal operation, there will effectively be 'blanks' at the end of each 'row' in the 1D array representation. 
     ** This is where we'll put the weights for the new neurons. This is how we will grow the network without slowing things down significantly. Upon writing the new connectome, we'll first re-organize.
@@ -57,7 +23,7 @@ For overall system design, perhaps reate a "Steward" class, that will contorl or
  
  
  
-    //////////////// NOTE 2: fix bad pointer usage: http://stackoverflow.com/questions/22146094/why-should-i-use-a-pointer-rather-than-the-object-itself
+   -> fix bad pointer usage: http://stackoverflow.com/questions/22146094/why-should-i-use-a-pointer-rather-than-the-object-itself
  
  */
 
@@ -125,6 +91,64 @@ void DataSteward::readOpenCLBuffers(){
     
 }
 
+void DataSteward::growConnectome(){
+    // this will take care of adding the required entries to the blades,
+    // and adding the required weights
+}
+
+/* we need another blade:
+ 
+
+ 
+ =========> 'active state', cut down on this.
+ -----------> 'sleeping state', or 'reflective state', maybe go back and do something?
+ 
+ 
+ 
+ 
+ so, just as the connectome is a square matrix, and each entry is a weight,
+ in this blade, each entry will be a crossCorrelation
+ 
+ maybe -- pass in two, three, etc.. historic voltage arrays, and compute the xcorr in the kernel,
+ and then alter the weight based upon that:
+    -> if postiviely correlated at 0 offset (signals are on top of eachother):
+        -> if positive change in correlation (so, more positive):
+            -> increase strength of excititory synapse
+        -> if negative change in correlation (so, less positive):
+            -> decrease strength of excitatory synapse
+    -> if inversely correlated at 0 offset (signals are on top of eachother)::
+        -> if positive change in correlation (so, more negative):
+            -> increase strength of inhibitory synapse
+        -> if negative change in correlation (so, less negative):
+            -> decrease strength of inhibitory synapse
+    -> if postiviely correlated at offset > 0, where presynaptic neuron's signal is offset:
+        -> if positive change in correlation (so, more positive):
+            -> increase strength of excititory synapse
+        -> if negative change in correlation (so, less positive):
+            -> decrease strength of excitatory synapse
+    -> if inversely correlated at offset > 0, where presynaptic neuron's signal is offset:
+        -> if positive change in correlation (so, more negative):
+            -> increase strength of inhibitory synapse
+        -> if negative change in correlation (so, less negative):
+            -> decrease strength of inhibitory synapse
+ 
+ 
+    => note: 'change' refers to xcorr value from previous time-step (iteration)
+ 
+    So, how do gap junctions factor into this? 
+        -> 
+            * if neuron A, at time n (A[n]) has an activation, x, and
+            * if neuron B, at time n (B[n]) has an activation, y, and
+            * if A[n+1] has an activation x+dX, then:
+                * if B[n+1] has an activation y+dY
+                => we have a correlation
+                * if B[n+1] has an activation,  y, and if B[n+2] has an activation y+dY
+                => we have a causal relationship
+    
+    
+            
+    
+ */
 
 std::vector<float> DataSteward::getOutputVoltageVector(){
     return outputVoltageVector;
@@ -365,17 +389,7 @@ void DataSteward::initializeData(){
     NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
     initializeBlades();
     probe = new Probe(); // NOTE: probe not working right now. needs to be re-worked.
-//    rowCount = NUM_ELEMS; // cl_uint, for current row count
-//    colCount = NUM_ELEMS; // cl_uint, for current col count
-//    gapNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-//    chemNormalizer = 1.f; // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
 }
-
-
-
-
-
-
 
 /* writes the connectome. as of this comment, it will write it by **DE-TRANSPOSING** it.
  * NOTE: currently, this assumes neurons are ordered. */

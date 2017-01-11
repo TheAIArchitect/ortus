@@ -3,6 +3,7 @@
 //  ortus
 //
 //  Created by andrew on 1/8/17.
+// Sean Grimes
 //  Copyright © 2017 Andrew W.E. McDonald. All rights reserved.
 //
 

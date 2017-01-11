@@ -8,6 +8,18 @@
 
 #include "Steward.hpp"
 
+/*
+ 
+ -> DevelopmentSteward
+    -> this will add neurons, and adjusts weights and connections
+        => so, it must have direct access to the Blade objects.
+ -> ThinkingSteward
+    -> would generate thoughts, by stimulating interneurons
+ -> ActionSteward
+    -> take outputs and graph, or activate a physics simulation, maybe pass data back to StimulationSteward from the physics simulation
+    -> obviously would need access to the Blades
+*/
+
 
 Steward::Steward(){
     
@@ -44,7 +56,6 @@ void Steward::run(){
         //}
         //printf("\n");
         
-        //dataStewardp->gym.stimulateSensors(*(dataStewardp->inputVoltages), dataStewardp->officialNameToIndexMap);
     }
 
     // Just a basic runtime report and small sample of elements

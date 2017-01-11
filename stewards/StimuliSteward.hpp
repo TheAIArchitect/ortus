@@ -27,6 +27,7 @@ public:
     float getStimuliForElement(int elementIndex);
     float normalizeStimuli(float aggregateStimuli);
     
+    
     /* maps element ids to a vector of stimuli */
     std::unordered_map<int,std::vector<Stimulus*>> stimuliMap;
     

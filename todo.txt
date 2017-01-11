@@ -1,3 +1,19 @@
 ortus todo
 
-* 
+* re-implement writeConnectome
+    -> first get it working again
+        -> then have it re-order to put all sensors before inters before motors (before muscles)
+* fix Probe
+* re-implement checks from get_conns (checks for ablated elements, etc.)
+* re-implement ComputeSteward's printReport
+* add new timing code to various places
+    -> TBD
+* implement StimuliSteward::normalizeStimuli
+* subplots for DataVisualizer (see "Plotr" below)
+* consider smart pointers.
+
+
+
+Plotr
+* subplots
+

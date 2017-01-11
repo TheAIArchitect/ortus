@@ -3,6 +3,7 @@
 //  ortus
 //
 //  Created by andrew on 1/8/17.
+// Sean Grimes
 //  Copyright © 2017 Andrew W.E. McDonald. All rights reserved.
 //
 
@@ -17,7 +18,7 @@
 #endif
 
 #include <stdio.h>
-//#include "Timer.hpp"
+#include "Timer.hpp"
 
 #include "CLHelper.hpp"
 #include "DataSteward.hpp"
