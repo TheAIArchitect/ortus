@@ -93,10 +93,25 @@ void DataSteward::readOpenCLBuffers(){
     outputVoltageHistory->readCLBuffer();
 }
 
+void DataSteward::reconfigureConnectomeStructure(){
+   // there should be a flag, or a set of flags, or something,
+    // that allows the kernel to let the host know that the connectome
+    // needs to be reconfigured
+    //
+    // perhaps this means that when the kernel doesn't understand something
+    // (i.e., it doesn't have a clear idea of what the response should be)
+    // then it says what the stimulus is, and what the confusion was.
+    //
+    // that description was very vauge...
+    
+}
+
 void DataSteward::growConnectome(){
     // this will take care of adding the required entries to the blades,
     // REMEMBER: the scratch pad must get 'openCLWorkGroupSize' number rows added for every new neuron
     // and adding the required weights
+    
+    
 }
 
 /* we need another blade:

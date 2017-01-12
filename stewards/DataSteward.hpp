@@ -78,6 +78,7 @@ public:
     void executePostRunMemoryTransfers();
     
     void growConnectome();
+    void reconfigureConnectomeStructure();
     bool writeConnectome(std::string csv_name);
     
     void setKernelp(cl_kernel* kp);
