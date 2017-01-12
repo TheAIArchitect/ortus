@@ -195,21 +195,13 @@ void DataSteward::setOpenCLKernelArgs(){
 void DataSteward::pushOpenCLBuffers(){
     //Timer et;
     //et.start_timer();
-    printf("1\n");
     voltages->pushCLBuffer();
-    printf("2\n");
     outputVoltageHistory->pushCLBuffer();
-    printf("3\n");
     gaps->pushCLBuffer();
-    printf("4\n");
     chems->pushCLBuffer();
-    printf("5\n");
     chemContrib->pushCLBuffer();
-    printf("6\n");
     gapContrib->pushCLBuffer();
-    printf("7\n");
     metadata->pushCLBuffer();
-    printf("8\n");
     //et.stop_timer();
 }
 

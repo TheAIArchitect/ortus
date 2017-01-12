@@ -18,7 +18,8 @@
 
 
 /* declarations */
-void computeXCorr(__global float* outputVoltageHistory, int voltageHistorySize, int gId, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries);
+void computeXCorr(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries);
+float XCorrMultiply(__global float* outputVoltageHistories, int aOffset, int bOffset, int len);
 
 float computeDecay(float v_curr, float v_decay, float v_init){
     float decay = v_curr*v_decay;// this works because v_init is 0.
@@ -271,8 +272,17 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
             //printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",outputVoltageHistory[0],outputVoltageHistory[1],outputVoltageHistory[2],outputVoltageHistory[3],outputVoltageHistory[4],outputVoltageHistory[5]);
             //}
             int startingScratchPadOffset = getLocalScratchPadStartingOffset(lid, numElements,numXCorrEntries);
-            computeXCorr(outputVoltageHistory, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
-            
+            computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
+            if (gid == 3){ // INO2
+                int otherElement = 8; // MINHALE
+                int spiOne = getScratchPadIndex(startingScratchPadOffset, otherElement, 0, numXCorrEntries);
+                int spiTwo = getScratchPadIndex(startingScratchPadOffset, otherElement, 1, numXCorrEntries);
+                int spiThree = getScratchPadIndex(startingScratchPadOffset, otherElement, 2, numXCorrEntries);
+                float xcorrOne = XCorrScratchPad[spiOne];
+                float xcorrTwo = XCorrScratchPad[spiTwo];
+                float xcorrThree = XCorrScratchPad[spiThree];
+                printf("(kernel iteration %d): [%d, %d, %d] - %.2f, %.2f, %.2f)\n",kernelIterationNum, spiOne, spiTwo, spiThree, xcorrOne, xcorrTwo, xcorrThree);
+            }
         }
         
         /*
@@ -296,40 +306,66 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
 /*
  *
  */
-void computeXCorr(__global float* outputVoltageHistory, int voltageHistorySize, int gId, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries){
+void computeXCorr(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries){
     //printf("gid, lid: %d, %d\n", gId, lid);
-    
-
+    // 'a' refers to the array, 'A' in XCorrMulitply. That is, we do a xcorr between 'A', and 'B'.
+    // 'a' is the voltage history for 'gid', and 'b' starts at '0', and goes to numElements-1.
+    // at some point, 'a' will be the same as 'b'. That's fine, we will know that xcorr,
+    // because when it is in the scratch pad, it will have index equal to 'gid'
+    // (in the scratch pad, 'a' with element 0 will be at 0, 'a' with element 1 will be at 1, and so on.
+    //
+    // XCorrScratchPad will have a row for each set of xcorr computations between 'a' and a given 'b'
+    // (of course, offset by the 'startingScratchPadOffset' to account for the specific thread's 'lid' (local id)),
+    // This means that:
+    //      - index 0 of that row will hold xcorr(a, b), stacked.
+    //      - index 1 of that row will hold xcorr(a, b), with 'b' advanced by 1
+    //      - index 2 of that row will hold xcorr(a, b), with 'b' advanced by 2
+    //
+    // 'a' will always have an offset of 0, and we will always use indices 0, 1, and 2.
+    // 'b' will 'slide', and will start off with an offset of 0, so that it is stacked directly on-top of 'a'.
+    // then, on the next 'xcorrIteration', 'b' will be offset by 1, so we use, 1, 2, and 3.
+    // finally, on the 3rd iteration, (when xcorrIteration = 2), 'b' will be offset by 2, and we will use 2, 3, and 4.
+    // That, is why outputVoltageHistory (currently, as of this writing), has a size of 6 (5 indices that we use, and 1 for the 'current' [staging] ouput voltage)
+    //
+    // we do two auto xcorrs, one for 'a', and one for 'b' (each b), with them stacked on top of themselves,
+    int i;
+    int j;
+    int aIndex = getOutputVoltageHistoryIndex(gid, 0, voltageHistorySize);
+    int aOffset = 0; // 'a' is never offset. only 'b' gets offset... we're not actually going to add 0, because that would be silly.
+    int bIndex = 0;
+    int windowNum = 0; // because of
+    int xcorrIteration = 0; // we'll use this to offset 'b' by 0, 1, and 2
+    int xcorrLength = numXCorrEntries; // This means that we use an array of this length (3, as of this writing) to compute the xcorr (e.g., indices 0, 1, and 2 of 'a')
+    // seems to make the most sense to use the full length of each signal for the autocorr. note, we are subtracting 1 from the voltageHistorySize due to the 1 'staging' index.
+    int autoCorrSize = voltageHistorySize - 1;
+    float autoCorrA = XCorrMultiply(outputVoltageHistory,aIndex,aIndex, autoCorrSize);
+    float autoCorrB = 0;
+    float divisor = 0; // this will be the sqrt(autocorrA + autoCorrB), which will divide (so, normalize) each xcorr
+    float xcorrResult = 0; 
+    int scratchPadIndex = 0;
+    for (i = 0; i < numElements; ++i){ // loop through outputVoltageHistory,
+        xcorrIteration = 0;
+        bIndex = getOutputVoltageHistoryIndex(i,xcorrIteration,voltageHistorySize); // the beginning of element 'i's voltage history
+        autoCorrB = XCorrMultiply(outputVoltageHistory, bIndex, bIndex, autoCorrSize);
+        divisor = sqrt(autoCorrA * autoCorrB);
+        for (xcorrIteration = 0; xcorrIteration < xcorrLength; ++xcorrIteration){
+            xcorrResult = XCorrMultiply(outputVoltageHistory, aIndex, bIndex+xcorrIteration, xcorrLength);
+            scratchPadIndex = getScratchPadIndex(startingScratchPadOffset, i, xcorrIteration, xcorrLength);
+            XCorrScratchPad[scratchPadIndex] = xcorrResult/divisor;
+            /*
+            if (scratchPadIndex == 117 || scratchPadIndex == 118 || scratchPadIndex == 119)
+                printf("xcorr: %2.f, divisor: %.2f, total: %.2f (idx: %d)\n",xcorrResult, divisor,XCorrScratchPad[scratchPadIndex], scratchPadIndex);
+             */
+        }
+        
+    }
     
 }
 
-float XCorrMultiply(float* A, int aOffset, float* B, int bOffset, int len, int windowNum){
-    if ((windowNum < 0) || ((windowNum + 1) >= (2 * len))){// see "aStartingIndex = (windowNum - len) + 1" line for reasoning
-        return 0.f;  // out of range
-    }
-    int lastIndex = len - 1;
-    int iterations = 0;
-    int aStartingIndex = 0;
-    int bStartingIndex = 0;
-    if (windowNum >= len){ // then we change our approach, because B[0] is under A[1] (assuming we are sliding B)
-        bStartingIndex = 0; // always start at the beginning of B
-        aStartingIndex = (windowNum - len) + 1; // at (6 - 4) + 1, we're done (if windowNum == 7, we have a problem)... that's the reasoning for the check above.
-        iterations = len - aStartingIndex;
-    }
-    else {
-        bStartingIndex = lastIndex - windowNum; // also, windowNum can't be less than 0, or we go past the end of B.
-        aStartingIndex = 0; // always start at the beginning of A
-        iterations = len - bStartingIndex;
-    }
+float XCorrMultiply(__global float* outputVoltageHistories, int aOffset, int bOffset, int len){
     float result = 0;
-    int aIndex = aStartingIndex;
-    int bIndex = bStartingIndex;
-    //printf("window: %d\n",windowNum);
-    for (int i = 0; i < iterations; ++i){
-        //printf("\raIndex, bIndex: %d (%.2f), %d (%.2f)\n",aIndex, A[aIndex], bIndex, B[bIndex]);
-        result += A[aIndex] * B[bIndex];
-        aIndex++;
-        bIndex++;
+    for (int i = 0; i < len; ++i){
+        result += outputVoltageHistories[aOffset+i] * outputVoltageHistories[bOffset+i];
     }
     return result;
 }
