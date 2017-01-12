@@ -45,6 +45,7 @@ public:
     // OpenCL related variables
     size_t global; // global size
     size_t local; // local size
+    size_t workGroupSize; // global/local
     cl_program program;
     cl_kernel kernel;
     char *programBuffer;

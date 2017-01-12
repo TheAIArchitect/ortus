@@ -5,26 +5,10 @@
  * What about: http://www.izhikevich.org/publications/spikes.htm
  */
 
-/* GENERAL (kernel) NOTES
- note: shouldProbe, chemContrib, and gapContrib:
- used for the Probe to collect information about which neurons/muscles are passing what to other neurons/muscles.
- 
- if shouldProbe == 0, nothing happens with the *Contrib vars.
- if shouldProbe == 1, we'll fill the *Contrib vars in the same way as the cs_ and gj_ matricies,
- but instead of each column holding the  pre synaptic conn weight of that neuron/muscle to the post synaptic neuron/muscle (the row),
- each column will hold the voltage/activation contribution of that synapse/gap junction to the neuron/muscle in that row.
- 
- */
-
-
-/* declarations */
-void computeXCorr(__global float* outputVoltageHistory, int voltageHistorySize, int gId, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries);
-
 float computeDecay(float v_curr, float v_decay, float v_init){
     float decay = v_curr*v_decay;// this works because v_init is 0.
     return decay;
 }
-
 
 /* skips 'row' rows, before adding 'col' columns -- row major */
 int get2DIndexAs1D(int row, int col, int numCols){
@@ -59,20 +43,28 @@ int getOutputVoltageHistoryIndex(int elementId, int idx, int voltageHistorySize)
  ...
  |_| <- Thread N's block
  
- each block has 'numElements' rows, and 'numXCorrEntries' cols (well, if the scratch pad weren't a 1D buffer it would).
+ each block has 'numElements' rows, and 'numXcorrEntries' cols (well, if the scratch pad weren't a 1D buffer it would).
  
- so, we multiply the lid (local id), by the block size, which is 'numElements*numXCorrEntries', to get the starting index (thus, offset), for a thread in a work-group 
+ so, we multiply the lId (local id), by the block size, which is 'numElements*numXCorrEntries', to get the starting index (thus, offset), for a thread in a work-group 
  
+int getLocalScratchPadStartingOffset(int lId, int numElements, int numXcorrEntries){
+    return lId*(numElements*numXcorrEntries);
+}
+
+int getScratchPadIndex(int startingScratchPadOffset, int elementId, int xcorrEntry, int numXcorrEntries){
+    return startingScratchPadOffset+get2DIndexAs1D(elementId, xcorrEntry, numXcorrEntries);
+}
  */
-int getLocalScratchPadStartingOffset(int lid, int numElements, int numXCorrEntries){
-    return lid*(numElements*numXCorrEntries);
-}
 
-int getScratchPadIndex(int startingScratchPadOffset, int elementId, int XCorrEntry, int numXCorrEntries){
-    return startingScratchPadOffset+get2DIndexAs1D(elementId, XCorrEntry, numXCorrEntries);
-}
-
-
+/*
+ note: shouldProbe, chemContrib, and gapContrib:
+ used for the Probe to collect information about which neurons/muscles are passing what to other neurons/muscles.
+ 
+ if shouldProbe == 0, nothing happens with the *Contrib vars.
+ if shouldProbe == 1, we'll fill the *Contrib vars in the same way as the cs_ and gj_ matricies,
+ but instead of each column holding the  pre synaptic conn weight of that neuron/muscle to the post synaptic neuron/muscle (the row),
+ each column will hold the voltage/activation contribution of that synapse/gap junction to the neuron/muscle in that row.
+ */
 __kernel void OrtusKernel( __global float *voltages, // read and write
                          __global float *outputVoltageHistory, // read and write
                          __global float *gapWeights, // read and write
@@ -83,35 +75,25 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
                           float gapNormalizer, // read and write
                           float chemNormalizer, // read and write
                           __global int* metadata,// read only... for now?
-                          __local float* XCorrScratchPad){// access rows by work-group id!
+                          __local float* xcorrScratchPad){// access rows by work-group id!
     
+    // iteration_number_for_row_access:
+    //  Tells us what iteration we're on, 0 indexed.
+    // gid:
+    //  Determine the row of the CS / GJ matrix we're working on
+    // loop_iter:
+    //  The column numbers of the CS / GJ matrix that we get v_current values from
+    //  on row = gid. So any given v_current comes from:
+    //      idx = getIndex(iteration_number_for_row_access, loop_iter, colCount)
+    //      float v_current = voltages[idx]
+    // Any given connection weight comes from:
+    //  idx = getIndex(gid, loop_iter, colCount)
+    //  {cs, gj}_matrix[idx]
     
-    // __locals -- THESE ARE SHARED AMONG MEMBERS OF WORK-GROUP
+    // current row
     __local unsigned int dimidx;
-    __local int rowCount;
-    __local int colCount;
-    __local int numElements;
-    __local int kernelIterationNum;
-    __local int voltageHistorySize;
-    __local int numXCorrEntries;
-    __local float v_decay_constant;
-    __local float v_init; // starting voltage/activation
-    __local float v_min; // minimum possible voltage/activation
-    __local float v_max; // maximum possible voltage/activation
-    __local float thresh; // don't pass on signals from neurons with activaiton below thresh
-    __local float max_cs_weight;
-    __local float max_gj_weight;
     dimidx = 0; // dimension index. we only have one dimension (with index 0).
-    
-    // PRIVATE VARS
     int gid = get_global_id(dimidx); // gives id of current work-item
-    int lid = get_local_id(dimidx);
-    int elementId = gid;
-    float gj_incoming = 0.0f;
-    float cs_incoming = 0.0f;
-    float total_incoming_current = 0.0f;
-    float total_incoming_voltage = 0.0f;
-    
     //size_t get_global_size(dimidx);// gives total number of work-items (for specified dimension)
     //size_t get_group_id(dimidx); // gives current work-group id (from 0 to (# of work-groups -1))
     //size_t get_local_id(dimidx); // gives id of work-item *within* its work group (so, from 0 to (local_size - 1))
@@ -119,34 +101,52 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
     //size_t get_num_groups(dimidx); // gives total number of work-groups
     
     
-    // __locals -- THESE ARE SHARED AMONG MEMBERS OF WORK-GROUP
+    // can i declare these as global??
+    __local int rowCount;
+    __local int colCount;
+    __local int kernelIterationNum;
+    __local int voltageHistorySize;
     rowCount = metadata[0];
     colCount = metadata[1];
     kernelIterationNum = metadata[2];
-    voltageHistorySize = metadata[3]; // this is one larger than we use for the XCorr -- the last one is the staging one.
-    numXCorrEntries = metadata[4];
-    numElements = rowCount;
-    v_decay_constant = .2; // loses % of its charge (multiply by 100 for %)
-    v_init = 0;
-    v_min = -100.f;
-    v_max = 100.f;
-    thresh = 5.f;
-    max_cs_weight = 1.0f;// NOTE: THIS WILL USE 'chemNormalizer'
-    max_gj_weight = 1.0f; // NOTE: THIS WILL USE 'gapNormalizer'
+    voltageHistorySize = metadata[3]; // this is one larger than we use for the xcorr -- the last one is the staging one.
     
     ///////////// *********** replace rowCount and colCount with numElments, and gid with elementId !!!!!!!!!!!!!!!!
     /* BEGIN CHECKS -- comment out for speed, but leave uncommented for development */
-    //if (rowCount != colCount){
-    //    //printf("OpenCL Kernel Error: rowCount != colCount\n"); // uncomment as test.
-    //    return;
-    //}
-    // PAST HERE,  THERE SHOULD BE NO REFENCE TO 'rowCount' or 'colCount' (this reduces confusion; it's clear then, that rowCount == colCount)
+    // assign
+    // rowCount == colCount
+    // then set numElements = rowCount;
+    
     
     /* END CHECKS */
     
+    // NOTE: Apparently you can't declare and initialize in 1 statement...huh.
+    // Well, regardless, these should be shared amoung the work-groups
+    __local float v_decay_constant;
+    v_decay_constant = .2; // loses % of its charge (multiply by 100 for %)
+    __local float v_init;
+    v_init = 0;
+    __local float v_min;
+    v_min = -100.f;
+    __local float v_max;
+    v_max = 100.f;
+    __local float thresh;
+    thresh = 5.f;
+    __local float max_cs_weight;
+    max_cs_weight = 1.0f;// NOTE: THIS WILL USE 'chemNormalizer'
+    __local float max_gj_weight;
+    max_gj_weight = 1.0f; // NOTE: THIS WILL USE 'gapNormalizer'
+    // These should be kept in private address space as they are unique to each 'neuron'
+    float gj_incoming = 0.0f;
+    float cs_incoming = 0.0f;
+    float total_incoming_current = 0.0f;
+    float total_incoming_voltage = 0.0f;
+    //if(gid == 1)printf("Running from mainKernel.cl\n");
+    //printf("rowCount, colCount: %u, %u\n", rowCount, colCount);
     // Don't do anything if we're out of range.
-    if(gid <= (numElements - 1)){
-        //printf("gid: %d\n",gid);
+    if(gid <= (rowCount - 1)){
+        // using 0 for the row_num, because right now voltages is just a vector
+//        size_t my_v_curr_idx = getIndex(0, gid, colCount); // ROW MAJOR
         size_t my_v_curr_idx = getVoltageIndex(gid);
         float my_v_current = voltages[my_v_curr_idx];
         float v_decay = computeDecay(my_v_current, v_decay_constant, v_init);
@@ -154,24 +154,23 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
         size_t weight_idx;
         voltage_idx = 0;
         weight_idx = 0;
+        //float cs_amount_passed_on = .5;//
+        //float gj_amount_passed_on = .65;
         float cs_amount_passed_on = 1;
         float gj_amount_passed_on = 1;
-        
-        // these three can probably be __local
         float inhibitRevPot = -10.0f;
         float exciteRevPot = 30.0f;
         float vRange = exciteRevPot - inhibitRevPot;
         
         // We are going to run across the full row of the cs/gj matrix and play with the v_curr value
-        int loop_iter; // NOTE: RENAME THIS VARIABLE
-        for(loop_iter = 0; loop_iter < numElements; ++loop_iter){
+        int loop_iter;
+        for(loop_iter = 0; loop_iter < colCount; ++loop_iter){
             if (loop_iter == gid){ // don't want to try to connect with ourselves.
                 continue;
             }
-            //voltage_idx = getIndex(0, loop_iter, numElements); // ROW MAJOR
+//            voltage_idx = getIndex(0, loop_iter, colCount); // ROW MAJOR
             voltage_idx = getVoltageIndex(loop_iter);
-            weight_idx = getConnectomeIndex(gid, loop_iter, numElements); // ROW MAJOR
-            //weight_idx = getIndex(gid, loop_iter, numElements); // ROW MAJOR
+            weight_idx = getConnectomeIndex(gid, loop_iter, colCount); // ROW MAJOR
             // Try to save ourselves from pointless memory access / operations
             if(chemWeights[weight_idx] == 0.0 && gapWeights[weight_idx] == 0.0)
                 continue;
@@ -241,10 +240,10 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
         
         // Reset the value in the voltage vec
         // Write the value back to the voltages, but 1 row ahead
-        //size_t w_idx = getIndex(iteration_number_for_row_access + 1, gid, numElements);
+        //size_t w_idx = getIndex(iteration_number_for_row_access + 1, gid, colCount);
         //voltages[w_idx] = v_curr_finished;
         
-        //size_t fin_idx = getIndex(0, gid, numElements); // ROW MAJOR
+//        size_t fin_idx = getIndex(0, gid, colCount); // ROW MAJOR
         size_t fin_idx = getVoltageIndex(gid);
         
         //voltages[fin_idx] = v_curr_finished;
@@ -253,37 +252,40 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
         // update the outputVoltageHistory
         int i;
         int ovhSizeMinusOne = voltageHistorySize - 1;
-        size_t currentOVHIndex =  getOutputVoltageHistoryIndex(gid, 0, voltageHistorySize);// the first (oldest) entry for this element. for next entry, just add one.
+        // TEST THIS LINE BELOW!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        // size_t currentOVHIndex =  getIndex(gid, 0, voltageHistorySize);// the first (oldest) entry for this element. for next entry, just add one.
         // push all the existing output voltages down one (losing the oldest)
         for(i = 0; i < ovhSizeMinusOne; ++i){
-            outputVoltageHistory[currentOVHIndex] = outputVoltageHistory[currentOVHIndex + 1];
-            currentOVHIndex++;
+            // NOTE: calling getIndex with row and col flipped, because we're doing row-by-row (e.g., element 0 uses 0-5, if we have an ovh of size 6).
+//            size_t ovhIndex = getIndex(gid, i, voltageHistorySize); // ROW MAJOR (each row contains all voltages for that element, so for each element, we need a new row -- row indexing is same as connectome)
+            size_t ovhIndex = getOutputVoltageHistoryIndex(gid, i, voltageHistorySize); // ROW MAJOR (each row contains all voltages for that element, so for each element, we need a new row -- row indexing is same as connectome)
+//            size_t ovhIndexPlusOne = getIndex(gid, i+1, voltageHistorySize); // ROW MAJOR
+            size_t ovhIndexPlusOne = getOutputVoltageHistoryIndex(gid, i+1, voltageHistorySize); // ROW MAJOR
+            outputVoltageHistory[ovhIndex] = outputVoltageHistory[ovhIndexPlusOne];
         }
-        // then set the most recent one in the 'staging' area (which is currentOVHIndex, because it was just incremented)
-        outputVoltageHistory[currentOVHIndex] = v_curr_finished;
+        // then set the most recent one in the 'staging' area
+        outputVoltageHistory[getIndex(gid,ovhSizeMinusOne, voltageHistorySize)] = v_curr_finished;
         
-        
+        /*
         if (kernelIterationNum >= ovhSizeMinusOne){ // then we know we have a full outputVoltageHistory
-            // do XCorr
-            // do gap nd chem work
-            //if (gid == 0){
-            //   printf("ovhs: %d, v_curr_finished: %.2f\n", voltageHistorySize, v_curr_finished);
-            //printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",outputVoltageHistory[0],outputVoltageHistory[1],outputVoltageHistory[2],outputVoltageHistory[3],outputVoltageHistory[4],outputVoltageHistory[5]);
-            //}
-            int startingScratchPadOffset = getLocalScratchPadStartingOffset(lid, numElements,numXCorrEntries);
-            computeXCorr(outputVoltageHistory, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
-            
+            // do xcorr
+            // do gap and chem work
+            if (gid == 0){
+                printf("ovhs: %d, v_curr_finished: %.2f\n", voltageHistorySize, v_curr_finished);
+            printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",outputVoltageHistory[0],outputVoltageHistory[1],outputVoltageHistory[2],outputVoltageHistory[3],outputVoltageHistory[4],outputVoltageHistory[5]);
+            }
         }
+         */
         
         /*
         if (gid == 1){
             printf("START CLPRINT:\ninputs: ");
             int i;
-            for (i = 0; i < numElements; ++i){
+            for (i = 0; i < rowCount; ++i){
                 printf("%.2f, ",voltages[i]);
             }
             printf("\noutputs: ");
-            for (i = 0; i < numElements; ++i){
+            for (i = 0; i < rowCount; ++i){
                 printf("%.2f, ",voltages[i]);
             }
             printf("\nEND CLPRINT\n");
@@ -295,15 +297,11 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
 
 /*
  *
- */
-void computeXCorr(__global float* outputVoltageHistory, int voltageHistorySize, int gId, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries){
-    //printf("gid, lid: %d, %d\n", gId, lid);
-    
-
-    
+void computeXCorr(float* outputVoltageHistory, int voltageHistorySize, int gId, int wkGpId, float* xcorrScratchPad ){
+    // 
 }
 
-float XCorrMultiply(float* A, int aOffset, float* B, int bOffset, int len, int windowNum){
+float xcorrMultiply(float* A, int aOffset, float* B, int bOffset, int len, int windowNum){
     if ((windowNum < 0) || ((windowNum + 1) >= (2 * len))){// see "aStartingIndex = (windowNum - len) + 1" line for reasoning
         return 0.f;  // out of range
     }
@@ -334,6 +332,7 @@ float XCorrMultiply(float* A, int aOffset, float* B, int bOffset, int len, int w
     return result;
 }
 
+ */
  
 
 /* c++ xcorr implementation for reference when doing an opencl implementation: */

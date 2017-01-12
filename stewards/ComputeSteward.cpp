@@ -12,6 +12,15 @@
 ComputeSteward::ComputeSteward(size_t globalSize, size_t localSize){
     global = globalSize;
     local = localSize;
+    // make sure we'll have a work-group size that's an integer power of 2:
+    float fWorkGroupSize = (float)globalSize/(float)localSize;
+    float fLog2WG = log2(fWorkGroupSize);
+    int iLog2WG = fLog2WG;
+    if (iLog2WG != fLog2WG){ 
+        printf("ERROR! Work-group size (global-size/local-size) must be an integer power of 2!\n");
+        exit(1);
+    }
+    workGroupSize = fWorkGroupSize;
     currentIteration = 0;
 }
 
@@ -23,7 +32,7 @@ void ComputeSteward::run(){
 void ComputeSteward::executePreRunOperations(){
     dStewiep->updateMetadataBlade(currentIteration);
     dStewiep->setOpenCLKernelArgs();
-    //printf("Set OpenCL Kernel Args\n");
+    //printf("Set OpenCL Kernel Args... prior to iteration '%d'\n",currentIteration);
     
     if (currentIteration == 0){
         // this only happens for all buffers prior to the first run
@@ -90,10 +99,7 @@ void ComputeSteward::printReport(int num_runs){
 void ComputeSteward::enqueueKernel(){
     cl_event timing_event;
     
-    size_t g, l;
-    g = global;
-    l = local;
-    clHelper.err = clEnqueueNDRangeKernel(clHelper.commands, kernel, 1, NULL, &g, &l, 0, NULL, &timing_event);
+    clHelper.err = clEnqueueNDRangeKernel(clHelper.commands, kernel, 1, NULL, &global, &local, 0, NULL, &timing_event);
     clHelper.check_and_print_cl_err(clHelper.err);
     
     clFinish(clHelper.commands);

@@ -16,6 +16,7 @@
 #endif
 #include <iostream>
 
+
 /**
     \brief Removing some OpenCL setup boiler plate
     \author Andrew McDonald
@@ -193,8 +194,10 @@ public:
     void check_and_print_cl_program_build_err(int err, cl_program *program){
         if (err != CL_SUCCESS){
             size_t len;
-            char buffer[2048];
-            clGetProgramBuildInfo(*program, device_id, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
+            clGetProgramBuildInfo(*program, device_id, CL_PROGRAM_BUILD_LOG, 0, NULL, &len);
+            char buffer[len];
+            clGetProgramBuildInfo(*program, device_id, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, NULL);
+            printf("\n%s\n",buffer);
             throw std::runtime_error("Couldn't build executable");
         }
     }

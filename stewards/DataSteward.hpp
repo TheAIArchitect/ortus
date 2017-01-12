@@ -60,6 +60,8 @@ public: // super important variables
     // (zero indexed): [rowCount, colCount, kernelIterationNum, voltageHistorySize ]
     Blade<cl_int>* metadata;
     
+    Blade<cl_float>* deviceScratchPad; // memory is local on device, so size depends upon work-group size
+    
 protected: // private?
     cl_kernel* kernelp;
     CLHelper* clHelperp;
@@ -69,7 +71,7 @@ public:
     
     DataSteward();
     ~DataSteward();
-    void init();
+    void init(size_t openCLWorkGroupSize);
     void createElements();
     void createConnections();
     void initializeData();
@@ -101,6 +103,7 @@ public:
     std::vector<std::vector<std::string>> csvDat;
     float maxGapWeight;
     float maxChemWeight;
+    size_t openCLWorkGroupSize;
     Probe* probe;
     AblationStation ablator;
     Gymnasium gym;
@@ -110,7 +113,6 @@ public:
     
     
   
-    
     
     
     // static and/or constant vars
@@ -125,7 +127,8 @@ public:
     static int CONNECTOME_COLS;
     const static int MAX_ELEMENTS = 200;
     const static int VOLTAGE_HISTORY_SIZE = 6; // 5 usable, and the 6th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
-    const static int METADATA_COUNT = 4; // see 'metadata' definition for metadata metadata. haha.
+    const static int METADATA_COUNT = 5; // see 'metadata' definition for metadata metadata. haha.
+    const static int XCORR_COMPUTATIONS = 3; // see notes/correlationNotes.txt
     static unsigned int NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8;
     
     

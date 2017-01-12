@@ -65,7 +65,8 @@ DataSteward::~DataSteward(){
     
 }
 
-void DataSteward::init(){
+void DataSteward::init(size_t openCLWorkGroupSize){
+    this->openCLWorkGroupSize = openCLWorkGroupSize;
     initializeData();
 }
 
@@ -94,6 +95,7 @@ void DataSteward::readOpenCLBuffers(){
 
 void DataSteward::growConnectome(){
     // this will take care of adding the required entries to the blades,
+    // REMEMBER: the scratch pad must get 'openCLWorkGroupSize' number rows added for every new neuron
     // and adding the required weights
 }
 
@@ -171,6 +173,7 @@ void DataSteward::updateMetadataBlade(int kernelIterationNum){
     metadata->set(1, CONNECTOME_COLS);
     metadata->set(2, kernelIterationNum);
     metadata->set(3, VOLTAGE_HISTORY_SIZE);
+    metadata->set(4, XCORR_COMPUTATIONS);
 }
 
 void DataSteward::setOpenCLKernelArgs(){
@@ -180,25 +183,33 @@ void DataSteward::setOpenCLKernelArgs(){
     chems->setCLArgIndex(3, kernelp);
     gapContrib->setCLArgIndex(4, kernelp);
     chemContrib->setCLArgIndex(5, kernelp);
-    //rowCount->setCLArgIndex(6, kernelp);
-    //colCount->setCLArgIndex(7, kernelp);
     clHelperp->err = clSetKernelArg(*kernelp, 6, sizeof(cl_int), &Probe::shouldProbe);
     clHelperp->check_and_print_cl_err(clHelperp->err);
     gapNormalizer->setCLArgIndex(7, kernelp);
     chemNormalizer->setCLArgIndex(8, kernelp);
     metadata->setCLArgIndex(9, kernelp);
+    deviceScratchPad->setCLArgIndex(10,kernelp);
+    
 }
 
 void DataSteward::pushOpenCLBuffers(){
     //Timer et;
     //et.start_timer();
+    printf("1\n");
     voltages->pushCLBuffer();
+    printf("2\n");
     outputVoltageHistory->pushCLBuffer();
+    printf("3\n");
     gaps->pushCLBuffer();
+    printf("4\n");
     chems->pushCLBuffer();
+    printf("5\n");
     chemContrib->pushCLBuffer();
+    printf("6\n");
     gapContrib->pushCLBuffer();
+    printf("7\n");
     metadata->pushCLBuffer();
+    printf("8\n");
     //et.stop_timer();
 }
 
@@ -222,6 +233,8 @@ void DataSteward::initializeBlades(){
     chemNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_WRITE);
     chemNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
     metadata = new Blade<cl_int>(clHelperp, CL_MEM_READ_ONLY, METADATA_COUNT, METADATA_COUNT);
+    // this doesn't create a buffer -- just a spot in local memory for the kernel to use as a scratch pad.
+    deviceScratchPad = new Blade<cl_float>(clHelperp, openCLWorkGroupSize*CONNECTOME_ROWS,XCORR_COMPUTATIONS, MAX_ELEMENTS, XCORR_COMPUTATIONS);
 }
 
 void DataSteward::fillInputVoltageBlade(){

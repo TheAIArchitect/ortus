@@ -26,14 +26,16 @@ Steward::Steward(){
 }
 
 void Steward::initialize(){
-    size_t globalSize = 512;
-    size_t localSize = 64;
+    size_t globalSize = 512; // total work-items to execute (number of times to call kernel)
+    size_t localSize = 64;// 16 or 32? // number of work-items to group into a work-group
+    // assuming global = 512 and local = 64:
+    // the number of work-groups = global / local = 512/64  = 8 work-groups
     
     dataStewardp = new DataSteward();
     computeStewardp = new ComputeSteward(globalSize, localSize);
     computeStewardp->dStewiep = dataStewardp;
     computeStewardp->initializeOpenCL();
-    dataStewardp->init();
+    dataStewardp->init(computeStewardp->workGroupSize);
     sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
     sensoryStimulationStewardp->setStimuli();
     

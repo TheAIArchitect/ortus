@@ -24,6 +24,9 @@ public:
     bool scalar;
     bool vector;
     bool readOnly;
+    bool deviceScratchPad;
+    bool clMemAllocated;
+    bool deleteDataBuffers;
     int currentRows;
     int maxRows;
     int currentCols;
@@ -46,20 +49,24 @@ public:
     Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols){
         scalar = false;
         vector = false;
+        deviceScratchPad = false;
+        clMemAllocated = false;
+        deleteDataBuffers = false;
         if ((maxRows == maxCols) && (maxRows == 1)){ // it's a scalar
             scalar = true;
         }
         else if ((currentRows == maxRows) && (maxRows == 1)) { // it's a vector, not a 2D matrix
             vector = true;
         }
-        currentSize = currentRows*currentCols;
-        maxSize = maxRows * maxCols;
         this->currentRows = currentRows;
         this->currentCols = currentCols;
+        updateCurrentSize();
+        maxSize = maxRows * maxCols;
         this->maxRows = maxRows;
         this->maxCols = maxCols;
         data = new T[maxSize](); // init zeroed with '()'
         zeros = new T[maxSize]();
+        deleteDataBuffers = true;
         // OpenCL buffer creation
         this->clhelper = clhelper;
         memFlags = flags;
@@ -67,6 +74,7 @@ public:
             readOnly = true;
         } else {
             createCLBuffer();
+            clMemAllocated = true;
         }
     }
     
@@ -76,9 +84,35 @@ public:
     /* Simplified constructor for a scalar */
     Blade(CLHelper* clhelper, cl_mem_flags flags) : Blade(clhelper, flags, 1, 1, 1, 1) {};
     
+    /* Create a Blade this way if you only want to use it as a device scratch pad. No buffer gets created, nothing gets pushed. You just need to set the kernel arg.
+     *
+     * IMORTANT NOTE: The kernel parameter MUST be declared with the __local qualifier  (in the kernel definition) for this to work.  If it isn't, things might not work as you wish...
+     */
+    Blade(CLHelper* clhelper, int currentRows, int currentCols, int maxRows, int maxCols){
+        this->clhelper = clhelper;
+        scalar = false;
+        vector = false;
+        deviceScratchPad = true;// TRUE!!!
+        clMemAllocated = false; // we don't create a buffer
+        deleteDataBuffers = false; // nor do we new anything
+        this->currentRows = currentRows;
+        this->currentCols = currentCols;
+        updateCurrentSize();
+        maxSize = maxRows * maxCols;
+        this->maxRows = maxRows;
+        this->maxCols = maxCols;
+    }
+    
     ~Blade(){
-        delete[] data;
-        delete[] zeros;
+        if (deleteDataBuffers){
+            delete[] data;
+            delete[] zeros;
+            deleteDataBuffers = false;
+        }
+        if (clMemAllocated){
+            clReleaseMemObject(clData);
+            clMemAllocated = false;
+        }
     }
     
     /* returns a pointer to the data at row, col. NULL if out of range. */
@@ -173,6 +207,7 @@ public:
         if(currentRows < maxRows){
             currentRows++;
         }
+        updateCurrentSize();
         return currentRows;
     }
     
@@ -181,6 +216,7 @@ public:
         if(currentCols < maxCols){
             currentCols++;
         }
+        updateCurrentSize();
         return currentCols;
     }
     
@@ -196,7 +232,10 @@ public:
         else if (oldColCount == newColCount){
             currentRows = oldRowCount; // same as above
         }
+        updateCurrentSize();
     }
+    
+
     
     /* copys the data array from otherBlade to this blade's data, overwriting the contents.
      *
@@ -216,6 +255,9 @@ public:
         clArgIndex = argIndex;
         if (scalar && readOnly){ // then we don't need a buffer, and just send the data over (which is already a pointer... don't send a reference to it.
             this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(T), data);
+        }
+        else if (deviceScratchPad){
+            this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, currentSize*sizeof(T), NULL);// note, we don't set an address for the arg, BUT, we tell the kernel how big the __local buffer needs to be!
         }
         else {
             this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(cl_mem), &clData);
@@ -250,6 +292,12 @@ public:
     void clearCLBuffer(){
         this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, clData, CL_TRUE, 0, sizeof(T) * maxSize, zeros, 0, NULL, NULL);
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
+    }
+    
+private:
+    
+    void updateCurrentSize(){
+        currentSize = currentRows * currentCols;
     }
     
 };
