@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include "DataSteward.hpp"
-#include "Plotr.hpp"
+#include "Plot.hpp"
 #include <vector>
 #include <string>
 

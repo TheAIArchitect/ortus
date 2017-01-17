@@ -281,7 +281,7 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
                 float xcorrOne = XCorrScratchPad[spiOne];
                 float xcorrTwo = XCorrScratchPad[spiTwo];
                 float xcorrThree = XCorrScratchPad[spiThree];
-                printf("(kernel iteration %d): [%d, %d, %d] - %.2f, %.2f, %.2f)\n",kernelIterationNum, spiOne, spiTwo, spiThree, xcorrOne, xcorrTwo, xcorrThree);
+                //printf("(kernel iteration %d): [%d, %d, %d] - %.2f, %.2f, %.2f)\n",kernelIterationNum, spiOne, spiTwo, spiThree, xcorrOne, xcorrTwo, xcorrThree);
             }
         }
         

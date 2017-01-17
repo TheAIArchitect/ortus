@@ -31,7 +31,6 @@
 #include "AblationStation.hpp"
 #include "Blade.hpp"
 #include "Probe.hpp"
-#include "Gymnasium.hpp"
 #include "CLHelper.hpp"
 
 
@@ -107,7 +106,6 @@ public:
     size_t openCLWorkGroupSize;
     Probe* probe;
     AblationStation ablator;
-    Gymnasium gym;
     std::vector<std::vector<float>> kernelVoltages; // might need to move
     //MuscleInfoModule** mim;
     //NeuronInfoModule** nim;

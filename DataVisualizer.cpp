@@ -13,6 +13,7 @@ DataVisualizer::DataVisualizer(DataSteward* stewie){
 }
 
 
+/*
 void DataVisualizer::plotAll(){
 
     int numWindows = stewie->kernelVoltages.size();
@@ -38,6 +39,7 @@ void DataVisualizer::plotAll(){
     
     
 }
+*/
 
 void DataVisualizer::plotSet(std::string* names, int numNames){
 
@@ -50,8 +52,9 @@ void DataVisualizer::plotSet(std::string* names, int numNames){
         
     }
     
-    Plotr plt;
-    std::map<std::string, std::string> kwArgs;
+    Plot plotOne(true);
+    //Plot::kwargsMap kwArgs;
+    std::unordered_map<std::string, std::string> kwArgs;
     for (int i = 0; i < numNames; ++i){
         int idx = stewie->officialNameToIndexMap[names[i]];
         kwArgs["label"] = names[i]; 
@@ -59,11 +62,12 @@ void DataVisualizer::plotSet(std::string* names, int numNames){
         for (int j = 0; j < max; ++j){
             yVals.push_back(stewie->kernelVoltages[j][idx]);
         }
-        plt.plot(xVals, yVals, kwArgs);
-        
+        plotOne.addValues<double>(xVals, yVals);
+        plotOne.plot(kwArgs);
     }
-    plt.legend();
-    plt.show();
+    plotOne.grid(true);
+    plotOne.legend();
+    plotOne.show();
     
     
 }

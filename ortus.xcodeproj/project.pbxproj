@@ -49,6 +49,10 @@
 		F748804C1E25B7020083763E /* DevelopmentSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748804A1E25B7020083763E /* DevelopmentSteward.cpp */; };
 		F74880501E25FB1E0083763E /* OrtusKernelOne.cl in Sources */ = {isa = PBXBuildFile; fileRef = F748804E1E25FB1E0083763E /* OrtusKernelOne.cl */; };
 		F74880511E25FB1E0083763E /* OrtusKernelTwo.cl in Sources */ = {isa = PBXBuildFile; fileRef = F748804F1E25FB1E0083763E /* OrtusKernelTwo.cl */; };
+		F75903AC1E2E49FB00879481 /* Plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903A41E2E49FB00879481 /* Plot.cpp */; };
+		F75903AD1E2E49FB00879481 /* Plotr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903A61E2E49FB00879481 /* Plotr.cpp */; };
+		F75903AE1E2E49FB00879481 /* Pyterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903A81E2E49FB00879481 /* Pyterpreter.cpp */; };
+		F75903AF1E2E49FB00879481 /* Pytils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903AA1E2E49FB00879481 /* Pytils.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
@@ -150,8 +154,6 @@
 		44B6E6331D9A6CB300A8DB7B /* Camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
 		44FDA2EA1DCC7995005897DB /* DataVisualizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataVisualizer.cpp; sourceTree = "<group>"; };
 		44FDA2EB1DCC7995005897DB /* DataVisualizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DataVisualizer.hpp; sourceTree = "<group>"; };
-		44FDA2EE1DCC7B51005897DB /* Plotr.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Plotr.hpp; sourceTree = "<group>"; };
-		44FDA2EF1DCC7B51005897DB /* Interpreter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interpreter.hpp; sourceTree = "<group>"; };
 		49C754C31E125D07000D0A00 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		49C754C51E125D15000D0A00 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		49EB41ED1E1D28FB00E98215 /* Blade.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Blade.hpp; sourceTree = "<group>"; };
@@ -176,6 +178,14 @@
 		F748804E1E25FB1E0083763E /* OrtusKernelOne.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = OrtusKernelOne.cl; path = kernels/OrtusKernelOne.cl; sourceTree = "<group>"; };
 		F748804F1E25FB1E0083763E /* OrtusKernelTwo.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = OrtusKernelTwo.cl; path = kernels/OrtusKernelTwo.cl; sourceTree = "<group>"; };
 		F753A7C51E283A0200625EBC /* learningNotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = learningNotes.txt; path = notes/learningNotes.txt; sourceTree = "<group>"; };
+		F75903A41E2E49FB00879481 /* Plot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plot.cpp; path = Plotr/src/Plot.cpp; sourceTree = "<group>"; };
+		F75903A51E2E49FB00879481 /* Plot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Plot.hpp; path = Plotr/src/Plot.hpp; sourceTree = "<group>"; };
+		F75903A61E2E49FB00879481 /* Plotr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plotr.cpp; path = Plotr/src/Plotr.cpp; sourceTree = "<group>"; };
+		F75903A71E2E49FB00879481 /* Plotr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Plotr.hpp; path = Plotr/src/Plotr.hpp; sourceTree = "<group>"; };
+		F75903A81E2E49FB00879481 /* Pyterpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pyterpreter.cpp; path = Plotr/src/Pyterpreter.cpp; sourceTree = "<group>"; };
+		F75903A91E2E49FB00879481 /* Pyterpreter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pyterpreter.hpp; path = Plotr/src/Pyterpreter.hpp; sourceTree = "<group>"; };
+		F75903AA1E2E49FB00879481 /* Pytils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pytils.cpp; path = Plotr/src/Pytils.cpp; sourceTree = "<group>"; };
+		F75903AB1E2E49FB00879481 /* Pytils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pytils.hpp; path = Plotr/src/Pytils.hpp; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -265,8 +275,14 @@
 		44FDA2ED1DCC7B38005897DB /* Plotr */ = {
 			isa = PBXGroup;
 			children = (
-				44FDA2EE1DCC7B51005897DB /* Plotr.hpp */,
-				44FDA2EF1DCC7B51005897DB /* Interpreter.hpp */,
+				F75903A41E2E49FB00879481 /* Plot.cpp */,
+				F75903A51E2E49FB00879481 /* Plot.hpp */,
+				F75903A61E2E49FB00879481 /* Plotr.cpp */,
+				F75903A71E2E49FB00879481 /* Plotr.hpp */,
+				F75903A81E2E49FB00879481 /* Pyterpreter.cpp */,
+				F75903A91E2E49FB00879481 /* Pyterpreter.hpp */,
+				F75903AA1E2E49FB00879481 /* Pytils.cpp */,
+				F75903AB1E2E49FB00879481 /* Pytils.hpp */,
 			);
 			name = Plotr;
 			sourceTree = "<group>";
@@ -491,6 +507,7 @@
 				444DE4231D8A642700247E36 /* image_DXT.c in Sources */,
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
 				F74880421E2448A00083763E /* Steward.cpp in Sources */,
+				F75903AF1E2E49FB00879481 /* Pytils.cpp in Sources */,
 				F74880511E25FB1E0083763E /* OrtusKernelTwo.cl in Sources */,
 				F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
@@ -504,9 +521,12 @@
 				F74880451E245C930083763E /* SensoryStimulationSteward.cpp in Sources */,
 				444DE4061D8A5D7F00247E36 /* ShapeCreator.cpp in Sources */,
 				444DE4101D8A5D7F00247E36 /* Geometrician.cpp in Sources */,
+				F75903AE1E2E49FB00879481 /* Pyterpreter.cpp in Sources */,
+				F75903AC1E2E49FB00879481 /* Plot.cpp in Sources */,
 				444DE4181D8A63AC00247E36 /* SOIL.c in Sources */,
 				444DE4241D8A642700247E36 /* image_helper.c in Sources */,
 				F74880481E25AA760083763E /* StimuliSteward.cpp in Sources */,
+				F75903AD1E2E49FB00879481 /* Plotr.cpp in Sources */,
 				F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */,
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE46C1D8A717500247E36 /* main.cpp in Sources */,
