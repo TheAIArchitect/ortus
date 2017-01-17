@@ -1,0 +1,23 @@
+xcorr? - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xcorr
+quiver? - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.quiver
+hold state, not sure if necessary - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.hold
+imsave - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.imsave
+hist - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.hist
+hist2d - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.hist2d
+grid - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.grid
+colorbar? (for what?) - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.colorbar
+    -> see: http://matplotlib.org/examples/pylab_examples/colorbar_tick_labelling_demo.html
+add arrow to axes - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.arrow
+annotate point (xy) - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.annotate
+xticks - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.xticks
+yticks - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.yticks
+eventplot - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.eventplot
+imshow (plots matrix as image) - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.imshow
+scatter - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.scatter
+specgram - http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.specgram
+
+
+check out Line2D package (matplotlib) : http://matplotlib.org/api/lines_api.html#matplotlib.lines.Line2D
+
+
+

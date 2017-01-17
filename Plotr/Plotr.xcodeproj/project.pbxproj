@@ -1,0 +1,297 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F753A7C91E28799B00625EBC /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = F753A7C71E28799B00625EBC /* README.md */; };
+		F753A7D11E287A1200625EBC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F753A7CD1E287A1200625EBC /* main.cpp */; };
+		F753A7D21E287A1200625EBC /* Plotr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F753A7CE1E287A1200625EBC /* Plotr.cpp */; };
+		F753A7D71E28882D00625EBC /* Pyterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F753A7D51E28882D00625EBC /* Pyterpreter.cpp */; };
+		F753A7DA1E29B58600625EBC /* Plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F753A7D81E29B58600625EBC /* Plot.cpp */; };
+		F753A7DD1E29BDFE00625EBC /* Pytils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F753A7DB1E29BDFE00625EBC /* Pytils.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		449019D91DC0848200569854 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		449019DB1DC0848200569854 /* Plotr */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Plotr; sourceTree = BUILT_PRODUCTS_DIR; };
+		F753A7C71E28799B00625EBC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		F753A7CD1E287A1200625EBC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = "<group>"; };
+		F753A7CE1E287A1200625EBC /* Plotr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plotr.cpp; path = src/Plotr.cpp; sourceTree = "<group>"; };
+		F753A7CF1E287A1200625EBC /* Plotr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Plotr.hpp; path = src/Plotr.hpp; sourceTree = "<group>"; };
+		F753A7D41E287A3900625EBC /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = todo.txt; path = notes/todo.txt; sourceTree = "<group>"; };
+		F753A7D51E28882D00625EBC /* Pyterpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pyterpreter.cpp; path = src/Pyterpreter.cpp; sourceTree = "<group>"; };
+		F753A7D61E28882D00625EBC /* Pyterpreter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pyterpreter.hpp; path = src/Pyterpreter.hpp; sourceTree = "<group>"; };
+		F753A7D81E29B58600625EBC /* Plot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plot.cpp; path = src/Plot.cpp; sourceTree = "<group>"; };
+		F753A7D91E29B58600625EBC /* Plot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Plot.hpp; path = src/Plot.hpp; sourceTree = "<group>"; };
+		F753A7DB1E29BDFE00625EBC /* Pytils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pytils.cpp; path = src/Pytils.cpp; sourceTree = "<group>"; };
+		F753A7DC1E29BDFE00625EBC /* Pytils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pytils.hpp; path = src/Pytils.hpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		449019D81DC0848200569854 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		449019D21DC0848200569854 = {
+			isa = PBXGroup;
+			children = (
+				F753A7CA1E2879A000625EBC /* src */,
+				F753A7D31E287A2B00625EBC /* notes */,
+				449019DC1DC0848200569854 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		449019DC1DC0848200569854 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				449019DB1DC0848200569854 /* Plotr */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F753A7CA1E2879A000625EBC /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F753A7CD1E287A1200625EBC /* main.cpp */,
+				F753A7CE1E287A1200625EBC /* Plotr.cpp */,
+				F753A7CF1E287A1200625EBC /* Plotr.hpp */,
+				F753A7D51E28882D00625EBC /* Pyterpreter.cpp */,
+				F753A7D61E28882D00625EBC /* Pyterpreter.hpp */,
+				F753A7D81E29B58600625EBC /* Plot.cpp */,
+				F753A7D91E29B58600625EBC /* Plot.hpp */,
+				F753A7DB1E29BDFE00625EBC /* Pytils.cpp */,
+				F753A7DC1E29BDFE00625EBC /* Pytils.hpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		F753A7D31E287A2B00625EBC /* notes */ = {
+			isa = PBXGroup;
+			children = (
+				F753A7D41E287A3900625EBC /* todo.txt */,
+				F753A7C71E28799B00625EBC /* README.md */,
+			);
+			name = notes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		449019DA1DC0848200569854 /* Plotr */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 449019E21DC0848200569854 /* Build configuration list for PBXNativeTarget "Plotr" */;
+			buildPhases = (
+				449019D71DC0848200569854 /* Sources */,
+				449019D81DC0848200569854 /* Frameworks */,
+				449019D91DC0848200569854 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Plotr;
+			productName = Plotr;
+			productReference = 449019DB1DC0848200569854 /* Plotr */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		449019D31DC0848200569854 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Ecodren Research";
+				TargetAttributes = {
+					449019DA1DC0848200569854 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 449019D61DC0848200569854 /* Build configuration list for PBXProject "Plotr" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 449019D21DC0848200569854;
+			productRefGroup = 449019DC1DC0848200569854 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				449019DA1DC0848200569854 /* Plotr */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		449019D71DC0848200569854 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F753A7C91E28799B00625EBC /* README.md in Sources */,
+				F753A7D11E287A1200625EBC /* main.cpp in Sources */,
+				F753A7D71E28882D00625EBC /* Pyterpreter.cpp in Sources */,
+				F753A7D21E287A1200625EBC /* Plotr.cpp in Sources */,
+				F753A7DD1E29BDFE00625EBC /* Pytils.cpp in Sources */,
+				F753A7DA1E29B58600625EBC /* Plot.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		449019E01DC0848200569854 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		449019E11DC0848200569854 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		449019E31DC0848200569854 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = "-lpython";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		449019E41DC0848200569854 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				MACH_O_TYPE = mh_execute;
+				OTHER_LDFLAGS = "-lpython";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		449019D61DC0848200569854 /* Build configuration list for PBXProject "Plotr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				449019E01DC0848200569854 /* Debug */,
+				449019E11DC0848200569854 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		449019E21DC0848200569854 /* Build configuration list for PBXNativeTarget "Plotr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				449019E31DC0848200569854 /* Debug */,
+				449019E41DC0848200569854 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 449019D31DC0848200569854 /* Project object */;
+}

@@ -2,23 +2,15 @@
 //  Plotr.hpp
 //  Plotr
 //
-//  Created by onyx on 10/26/16.
-//  Copyright © 2016 Ecodren Research. All rights reserved.
 //
 
 
-/***
- **
- ** http://stackoverflow.com/questions/32812509/how-to-make-c-code-into-a-library-for-xcode
- **
- ** ==> scroll down to the answer starting off, "This is a big question..."
- **
- **/
+
 #ifndef Plotr_hpp
 #define Plotr_hpp
 
 #include <iostream>
-#include "Interpreter.hpp"
+#include "Pyterpreter.hpp"
 #include <vector>
 #include <map>
 #include <numeric>
@@ -34,6 +26,8 @@
 class Plotr{
     
 public:
+    
+    Pyterpreter interpreter;
 
     template<typename Numeric>
     bool pie(const std::vector<Numeric> &x, const std::map<std::string, std::string>& keywords){
@@ -56,7 +50,7 @@ public:
         //}
         
         // https://docs.python.org/3/c-api/object.html
-        PyObject* result = PyObject_Call(Interpreter::get().s_python_function_pie, args,NULL);
+        PyObject* result = PyObject_Call(interpreter.getPyObject("pie"), args,NULL);
         
         Py_DECREF(args);
         //Py_DECREF(kwargs);
@@ -98,7 +92,7 @@ public:
             PyDict_SetItemString(kwargs, it->first.c_str(), PyString_FromString(it->second.c_str()));
         }
         
-        PyObject* res = PyObject_Call(Interpreter::get().s_python_function_plot, args, kwargs);
+        PyObject* res = PyObject_Call(interpreter.getPyObject("plot"), args, kwargs);
         
         Py_DECREF(xlist);
         Py_DECREF(ylist);
@@ -129,7 +123,7 @@ public:
         PyTuple_SetItem(plot_args, 1, ylist);
         //PyTuple_SetItem(plot_args, 2, pystring);
         
-        PyObject* res = PyObject_Call(Interpreter::get().s_python_function_plot, plot_args,NULL);
+        PyObject* res = PyObject_Call(interpreter.getPyObject("plot"), plot_args,NULL);
         
         Py_DECREF(xlist);
         Py_DECREF(ylist);
@@ -159,7 +153,7 @@ public:
         PyTuple_SetItem(plot_args, 1, ylist);
         PyTuple_SetItem(plot_args, 2, pystring);
         
-        PyObject* res = PyObject_Call(Interpreter::get().s_python_function_plot, plot_args, kwargs);
+        PyObject* res = PyObject_Call(interpreter.getPyObject("plot"), plot_args, kwargs);
         
         Py_DECREF(kwargs);
         Py_DECREF(xlist);
@@ -180,7 +174,7 @@ public:
 
 
     inline void legend() {
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_legend, Interpreter::get().s_python_empty_tuple);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("legend"),interpreter.emptyPythonTuple);
         //if(!res) throw std::runtime_error("Call to legend() failed.");
         
         if (res){
@@ -202,7 +196,7 @@ public:
         PyObject* args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, list);
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_ylim, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("ylim"), args);
         if(!res) throw std::runtime_error("Call to ylim() failed.");
         
         Py_DECREF(list);
@@ -220,7 +214,7 @@ public:
         PyObject* args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, list);
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_xlim, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("xlim"), args);
         if(!res) throw std::runtime_error("Call to xlim() failed.");
         
         Py_DECREF(list);
@@ -235,7 +229,7 @@ public:
         PyTuple_SetItem(args, 1, PyFloat_FromDouble(ncols));
         PyTuple_SetItem(args, 2, PyFloat_FromDouble(plot_number));
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_subplot, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("subplot"), args);
         if(!res) throw std::runtime_error("Call to subplot() failed.");
         
         Py_DECREF(args);
@@ -248,7 +242,7 @@ public:
         PyObject* args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, pytitlestr);
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_title, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("title"), args);
         if(!res) throw std::runtime_error("Call to title() failed.");
         
         // if PyDeCRFF, the function doesn't work on Mac OS
@@ -260,7 +254,7 @@ public:
         PyObject* args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, str);
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_axis, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("axis"), args);
         if(!res) throw std::runtime_error("Call to title() failed.");
         
         // if PyDeCRFF, the function doesn't work on Mac OS
@@ -272,7 +266,7 @@ public:
         PyObject* args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, pystr);
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_xlabel, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("xlabel"), args);
         if(!res) throw std::runtime_error("Call to xlabel() failed.");
         
         // if PyDeCRFF, the function doesn't work on Mac OS
@@ -284,7 +278,7 @@ public:
         PyObject* args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, pystr);
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_ylabel, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("ylabel"), args);
         if(!res) throw std::runtime_error("Call to ylabel() failed.");
         
         // if PyDeCRFF, the function doesn't work on Mac OS
@@ -297,7 +291,7 @@ public:
         PyObject* args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, pyflag);
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_grid, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("grid"), args);
         if(!res) throw std::runtime_error("Call to grid() failed.");
         
         // if PyDeCRFF, the function doesn't work on Mac OS
@@ -305,7 +299,7 @@ public:
 
     inline void show()
     {
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_show, Interpreter::get().s_python_empty_tuple);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("show"), interpreter.emptyPythonTuple);
         //if(!res) throw std::runtime_error("Call to show() failed.");
         if (res){
             Py_DECREF(res);
@@ -322,7 +316,7 @@ public:
         PyObject* args = PyTuple_New(1);
         PyTuple_SetItem(args, 0, pyfilename);
         
-        PyObject* res = PyObject_CallObject(Interpreter::get().s_python_function_save, args);
+        PyObject* res = PyObject_CallObject(interpreter.getPyObject("savefig"), args);
         if(!res) throw std::runtime_error("Call to save() failed.");
         
         Py_DECREF(pyfilename);

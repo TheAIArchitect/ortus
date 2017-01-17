@@ -1,0 +1,3 @@
+[submodule "Plotr/Plotr"]
+	path = Plotr/Plotr
+	url = https://github.com/TheAITherapist/Plotr.git
