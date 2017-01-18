@@ -14,15 +14,18 @@ ortus todo
 
 
 
-Plotr
-* subplots
 
 
 /////////////////////
 
 next:
 
-- make sure this is the best way, but, create global buffer for 'scratch pad' so that xcorr can be computer in opencl
+- H2O has been added with O2 deprevation. Now, need to have ortus draw connection between IFEAR and H2O.
+- figure out good way to graph xcorr
+    -> this will be helpful to figure out rules for modifying gaps and chems
 - apply rules to modify gaps and chems, based upon xcorr computation
-- modify writeConnectome
-- add h20 stimulus and play with results.
+- modify writeConnectome to sort new neurons
+    -> also need a way to name them...
+- modify connectome to include learning rates
+    -> what should default learning rate be?
+    -> what are rules to govern changes in learning rate?
