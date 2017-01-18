@@ -17,6 +17,7 @@ class ComplexStimulus : public Stimulus {
 public:
     ComplexStimulus();
     virtual float getDerivedStimulus(int timeStep);
+    void addStimulus(Stimulus* stimulusp);
     std::vector<Stimulus*> stimuli;
 };
 

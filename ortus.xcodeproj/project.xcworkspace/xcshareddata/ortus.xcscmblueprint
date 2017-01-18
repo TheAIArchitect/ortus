@@ -4,11 +4,13 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "8180220C03F76958D7B06AB66A2F6AB89FB90063" : 9223372036854775807,
     "D50196890496E704759354208C7846DC43DE9171" : 9223372036854775807,
     "DF4951353CD963DF2EC9F22162E62100129A9D75" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "F5BF61FD-E635-45D9-BCD2-0742AAC38B13",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "8180220C03F76958D7B06AB66A2F6AB89FB90063" : "ortus\/Plotr\/",
     "D50196890496E704759354208C7846DC43DE9171" : "ortus\/cppcommon\/",
     "DF4951353CD963DF2EC9F22162E62100129A9D75" : "ortus\/"
   },
@@ -16,6 +18,11 @@
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ortus.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/TheAITherapist\/Plotr.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8180220C03F76958D7B06AB66A2F6AB89FB90063"
+    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/TheAITherapist\/cppcommon.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",

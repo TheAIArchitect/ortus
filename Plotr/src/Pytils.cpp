@@ -54,7 +54,7 @@ void Pytils::packDict(PyObject** dictToBe, std::unordered_map<std::string, std::
         tempString = mapIter.second;
         printf("<%s, %s>\n",theKey.c_str(), tempString.c_str());
         if (tryLongConversion(tempString, tempLong)){
-            printf("\rkey: %s -- the long is: %l\n",theKey.c_str(), tempLong);
+            printf("\rkey: %s -- the long is: %ld\n",theKey.c_str(), tempLong);
             itemObjectp = PyInt_FromLong(tempLong);
         }
         else if (tryBoolConversion(tempString, tempBool)){
@@ -101,7 +101,7 @@ bool Pytils::tryLongConversion(std::string& s, long& theLong){
     char* p;
     long converted = strtol(s.c_str(), &p, 10);
     if (!*p){
-        theLong = (int) converted;
+        theLong = converted;
         return true;
     }
     theLong = 0;

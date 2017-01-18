@@ -30,7 +30,7 @@ public:
     ~Plot();
     
     template<typename N>
-    Plot(std::vector<N> &xValues, std::vector<N> &yValues, bool useOneXDataset = true) : Plot(true) {
+    Plot(std::vector<N> &xValues, std::vector<N> &yValues, bool useOneXDataset = true) : Plot(useOneXDataset) {
         addValues(xValues, yValues);
     }
     
@@ -42,7 +42,7 @@ public:
     //bool colorbar(); // implement
     bool draw();
     //bool eventplot();// implement
-    bool figure(int figNum);
+    int figure(int figNum = -1);// -1 tells Plot to create a new figure
     bool grid(bool gridOn);
     //bool hist();// implement
     //bool hist2d();//implement
@@ -54,17 +54,17 @@ public:
     bool legend();
     bool pause(double duration);
     //bool pie(); // implement
-    bool plot(std::string formatString, int xIndex = -1, int yIndex = -1);
-    bool plot(kwargsMap& args, int xIndex = -1, int yIndex = -1);
-    bool plot(std::string& formatString, kwargsMap& args, int xIndex = -1, int yIndex = -1);
+    bool plot(std::string formatString, bool plotAll = false, int xIndex = -1, int yIndex = -1);
+    bool plot(kwargsMap& args, bool plotAll = false, int xIndex = -1, int yIndex = -1);
+    bool plot(std::string& formatString, kwargsMap& args, bool plotAll = false, int xIndex = -1, int yIndex = -1);
     //bool quiver(); // implement
     //bool scatter(); // implement
     bool show();
     //bool specgram(); // implement
     bool subplot(std::string threeDigitNumber);
     bool title(std::string title);
-    // xcorr doesn't work for bool or numeric kwargs.. need to fix that.
-    bool xcorr(kwargsMap args = kwargsMap(), int xIndex = -1, int yIndex = -1);
+    // if xcorr_yIndexA_andAllOthers = true, yIndexB doesn't matter.
+    bool xcorr(kwargsMap args = kwargsMap(),  int yIndexA = -1, int yIndexB = -1, bool xcorr_yIndexA_andAllOthers = false);
     bool xlabel(std::string xlabel); // implement
     bool xlim(double lower, double uppper); // implement
     bool xticks(); // implement
@@ -72,6 +72,7 @@ public:
     bool ylim(double lower, double uppper); // implement
     bool yticks(); // implement
     bool saveFig(std::string fileName);// implement
+    
     
     
     
@@ -114,20 +115,38 @@ public:
         _addValues(xValuesDoubles, yValuesDoubles);
     }
     
-    /* adds a vector of y values, but iff there is one x vector (no more, and no less)
+    /* adds a vector of y values,
+     * 
+     * NOTE: THE REST OF THIS COMMENT IS NO LONGER VALID. IT'S ONLY STILL AROUND BECAUSE I'M NOT SURE THE FUNCTIONALITY DESCRIBED SHOULD BE TOTALLY REMOVED
+     *
+     * but iff there is one x vector (no more, and no less)
      *
      * The idea here, is that one can plot multiple datasets that have the same domain,
      * and to do so, must only add the domain once.
      */
     template<typename N>
     void addYValues(std::vector<double> &yValues){
-        if (xValuesListpVector.size() != 1){
-            printf("Plot can only add 'y' values if there is exactly one set of 'x' values\n.");
-            return;
+        //if (xValuesListpVector.size() != 1){
+        //    printf("Plot can only add 'y' values if there is exactly one set of 'x' values\n.");
+        //    return;
+        //}
+        assert(yValues.size() == length || length == 0);
+        if (length == 0){
+            length = yValues.size();
         }
-        assert((length != 0) && (yValues.size() == length));
         std::vector<double> yValuesDoubles = static_cast<std::vector<double>>(yValues);
         _addYValues(yValuesDoubles);
+    }
+    
+    /* adds a vector of x values */
+    template<typename N>
+    void addXValues(std::vector<double> &xValues){
+        assert(xValues.size() == length || length == 0);
+        if (length == 0){
+            length = xValues.size();
+        }
+        std::vector<double> xValuesDoubles = static_cast<std::vector<double>>(xValues);
+        _addXValues(xValuesDoubles);
     }
     
     
@@ -153,9 +172,13 @@ public:
     int currentXValuesIndex = -1;
     int currentYValuesIndex = -1;
     
+    bool _figure(int figNum);
+    int createdFigureCount = 0;
+    
     
     void _addValues(std::vector<double> &xValues, std::vector<double> &yValues);
     void _addYValues(std::vector<double> &yValues);
+    void _addXValues(std::vector<double> &xValues);
     
     // length is the length of the signal/data -- it has nothing to do with the number of signals (that is, the size of [x/y]ValuesListpVector).
     int length;

@@ -43,7 +43,7 @@ void Steward::initialize(){
 
 void Steward::run(){
     
-    numIterations = 1000;
+    numIterations = 600;
     for (int i = 0; i < numIterations; ++i){
         computeStewardp->executePreRunOperations();
         computeStewardp->run();
@@ -69,10 +69,9 @@ void Steward::run(){
         printf("\n");
     }
     DataVisualizer vizzer = DataVisualizer(dataStewardp);
-    const int plotSetSize = 6;
-    std::string plotSet[plotSetSize] = {"SO2","SCO2","IPO2", "INO2", "MINHALE", "MEXHALE"};
     //vizzer.plotAll();
-    vizzer.plotSet(plotSet, plotSetSize);
+    vizzer.makePlots();
+    //vizzer.plotSet(plotSet, plotSetSize);
     //initGraphics(&core);
     cleanUp();
     exit(89);   

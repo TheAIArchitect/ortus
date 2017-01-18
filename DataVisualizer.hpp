@@ -24,6 +24,7 @@ public:
     
     DataVisualizer(DataSteward* stewie);
     void plotSet(std::string* names, int numNames);
+    void makePlots();
     void plotAll();
     
     DataSteward* stewie;

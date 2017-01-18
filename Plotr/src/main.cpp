@@ -11,21 +11,21 @@ int main(int argc, char** argv){
     //Plotr plt;
     
     // Prepare data.
-    int n = 5000;
+    int n = 1000;
     std::vector<double> x(n), y(n), z(n), yy(n), zz(n), w(n,2);
-    for(int i=0; i<n; ++i) {
-        x.at(i) = i*i;
+    for(int i=1; i<n; ++i) {
+        x.at(i) = i;
         y.at(i) = sin(2*M_PI*i/360.0);
         yy.at(i) = sin(2*M_PI*i/360.0);
         z.at(i) = log(i);
         zz.at(i) = 7*i*i*i*i + 3*i*i*i + 2*i*i + 2*i;
-        
+        printf("x (0), y (0), z (1), yy (2), zz (3): %.f, %.f, %.f, %.f, %.f\n",x[i], y[i], z[i], yy[i], zz[i]);
     }
     Plot p(x, y);
-    p.ion();
     p.addYValues<double>(z);
     p.addYValues<double>(yy);
     p.addYValues<double>(zz);
+    p.ion();
     
     std::unordered_map<std::string, std::string> things;
     things["label"] = "sin(x)";
@@ -34,10 +34,10 @@ int main(int argc, char** argv){
     //things["marker"] = p.MARKERS[0];
     things["linestyle"] = p.STYLES[0];
     //things["title"] = p.COLORS[0];
-    p.figure(1);
+    p.figure();
     p.subplot("211");
     p.title("This is a Sample Title for Subplot 1");
-    p.plot(things,0,0);
+    p.plot(things,false, 0,0);
     //p.legend();
     things["linestyle"] = p.STYLES[1];
     things["color"] = p.COLORS[2];
@@ -46,7 +46,7 @@ int main(int argc, char** argv){
     //p.figure(2);
     p.grid(true);
     p.subplot("212");
-    p.plot(things,0,1);
+    p.plot(things,false, 0,1);
     //plt2.plot(x, y, labelVec);
     //labelVec["label"] = "log(x)";
     //plt2.plot(x, z, labelVec);
@@ -56,11 +56,11 @@ int main(int argc, char** argv){
     //p.show();
     p.draw();
     
-    p.figure(2);
+    p.figure();
     things.clear();
     things["maxlags"] = "20";
-    things["usevlines"] = "False";
-    p.xcorr(things,0,2);
+    //things["usevlines"] = "False";
+    p.xcorr(things,1,1);
     //p.plot("w");
     //p.plot(things);
     
@@ -69,7 +69,7 @@ int main(int argc, char** argv){
     // if ion() has been called (it causes the plot to be non-blocking),
     // so, unless there is something else preventing holding things up,
     // after pause, eventually the interpreter will close the plot.
-    p.pause(5);
+    p.pause(50);
    
     //std::string wtf;
     //std::cin >> wtf;

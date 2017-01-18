@@ -43,11 +43,35 @@ bool Plot::draw(){
     return Pytils::call(py.getPyObject("draw"));
 }
 
+/* creates a figure (or calls up an existing one), and returns its 'figure number'
+ *
+ * returns the figure index if successful, and -1 if not*/
+int Plot::figure(int figIndex){
+    if (figIndex >= 0 && figIndex < createdFigureCount){
+        // if above check passed, it's (probably) an existing figure
+        if (_figure(figIndex)){
+            return figIndex;
+        }
+        return -1;
+    }
+    else { // we create a new figure
+        if (_figure(createdFigureCount)){
+            return createdFigureCount;
+        }
+    }
+    return -1;
+    
+}
+
 /* creates a figure (or calls up an existing one), and returns its 'figure number' */
-bool Plot::figure(int figNum){
+bool Plot::_figure(int figNum){
     PyObject* packedArgs;
     Pytils::packTuple(&packedArgs, {PyInt_FromLong(figNum)});
-    return Pytils::call(py.getPyObject("figure"),packedArgs);
+    if (Pytils::call(py.getPyObject("figure"),packedArgs)){
+        createdFigureCount++;
+        return true;
+    }
+    return false;
 }
 
 /* turns the grid on or off */
@@ -106,25 +130,22 @@ bool Plot::title(std::string title){
     return Pytils::call(py.getPyObject("title"), packedArgs);
 }
 
-/* NOTE: this will increment the counters for the X and Y datasets... figure out a better solution here
- *
+/*
+ * This take
  */
-bool Plot::xcorr(std::unordered_map<std::string, std::string> args, int xIndex, int yIndex){
+bool Plot::xcorr(std::unordered_map<std::string, std::string> args, int yIndexA, int yIndexB, bool xcorr_yIndexA_andAllOthers){
     // first deal with indices
-    int gottenXIndex = -1;
-    int gottenYIndex = -1;
-    bool gotIndices = false;
-    if (xIndex < 0 || yIndex < 0){
-        getMostRecentlyAddedValuesIndices(gottenXIndex, gottenYIndex);
-        gotIndices = true;
-    }
-    if (gotIndices && (gottenXIndex < 0 || gottenYIndex < 0)){ // then one of them is negative, and we can't plot anything.
+    int yCount = yValuesListpVector.size();
+    int numXCorrs = 1;
+    if ((yIndexA < 0 || yIndexA >= yCount) || ((yIndexB < 0 || yIndexB >= yCount) && !xcorr_yIndexA_andAllOthers)){
+        printf("XCorr Error: indices not set properly.\n");
         return false;
     }
-    else if (gotIndices){
-        xIndex = gottenXIndex;
-        yIndex = gottenYIndex;
-    }
+    /************ NOTE: NOT IMPLEMENTED YET  ******************/
+    //if (xcorr_yIndexA_andAllOthers){ // then we do a XCorr for all Y values we have, against yIndexA
+    //    numXCorrs = yCount;
+    //    yIndexB = 0;
+    //}
     // then deal with the "optional" parameters -- assume neither exist, and adjust as necessary
     bool noArgs = true;
     // first the dictionary
@@ -134,7 +155,7 @@ bool Plot::xcorr(std::unordered_map<std::string, std::string> args, int xIndex, 
         Pytils::packDict(&kwargsp, args);
     }
     PyObject* plotArgsTuplep;
-    Pytils::packTuple(&plotArgsTuplep, {xValuesListpVector[xIndex], yValuesListpVector[yIndex]});
+    Pytils::packTuple(&plotArgsTuplep, {yValuesListpVector[yIndexA], yValuesListpVector[yIndexB]});
     if (noArgs){
         return Pytils::call(py.getPyObject("xcorr"), plotArgsTuplep);
     }
@@ -150,21 +171,38 @@ bool Plot::xcorr(std::unordered_map<std::string, std::string> args, int xIndex, 
  * if either the X index or the Y (or both) are < 0, the default index-getting function,
  * getMostRecentlyAddedValuesIndices(...) will be called to get the indices of the datasets to plot.
  */
-bool Plot::plot(std::string& formatString, std::unordered_map<std::string, std::string>& args, int xIndex, int yIndex){
+bool Plot::plot(std::string& formatString, std::unordered_map<std::string, std::string>& args, bool plotAll, int xIndex, int yIndex){
     // first deal with indices
-    int gottenXIndex = -1;
-    int gottenYIndex = -1;
-    bool gotIndices = false;
-    if (xIndex < 0 || yIndex < 0){
-        getMostRecentlyAddedValuesIndices(gottenXIndex, gottenYIndex);
-        gotIndices = true;
+    int numPlots = 1;
+    if (!plotAll){
+        int gottenXIndex = -1;
+        int gottenYIndex = -1;
+        bool gotIndices = false;
+        if (xIndex < 0 || yIndex < 0){
+            getMostRecentlyAddedValuesIndices(gottenXIndex, gottenYIndex);
+            gotIndices = true;
+        }
+        if (gotIndices && (gottenXIndex < 0 || gottenYIndex < 0)){ // then one of them is negative, and we can't plot anything.
+            return false;
+        }
+        else if (gotIndices){
+            xIndex = gottenXIndex;
+            yIndex = gottenYIndex;
+        }
     }
-    if (gotIndices && (gottenXIndex < 0 || gottenYIndex < 0)){ // then one of them is negative, and we can't plot anything.
-        return false;
-    }
-    else if (gotIndices){
-        xIndex = gottenXIndex;
-        yIndex = gottenYIndex;
+    else {
+        numPlots = yValuesListpVector.size(); // use Y list of data for count, because we could only have one X
+        if (numPlots <= 0){
+            printf("Plot Error: not enough Y datasets to plot.\n");
+            return false;
+        }
+        if (useOneXDataset){
+            xIndex = 0; // this will never get incremented
+            yIndex = -1; // this will get incremented before the first plot call
+        }
+        else{
+            xIndex = yIndex = -1; // they will both get incremented together (and before the first plot call)
+        }
     }
     // then deal with the "optional" parameters -- assume neither exist, and adjust as necessary
     bool noArgs = true;
@@ -175,31 +213,49 @@ bool Plot::plot(std::string& formatString, std::unordered_map<std::string, std::
         noArgs = false;
         Pytils::packDict(&kwargsp, args);
     }
-    // then the format string
-    PyObject* plotArgsTuplep;
-    if (formatString != ""){
-        noFormatString = false;
-        Pytils::packTuple(&plotArgsTuplep, {xValuesListpVector[xIndex], yValuesListpVector[yIndex], PyString_FromString(formatString.c_str())});
+    // then the format string, and plotting (since if the xIndex or yIndex values change, the args have to change)
+    bool res = false;
+    for (int i = 0; i < numPlots; ++i){
+        if (plotAll){
+            if (!useOneXDataset){ // then we increment xIndex and yIndex, otherwise, just yIndex
+                xIndex++;
+                yIndex++;
+            }
+            else{
+                yIndex++;
+            }
+        }
+        PyObject* plotArgsTuplep;
+        if (formatString != ""){
+            noFormatString = false;
+            Pytils::packTuple(&plotArgsTuplep, {xValuesListpVector[xIndex], yValuesListpVector[yIndex], PyString_FromString(formatString.c_str())});
+        }
+        else {
+            Pytils::packTuple(&plotArgsTuplep, {xValuesListpVector[xIndex], yValuesListpVector[yIndex]});
+        }
+        if (noArgs){
+            res =  Pytils::call(py.getPyObject("plot"), plotArgsTuplep);
+        }
+        else {
+            res = Pytils::call(py.getPyObject("plot"), plotArgsTuplep, kwargsp);
+        }
+        if (!res){
+            printf("Plot Error: there was an error plotting. I dont' know much more than that at the moment.\n");
+            return false;
+        }
     }
-    else {
-        Pytils::packTuple(&plotArgsTuplep, {xValuesListpVector[xIndex], yValuesListpVector[yIndex]});
-    }
-    if (noArgs){
-        return Pytils::call(py.getPyObject("plot"), plotArgsTuplep);
-    }
-    else {
-        return Pytils::call(py.getPyObject("plot"), plotArgsTuplep, kwargsp);
-    }
+    return res;
+    
 }
 
-bool Plot::plot(std::string formatString, int xIndex, int yIndex){
+bool Plot::plot(std::string formatString, bool plotAll, int xIndex, int yIndex){
     std::unordered_map<std::string, std::string> dummy;
-    return plot(formatString, dummy, xIndex, yIndex);
+    return plot(formatString, dummy, plotAll, xIndex, yIndex);
 }
 
-bool Plot::plot(std::unordered_map<std::string, std::string>& args, int xIndex, int yIndex){
+bool Plot::plot(std::unordered_map<std::string, std::string>& args, bool plotAll, int xIndex, int yIndex){
     std::string s = "";
-    return plot(s,args, xIndex, yIndex);
+    return plot(s,args, plotAll, xIndex, yIndex);
 }
 
 
@@ -208,8 +264,6 @@ void Plot::getMostRecentlyAddedValuesIndices(int& xValuesIndex, int& yValuesInde
     xValuesIndex = currentXValuesIndex;
     yValuesIndex = currentYValuesIndex;
 }
-
-
 
 int Plot::getDataLength(){
     return length;
@@ -220,16 +274,8 @@ void Plot::setUseOneXDataset(bool useOneXDataset){
 }
 
 void Plot::_addValues(std::vector<double> &xValues, std::vector<double> &yValues){
-    PyObject* tempX = PyList_New(xValues.size());
-    PyObject* tempY = PyList_New(yValues.size());
-    for (size_t i = 0; i < length; ++i){
-        PyList_SetItem(tempX, i, PyFloat_FromDouble(xValues[i]));
-        PyList_SetItem(tempY, i, PyFloat_FromDouble(yValues[i]));
-    }
-    xValuesListpVector.push_back(tempX);
-    currentXValuesIndex++;
-    yValuesListpVector.push_back(tempY);
-    currentYValuesIndex++;
+    _addXValues(xValues);
+    _addYValues(yValues);
 }
 
 void Plot::_addYValues(std::vector<double> &yValues){
@@ -239,6 +285,15 @@ void Plot::_addYValues(std::vector<double> &yValues){
     }
     yValuesListpVector.push_back(tempY);
     currentYValuesIndex++;
+}
+
+void Plot::_addXValues(std::vector<double> &xValues){
+    PyObject* tempX = PyList_New(xValues.size());
+    for (size_t i = 0; i < length; ++i){
+        PyList_SetItem(tempX, i, PyFloat_FromDouble(xValues[i]));
+    }
+    xValuesListpVector.push_back(tempX);
+    currentXValuesIndex++;
 }
 
 

@@ -28,8 +28,13 @@ public:
     DataSteward* dStewiep;
     StimuliSteward* stimuliStewardp;
     
+    
+    // this function (as is noted in the source) is essentially a copy of the chemical synapse implementation in the kernel. if the kernel changes, this should too.
+    float chemicalSynapseSimulator(float cs_weight, float their_v_curr, float my_v_current);
+    
 public:// the stimuli creators
-    Stimulus* createCO2Generator();
+    void createCO2Generator();
+    void createO2DeprevationAndH2OGenerator();
 };
 
 #endif /* SensoryStimulationSteward_hpp */

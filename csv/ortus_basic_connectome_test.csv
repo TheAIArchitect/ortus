@@ -3,11 +3,11 @@ gap/chem,,SENSORY,,,INTER,,,,,MOTOR,,placeholder
 SENSORY,SO2,,,,0/-1,0/1,,,,,,SO2
 ,SCO2,,,,0/1,0/-1,,,,,,SCO2
 ,SH2O,,,,,,,,,,,SH2O
-INTER,INO2,,,,,,,,,0/1,0/-1,INO2
+INTER,INO2,,,,,,,,0/0,0/1,0/-1,INO2
 ,IPO2,,,,,,,,,0/-1,0/1,IPO2
 ,INCO2,,,,,,,,,,,INCO2
 ,IPCO2,,,,,,,,,,,IPCO2
 ,IFEAR,,,,,,,,,,,IFEAR
-MOTOR,MINHALE,0/1,,,,,,,,,,MINHALE
-,MEXHALE,,0/-1,,,,,,,,,MEXHALE
+MOTOR,MINHALE,,,,,,,,,,,MINHALE
+,MEXHALE,,,,,,,,,,,MEXHALE
 ,,SO2,SCO2,SH2O,INO2,IPO2,INCO2,IPCO2,IFEAR,MINHALE,MEXHALE,placeholder

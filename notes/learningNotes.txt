@@ -93,5 +93,5 @@ b) non-emotional repititon -- sensory motor sort of thing.
 -> see (2),
 -> if this floor isn't reached, then the weights go back to nearly zero -- maybe this floor means it'll never completely decay to nothing, though.
 
-
+11) would a negative learning rate have meaning?
 */

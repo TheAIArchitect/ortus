@@ -13,6 +13,58 @@ DataVisualizer::DataVisualizer(DataSteward* stewie){
 }
 
 
+void DataVisualizer::makePlots(){
+    const int plotOneSize = 6;
+    std::string plotOneSet[plotOneSize] = {"SO2","SCO2","IPO2", "INO2", "MINHALE", "MEXHALE"};
+    const int plotTwoSize = 5;
+    std::string plotTwoSet[plotTwoSize] = {"SO2","SCO2","INO2", "IFEAR", "SH2O"};
+    
+    int max = stewie->kernelVoltages.size();
+    Plot plot(true);
+    
+    std::vector<double> xVals;// windows
+    std::vector<double> yVals;// neuron voltages
+    for ( int i = 0; i < max; ++i){
+        xVals.push_back(i);//window number
+    }
+    plot.addXValues<double>(xVals);
+    plot.figure();
+    
+    plot.subplot("211");
+    //Plot::kwargsMap kwArgs;
+    std::unordered_map<std::string, std::string> kwArgs;
+    for (int i = 0; i < plotOneSize; ++i){
+        int idx = stewie->officialNameToIndexMap[plotOneSet[i]];
+        kwArgs["label"] = plotOneSet[i];
+        yVals.clear();
+        for (int j = 0; j < max; ++j){
+            yVals.push_back(stewie->kernelVoltages[j][idx]);
+        }
+        plot.addYValues<double>(yVals);
+        plot.plot(kwArgs);
+    }
+    plot.grid(true);
+    plot.legend();
+    plot.subplot("212");
+    kwArgs.clear();
+    for (int i = 0; i < plotTwoSize; ++i){
+        int idx = stewie->officialNameToIndexMap[plotTwoSet[i]];
+        kwArgs["label"] = plotTwoSet[i];
+        yVals.clear();
+        for (int j = 0; j < max; ++j){
+            yVals.push_back(stewie->kernelVoltages[j][idx]);
+        }
+        plot.addYValues<double>(yVals);
+        plot.plot(kwArgs);
+    }
+    plot.grid(true);
+    plot.legend();
+    
+    plot.show();
+ 
+    
+}
+
 /*
 void DataVisualizer::plotAll(){
 

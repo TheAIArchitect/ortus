@@ -13,8 +13,11 @@ ComplexStimulus::ComplexStimulus(){
     
 }
 
+void ComplexStimulus::addStimulus(Stimulus* stimulusp){
+    stimuli.push_back(stimulusp);
+}
+
 float ComplexStimulus::getDerivedStimulus(int timeStep){
-    // this should normalize the stimuli too, i think. 
     return 0.f;
     
 }

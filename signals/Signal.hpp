@@ -42,6 +42,7 @@ public:
     
 protected:
     int signalLength;
+    int signalDelay;
     float* signal; // can be a single value, or not...
     virtual void generateFullSignalDerived(float startTime, float increment, int length);
 private:

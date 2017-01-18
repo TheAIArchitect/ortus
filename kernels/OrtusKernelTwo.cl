@@ -273,8 +273,8 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
             //}
             int startingScratchPadOffset = getLocalScratchPadStartingOffset(lid, numElements,numXCorrEntries);
             computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
-            if (gid == 3){ // INO2
-                int otherElement = 8; // MINHALE
+            if (gid == 2){ // INO2
+                int otherElement = 7; // MINHALE
                 int spiOne = getScratchPadIndex(startingScratchPadOffset, otherElement, 0, numXCorrEntries);
                 int spiTwo = getScratchPadIndex(startingScratchPadOffset, otherElement, 1, numXCorrEntries);
                 int spiThree = getScratchPadIndex(startingScratchPadOffset, otherElement, 2, numXCorrEntries);
