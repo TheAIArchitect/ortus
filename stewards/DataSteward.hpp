@@ -59,7 +59,8 @@ public: // super important variables
     // (zero indexed): [rowCount, colCount, kernelIterationNum, voltageHistorySize ]
     Blade<cl_int>* metadata;
     
-    Blade<cl_float>* deviceScratchPad; // memory is local on device, so size depends upon work-group size
+    Blade<cl_float>* deviceScratchPadXCorr; // memory is local on device, so size depends upon work-group size, XCorr comptuations
+    Blade<cl_float>* deviceScratchPadVoltageROC; // memory is local on device, so size depends upon work-group size, voltage rate of change computations
     
 protected: // private?
     cl_kernel* kernelp;
@@ -125,9 +126,9 @@ public:
     static int CONNECTOME_ROWS;
     static int CONNECTOME_COLS;
     const static int MAX_ELEMENTS = 200;
-    const static int VOLTAGE_HISTORY_SIZE = 6; // 5 usable, and the 6th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
+    const static int VOLTAGE_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
     const static int METADATA_COUNT = 5; // see 'metadata' definition for metadata metadata. haha.
-    const static int XCORR_COMPUTATIONS = 3; // see notes/correlationNotes.txt
+    const static int XCORR_COMPUTATIONS = 4; // see notes/correlationNotes.txt, but note that insead of 3, it's now 4 (for testing purposes -- may or may not stay that way.)
     static unsigned int NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8;
     
     

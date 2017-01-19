@@ -203,7 +203,8 @@ void DataSteward::setOpenCLKernelArgs(){
     gapNormalizer->setCLArgIndex(7, kernelp);
     chemNormalizer->setCLArgIndex(8, kernelp);
     metadata->setCLArgIndex(9, kernelp);
-    deviceScratchPad->setCLArgIndex(10,kernelp);
+    deviceScratchPadXCorr->setCLArgIndex(10,kernelp);
+    deviceScratchPadVoltageROC->setCLArgIndex(11,kernelp);
     
 }
 
@@ -241,7 +242,8 @@ void DataSteward::initializeBlades(){
     chemNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
     metadata = new Blade<cl_int>(clHelperp, CL_MEM_READ_ONLY, METADATA_COUNT, METADATA_COUNT);
     // this doesn't create a buffer -- just a spot in local memory for the kernel to use as a scratch pad.
-    deviceScratchPad = new Blade<cl_float>(clHelperp, openCLWorkGroupSize*CONNECTOME_ROWS,XCORR_COMPUTATIONS, MAX_ELEMENTS, XCORR_COMPUTATIONS);
+    deviceScratchPadXCorr = new Blade<cl_float>(clHelperp, openCLWorkGroupSize*CONNECTOME_ROWS,XCORR_COMPUTATIONS, MAX_ELEMENTS, XCORR_COMPUTATIONS);
+    deviceScratchPadVoltageROC = new Blade<cl_float>(clHelperp, openCLWorkGroupSize*CONNECTOME_ROWS,XCORR_COMPUTATIONS, MAX_ELEMENTS, XCORR_COMPUTATIONS);
 }
 
 void DataSteward::fillInputVoltageBlade(){
