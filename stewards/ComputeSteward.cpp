@@ -44,6 +44,8 @@ void ComputeSteward::executePreRunOperations(){
         dStewiep->voltages->pushCLBuffer();
         dStewiep->metadata->pushCLBuffer();
         dStewiep->outputVoltageHistory->pushCLBuffer();
+        dStewiep->chems->pushCLBuffer();
+        dStewiep->gaps->pushCLBuffer();
     }
 }
 

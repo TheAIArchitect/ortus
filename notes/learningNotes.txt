@@ -1,3 +1,5 @@
+>>>>>>>>>> what about 'turning off' part(s) of ortus for a certain number of cycles to speed up computation? similar to how one might forget to breathe, or to do other things, when focused on another task... resource allocation? <<<<<<<<<<<<<<<<<'
+
 => altering and adding gap junction and chemical synapse weights
 
 -> maybe give each synapse a 'learning rate', that starts off high (fast), and decays with age, to some asymptotic value. This will make learning slow, but not impossible.

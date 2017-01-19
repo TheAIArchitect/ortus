@@ -48,6 +48,7 @@ public: // super important variables
     Blade<float>* outputVoltageHistory;
     Blade<float>* gaps;
     Blade<float>* chems;
+    Blade<float>* learningRates;
     Blade<float>* chemContrib;
     Blade<float>* gapContrib;
     

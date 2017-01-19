@@ -91,6 +91,8 @@ void DataSteward::readOpenCLBuffers(){
     // get output voltages
     voltages->readCLBuffer();
     outputVoltageHistory->readCLBuffer();
+    chems->readCLBuffer();
+    gaps->readCLBuffer();
 }
 
 void DataSteward::reconfigureConnectomeStructure(){
@@ -495,7 +497,7 @@ bool DataSteward::writeConnectome(std::string csv_name){
             }
             else {
                 /* NOTE NOTE NOTE: THIS IS THE OTHER SPOT WHERE THE 'i' and 'j' ARE SWITCHED, TO DE-TRANSPOSE */
-                actualConnectome += std::to_string((int)gaps->getv(j,i)) + "/" + std::to_string((int)chems->getv(j,i)) + ",";
+                actualConnectome += std::to_string((float)gaps->getv(j,i)) + "/" + std::to_string((float)chems->getv(j,i)) + ",";
             }
         }
         actualConnectome += (*officialNamepVector[i]) + "\n";

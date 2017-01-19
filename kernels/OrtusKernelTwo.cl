@@ -20,6 +20,8 @@
 /* declarations */
 void computeXCorr(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries);
 float XCorrMultiply(__global float* outputVoltageHistories, int aOffset, int bOffset, int len);
+float computeVoltageRateOfChange(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* voltageRateOfChangeScratchPad, int startingScratchPadOffset, int numXCorrEntries);
+
 
 float computeDecay(float v_curr, float v_decay, float v_init){
     float decay = v_curr*v_decay;// this works because v_init is 0.
@@ -275,16 +277,66 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
             //}
             int startingScratchPadOffset = getLocalScratchPadStartingOffset(lid, numElements,numXCorrEntries);
             computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
+            computeVoltageRateOfChange(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, voltageRateOfChangeScratchPad, startingScratchPadOffset, numXCorrEntries);
             if (gid == 2){ // H20
                 int otherElement = 7; // IFEAR
                 int spiOne = getScratchPadIndex(startingScratchPadOffset, otherElement, 0, numXCorrEntries);
                 int spiTwo = getScratchPadIndex(startingScratchPadOffset, otherElement, 1, numXCorrEntries);
                 int spiThree = getScratchPadIndex(startingScratchPadOffset, otherElement, 2, numXCorrEntries);
+                int spiFour = getScratchPadIndex(startingScratchPadOffset, otherElement, 3, numXCorrEntries);
                 float xcorrOne = XCorrScratchPad[spiOne];
                 float xcorrTwo = XCorrScratchPad[spiTwo];
                 float xcorrThree = XCorrScratchPad[spiThree];
-                printf("(kernel iteration %d): [%d, %d, %d] - %.2f, %.2f, %.2f)\n",kernelIterationNum, spiOne, spiTwo, spiThree, xcorrOne, xcorrTwo, xcorrThree);
+                float xcorrFour = XCorrScratchPad[spiFour];
+                float voltageRocOne = voltageRateOfChangeScratchPad[spiOne];
+                float voltageRocTwo = voltageRateOfChangeScratchPad[spiTwo];
+                float voltageRocThree = voltageRateOfChangeScratchPad[spiThree];
+                float voltageRocFour = voltageRateOfChangeScratchPad[spiFour];
+                //printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",kernelIterationNum, gid, otherElement, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
             }
+            
+            // Now, this is where we adjust the connectome weights.
+            
+            // first rule we want to (try) to implement is:
+            // if xcorr indices 0, 1, and 2 are all greater than .75, AND, 0 < 1 < 2
+            // then, we increase weight by some rule
+            // possibly: += learningRate
+            // -------> learningRate will (very shortly) be different for every synapse, based upon age (maybe have learning rate slightly decrease each time its used to adjust the synaptic weight?
+            float learningRate = .1;
+            for ( i = 0; i < numElements; ++i){
+                if (i == gid){
+                    continue;
+                }
+                int spiOne = getScratchPadIndex(startingScratchPadOffset, i, 0, numXCorrEntries);
+                int spiTwo = getScratchPadIndex(startingScratchPadOffset, i, 1, numXCorrEntries);
+                int spiThree = getScratchPadIndex(startingScratchPadOffset, i, 2, numXCorrEntries);
+                int spiFour = getScratchPadIndex(startingScratchPadOffset, i, 3, numXCorrEntries);
+                float xcorrOne = XCorrScratchPad[spiOne];
+                float xcorrTwo = XCorrScratchPad[spiTwo];
+                float xcorrThree = XCorrScratchPad[spiThree];
+                float xcorrFour = XCorrScratchPad[spiFour];
+                float voltageRocOne = voltageRateOfChangeScratchPad[spiOne];
+                float voltageRocTwo = voltageRateOfChangeScratchPad[spiTwo];
+                float voltageRocThree = voltageRateOfChangeScratchPad[spiThree];
+                float voltageRocFour = voltageRateOfChangeScratchPad[spiFour];
+                float vrocMin = .6;
+                //float vrocMax = 2.0;
+                float xcorrMin = .95;
+                //float avgVROC = (voltageRocOne+voltageRocTwo+voltageRocThree+voltageRocFour)/4.0;
+                if ((voltageRocOne >= vrocMin && voltageRocTwo >= vrocMin && voltageRocThree >= voltageRocFour && voltageRocFour >= vrocMin) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+                //if ((avgVROC >= vrocMin && avgVROC <= vrocMax) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+                    // then we increase the CHEM weight (different rule for GJ)
+                    //printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",kernelIterationNum, gid, i, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
+                    
+                    weight_idx = getConnectomeIndex(gid, i, numElements); // ROW MAJOR
+                    if (chemWeights[weight_idx] < 0){
+                        // it's inhibitory, leave it be for now (and in this section)
+                        continue;
+                    }
+                    chemWeights[weight_idx] = chemWeights[weight_idx] + ((max_cs_weight - chemWeights[weight_idx]) * learningRate);
+                }
+            }
+            
         }
         
         /*
@@ -377,7 +429,26 @@ float XCorrMultiply(__global float* outputVoltageHistories, int aOffset, int bOf
     return result;
 }
 
- 
+
+float computeVoltageRateOfChange(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* voltageRateOfChangeScratchPad, int startingScratchPadOffset, int numXCorrEntries){
+    int i;
+    int j;
+    int xcorrLength = numXCorrEntries;
+    float timeSteps = xcorrLength;
+    int elementBaseIndex = -1;
+    int elementLastIndex = -1;
+    float rateOfChange = -1.f;
+    int scratchPadIndex = -1;
+    for (i = 0; i < numElements; ++i){
+        for (j = 0; j < numXCorrEntries; ++j){
+            elementBaseIndex = getOutputVoltageHistoryIndex(i, j, voltageHistorySize);
+            elementLastIndex = elementBaseIndex + xcorrLength;
+            rateOfChange = (outputVoltageHistory[elementLastIndex] - outputVoltageHistory[elementBaseIndex])/timeSteps;
+            scratchPadIndex = getScratchPadIndex(startingScratchPadOffset, i, j, xcorrLength);
+            voltageRateOfChangeScratchPad[scratchPadIndex] = rateOfChange;
+        }
+    }
+}
 
 /* c++ xcorr implementation for reference when doing an opencl implementation: */
 /*

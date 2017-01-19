@@ -21,6 +21,10 @@ SensoryStimulationSteward::~SensoryStimulationSteward(){
 void SensoryStimulationSteward::setStimuli(){
     createCO2Generator();
     createO2DeprevationAndH2OGenerator();
+    createH2OStimulator();
+    elementsToStimulate.push_back("SCO2");
+    elementsToStimulate.push_back("SH2O");
+    elementsToStimulate.push_back("SO2");
 }
 
 void SensoryStimulationSteward::createCO2Generator(){
@@ -30,24 +34,30 @@ void SensoryStimulationSteward::createCO2Generator(){
     PrimitiveStimulus* co2Generator = new PrimitiveStimulus("co2Generator");
     co2Generator->setSignal(co2Signal);
     addStimulus("SCO2", co2Generator);
-    elementsToStimulate.push_back("SCO2");
 }
 
 void SensoryStimulationSteward::createO2DeprevationAndH2OGenerator(){
-    ConstantSignal* h2oSignal = new ConstantSignal(2.5f, 100, 400, 300);
+    ConstantSignal* h2oSignal = new ConstantSignal(2.5f, 100, 150, 50);
     PrimitiveStimulus* h2oGenerator = new PrimitiveStimulus("h2oGenerator");
     h2oGenerator->setSignal(h2oSignal);
     addStimulus("SH2O", h2oGenerator);
-    elementsToStimulate.push_back("SH2O");
     
     // this is a 'special' signal, and we're going to just z
-    ConstantSignal* o2InhibitorySignal = new ConstantSignal(-1.f, 100, 400, 300);
+    ConstantSignal* o2InhibitorySignal = new ConstantSignal(-1.f, 100, 150, 50);
     PrimitiveStimulus* o2Inhibitor = new PrimitiveStimulus("o2Inhibitor");
     o2Inhibitor->setSignal(o2InhibitorySignal);
     addStimulus("SO2", o2Inhibitor);
-    elementsToStimulate.push_back("SO2");
     
 }
+
+void SensoryStimulationSteward::createH2OStimulator(){
+    ConstantSignal* h2oSignal = new ConstantSignal(2.5f, 300, 350, 50);
+    PrimitiveStimulus* h2oGenerator = new PrimitiveStimulus("h2oGenerator");
+    h2oGenerator->setSignal(h2oSignal);
+    addStimulus("SH2O", h2oGenerator);
+}
+
+
 
 void SensoryStimulationSteward::addStimulus(std::string elementName, Stimulus* stimulusp){
     int elementIndex = dStewiep->officialNameToIndexMap[elementName];
@@ -92,14 +102,14 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         sensorV = dStewiep->voltages->getv(sensorIndex);
         vFromMotor = chemicalSynapseSimulator(1, motorV, sensorV);
         dStewiep->voltages->add(sensorIndex, vFromMotor);
+        // exhale and CO2
+        motorIndex = dStewiep->officialNameToIndexMap["MEXHALE"];
+        motorV = dStewiep->voltages->getv(motorIndex);
+        sensorIndex = dStewiep->officialNameToIndexMap["SCO2"];
+        sensorV = dStewiep->voltages->getv(sensorIndex);
+        vFromMotor = chemicalSynapseSimulator(-1, motorV, sensorV);
+        dStewiep->voltages->add(sensorIndex, vFromMotor);
     }
-    // exhale and CO2
-    motorIndex = dStewiep->officialNameToIndexMap["MEXHALE"];
-    motorV = dStewiep->voltages->getv(motorIndex);
-    sensorIndex = dStewiep->officialNameToIndexMap["SCO2"];
-    sensorV = dStewiep->voltages->getv(sensorIndex);
-    vFromMotor = chemicalSynapseSimulator(-1, motorV, sensorV);
-    dStewiep->voltages->add(sensorIndex, vFromMotor);
  
     
 }

@@ -29,3 +29,6 @@ next:
 - modify connectome to include learning rates
     -> what should default learning rate be?
     -> what are rules to govern changes in learning rate?
+- now that xcorr computation has been fixed, need to compute the voltage rate of change for each set of voltages that were used to compute the xcorr... then look at the voltage rate of change along with the xcorr to determine how to modify weights.
+
+

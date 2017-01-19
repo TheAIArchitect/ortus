@@ -35,6 +35,7 @@ public:
 public:// the stimuli creators
     void createCO2Generator();
     void createO2DeprevationAndH2OGenerator();
+    void createH2OStimulator();
 };
 
 #endif /* SensoryStimulationSteward_hpp */
