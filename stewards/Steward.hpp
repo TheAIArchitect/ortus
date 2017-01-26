@@ -14,6 +14,7 @@
 #include "ComputeSteward.hpp"
 #include "DataVisualizer.hpp"
 #include "SensoryStimulationSteward.hpp"
+#include "DiagnosticSteward.hpp"
 
 class Steward {
 public:
@@ -26,6 +27,7 @@ public:
     DataSteward* dataStewardp;
     ComputeSteward* computeStewardp;
     SensoryStimulationSteward* sensoryStimulationStewardp;
+    DiagnosticSteward* diagnosticStewardp;
     
     int numIterations;
     

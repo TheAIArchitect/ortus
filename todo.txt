@@ -23,6 +23,7 @@ next:
 - H2O has been added with O2 deprevation. Now, need to have ortus draw connection between IFEAR and H2O.
 - figure out good way to graph xcorr
     -> this will be helpful to figure out rules for modifying gaps and chems
+    -> tie it into Probe, and either recompute or take values from kernel... then do a line per xcorr 'index'
 - apply rules to modify gaps and chems, based upon xcorr computation
 - modify writeConnectome to sort new neurons
     -> also need a way to name them...

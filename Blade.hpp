@@ -27,6 +27,8 @@ public:
     bool deviceScratchPad;
     bool clMemAllocated;
     bool deleteDataBuffers;
+    bool dataPushed;
+    bool dataRead;
     int currentRows;
     int maxRows;
     int currentCols;
@@ -49,6 +51,8 @@ public:
     Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols){
         scalar = false;
         vector = false;
+        dataPushed = false;
+        dataRead = false;
         deviceScratchPad = false;
         clMemAllocated = false;
         deleteDataBuffers = false;
@@ -92,6 +96,8 @@ public:
         this->clhelper = clhelper;
         scalar = false;
         vector = false;
+        dataPushed = false;
+        dataRead = false;
         deviceScratchPad = true;// TRUE!!!
         clMemAllocated = false; // we don't create a buffer
         deleteDataBuffers = false; // nor do we new anything
@@ -275,6 +281,8 @@ public:
     void pushCLBuffer(){
         this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, clData, CL_TRUE, 0, sizeof(T) * currentSize, data, 0, NULL, NULL);
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
+        dataPushed = true;
+        dataRead = false; // we know current data is invalid
     }
     
     /* reads data from the OpenCL buffer into data. This will overwrite anything in data.
@@ -285,6 +293,8 @@ public:
         }
         this->clhelper->err = clEnqueueReadBuffer(this->clhelper->commands, clData, CL_TRUE, 0, sizeof(T) * currentSize, data, 0, NULL, NULL);
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
+        dataPushed = false;
+        dataRead = true;
         return true;
     }
     
@@ -293,6 +303,40 @@ public:
         this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, clData, CL_TRUE, 0, sizeof(T) * maxSize, zeros, 0, NULL, NULL);
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
     }
+    
+    std::vector<std::vector<float>> convertDataTo2DVector(){
+        if (scalar){
+            printf("Blade Warning: Placing scalar into vector of vector of floats. Are you sure you want to do this?\n");
+        }
+        if (vector){
+            printf("Blade Warning: Placing vector into vector of vector of floats. Are you sure you want to do this?\n");
+        }
+        std::vector<std::vector<float>> output;
+        for (int i = 0; i < currentRows; ++i){
+            std::vector<float> tempRow;
+            for (int j = 0; j < currentCols; ++j){
+                tempRow.push_back(getv(i, j));
+            }
+            output.push_back(tempRow);
+        }
+        return output;
+    }
+    
+    std::vector<float> convertDataToVector(){
+        if (scalar){
+            printf("Blade Warning: Placing scalar into vector of floats. Are you sure you want to do this?\n");
+        }
+        if (!vector && !scalar){
+            printf("Blade Error: Attempting to place 2D Data into vector of floats.\n");
+        }
+        std::vector<float> output;
+        for (int i = 0; i < currentCols; ++i){
+            output.push_back(getv(i));
+        }
+        return output;
+    }
+    
+    
     
 private:
     

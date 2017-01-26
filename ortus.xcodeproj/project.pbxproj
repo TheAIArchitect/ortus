@@ -49,6 +49,8 @@
 		F748804C1E25B7020083763E /* DevelopmentSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748804A1E25B7020083763E /* DevelopmentSteward.cpp */; };
 		F74880501E25FB1E0083763E /* OrtusKernelOne.cl in Sources */ = {isa = PBXBuildFile; fileRef = F748804E1E25FB1E0083763E /* OrtusKernelOne.cl */; };
 		F74880511E25FB1E0083763E /* OrtusKernelTwo.cl in Sources */ = {isa = PBXBuildFile; fileRef = F748804F1E25FB1E0083763E /* OrtusKernelTwo.cl */; };
+		F757ADCC1E35DF3700A8B181 /* DiagnosticSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F757ADCA1E35DF3700A8B181 /* DiagnosticSteward.cpp */; };
+		F757ADCF1E35E3DF00A8B181 /* Statistician.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F757ADCD1E35E3DF00A8B181 /* Statistician.cpp */; };
 		F75903AC1E2E49FB00879481 /* Plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903A41E2E49FB00879481 /* Plot.cpp */; };
 		F75903AD1E2E49FB00879481 /* Plotr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903A61E2E49FB00879481 /* Plotr.cpp */; };
 		F75903AE1E2E49FB00879481 /* Pyterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903A81E2E49FB00879481 /* Pyterpreter.cpp */; };
@@ -178,6 +180,11 @@
 		F748804E1E25FB1E0083763E /* OrtusKernelOne.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = OrtusKernelOne.cl; path = kernels/OrtusKernelOne.cl; sourceTree = "<group>"; };
 		F748804F1E25FB1E0083763E /* OrtusKernelTwo.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = OrtusKernelTwo.cl; path = kernels/OrtusKernelTwo.cl; sourceTree = "<group>"; };
 		F753A7C51E283A0200625EBC /* learningNotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = learningNotes.txt; path = notes/learningNotes.txt; sourceTree = "<group>"; };
+		F757ADCA1E35DF3700A8B181 /* DiagnosticSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DiagnosticSteward.cpp; path = stewards/DiagnosticSteward.cpp; sourceTree = "<group>"; };
+		F757ADCB1E35DF3700A8B181 /* DiagnosticSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DiagnosticSteward.hpp; path = stewards/DiagnosticSteward.hpp; sourceTree = "<group>"; };
+		F757ADCD1E35E3DF00A8B181 /* Statistician.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Statistician.cpp; sourceTree = "<group>"; };
+		F757ADCE1E35E3DF00A8B181 /* Statistician.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Statistician.hpp; sourceTree = "<group>"; };
+		F757ADD01E3A61DE00A8B181 /* OrtusNamespace.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = OrtusNamespace.hpp; sourceTree = "<group>"; };
 		F75903A41E2E49FB00879481 /* Plot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plot.cpp; path = Plotr/src/Plot.cpp; sourceTree = "<group>"; };
 		F75903A51E2E49FB00879481 /* Plot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Plot.hpp; path = Plotr/src/Plot.hpp; sourceTree = "<group>"; };
 		F75903A61E2E49FB00879481 /* Plotr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plotr.cpp; path = Plotr/src/Plotr.cpp; sourceTree = "<group>"; };
@@ -358,11 +365,14 @@
 				444DE44B1D8A717400247E36 /* myDebug.hpp */,
 				444DE3E31D8A5D7F00247E36 /* NeuronInfoModule.cpp */,
 				444DE3E41D8A5D7F00247E36 /* NeuronInfoModule.hpp */,
+				F757ADD01E3A61DE00A8B181 /* OrtusNamespace.hpp */,
 				449019C61DBA13CE00569854 /* Probe.cpp */,
 				449019C71DBA13CF00569854 /* Probe.hpp */,
 				444DE3F51D8A5D7F00247E36 /* std_graphics_header.hpp */,
 				44AF538B1DA46F89009546BC /* OptionForewoman.cpp */,
 				44AF538C1DA46F89009546BC /* OptionForewoman.hpp */,
+				F757ADCD1E35E3DF00A8B181 /* Statistician.cpp */,
+				F757ADCE1E35E3DF00A8B181 /* Statistician.hpp */,
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
 			);
 			name = src;
@@ -375,14 +385,16 @@
 				F748803B1E2448A00083763E /* ComputeSteward.hpp */,
 				F748803C1E2448A00083763E /* DataSteward.cpp */,
 				F748803D1E2448A00083763E /* DataSteward.hpp */,
+				F748804A1E25B7020083763E /* DevelopmentSteward.cpp */,
+				F748804B1E25B7020083763E /* DevelopmentSteward.hpp */,
+				F757ADCA1E35DF3700A8B181 /* DiagnosticSteward.cpp */,
+				F757ADCB1E35DF3700A8B181 /* DiagnosticSteward.hpp */,
 				F74880431E245C930083763E /* SensoryStimulationSteward.cpp */,
 				F74880441E245C930083763E /* SensoryStimulationSteward.hpp */,
 				F748803E1E2448A00083763E /* Steward.cpp */,
 				F748803F1E2448A00083763E /* Steward.hpp */,
 				F74880461E25AA760083763E /* StimuliSteward.cpp */,
 				F74880471E25AA760083763E /* StimuliSteward.hpp */,
-				F748804A1E25B7020083763E /* DevelopmentSteward.cpp */,
-				F748804B1E25B7020083763E /* DevelopmentSteward.hpp */,
 			);
 			name = stewards;
 			sourceTree = "<group>";
@@ -504,6 +516,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */,
+				F757ADCC1E35DF3700A8B181 /* DiagnosticSteward.cpp in Sources */,
 				444DE4231D8A642700247E36 /* image_DXT.c in Sources */,
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
 				F74880421E2448A00083763E /* Steward.cpp in Sources */,
@@ -511,6 +524,7 @@
 				F74880511E25FB1E0083763E /* OrtusKernelTwo.cl in Sources */,
 				F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
+				F757ADCF1E35E3DF00A8B181 /* Statistician.cpp in Sources */,
 				44B6E6341D9A6CB300A8DB7B /* Camera.cpp in Sources */,
 				F7E7A0B31E2260350068BD3E /* ComplexStimulus.cpp in Sources */,
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,

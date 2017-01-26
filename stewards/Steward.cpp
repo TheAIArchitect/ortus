@@ -38,6 +38,7 @@ void Steward::initialize(){
     dataStewardp->init(computeStewardp->workGroupSize);
     sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
     sensoryStimulationStewardp->setStimuli();
+    diagnosticStewardp = new DiagnosticSteward(dataStewardp);
     
 }
 
@@ -68,10 +69,9 @@ void Steward::run(){
         }
         printf("\n");
     }
-    DataVisualizer vizzer = DataVisualizer(dataStewardp);
-    //vizzer.plotAll();
-    vizzer.makePlots();
-    //vizzer.plotSet(plotSet, plotSetSize);
+    diagnosticStewardp->runStandardDiagnostics();
+    //diagnosticStewardp->runAdvancedDiagnostics();
+    
     //initGraphics(&core);
     cleanUp();
     exit(89);   
@@ -80,10 +80,10 @@ void Steward::run(){
 
 void Steward::cleanUp(){
     // do in reverse order of allocation? might not matter.
+    
+    delete diagnosticStewardp;
+    delete sensoryStimulationStewardp;
     delete computeStewardp;
     delete dataStewardp;
-    delete sensoryStimulationStewardp;
-    
-    
 }
 
