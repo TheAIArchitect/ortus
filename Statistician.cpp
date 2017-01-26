@@ -128,7 +128,7 @@ std::unordered_map<int, ortus::vectrix> Statistician::computeXCorrBetweenVoltage
     size_t numElements = voltageHistoryVector.size();
     
     // This is going to be slow, and it would probably be best to either rad the resutls back from blade, or thread this computation...
-    for (int i = 0; i < numElements; ++i){// go through each element,
+    for (int i = 0; i < numIndices; ++i){// go through each element,
         for (int j = 0; j < numElements; ++j){ // and compute the xcorr between it, and everything else (including itself)
         
     }
