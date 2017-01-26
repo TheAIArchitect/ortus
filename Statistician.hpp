@@ -28,7 +28,7 @@ public:
     float xcorrMultiplyLimited(ortus::vector A, int aOffset, ortus::vector B, int bOffset, int len);
     //std::unordered_map<int, ortus::vectrix> computeXCorrBetweenVoltages(ortus::vectrix voltageHistoryVector, int numXCorrComputations, const std::string* computeList = {});
     std::unordered_map<int, ortus::vectrix> computeXCorrBetweenVoltages(DataSteward* dStewiep, const std::string* computeList = {}, int numToCompute = -1);
-    ortus::vector xcorrLimited(ortus::vector A, ortus::vector B, float normalizer, int start, int len, int end);
+    ortus::vector xcorrLimited(ortus::vector A, ortus::vector B, int start, int len, int end);
     ortus::vector xcorr(ortus::vector A, ortus::vector B, float normalizer);
     ortus::vector normalizedXCorr(ortus::vector A, ortus::vector B);
 };

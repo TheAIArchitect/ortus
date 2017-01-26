@@ -81,7 +81,7 @@ float Statistician::xcorrMultiplyLimited(ortus::vector A, int aOffset, ortus::ve
  *      -> and so on, until len+n == end, which is the final xcorr computation (which means that 'end' is *inclusive*, because it is an index, and not a length, or size.
  
  */
-ortus::vector Statistician::xcorrLimited(ortus::vector A, ortus::vector B, float normalizer, int start, int len, int end){
+ortus::vector Statistician::xcorrLimited(ortus::vector A, ortus::vector B, int start, int len, int end){
     size_t aLen = A.size();
     size_t bLen = B.size();
     if ((aLen != bLen) || (aLen == 0)){
@@ -90,8 +90,20 @@ ortus::vector Statistician::xcorrLimited(ortus::vector A, ortus::vector B, float
     size_t xcorrLoops = end - (len - 1); // subtract one from len becuase then we have the last index that we consider for the xcorr computation at 0 offset
     int aOffset = 0;
     ortus::vector xcorrResults;
+    float autoCorrA = 0;
+    float autoCorrB = 0;
+    float divisor = 0;
+    autoCorrA = xcorrMultiplyLimited(A, aOffset, A, aOffset, len);
     for (int i = 0; i < xcorrLoops; ++i){
-        xcorrResults.push_back(xcorrMultiplyLimited(A, aOffset, B, i, len));
+        // 'i' is what we would set 'bOffset' to, but this comment should be enough to make that clear.
+        autoCorrB = xcorrMultiplyLimited(B, i, B, i, len);
+        divisor = sqrtf(autoCorrA * autoCorrB);
+        if (divisor == 0){
+            xcorrResults.push_back(0.f);// can't divide by 0, this means we don't have full data for this window of time, so there can't be any correlation. set it to 0.
+        }
+        else {
+            xcorrResults.push_back((xcorrMultiplyLimited(A, aOffset, B, i, len)/divisor));
+        }
     }
     return xcorrResults;
 }
@@ -122,17 +134,22 @@ std::unordered_map<int, ortus::vectrix> Statistician::computeXCorrBetweenVoltage
     // the key, is the "A" element -- the static one
     // second index, is the "B" element -- this one, gets the window sliding across it
     // third index is xcorr computation 0 to dStewiep->numXCorrComputations-1
-    // NOTE: totalXCorr[x][x][x] gives the autocorrelation for element X. 
-    std::unordered_map<int, ortus::vectrix> totalXCorr;
+    // NOTE: totalXCorr[x][x][x] gives the autocorrelation for element X, which should be 1.0 (due to normalization)
+    std::unordered_map<int, ortus::vectrix> totalXCorr(numIndices);
     ortus::vectrix voltageHistoryVector = dStewiep->outputVoltageHistory->convertDataTo2DVector();
     size_t numElements = voltageHistoryVector.size();
+    int startIndex = 0; // we want to start at the beginning of the voltage history
     
+    // endIndex is the startIndex, plus the length that we use for a single xcorr computation, plus the number of xcorr computations (because for each computation, we shift our window for 'B' over by 1), and then we subtract one because it's an index, not a length. It's 2*XCORR_COMPUTATIONS because XCORRR_COMPUTATIONS == the length that we use for a single xcorr computation.
+    int endIndex = startIndex + 2*dStewiep->XCORR_COMPUTATIONS - 1;
     // This is going to be slow, and it would probably be best to either rad the resutls back from blade, or thread this computation...
     for (int i = 0; i < numIndices; ++i){// go through each element,
+        ortus::vectrix tempXCorrRes(numElements);
         for (int j = 0; j < numElements; ++j){ // and compute the xcorr between it, and everything else (including itself)
-        
+            tempXCorrRes[j] = xcorrLimited(voltageHistoryVector[indicesToUse[i]], voltageHistoryVector[j], startIndex, dStewiep->XCORR_COMPUTATIONS, endIndex);
+        }
+        totalXCorr[indicesToUse[i]] = tempXCorrRes;
     }
-    
     return totalXCorr;
 }
 

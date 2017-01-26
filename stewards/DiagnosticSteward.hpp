@@ -25,6 +25,7 @@ public:
     void runAdvancedDiagnostics();
     
     
+    std::unordered_map<int, ortus::vectrix> fullXCorrResults;
     
     DataSteward* dStewiep;
     DataVisualizer* vizzer;
