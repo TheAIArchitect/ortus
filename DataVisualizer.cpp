@@ -12,6 +12,30 @@ DataVisualizer::DataVisualizer(DataSteward* stewie){
     this->stewie = stewie;
 }
 
+void DataVisualizer::plotXCorr(std::vector<double>& dataX, std::vector<double>& dataY0, std::vector<double>& dataY1, std::vector<double>& dataY2, std::vector<double>& dataY3){
+    
+    Plot p(true);
+   
+    p.addXValues<double>(dataX);
+    std::unordered_map<std::string, std::string> kwArgs;
+    p.addYValues<double>(dataY0);
+    kwArgs["label"] = "lag "+std::to_string(0);
+    p.plot(kwArgs);
+    p.addYValues<double>(dataY1);
+    kwArgs["label"] = "lag "+std::to_string(1);
+    p.plot(kwArgs);
+    p.addYValues<double>(dataY2);
+    kwArgs["label"] = "lag "+std::to_string(2);
+    p.plot(kwArgs);
+     p.addYValues<double>(dataY3);
+    kwArgs["label"] = "lag "+std::to_string(3);
+    p.plot(kwArgs);
+    p.title("Holding SH20 at 0, with IFEAR sliding -- xcorr size of 4");
+    p.grid(true);
+    p.legend();
+    p.show();
+    
+}
 
 void DataVisualizer::makePlots(){
     const int plotOneSize = 6;

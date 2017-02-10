@@ -55,6 +55,110 @@
 		F75903AD1E2E49FB00879481 /* Plotr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903A61E2E49FB00879481 /* Plotr.cpp */; };
 		F75903AE1E2E49FB00879481 /* Pyterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903A81E2E49FB00879481 /* Pyterpreter.cpp */; };
 		F75903AF1E2E49FB00879481 /* Pytils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F75903AA1E2E49FB00879481 /* Pytils.cpp */; };
+		F77158CF1E4DE80400D51FEB /* libvtkalglib-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158671E4DE80400D51FEB /* libvtkalglib-7.1.dylib */; };
+		F77158D01E4DE80400D51FEB /* libvtkChartsCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158681E4DE80400D51FEB /* libvtkChartsCore-7.1.dylib */; };
+		F77158D11E4DE80400D51FEB /* libvtkCommonColor-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158691E4DE80400D51FEB /* libvtkCommonColor-7.1.dylib */; };
+		F77158D21E4DE80400D51FEB /* libvtkCommonComputationalGeometry-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771586A1E4DE80400D51FEB /* libvtkCommonComputationalGeometry-7.1.dylib */; };
+		F77158D31E4DE80400D51FEB /* libvtkCommonCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771586B1E4DE80400D51FEB /* libvtkCommonCore-7.1.dylib */; };
+		F77158D41E4DE80400D51FEB /* libvtkCommonDataModel-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771586C1E4DE80400D51FEB /* libvtkCommonDataModel-7.1.dylib */; };
+		F77158D51E4DE80400D51FEB /* libvtkCommonExecutionModel-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771586D1E4DE80400D51FEB /* libvtkCommonExecutionModel-7.1.dylib */; };
+		F77158D61E4DE80400D51FEB /* libvtkCommonMath-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771586E1E4DE80400D51FEB /* libvtkCommonMath-7.1.dylib */; };
+		F77158D71E4DE80400D51FEB /* libvtkCommonMisc-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771586F1E4DE80400D51FEB /* libvtkCommonMisc-7.1.dylib */; };
+		F77158D81E4DE80400D51FEB /* libvtkCommonSystem-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158701E4DE80400D51FEB /* libvtkCommonSystem-7.1.dylib */; };
+		F77158D91E4DE80400D51FEB /* libvtkCommonTransforms-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158711E4DE80400D51FEB /* libvtkCommonTransforms-7.1.dylib */; };
+		F77158DA1E4DE80400D51FEB /* libvtkDICOMParser-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158721E4DE80400D51FEB /* libvtkDICOMParser-7.1.dylib */; };
+		F77158DB1E4DE80400D51FEB /* libvtkDomainsChemistry-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158731E4DE80400D51FEB /* libvtkDomainsChemistry-7.1.dylib */; };
+		F77158DC1E4DE80400D51FEB /* libvtkDomainsChemistryOpenGL2-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158741E4DE80400D51FEB /* libvtkDomainsChemistryOpenGL2-7.1.dylib */; };
+		F77158DD1E4DE80400D51FEB /* libvtkexoIIc-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158751E4DE80400D51FEB /* libvtkexoIIc-7.1.dylib */; };
+		F77158DE1E4DE80400D51FEB /* libvtkFiltersAMR-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158761E4DE80400D51FEB /* libvtkFiltersAMR-7.1.dylib */; };
+		F77158DF1E4DE80400D51FEB /* libvtkFiltersCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158771E4DE80400D51FEB /* libvtkFiltersCore-7.1.dylib */; };
+		F77158E01E4DE80400D51FEB /* libvtkFiltersExtraction-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158781E4DE80400D51FEB /* libvtkFiltersExtraction-7.1.dylib */; };
+		F77158E11E4DE80400D51FEB /* libvtkFiltersFlowPaths-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158791E4DE80400D51FEB /* libvtkFiltersFlowPaths-7.1.dylib */; };
+		F77158E21E4DE80400D51FEB /* libvtkFiltersGeneral-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771587A1E4DE80400D51FEB /* libvtkFiltersGeneral-7.1.dylib */; };
+		F77158E31E4DE80400D51FEB /* libvtkFiltersGeneric-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771587B1E4DE80400D51FEB /* libvtkFiltersGeneric-7.1.dylib */; };
+		F77158E41E4DE80400D51FEB /* libvtkFiltersGeometry-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771587C1E4DE80400D51FEB /* libvtkFiltersGeometry-7.1.dylib */; };
+		F77158E51E4DE80400D51FEB /* libvtkFiltersHybrid-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771587D1E4DE80400D51FEB /* libvtkFiltersHybrid-7.1.dylib */; };
+		F77158E61E4DE80400D51FEB /* libvtkFiltersHyperTree-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771587E1E4DE80400D51FEB /* libvtkFiltersHyperTree-7.1.dylib */; };
+		F77158E71E4DE80400D51FEB /* libvtkFiltersImaging-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771587F1E4DE80400D51FEB /* libvtkFiltersImaging-7.1.dylib */; };
+		F77158E81E4DE80400D51FEB /* libvtkFiltersModeling-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158801E4DE80400D51FEB /* libvtkFiltersModeling-7.1.dylib */; };
+		F77158E91E4DE80400D51FEB /* libvtkFiltersParallel-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158811E4DE80400D51FEB /* libvtkFiltersParallel-7.1.dylib */; };
+		F77158EA1E4DE80400D51FEB /* libvtkFiltersParallelImaging-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158821E4DE80400D51FEB /* libvtkFiltersParallelImaging-7.1.dylib */; };
+		F77158EB1E4DE80400D51FEB /* libvtkFiltersPoints-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158831E4DE80400D51FEB /* libvtkFiltersPoints-7.1.dylib */; };
+		F77158EC1E4DE80400D51FEB /* libvtkFiltersProgrammable-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158841E4DE80400D51FEB /* libvtkFiltersProgrammable-7.1.dylib */; };
+		F77158ED1E4DE80400D51FEB /* libvtkFiltersSelection-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158851E4DE80400D51FEB /* libvtkFiltersSelection-7.1.dylib */; };
+		F77158EE1E4DE80400D51FEB /* libvtkFiltersSMP-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158861E4DE80400D51FEB /* libvtkFiltersSMP-7.1.dylib */; };
+		F77158EF1E4DE80400D51FEB /* libvtkFiltersSources-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158871E4DE80400D51FEB /* libvtkFiltersSources-7.1.dylib */; };
+		F77158F01E4DE80400D51FEB /* libvtkFiltersStatistics-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158881E4DE80400D51FEB /* libvtkFiltersStatistics-7.1.dylib */; };
+		F77158F11E4DE80400D51FEB /* libvtkFiltersTexture-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158891E4DE80400D51FEB /* libvtkFiltersTexture-7.1.dylib */; };
+		F77158F21E4DE80400D51FEB /* libvtkFiltersVerdict-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771588A1E4DE80400D51FEB /* libvtkFiltersVerdict-7.1.dylib */; };
+		F77158F31E4DE80400D51FEB /* libvtkfreetype-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771588B1E4DE80400D51FEB /* libvtkfreetype-7.1.dylib */; };
+		F77158F41E4DE80400D51FEB /* libvtkGeovisCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771588C1E4DE80400D51FEB /* libvtkGeovisCore-7.1.dylib */; };
+		F77158F51E4DE80400D51FEB /* libvtkgl2ps-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771588D1E4DE80400D51FEB /* libvtkgl2ps-7.1.dylib */; };
+		F77158F61E4DE80400D51FEB /* libvtkglew-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771588E1E4DE80400D51FEB /* libvtkglew-7.1.dylib */; };
+		F77158F71E4DE80400D51FEB /* libvtkImagingColor-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771588F1E4DE80400D51FEB /* libvtkImagingColor-7.1.dylib */; };
+		F77158F81E4DE80400D51FEB /* libvtkImagingCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158901E4DE80400D51FEB /* libvtkImagingCore-7.1.dylib */; };
+		F77158F91E4DE80400D51FEB /* libvtkImagingFourier-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158911E4DE80400D51FEB /* libvtkImagingFourier-7.1.dylib */; };
+		F77158FA1E4DE80400D51FEB /* libvtkImagingGeneral-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158921E4DE80400D51FEB /* libvtkImagingGeneral-7.1.dylib */; };
+		F77158FB1E4DE80400D51FEB /* libvtkImagingHybrid-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158931E4DE80400D51FEB /* libvtkImagingHybrid-7.1.dylib */; };
+		F77158FC1E4DE80400D51FEB /* libvtkImagingMath-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158941E4DE80400D51FEB /* libvtkImagingMath-7.1.dylib */; };
+		F77158FD1E4DE80400D51FEB /* libvtkImagingMorphological-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158951E4DE80400D51FEB /* libvtkImagingMorphological-7.1.dylib */; };
+		F77158FE1E4DE80400D51FEB /* libvtkImagingSources-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158961E4DE80400D51FEB /* libvtkImagingSources-7.1.dylib */; };
+		F77158FF1E4DE80400D51FEB /* libvtkImagingStatistics-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158971E4DE80400D51FEB /* libvtkImagingStatistics-7.1.dylib */; };
+		F77159001E4DE80400D51FEB /* libvtkImagingStencil-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158981E4DE80400D51FEB /* libvtkImagingStencil-7.1.dylib */; };
+		F77159011E4DE80400D51FEB /* libvtkInfovisBoostGraphAlgorithms-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158991E4DE80400D51FEB /* libvtkInfovisBoostGraphAlgorithms-7.1.dylib */; };
+		F77159021E4DE80400D51FEB /* libvtkInfovisCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771589A1E4DE80400D51FEB /* libvtkInfovisCore-7.1.dylib */; };
+		F77159031E4DE80400D51FEB /* libvtkInfovisLayout-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771589B1E4DE80400D51FEB /* libvtkInfovisLayout-7.1.dylib */; };
+		F77159041E4DE80400D51FEB /* libvtkInteractionImage-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771589C1E4DE80400D51FEB /* libvtkInteractionImage-7.1.dylib */; };
+		F77159051E4DE80400D51FEB /* libvtkInteractionStyle-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771589D1E4DE80400D51FEB /* libvtkInteractionStyle-7.1.dylib */; };
+		F77159061E4DE80400D51FEB /* libvtkInteractionWidgets-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771589E1E4DE80400D51FEB /* libvtkInteractionWidgets-7.1.dylib */; };
+		F77159071E4DE80400D51FEB /* libvtkIOAMR-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F771589F1E4DE80400D51FEB /* libvtkIOAMR-7.1.dylib */; };
+		F77159081E4DE80400D51FEB /* libvtkIOCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A01E4DE80400D51FEB /* libvtkIOCore-7.1.dylib */; };
+		F77159091E4DE80400D51FEB /* libvtkIOEnSight-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A11E4DE80400D51FEB /* libvtkIOEnSight-7.1.dylib */; };
+		F771590A1E4DE80400D51FEB /* libvtkIOExodus-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A21E4DE80400D51FEB /* libvtkIOExodus-7.1.dylib */; };
+		F771590B1E4DE80400D51FEB /* libvtkIOExport-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A31E4DE80400D51FEB /* libvtkIOExport-7.1.dylib */; };
+		F771590C1E4DE80400D51FEB /* libvtkIOGeometry-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A41E4DE80400D51FEB /* libvtkIOGeometry-7.1.dylib */; };
+		F771590D1E4DE80400D51FEB /* libvtkIOImage-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A51E4DE80400D51FEB /* libvtkIOImage-7.1.dylib */; };
+		F771590E1E4DE80400D51FEB /* libvtkIOImport-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A61E4DE80400D51FEB /* libvtkIOImport-7.1.dylib */; };
+		F771590F1E4DE80400D51FEB /* libvtkIOInfovis-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A71E4DE80400D51FEB /* libvtkIOInfovis-7.1.dylib */; };
+		F77159101E4DE80400D51FEB /* libvtkIOLegacy-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A81E4DE80400D51FEB /* libvtkIOLegacy-7.1.dylib */; };
+		F77159111E4DE80400D51FEB /* libvtkIOLSDyna-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158A91E4DE80400D51FEB /* libvtkIOLSDyna-7.1.dylib */; };
+		F77159121E4DE80400D51FEB /* libvtkIOMINC-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158AA1E4DE80400D51FEB /* libvtkIOMINC-7.1.dylib */; };
+		F77159131E4DE80400D51FEB /* libvtkIOMovie-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158AB1E4DE80400D51FEB /* libvtkIOMovie-7.1.dylib */; };
+		F77159141E4DE80400D51FEB /* libvtkIONetCDF-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158AC1E4DE80400D51FEB /* libvtkIONetCDF-7.1.dylib */; };
+		F77159151E4DE80400D51FEB /* libvtkIOParallel-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158AD1E4DE80400D51FEB /* libvtkIOParallel-7.1.dylib */; };
+		F77159161E4DE80400D51FEB /* libvtkIOParallelXML-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158AE1E4DE80400D51FEB /* libvtkIOParallelXML-7.1.dylib */; };
+		F77159171E4DE80400D51FEB /* libvtkIOPLY-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158AF1E4DE80400D51FEB /* libvtkIOPLY-7.1.dylib */; };
+		F77159181E4DE80400D51FEB /* libvtkIOSQL-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B01E4DE80400D51FEB /* libvtkIOSQL-7.1.dylib */; };
+		F77159191E4DE80400D51FEB /* libvtkIOTecplotTable-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B11E4DE80400D51FEB /* libvtkIOTecplotTable-7.1.dylib */; };
+		F771591A1E4DE80400D51FEB /* libvtkIOVideo-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B21E4DE80400D51FEB /* libvtkIOVideo-7.1.dylib */; };
+		F771591B1E4DE80400D51FEB /* libvtkIOXML-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B31E4DE80400D51FEB /* libvtkIOXML-7.1.dylib */; };
+		F771591C1E4DE80400D51FEB /* libvtkIOXMLParser-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B41E4DE80400D51FEB /* libvtkIOXMLParser-7.1.dylib */; };
+		F771591D1E4DE80400D51FEB /* libvtkjsoncpp-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B51E4DE80400D51FEB /* libvtkjsoncpp-7.1.dylib */; };
+		F771591E1E4DE80400D51FEB /* libvtkmetaio-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B61E4DE80400D51FEB /* libvtkmetaio-7.1.dylib */; };
+		F771591F1E4DE80400D51FEB /* libvtkNetCDF_cxx-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B71E4DE80400D51FEB /* libvtkNetCDF_cxx-7.1.dylib */; };
+		F77159201E4DE80400D51FEB /* libvtkNetCDF-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B81E4DE80400D51FEB /* libvtkNetCDF-7.1.dylib */; };
+		F77159211E4DE80400D51FEB /* libvtkoggtheora-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158B91E4DE80400D51FEB /* libvtkoggtheora-7.1.dylib */; };
+		F77159221E4DE80400D51FEB /* libvtkParallelCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158BA1E4DE80400D51FEB /* libvtkParallelCore-7.1.dylib */; };
+		F77159231E4DE80400D51FEB /* libvtkproj4-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158BB1E4DE80400D51FEB /* libvtkproj4-7.1.dylib */; };
+		F77159241E4DE80400D51FEB /* libvtkRenderingAnnotation-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158BC1E4DE80400D51FEB /* libvtkRenderingAnnotation-7.1.dylib */; };
+		F77159251E4DE80400D51FEB /* libvtkRenderingContext2D-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158BD1E4DE80400D51FEB /* libvtkRenderingContext2D-7.1.dylib */; };
+		F77159261E4DE80400D51FEB /* libvtkRenderingContextOpenGL2-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158BE1E4DE80400D51FEB /* libvtkRenderingContextOpenGL2-7.1.dylib */; };
+		F77159271E4DE80400D51FEB /* libvtkRenderingCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158BF1E4DE80400D51FEB /* libvtkRenderingCore-7.1.dylib */; };
+		F77159281E4DE80400D51FEB /* libvtkRenderingFreeType-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C01E4DE80400D51FEB /* libvtkRenderingFreeType-7.1.dylib */; };
+		F77159291E4DE80400D51FEB /* libvtkRenderingFreeTypeFontConfig-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C11E4DE80400D51FEB /* libvtkRenderingFreeTypeFontConfig-7.1.dylib */; };
+		F771592A1E4DE80400D51FEB /* libvtkRenderingGL2PSOpenGL2-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C21E4DE80400D51FEB /* libvtkRenderingGL2PSOpenGL2-7.1.dylib */; };
+		F771592B1E4DE80400D51FEB /* libvtkRenderingImage-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C31E4DE80400D51FEB /* libvtkRenderingImage-7.1.dylib */; };
+		F771592C1E4DE80400D51FEB /* libvtkRenderingLabel-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C41E4DE80400D51FEB /* libvtkRenderingLabel-7.1.dylib */; };
+		F771592D1E4DE80400D51FEB /* libvtkRenderingLOD-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C51E4DE80400D51FEB /* libvtkRenderingLOD-7.1.dylib */; };
+		F771592E1E4DE80400D51FEB /* libvtkRenderingOpenGL2-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C61E4DE80400D51FEB /* libvtkRenderingOpenGL2-7.1.dylib */; };
+		F771592F1E4DE80400D51FEB /* libvtkRenderingVolume-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C71E4DE80400D51FEB /* libvtkRenderingVolume-7.1.dylib */; };
+		F77159301E4DE80400D51FEB /* libvtkRenderingVolumeOpenGL2-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C81E4DE80400D51FEB /* libvtkRenderingVolumeOpenGL2-7.1.dylib */; };
+		F77159311E4DE80400D51FEB /* libvtksqlite-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158C91E4DE80400D51FEB /* libvtksqlite-7.1.dylib */; };
+		F77159321E4DE80400D51FEB /* libvtksys-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158CA1E4DE80400D51FEB /* libvtksys-7.1.dylib */; };
+		F77159331E4DE80400D51FEB /* libvtkverdict-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158CB1E4DE80400D51FEB /* libvtkverdict-7.1.dylib */; };
+		F77159341E4DE80400D51FEB /* libvtkViewsContext2D-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158CC1E4DE80400D51FEB /* libvtkViewsContext2D-7.1.dylib */; };
+		F77159351E4DE80400D51FEB /* libvtkViewsCore-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158CD1E4DE80400D51FEB /* libvtkViewsCore-7.1.dylib */; };
+		F77159361E4DE80400D51FEB /* libvtkViewsInfovis-7.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F77158CE1E4DE80400D51FEB /* libvtkViewsInfovis-7.1.dylib */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
@@ -193,6 +297,111 @@
 		F75903A91E2E49FB00879481 /* Pyterpreter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pyterpreter.hpp; path = Plotr/src/Pyterpreter.hpp; sourceTree = "<group>"; };
 		F75903AA1E2E49FB00879481 /* Pytils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pytils.cpp; path = Plotr/src/Pytils.cpp; sourceTree = "<group>"; };
 		F75903AB1E2E49FB00879481 /* Pytils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pytils.hpp; path = Plotr/src/Pytils.hpp; sourceTree = "<group>"; };
+		F77158661E4DE75F00D51FEB /* StandardVTKHeader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StandardVTKHeader.hpp; sourceTree = "<group>"; };
+		F77158671E4DE80400D51FEB /* libvtkalglib-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkalglib-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkalglib-7.1.dylib"; sourceTree = "<group>"; };
+		F77158681E4DE80400D51FEB /* libvtkChartsCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkChartsCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkChartsCore-7.1.dylib"; sourceTree = "<group>"; };
+		F77158691E4DE80400D51FEB /* libvtkCommonColor-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonColor-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonColor-7.1.dylib"; sourceTree = "<group>"; };
+		F771586A1E4DE80400D51FEB /* libvtkCommonComputationalGeometry-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonComputationalGeometry-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonComputationalGeometry-7.1.dylib"; sourceTree = "<group>"; };
+		F771586B1E4DE80400D51FEB /* libvtkCommonCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonCore-7.1.dylib"; sourceTree = "<group>"; };
+		F771586C1E4DE80400D51FEB /* libvtkCommonDataModel-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonDataModel-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonDataModel-7.1.dylib"; sourceTree = "<group>"; };
+		F771586D1E4DE80400D51FEB /* libvtkCommonExecutionModel-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonExecutionModel-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonExecutionModel-7.1.dylib"; sourceTree = "<group>"; };
+		F771586E1E4DE80400D51FEB /* libvtkCommonMath-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonMath-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonMath-7.1.dylib"; sourceTree = "<group>"; };
+		F771586F1E4DE80400D51FEB /* libvtkCommonMisc-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonMisc-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonMisc-7.1.dylib"; sourceTree = "<group>"; };
+		F77158701E4DE80400D51FEB /* libvtkCommonSystem-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonSystem-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonSystem-7.1.dylib"; sourceTree = "<group>"; };
+		F77158711E4DE80400D51FEB /* libvtkCommonTransforms-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkCommonTransforms-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkCommonTransforms-7.1.dylib"; sourceTree = "<group>"; };
+		F77158721E4DE80400D51FEB /* libvtkDICOMParser-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkDICOMParser-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkDICOMParser-7.1.dylib"; sourceTree = "<group>"; };
+		F77158731E4DE80400D51FEB /* libvtkDomainsChemistry-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkDomainsChemistry-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkDomainsChemistry-7.1.dylib"; sourceTree = "<group>"; };
+		F77158741E4DE80400D51FEB /* libvtkDomainsChemistryOpenGL2-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkDomainsChemistryOpenGL2-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkDomainsChemistryOpenGL2-7.1.dylib"; sourceTree = "<group>"; };
+		F77158751E4DE80400D51FEB /* libvtkexoIIc-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkexoIIc-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkexoIIc-7.1.dylib"; sourceTree = "<group>"; };
+		F77158761E4DE80400D51FEB /* libvtkFiltersAMR-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersAMR-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersAMR-7.1.dylib"; sourceTree = "<group>"; };
+		F77158771E4DE80400D51FEB /* libvtkFiltersCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersCore-7.1.dylib"; sourceTree = "<group>"; };
+		F77158781E4DE80400D51FEB /* libvtkFiltersExtraction-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersExtraction-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersExtraction-7.1.dylib"; sourceTree = "<group>"; };
+		F77158791E4DE80400D51FEB /* libvtkFiltersFlowPaths-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersFlowPaths-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersFlowPaths-7.1.dylib"; sourceTree = "<group>"; };
+		F771587A1E4DE80400D51FEB /* libvtkFiltersGeneral-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersGeneral-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersGeneral-7.1.dylib"; sourceTree = "<group>"; };
+		F771587B1E4DE80400D51FEB /* libvtkFiltersGeneric-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersGeneric-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersGeneric-7.1.dylib"; sourceTree = "<group>"; };
+		F771587C1E4DE80400D51FEB /* libvtkFiltersGeometry-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersGeometry-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersGeometry-7.1.dylib"; sourceTree = "<group>"; };
+		F771587D1E4DE80400D51FEB /* libvtkFiltersHybrid-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersHybrid-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersHybrid-7.1.dylib"; sourceTree = "<group>"; };
+		F771587E1E4DE80400D51FEB /* libvtkFiltersHyperTree-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersHyperTree-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersHyperTree-7.1.dylib"; sourceTree = "<group>"; };
+		F771587F1E4DE80400D51FEB /* libvtkFiltersImaging-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersImaging-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersImaging-7.1.dylib"; sourceTree = "<group>"; };
+		F77158801E4DE80400D51FEB /* libvtkFiltersModeling-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersModeling-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersModeling-7.1.dylib"; sourceTree = "<group>"; };
+		F77158811E4DE80400D51FEB /* libvtkFiltersParallel-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersParallel-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersParallel-7.1.dylib"; sourceTree = "<group>"; };
+		F77158821E4DE80400D51FEB /* libvtkFiltersParallelImaging-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersParallelImaging-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersParallelImaging-7.1.dylib"; sourceTree = "<group>"; };
+		F77158831E4DE80400D51FEB /* libvtkFiltersPoints-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersPoints-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersPoints-7.1.dylib"; sourceTree = "<group>"; };
+		F77158841E4DE80400D51FEB /* libvtkFiltersProgrammable-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersProgrammable-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersProgrammable-7.1.dylib"; sourceTree = "<group>"; };
+		F77158851E4DE80400D51FEB /* libvtkFiltersSelection-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersSelection-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersSelection-7.1.dylib"; sourceTree = "<group>"; };
+		F77158861E4DE80400D51FEB /* libvtkFiltersSMP-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersSMP-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersSMP-7.1.dylib"; sourceTree = "<group>"; };
+		F77158871E4DE80400D51FEB /* libvtkFiltersSources-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersSources-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersSources-7.1.dylib"; sourceTree = "<group>"; };
+		F77158881E4DE80400D51FEB /* libvtkFiltersStatistics-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersStatistics-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersStatistics-7.1.dylib"; sourceTree = "<group>"; };
+		F77158891E4DE80400D51FEB /* libvtkFiltersTexture-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersTexture-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersTexture-7.1.dylib"; sourceTree = "<group>"; };
+		F771588A1E4DE80400D51FEB /* libvtkFiltersVerdict-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkFiltersVerdict-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkFiltersVerdict-7.1.dylib"; sourceTree = "<group>"; };
+		F771588B1E4DE80400D51FEB /* libvtkfreetype-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkfreetype-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkfreetype-7.1.dylib"; sourceTree = "<group>"; };
+		F771588C1E4DE80400D51FEB /* libvtkGeovisCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkGeovisCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkGeovisCore-7.1.dylib"; sourceTree = "<group>"; };
+		F771588D1E4DE80400D51FEB /* libvtkgl2ps-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkgl2ps-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkgl2ps-7.1.dylib"; sourceTree = "<group>"; };
+		F771588E1E4DE80400D51FEB /* libvtkglew-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkglew-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkglew-7.1.dylib"; sourceTree = "<group>"; };
+		F771588F1E4DE80400D51FEB /* libvtkImagingColor-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingColor-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingColor-7.1.dylib"; sourceTree = "<group>"; };
+		F77158901E4DE80400D51FEB /* libvtkImagingCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingCore-7.1.dylib"; sourceTree = "<group>"; };
+		F77158911E4DE80400D51FEB /* libvtkImagingFourier-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingFourier-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingFourier-7.1.dylib"; sourceTree = "<group>"; };
+		F77158921E4DE80400D51FEB /* libvtkImagingGeneral-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingGeneral-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingGeneral-7.1.dylib"; sourceTree = "<group>"; };
+		F77158931E4DE80400D51FEB /* libvtkImagingHybrid-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingHybrid-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingHybrid-7.1.dylib"; sourceTree = "<group>"; };
+		F77158941E4DE80400D51FEB /* libvtkImagingMath-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingMath-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingMath-7.1.dylib"; sourceTree = "<group>"; };
+		F77158951E4DE80400D51FEB /* libvtkImagingMorphological-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingMorphological-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingMorphological-7.1.dylib"; sourceTree = "<group>"; };
+		F77158961E4DE80400D51FEB /* libvtkImagingSources-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingSources-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingSources-7.1.dylib"; sourceTree = "<group>"; };
+		F77158971E4DE80400D51FEB /* libvtkImagingStatistics-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingStatistics-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingStatistics-7.1.dylib"; sourceTree = "<group>"; };
+		F77158981E4DE80400D51FEB /* libvtkImagingStencil-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkImagingStencil-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkImagingStencil-7.1.dylib"; sourceTree = "<group>"; };
+		F77158991E4DE80400D51FEB /* libvtkInfovisBoostGraphAlgorithms-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkInfovisBoostGraphAlgorithms-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkInfovisBoostGraphAlgorithms-7.1.dylib"; sourceTree = "<group>"; };
+		F771589A1E4DE80400D51FEB /* libvtkInfovisCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkInfovisCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkInfovisCore-7.1.dylib"; sourceTree = "<group>"; };
+		F771589B1E4DE80400D51FEB /* libvtkInfovisLayout-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkInfovisLayout-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkInfovisLayout-7.1.dylib"; sourceTree = "<group>"; };
+		F771589C1E4DE80400D51FEB /* libvtkInteractionImage-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkInteractionImage-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkInteractionImage-7.1.dylib"; sourceTree = "<group>"; };
+		F771589D1E4DE80400D51FEB /* libvtkInteractionStyle-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkInteractionStyle-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkInteractionStyle-7.1.dylib"; sourceTree = "<group>"; };
+		F771589E1E4DE80400D51FEB /* libvtkInteractionWidgets-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkInteractionWidgets-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkInteractionWidgets-7.1.dylib"; sourceTree = "<group>"; };
+		F771589F1E4DE80400D51FEB /* libvtkIOAMR-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOAMR-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOAMR-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A01E4DE80400D51FEB /* libvtkIOCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOCore-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A11E4DE80400D51FEB /* libvtkIOEnSight-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOEnSight-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOEnSight-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A21E4DE80400D51FEB /* libvtkIOExodus-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOExodus-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOExodus-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A31E4DE80400D51FEB /* libvtkIOExport-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOExport-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOExport-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A41E4DE80400D51FEB /* libvtkIOGeometry-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOGeometry-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOGeometry-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A51E4DE80400D51FEB /* libvtkIOImage-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOImage-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOImage-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A61E4DE80400D51FEB /* libvtkIOImport-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOImport-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOImport-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A71E4DE80400D51FEB /* libvtkIOInfovis-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOInfovis-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOInfovis-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A81E4DE80400D51FEB /* libvtkIOLegacy-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOLegacy-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOLegacy-7.1.dylib"; sourceTree = "<group>"; };
+		F77158A91E4DE80400D51FEB /* libvtkIOLSDyna-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOLSDyna-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOLSDyna-7.1.dylib"; sourceTree = "<group>"; };
+		F77158AA1E4DE80400D51FEB /* libvtkIOMINC-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOMINC-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOMINC-7.1.dylib"; sourceTree = "<group>"; };
+		F77158AB1E4DE80400D51FEB /* libvtkIOMovie-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOMovie-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOMovie-7.1.dylib"; sourceTree = "<group>"; };
+		F77158AC1E4DE80400D51FEB /* libvtkIONetCDF-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIONetCDF-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIONetCDF-7.1.dylib"; sourceTree = "<group>"; };
+		F77158AD1E4DE80400D51FEB /* libvtkIOParallel-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOParallel-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOParallel-7.1.dylib"; sourceTree = "<group>"; };
+		F77158AE1E4DE80400D51FEB /* libvtkIOParallelXML-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOParallelXML-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOParallelXML-7.1.dylib"; sourceTree = "<group>"; };
+		F77158AF1E4DE80400D51FEB /* libvtkIOPLY-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOPLY-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOPLY-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B01E4DE80400D51FEB /* libvtkIOSQL-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOSQL-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOSQL-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B11E4DE80400D51FEB /* libvtkIOTecplotTable-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOTecplotTable-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOTecplotTable-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B21E4DE80400D51FEB /* libvtkIOVideo-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOVideo-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOVideo-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B31E4DE80400D51FEB /* libvtkIOXML-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOXML-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOXML-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B41E4DE80400D51FEB /* libvtkIOXMLParser-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkIOXMLParser-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkIOXMLParser-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B51E4DE80400D51FEB /* libvtkjsoncpp-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkjsoncpp-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkjsoncpp-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B61E4DE80400D51FEB /* libvtkmetaio-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkmetaio-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkmetaio-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B71E4DE80400D51FEB /* libvtkNetCDF_cxx-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkNetCDF_cxx-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkNetCDF_cxx-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B81E4DE80400D51FEB /* libvtkNetCDF-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkNetCDF-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkNetCDF-7.1.dylib"; sourceTree = "<group>"; };
+		F77158B91E4DE80400D51FEB /* libvtkoggtheora-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkoggtheora-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkoggtheora-7.1.dylib"; sourceTree = "<group>"; };
+		F77158BA1E4DE80400D51FEB /* libvtkParallelCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkParallelCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkParallelCore-7.1.dylib"; sourceTree = "<group>"; };
+		F77158BB1E4DE80400D51FEB /* libvtkproj4-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkproj4-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkproj4-7.1.dylib"; sourceTree = "<group>"; };
+		F77158BC1E4DE80400D51FEB /* libvtkRenderingAnnotation-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingAnnotation-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingAnnotation-7.1.dylib"; sourceTree = "<group>"; };
+		F77158BD1E4DE80400D51FEB /* libvtkRenderingContext2D-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingContext2D-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingContext2D-7.1.dylib"; sourceTree = "<group>"; };
+		F77158BE1E4DE80400D51FEB /* libvtkRenderingContextOpenGL2-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingContextOpenGL2-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingContextOpenGL2-7.1.dylib"; sourceTree = "<group>"; };
+		F77158BF1E4DE80400D51FEB /* libvtkRenderingCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingCore-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C01E4DE80400D51FEB /* libvtkRenderingFreeType-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingFreeType-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingFreeType-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C11E4DE80400D51FEB /* libvtkRenderingFreeTypeFontConfig-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingFreeTypeFontConfig-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingFreeTypeFontConfig-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C21E4DE80400D51FEB /* libvtkRenderingGL2PSOpenGL2-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingGL2PSOpenGL2-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingGL2PSOpenGL2-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C31E4DE80400D51FEB /* libvtkRenderingImage-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingImage-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingImage-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C41E4DE80400D51FEB /* libvtkRenderingLabel-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingLabel-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingLabel-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C51E4DE80400D51FEB /* libvtkRenderingLOD-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingLOD-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingLOD-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C61E4DE80400D51FEB /* libvtkRenderingOpenGL2-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingOpenGL2-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingOpenGL2-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C71E4DE80400D51FEB /* libvtkRenderingVolume-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingVolume-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingVolume-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C81E4DE80400D51FEB /* libvtkRenderingVolumeOpenGL2-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkRenderingVolumeOpenGL2-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkRenderingVolumeOpenGL2-7.1.dylib"; sourceTree = "<group>"; };
+		F77158C91E4DE80400D51FEB /* libvtksqlite-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtksqlite-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtksqlite-7.1.dylib"; sourceTree = "<group>"; };
+		F77158CA1E4DE80400D51FEB /* libvtksys-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtksys-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtksys-7.1.dylib"; sourceTree = "<group>"; };
+		F77158CB1E4DE80400D51FEB /* libvtkverdict-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkverdict-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkverdict-7.1.dylib"; sourceTree = "<group>"; };
+		F77158CC1E4DE80400D51FEB /* libvtkViewsContext2D-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkViewsContext2D-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkViewsContext2D-7.1.dylib"; sourceTree = "<group>"; };
+		F77158CD1E4DE80400D51FEB /* libvtkViewsCore-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkViewsCore-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkViewsCore-7.1.dylib"; sourceTree = "<group>"; };
+		F77158CE1E4DE80400D51FEB /* libvtkViewsInfovis-7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libvtkViewsInfovis-7.1.dylib"; path = "../../../../usr/local/Cellar/vtk/7.1.0_3/lib/libvtkViewsInfovis-7.1.dylib"; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -221,6 +430,110 @@
 				44B6E6261D8A793A00A8DB7B /* LinearMath.framework in Frameworks */,
 				44B6E6241D8A792300A8DB7B /* BulletCollision.framework in Frameworks */,
 				44B6E6221D8A790200A8DB7B /* BulletDynamics.framework in Frameworks */,
+				F77158CF1E4DE80400D51FEB /* libvtkalglib-7.1.dylib in Frameworks */,
+				F77158D01E4DE80400D51FEB /* libvtkChartsCore-7.1.dylib in Frameworks */,
+				F77158D11E4DE80400D51FEB /* libvtkCommonColor-7.1.dylib in Frameworks */,
+				F77158D21E4DE80400D51FEB /* libvtkCommonComputationalGeometry-7.1.dylib in Frameworks */,
+				F77158D31E4DE80400D51FEB /* libvtkCommonCore-7.1.dylib in Frameworks */,
+				F77158D41E4DE80400D51FEB /* libvtkCommonDataModel-7.1.dylib in Frameworks */,
+				F77158D51E4DE80400D51FEB /* libvtkCommonExecutionModel-7.1.dylib in Frameworks */,
+				F77158D61E4DE80400D51FEB /* libvtkCommonMath-7.1.dylib in Frameworks */,
+				F77158D71E4DE80400D51FEB /* libvtkCommonMisc-7.1.dylib in Frameworks */,
+				F77158D81E4DE80400D51FEB /* libvtkCommonSystem-7.1.dylib in Frameworks */,
+				F77158D91E4DE80400D51FEB /* libvtkCommonTransforms-7.1.dylib in Frameworks */,
+				F77158DA1E4DE80400D51FEB /* libvtkDICOMParser-7.1.dylib in Frameworks */,
+				F77158DB1E4DE80400D51FEB /* libvtkDomainsChemistry-7.1.dylib in Frameworks */,
+				F77158DC1E4DE80400D51FEB /* libvtkDomainsChemistryOpenGL2-7.1.dylib in Frameworks */,
+				F77158DD1E4DE80400D51FEB /* libvtkexoIIc-7.1.dylib in Frameworks */,
+				F77158DE1E4DE80400D51FEB /* libvtkFiltersAMR-7.1.dylib in Frameworks */,
+				F77158DF1E4DE80400D51FEB /* libvtkFiltersCore-7.1.dylib in Frameworks */,
+				F77158E01E4DE80400D51FEB /* libvtkFiltersExtraction-7.1.dylib in Frameworks */,
+				F77158E11E4DE80400D51FEB /* libvtkFiltersFlowPaths-7.1.dylib in Frameworks */,
+				F77158E21E4DE80400D51FEB /* libvtkFiltersGeneral-7.1.dylib in Frameworks */,
+				F77158E31E4DE80400D51FEB /* libvtkFiltersGeneric-7.1.dylib in Frameworks */,
+				F77158E41E4DE80400D51FEB /* libvtkFiltersGeometry-7.1.dylib in Frameworks */,
+				F77158E51E4DE80400D51FEB /* libvtkFiltersHybrid-7.1.dylib in Frameworks */,
+				F77158E61E4DE80400D51FEB /* libvtkFiltersHyperTree-7.1.dylib in Frameworks */,
+				F77158E71E4DE80400D51FEB /* libvtkFiltersImaging-7.1.dylib in Frameworks */,
+				F77158E81E4DE80400D51FEB /* libvtkFiltersModeling-7.1.dylib in Frameworks */,
+				F77158E91E4DE80400D51FEB /* libvtkFiltersParallel-7.1.dylib in Frameworks */,
+				F77158EA1E4DE80400D51FEB /* libvtkFiltersParallelImaging-7.1.dylib in Frameworks */,
+				F77158EB1E4DE80400D51FEB /* libvtkFiltersPoints-7.1.dylib in Frameworks */,
+				F77158EC1E4DE80400D51FEB /* libvtkFiltersProgrammable-7.1.dylib in Frameworks */,
+				F77158ED1E4DE80400D51FEB /* libvtkFiltersSelection-7.1.dylib in Frameworks */,
+				F77158EE1E4DE80400D51FEB /* libvtkFiltersSMP-7.1.dylib in Frameworks */,
+				F77158EF1E4DE80400D51FEB /* libvtkFiltersSources-7.1.dylib in Frameworks */,
+				F77158F01E4DE80400D51FEB /* libvtkFiltersStatistics-7.1.dylib in Frameworks */,
+				F77158F11E4DE80400D51FEB /* libvtkFiltersTexture-7.1.dylib in Frameworks */,
+				F77158F21E4DE80400D51FEB /* libvtkFiltersVerdict-7.1.dylib in Frameworks */,
+				F77158F31E4DE80400D51FEB /* libvtkfreetype-7.1.dylib in Frameworks */,
+				F77158F41E4DE80400D51FEB /* libvtkGeovisCore-7.1.dylib in Frameworks */,
+				F77158F51E4DE80400D51FEB /* libvtkgl2ps-7.1.dylib in Frameworks */,
+				F77158F61E4DE80400D51FEB /* libvtkglew-7.1.dylib in Frameworks */,
+				F77158F71E4DE80400D51FEB /* libvtkImagingColor-7.1.dylib in Frameworks */,
+				F77158F81E4DE80400D51FEB /* libvtkImagingCore-7.1.dylib in Frameworks */,
+				F77158F91E4DE80400D51FEB /* libvtkImagingFourier-7.1.dylib in Frameworks */,
+				F77158FA1E4DE80400D51FEB /* libvtkImagingGeneral-7.1.dylib in Frameworks */,
+				F77158FB1E4DE80400D51FEB /* libvtkImagingHybrid-7.1.dylib in Frameworks */,
+				F77158FC1E4DE80400D51FEB /* libvtkImagingMath-7.1.dylib in Frameworks */,
+				F77158FD1E4DE80400D51FEB /* libvtkImagingMorphological-7.1.dylib in Frameworks */,
+				F77158FE1E4DE80400D51FEB /* libvtkImagingSources-7.1.dylib in Frameworks */,
+				F77158FF1E4DE80400D51FEB /* libvtkImagingStatistics-7.1.dylib in Frameworks */,
+				F77159001E4DE80400D51FEB /* libvtkImagingStencil-7.1.dylib in Frameworks */,
+				F77159011E4DE80400D51FEB /* libvtkInfovisBoostGraphAlgorithms-7.1.dylib in Frameworks */,
+				F77159021E4DE80400D51FEB /* libvtkInfovisCore-7.1.dylib in Frameworks */,
+				F77159031E4DE80400D51FEB /* libvtkInfovisLayout-7.1.dylib in Frameworks */,
+				F77159041E4DE80400D51FEB /* libvtkInteractionImage-7.1.dylib in Frameworks */,
+				F77159051E4DE80400D51FEB /* libvtkInteractionStyle-7.1.dylib in Frameworks */,
+				F77159061E4DE80400D51FEB /* libvtkInteractionWidgets-7.1.dylib in Frameworks */,
+				F77159071E4DE80400D51FEB /* libvtkIOAMR-7.1.dylib in Frameworks */,
+				F77159081E4DE80400D51FEB /* libvtkIOCore-7.1.dylib in Frameworks */,
+				F77159091E4DE80400D51FEB /* libvtkIOEnSight-7.1.dylib in Frameworks */,
+				F771590A1E4DE80400D51FEB /* libvtkIOExodus-7.1.dylib in Frameworks */,
+				F771590B1E4DE80400D51FEB /* libvtkIOExport-7.1.dylib in Frameworks */,
+				F771590C1E4DE80400D51FEB /* libvtkIOGeometry-7.1.dylib in Frameworks */,
+				F771590D1E4DE80400D51FEB /* libvtkIOImage-7.1.dylib in Frameworks */,
+				F771590E1E4DE80400D51FEB /* libvtkIOImport-7.1.dylib in Frameworks */,
+				F771590F1E4DE80400D51FEB /* libvtkIOInfovis-7.1.dylib in Frameworks */,
+				F77159101E4DE80400D51FEB /* libvtkIOLegacy-7.1.dylib in Frameworks */,
+				F77159111E4DE80400D51FEB /* libvtkIOLSDyna-7.1.dylib in Frameworks */,
+				F77159121E4DE80400D51FEB /* libvtkIOMINC-7.1.dylib in Frameworks */,
+				F77159131E4DE80400D51FEB /* libvtkIOMovie-7.1.dylib in Frameworks */,
+				F77159141E4DE80400D51FEB /* libvtkIONetCDF-7.1.dylib in Frameworks */,
+				F77159151E4DE80400D51FEB /* libvtkIOParallel-7.1.dylib in Frameworks */,
+				F77159161E4DE80400D51FEB /* libvtkIOParallelXML-7.1.dylib in Frameworks */,
+				F77159171E4DE80400D51FEB /* libvtkIOPLY-7.1.dylib in Frameworks */,
+				F77159181E4DE80400D51FEB /* libvtkIOSQL-7.1.dylib in Frameworks */,
+				F77159191E4DE80400D51FEB /* libvtkIOTecplotTable-7.1.dylib in Frameworks */,
+				F771591A1E4DE80400D51FEB /* libvtkIOVideo-7.1.dylib in Frameworks */,
+				F771591B1E4DE80400D51FEB /* libvtkIOXML-7.1.dylib in Frameworks */,
+				F771591C1E4DE80400D51FEB /* libvtkIOXMLParser-7.1.dylib in Frameworks */,
+				F771591D1E4DE80400D51FEB /* libvtkjsoncpp-7.1.dylib in Frameworks */,
+				F771591E1E4DE80400D51FEB /* libvtkmetaio-7.1.dylib in Frameworks */,
+				F771591F1E4DE80400D51FEB /* libvtkNetCDF_cxx-7.1.dylib in Frameworks */,
+				F77159201E4DE80400D51FEB /* libvtkNetCDF-7.1.dylib in Frameworks */,
+				F77159211E4DE80400D51FEB /* libvtkoggtheora-7.1.dylib in Frameworks */,
+				F77159221E4DE80400D51FEB /* libvtkParallelCore-7.1.dylib in Frameworks */,
+				F77159231E4DE80400D51FEB /* libvtkproj4-7.1.dylib in Frameworks */,
+				F77159241E4DE80400D51FEB /* libvtkRenderingAnnotation-7.1.dylib in Frameworks */,
+				F77159251E4DE80400D51FEB /* libvtkRenderingContext2D-7.1.dylib in Frameworks */,
+				F77159261E4DE80400D51FEB /* libvtkRenderingContextOpenGL2-7.1.dylib in Frameworks */,
+				F77159271E4DE80400D51FEB /* libvtkRenderingCore-7.1.dylib in Frameworks */,
+				F77159281E4DE80400D51FEB /* libvtkRenderingFreeType-7.1.dylib in Frameworks */,
+				F77159291E4DE80400D51FEB /* libvtkRenderingFreeTypeFontConfig-7.1.dylib in Frameworks */,
+				F771592A1E4DE80400D51FEB /* libvtkRenderingGL2PSOpenGL2-7.1.dylib in Frameworks */,
+				F771592B1E4DE80400D51FEB /* libvtkRenderingImage-7.1.dylib in Frameworks */,
+				F771592C1E4DE80400D51FEB /* libvtkRenderingLabel-7.1.dylib in Frameworks */,
+				F771592D1E4DE80400D51FEB /* libvtkRenderingLOD-7.1.dylib in Frameworks */,
+				F771592E1E4DE80400D51FEB /* libvtkRenderingOpenGL2-7.1.dylib in Frameworks */,
+				F771592F1E4DE80400D51FEB /* libvtkRenderingVolume-7.1.dylib in Frameworks */,
+				F77159301E4DE80400D51FEB /* libvtkRenderingVolumeOpenGL2-7.1.dylib in Frameworks */,
+				F77159311E4DE80400D51FEB /* libvtksqlite-7.1.dylib in Frameworks */,
+				F77159321E4DE80400D51FEB /* libvtksys-7.1.dylib in Frameworks */,
+				F77159331E4DE80400D51FEB /* libvtkverdict-7.1.dylib in Frameworks */,
+				F77159341E4DE80400D51FEB /* libvtkViewsContext2D-7.1.dylib in Frameworks */,
+				F77159351E4DE80400D51FEB /* libvtkViewsCore-7.1.dylib in Frameworks */,
+				F77159361E4DE80400D51FEB /* libvtkViewsInfovis-7.1.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +610,110 @@
 		49C754C21E125D07000D0A00 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F77158671E4DE80400D51FEB /* libvtkalglib-7.1.dylib */,
+				F77158681E4DE80400D51FEB /* libvtkChartsCore-7.1.dylib */,
+				F77158691E4DE80400D51FEB /* libvtkCommonColor-7.1.dylib */,
+				F771586A1E4DE80400D51FEB /* libvtkCommonComputationalGeometry-7.1.dylib */,
+				F771586B1E4DE80400D51FEB /* libvtkCommonCore-7.1.dylib */,
+				F771586C1E4DE80400D51FEB /* libvtkCommonDataModel-7.1.dylib */,
+				F771586D1E4DE80400D51FEB /* libvtkCommonExecutionModel-7.1.dylib */,
+				F771586E1E4DE80400D51FEB /* libvtkCommonMath-7.1.dylib */,
+				F771586F1E4DE80400D51FEB /* libvtkCommonMisc-7.1.dylib */,
+				F77158701E4DE80400D51FEB /* libvtkCommonSystem-7.1.dylib */,
+				F77158711E4DE80400D51FEB /* libvtkCommonTransforms-7.1.dylib */,
+				F77158721E4DE80400D51FEB /* libvtkDICOMParser-7.1.dylib */,
+				F77158731E4DE80400D51FEB /* libvtkDomainsChemistry-7.1.dylib */,
+				F77158741E4DE80400D51FEB /* libvtkDomainsChemistryOpenGL2-7.1.dylib */,
+				F77158751E4DE80400D51FEB /* libvtkexoIIc-7.1.dylib */,
+				F77158761E4DE80400D51FEB /* libvtkFiltersAMR-7.1.dylib */,
+				F77158771E4DE80400D51FEB /* libvtkFiltersCore-7.1.dylib */,
+				F77158781E4DE80400D51FEB /* libvtkFiltersExtraction-7.1.dylib */,
+				F77158791E4DE80400D51FEB /* libvtkFiltersFlowPaths-7.1.dylib */,
+				F771587A1E4DE80400D51FEB /* libvtkFiltersGeneral-7.1.dylib */,
+				F771587B1E4DE80400D51FEB /* libvtkFiltersGeneric-7.1.dylib */,
+				F771587C1E4DE80400D51FEB /* libvtkFiltersGeometry-7.1.dylib */,
+				F771587D1E4DE80400D51FEB /* libvtkFiltersHybrid-7.1.dylib */,
+				F771587E1E4DE80400D51FEB /* libvtkFiltersHyperTree-7.1.dylib */,
+				F771587F1E4DE80400D51FEB /* libvtkFiltersImaging-7.1.dylib */,
+				F77158801E4DE80400D51FEB /* libvtkFiltersModeling-7.1.dylib */,
+				F77158811E4DE80400D51FEB /* libvtkFiltersParallel-7.1.dylib */,
+				F77158821E4DE80400D51FEB /* libvtkFiltersParallelImaging-7.1.dylib */,
+				F77158831E4DE80400D51FEB /* libvtkFiltersPoints-7.1.dylib */,
+				F77158841E4DE80400D51FEB /* libvtkFiltersProgrammable-7.1.dylib */,
+				F77158851E4DE80400D51FEB /* libvtkFiltersSelection-7.1.dylib */,
+				F77158861E4DE80400D51FEB /* libvtkFiltersSMP-7.1.dylib */,
+				F77158871E4DE80400D51FEB /* libvtkFiltersSources-7.1.dylib */,
+				F77158881E4DE80400D51FEB /* libvtkFiltersStatistics-7.1.dylib */,
+				F77158891E4DE80400D51FEB /* libvtkFiltersTexture-7.1.dylib */,
+				F771588A1E4DE80400D51FEB /* libvtkFiltersVerdict-7.1.dylib */,
+				F771588B1E4DE80400D51FEB /* libvtkfreetype-7.1.dylib */,
+				F771588C1E4DE80400D51FEB /* libvtkGeovisCore-7.1.dylib */,
+				F771588D1E4DE80400D51FEB /* libvtkgl2ps-7.1.dylib */,
+				F771588E1E4DE80400D51FEB /* libvtkglew-7.1.dylib */,
+				F771588F1E4DE80400D51FEB /* libvtkImagingColor-7.1.dylib */,
+				F77158901E4DE80400D51FEB /* libvtkImagingCore-7.1.dylib */,
+				F77158911E4DE80400D51FEB /* libvtkImagingFourier-7.1.dylib */,
+				F77158921E4DE80400D51FEB /* libvtkImagingGeneral-7.1.dylib */,
+				F77158931E4DE80400D51FEB /* libvtkImagingHybrid-7.1.dylib */,
+				F77158941E4DE80400D51FEB /* libvtkImagingMath-7.1.dylib */,
+				F77158951E4DE80400D51FEB /* libvtkImagingMorphological-7.1.dylib */,
+				F77158961E4DE80400D51FEB /* libvtkImagingSources-7.1.dylib */,
+				F77158971E4DE80400D51FEB /* libvtkImagingStatistics-7.1.dylib */,
+				F77158981E4DE80400D51FEB /* libvtkImagingStencil-7.1.dylib */,
+				F77158991E4DE80400D51FEB /* libvtkInfovisBoostGraphAlgorithms-7.1.dylib */,
+				F771589A1E4DE80400D51FEB /* libvtkInfovisCore-7.1.dylib */,
+				F771589B1E4DE80400D51FEB /* libvtkInfovisLayout-7.1.dylib */,
+				F771589C1E4DE80400D51FEB /* libvtkInteractionImage-7.1.dylib */,
+				F771589D1E4DE80400D51FEB /* libvtkInteractionStyle-7.1.dylib */,
+				F771589E1E4DE80400D51FEB /* libvtkInteractionWidgets-7.1.dylib */,
+				F771589F1E4DE80400D51FEB /* libvtkIOAMR-7.1.dylib */,
+				F77158A01E4DE80400D51FEB /* libvtkIOCore-7.1.dylib */,
+				F77158A11E4DE80400D51FEB /* libvtkIOEnSight-7.1.dylib */,
+				F77158A21E4DE80400D51FEB /* libvtkIOExodus-7.1.dylib */,
+				F77158A31E4DE80400D51FEB /* libvtkIOExport-7.1.dylib */,
+				F77158A41E4DE80400D51FEB /* libvtkIOGeometry-7.1.dylib */,
+				F77158A51E4DE80400D51FEB /* libvtkIOImage-7.1.dylib */,
+				F77158A61E4DE80400D51FEB /* libvtkIOImport-7.1.dylib */,
+				F77158A71E4DE80400D51FEB /* libvtkIOInfovis-7.1.dylib */,
+				F77158A81E4DE80400D51FEB /* libvtkIOLegacy-7.1.dylib */,
+				F77158A91E4DE80400D51FEB /* libvtkIOLSDyna-7.1.dylib */,
+				F77158AA1E4DE80400D51FEB /* libvtkIOMINC-7.1.dylib */,
+				F77158AB1E4DE80400D51FEB /* libvtkIOMovie-7.1.dylib */,
+				F77158AC1E4DE80400D51FEB /* libvtkIONetCDF-7.1.dylib */,
+				F77158AD1E4DE80400D51FEB /* libvtkIOParallel-7.1.dylib */,
+				F77158AE1E4DE80400D51FEB /* libvtkIOParallelXML-7.1.dylib */,
+				F77158AF1E4DE80400D51FEB /* libvtkIOPLY-7.1.dylib */,
+				F77158B01E4DE80400D51FEB /* libvtkIOSQL-7.1.dylib */,
+				F77158B11E4DE80400D51FEB /* libvtkIOTecplotTable-7.1.dylib */,
+				F77158B21E4DE80400D51FEB /* libvtkIOVideo-7.1.dylib */,
+				F77158B31E4DE80400D51FEB /* libvtkIOXML-7.1.dylib */,
+				F77158B41E4DE80400D51FEB /* libvtkIOXMLParser-7.1.dylib */,
+				F77158B51E4DE80400D51FEB /* libvtkjsoncpp-7.1.dylib */,
+				F77158B61E4DE80400D51FEB /* libvtkmetaio-7.1.dylib */,
+				F77158B71E4DE80400D51FEB /* libvtkNetCDF_cxx-7.1.dylib */,
+				F77158B81E4DE80400D51FEB /* libvtkNetCDF-7.1.dylib */,
+				F77158B91E4DE80400D51FEB /* libvtkoggtheora-7.1.dylib */,
+				F77158BA1E4DE80400D51FEB /* libvtkParallelCore-7.1.dylib */,
+				F77158BB1E4DE80400D51FEB /* libvtkproj4-7.1.dylib */,
+				F77158BC1E4DE80400D51FEB /* libvtkRenderingAnnotation-7.1.dylib */,
+				F77158BD1E4DE80400D51FEB /* libvtkRenderingContext2D-7.1.dylib */,
+				F77158BE1E4DE80400D51FEB /* libvtkRenderingContextOpenGL2-7.1.dylib */,
+				F77158BF1E4DE80400D51FEB /* libvtkRenderingCore-7.1.dylib */,
+				F77158C01E4DE80400D51FEB /* libvtkRenderingFreeType-7.1.dylib */,
+				F77158C11E4DE80400D51FEB /* libvtkRenderingFreeTypeFontConfig-7.1.dylib */,
+				F77158C21E4DE80400D51FEB /* libvtkRenderingGL2PSOpenGL2-7.1.dylib */,
+				F77158C31E4DE80400D51FEB /* libvtkRenderingImage-7.1.dylib */,
+				F77158C41E4DE80400D51FEB /* libvtkRenderingLabel-7.1.dylib */,
+				F77158C51E4DE80400D51FEB /* libvtkRenderingLOD-7.1.dylib */,
+				F77158C61E4DE80400D51FEB /* libvtkRenderingOpenGL2-7.1.dylib */,
+				F77158C71E4DE80400D51FEB /* libvtkRenderingVolume-7.1.dylib */,
+				F77158C81E4DE80400D51FEB /* libvtkRenderingVolumeOpenGL2-7.1.dylib */,
+				F77158C91E4DE80400D51FEB /* libvtksqlite-7.1.dylib */,
+				F77158CA1E4DE80400D51FEB /* libvtksys-7.1.dylib */,
+				F77158CB1E4DE80400D51FEB /* libvtkverdict-7.1.dylib */,
+				F77158CC1E4DE80400D51FEB /* libvtkViewsContext2D-7.1.dylib */,
+				F77158CD1E4DE80400D51FEB /* libvtkViewsCore-7.1.dylib */,
+				F77158CE1E4DE80400D51FEB /* libvtkViewsInfovis-7.1.dylib */,
 				49C754C51E125D15000D0A00 /* Cocoa.framework */,
 				49C754C31E125D07000D0A00 /* CoreVideo.framework */,
 			);
@@ -306,6 +723,7 @@
 		663A758A1D0B193D00F6B561 = {
 			isa = PBXGroup;
 			children = (
+				F77158651E4DE74F00D51FEB /* temp */,
 				44FDA2ED1DCC7B38005897DB /* Plotr */,
 				443247A71DA62732001D153B /* Python.framework */,
 				44B6E62E1D8B48CA00A8DB7B /* kernels */,
@@ -397,6 +815,14 @@
 				F74880471E25AA760083763E /* StimuliSteward.hpp */,
 			);
 			name = stewards;
+			sourceTree = "<group>";
+		};
+		F77158651E4DE74F00D51FEB /* temp */ = {
+			isa = PBXGroup;
+			children = (
+				F77158661E4DE75F00D51FEB /* StandardVTKHeader.hpp */,
+			);
+			name = temp;
 			sourceTree = "<group>";
 		};
 		F7DA053C1E1FC943009FA734 /* CurrentlyUnused */ = {
@@ -661,6 +1087,7 @@
 					"$(SRCROOT)",
 					/usr/local/include,
 					"$(PROJECT_DIR)/cppcommon",
+					"/usr/local/Cellar/vtk/7.1.0_3/include/vtk-7.1/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -671,6 +1098,7 @@
 					/usr/local/lib,
 					"$(PROJECT_DIR)/bullet-build/BulletDynamics",
 					"$(PROJECT_DIR)/bullet-build/LinearMath",
+					/usr/local/Cellar/vtk/7.1.0_3/lib,
 				);
 				OPENCL_COMPILER_VERSION = CL1.2;
 				OTHER_LDFLAGS = (
@@ -696,6 +1124,7 @@
 					"$(SRCROOT)",
 					/usr/local/include,
 					"$(PROJECT_DIR)/cppcommon",
+					"/usr/local/Cellar/vtk/7.1.0_3/include/vtk-7.1/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -706,6 +1135,7 @@
 					/usr/local/lib,
 					"$(PROJECT_DIR)/bullet-build/BulletDynamics",
 					"$(PROJECT_DIR)/bullet-build/LinearMath",
+					/usr/local/Cellar/vtk/7.1.0_3/lib,
 				);
 				OPENCL_COMPILER_VERSION = CL1.2;
 				OTHER_LDFLAGS = (

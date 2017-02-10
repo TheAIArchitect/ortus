@@ -87,7 +87,7 @@ ortus::vector Statistician::xcorrLimited(ortus::vector A, ortus::vector B, int s
     if ((aLen != bLen) || (aLen == 0)){
         printf("xcorr requires two non-zero arrays of equal length.\n");
     }
-    size_t xcorrLoops = end - (len - 1); // subtract one from len becuase then we have the last index that we consider for the xcorr computation at 0 offset
+    size_t xcorrLoops = len;
     int aOffset = 0;
     ortus::vector xcorrResults;
     float autoCorrA = 0;
@@ -108,50 +108,7 @@ ortus::vector Statistician::xcorrLimited(ortus::vector A, ortus::vector B, int s
     return xcorrResults;
 }
 
-/* The names of elements in computeList are the elements used as the "A" elements in the xcorr computations.
- 
- * If computeList is empty, all elements are used.
- */
-//std::unordered_map<int, ortus::vectrix> Statistician::computeXCorrBetweenVoltages(ortus::vectrix voltageHistoryVector, int numXCorrComputations, const std::string* computeList ){
-std::unordered_map<int, ortus::vectrix> Statistician::computeXCorrBetweenVoltages(DataSteward* dStewiep, const std::string* computeList, int numToCompute){
-    
-    // this allows us to have the 'key' in the map be the same as the index the actual element has, so we can access what amounts to a sparse 3D matrix as if it were just that.
-    ortus::vector indicesToUse(dStewiep->NUM_ELEMS);
-    int numIndices = 0;
-    if (numToCompute < 0){ // then we do all
-        // doing this just so that if numToCompute is not empty, we can use the same code
-        for (int i = 0; i < dStewiep->NUM_ELEMS; ++i){
-            indicesToUse[i] = i;
-        }
-        numIndices = dStewiep->NUM_ELEMS;
-    }
-    else {
-        for (int i = 0; i < numToCompute; ++i){
-            indicesToUse[i] = dStewiep->officialNameToIndexMap[computeList[i]];
-        }
-        numIndices = numToCompute;
-    }
-    // the key, is the "A" element -- the static one
-    // second index, is the "B" element -- this one, gets the window sliding across it
-    // third index is xcorr computation 0 to dStewiep->numXCorrComputations-1
-    // NOTE: totalXCorr[x][x][x] gives the autocorrelation for element X, which should be 1.0 (due to normalization)
-    std::unordered_map<int, ortus::vectrix> totalXCorr(numIndices);
-    ortus::vectrix voltageHistoryVector = dStewiep->outputVoltageHistory->convertDataTo2DVector();
-    size_t numElements = voltageHistoryVector.size();
-    int startIndex = 0; // we want to start at the beginning of the voltage history
-    
-    // endIndex is the startIndex, plus the length that we use for a single xcorr computation, plus the number of xcorr computations (because for each computation, we shift our window for 'B' over by 1), and then we subtract one because it's an index, not a length. It's 2*XCORR_COMPUTATIONS because XCORRR_COMPUTATIONS == the length that we use for a single xcorr computation.
-    int endIndex = startIndex + 2*dStewiep->XCORR_COMPUTATIONS - 1;
-    // This is going to be slow, and it would probably be best to either rad the resutls back from blade, or thread this computation...
-    for (int i = 0; i < numIndices; ++i){// go through each element,
-        ortus::vectrix tempXCorrRes(numElements);
-        for (int j = 0; j < numElements; ++j){ // and compute the xcorr between it, and everything else (including itself)
-            tempXCorrRes[j] = xcorrLimited(voltageHistoryVector[indicesToUse[i]], voltageHistoryVector[j], startIndex, dStewiep->XCORR_COMPUTATIONS, endIndex);
-        }
-        totalXCorr[indicesToUse[i]] = tempXCorrRes;
-    }
-    return totalXCorr;
-}
+
 
 /* normalizer should be 1, unless being called form normalizedXCorr, in which case, it will pass the appropriate value */
 ortus::vector Statistician::xcorr(ortus::vector A, ortus::vector B, float normalizer){
@@ -185,6 +142,7 @@ ortus::vector Statistician::normalizedXCorr(ortus::vector A, ortus::vector B){
     return  xcorr(A, B, divisor);
 }
 
+/*
 int main(int argc, char** argv){
     int len = 23;
     float A[] = {1,1,2,4,6,8,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -207,3 +165,4 @@ int main(int argc, char** argv){
     
     return 0;
 }
+*/

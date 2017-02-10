@@ -13,19 +13,28 @@
 #include "DataSteward.hpp"
 #include "DataVisualizer.hpp"
 #include "Statistician.hpp"
-
+///////////// TEMP
+#include "vtkContextMouseEvent.h"
 
 
 class DiagnosticSteward {
 public:
+    
+    void tempVTKPlot();
+    ortus::vtkFullxcorr* morphToVTK();
+    
     DiagnosticSteward(DataSteward* dStewiep);
     ~DiagnosticSteward();
     
     void runStandardDiagnostics();
     void runAdvancedDiagnostics();
     
+    void plotXCorr();
+    ortus::partialxcorr computeXCorrBetweenVoltages(const std::string* computeList = {}, int numToCompute = -1);
     
-    std::unordered_map<int, ortus::vectrix> fullXCorrResults;
+    ortus::fullxcorr fullXCorr;
+    int stepsSinceLastXCorr = 0;
+    int nextXCorrWindowNum = 0;
     
     DataSteward* dStewiep;
     DataVisualizer* vizzer;

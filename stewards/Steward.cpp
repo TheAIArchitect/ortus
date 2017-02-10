@@ -44,7 +44,7 @@ void Steward::initialize(){
 
 void Steward::run(){
     
-    numIterations = 600;
+    numIterations = 300;// SHOULD BE ~600!!!
     for (int i = 0; i < numIterations; ++i){
         computeStewardp->executePreRunOperations();
         computeStewardp->run();
@@ -53,7 +53,9 @@ void Steward::run(){
         // Stimulate the sensors 
         sensoryStimulationStewardp->performSensoryStimulation();
         
+        diagnosticStewardp->runAdvancedDiagnostics();
     }
+    diagnosticStewardp->plotXCorr();
     // temporary placement...
     dataStewardp->writeConnectome("doesn't matter yet");
 
@@ -61,6 +63,7 @@ void Steward::run(){
     //stewie.printReport(DataSteward::numKernelLoops);
     
     // temporaray print statement(s)
+    /*
     int numKVs = dataStewardp->kernelVoltages.size();
     printf("size of 'kernel_voltages': %d\n", numKVs);
     for (int i = 0; i < numKVs; ++i){
@@ -69,8 +72,9 @@ void Steward::run(){
         }
         printf("\n");
     }
-    diagnosticStewardp->runStandardDiagnostics();
-    //diagnosticStewardp->runAdvancedDiagnostics();
+     */
+    //diagnosticStewardp->plotXCorr();
+    //diagnosticStewardp->runStandardDiagnostics();
     
     //initGraphics(&core);
     cleanUp();
