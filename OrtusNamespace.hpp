@@ -11,7 +11,7 @@
 
 #include <unordered_map>
 #include <vector>
-#include "StandardVTKHeader.hpp"
+#include "vtkFloatArray.h"
 
 namespace ortus {
     

@@ -17,14 +17,22 @@ VTK_MODULE_INIT(vtkRenderingFreeType);
 
 
 #include "vtkActor.h"
+#include "vtkAxis.h"
 #include "vtkBoxWidget.h"
 #include "vtkCamera.h"
+#include "vtkChartXY.h"
 #include "vtkChartXYZ.h"
+#include "vtkColor.h"
 #include "vtkCommand.h"
+#include "vtkContext2D.h"
+#include "vtkContext3D.h"
+#include "vtkContextActor.h"
 #include "vtkContextScene.h"
 #include "vtkConeSource.h"
+#include "vtkContextInteractorStyle.h"
 #include "vtkContextView.h"
 #include "vtkCylinderSource.h"
+#include "vtkDoubleArray.h"
 #include "vtkFloatArray.h"
 #include "vtkGenericDataArray.h"
 #include "vtkInteractorStyleTrackballCamera.h"
@@ -39,6 +47,9 @@ VTK_MODULE_INIT(vtkRenderingFreeType);
 #include "vtkSmartPointer.h"
 #include "vtkTable.h"
 #include "vtkTransform.h"
+
+
+#include "Ortus3DChart.hpp"
 
 
 

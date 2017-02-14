@@ -1,0 +1,15 @@
+This is a temporary version of VTKTool. The 3D plotting must be redone with real 3D objects.
+
+vtkPoint might be a good place to start.
+
+The main problem with how its currently set up, is that vtkChartXYZ runs off of a 2D contextView, which basically draws stuff, and doesn't have a backend made up of 3D objects. This makes it very difficult to do things like:
+
+- label individual data points
+- label individual lines/plots (vtkChartXYZ has a number of vtkPlotLine3D plot objects added to it)
+- change colors of individual points in each plot (e.g., if the value is > .9)
+- picking -- there is a mechanism in VTK for vtkChartXY, but not vtkChartXYZ as far as I can tell. vtkChartXY does not have the same parent as vtkChartXYZ does.
+
+
+Essentially, it is very limiting. Re-doing would be idea. This could be done by creating custom classes that create 3D lines from vtkPoint objects, which can themselves be picked, and connecting them by calling DrawLine (see how the grid is drawn in Ortus3DChart.cpp for how I envision that happening).
+
+Of course, then creating labels and a legend might require playing around with view matricies and coordinate transformations and such, but it seems to be the best option.

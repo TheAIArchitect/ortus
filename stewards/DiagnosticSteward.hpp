@@ -13,8 +13,8 @@
 #include "DataSteward.hpp"
 #include "DataVisualizer.hpp"
 #include "Statistician.hpp"
-///////////// TEMP
-#include "vtkContextMouseEvent.h"
+#include "StandardVTKHeader.hpp"
+#include "OrtusXCorrVisualizer.hpp"
 
 
 class DiagnosticSteward {

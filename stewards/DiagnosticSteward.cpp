@@ -8,193 +8,7 @@
 
 #include "DiagnosticSteward.hpp"
 
-ortus::vtkFullxcorr* DiagnosticSteward::morphToVTK(){
-    int save = 1;
-    int lagsSize = 4;
-    int outerElementIndex = 0;
-    ortus::vtkFullxcorr* theXCorr = new ortus::vtkFullxcorr();
-    for (auto outerElement : fullXCorr){
-        ortus::vtkTrivec* tempTri = new ortus::vtkTrivec();
-        for (auto xcorrWindow : outerElement.second){
-            int innerElementIndex = 0;
-            // each element in innerElement is a vector of lags corresponding to the
-            // xcorr computation between the outerElement starting at outerElement.first,
-            // and innerElement starting at index outerElement.first,
-            // and moving forward 3 windows (so, a total of 4)
-            
-            ortus::vtkVectrix* tempTrix = new ortus::vtkVectrix();
-            for (auto innerElement: xcorrWindow){
-                //printf("inner element size (expected 4): %d\n", innerElement.size());
-                // not using array just to make code more clear/readable
-                float* lags = new float[lagsSize];
-                for (int i = 0; i < lagsSize; ++i){
-                    lags[i] = innerElement[i]; // lag
-                }
-                ortus::vtkVector* tempVec = ortus::vtkVector::New();
-                tempVec->SetArray(lags, lagsSize, save);
-                tempTrix->push_back(tempVec);
-                
-                innerElementIndex++;
-            }
-            tempTri->push_back(tempTrix);
-        }
-        (*theXCorr)[outerElementIndex] = tempTri;
-        outerElementIndex++;
-    }
-    return theXCorr;
-}
 
-vtkTable* getNewTable(int numWindows){
-    vtkNew<vtkTable> theTable;
-    vtkNew<vtkFloatArray> tableX;
-    vtkNew<vtkFloatArray> tableY;
-    vtkNew<vtkFloatArray> tableZ;
-    tableX->SetName("X");
-    tableY->SetName("Y");
-    tableZ->SetName("Z");
-    theTable->AddColumn(tableX.GetPointer());
-    theTable->AddColumn(tableY.GetPointer());
-    theTable->AddColumn(tableZ.GetPointer());
-    theTable->SetNumberOfRows(numWindows);
-    theTable->SetReferenceCount(theTable->GetReferenceCount()+1);
-    return theTable.GetPointer();
-}
-
-void DiagnosticSteward::tempVTKPlot(){
-    // convert fullxcorr to vtkFullxcorr
-    ortus::vtkFullxcorr* theXCorr = morphToVTK();
-    ortus::vtkTrivec outerTrivec = *((*theXCorr)[2]); // H20
-    
-    
-    int numElements = dStewiep->NUM_ELEMS;
-    int numWindows = outerTrivec.size();
-    int numXCorrs = dStewiep->XCORR_COMPUTATIONS;
-    int numXCMinusOne = numXCorrs-1;
-    int numWindowsMinusOne = numWindows-1;
-    
-    float alpha = 1.0;
-    float colors[4][4] = {
-        {1.0, 0.0, 0.0, alpha}, // red
-        {0.0, 1.0, 0.0, alpha}, // green
-        {0.0, 0.0, 1.0, alpha}, // blue
-        {1.0, 0.0, 1.0, alpha}};// purple
-    
-    // set up 3d scene
-    vtkNew<vtkContextView> view;
-    view->GetRenderWindow()->SetSize(1000,1000);
-    view->GetRenderer()->GetActiveCamera()->SetClippingRange(0.00000001, 1000.0);
-    vtkNew<vtkChartXYZ> chart;
-    chart->SetAroundX(false);
-//    chart->SetGeometry(vtkRectf(numElements*numXCorrs, 1.2, 2000, 2000));
-    chart->SetGeometry(vtkRectf(0,0, 1000, 1000));
-    
-    view->GetScene()->AddItem(chart.GetPointer());
-    // add plots
-    std::vector<std::vector<vtkTable*>> vecOfLags; // indices are elements
-    for (int j = 0; j < numElements; ++j){
-        std::vector<vtkTable*> lagTables;
-        lagTables.push_back(getNewTable(numWindows)); // lag 0
-        lagTables.push_back(getNewTable(numWindows));
-        lagTables.push_back(getNewTable(numWindows));
-        lagTables.push_back(getNewTable(numWindows)); // lag 4
-        for (int i = 0; i < numWindows; ++i){
-            //int j = 0; ////////// TEMP TEMP TEMP
-            //for (int j = 0; j < numElements; ++j){
-            //for (int k = 0; k < numXCMinusOne; ++k){
-            // printf("%.2f, ",(*partialxcorr[i])[j]->GetValue(k));
-            float y0 = (*outerTrivec[i])[j]->GetValue(0); // first line in group is always at 0 offset,
-            float y1 = (*outerTrivec[i])[j]->GetValue(1); // then 1,
-            float y2 = (*outerTrivec[i])[j]->GetValue(2); // then 2,
-            float y3 = (*outerTrivec[i])[j]->GetValue(3); // then 3
-            float ys[] = {y0, y1, y2, y3};
-            //TEMP printf("(%d, %.2f, %d)\n", i, y, j);
-            for (int w = 0; w < numXCorrs; ++w){
-                lagTables[w]->SetValue(i, 0, i);// x value is the window number, which is the
-                lagTables[w]->SetValue(i, 1, ys[w]); // y value is the xcorr value
-                if (i == numWindowsMinusOne)
-                    lagTables[w]->SetValue(i, 2, (j*numXCorrs)+w-.0001); // z value is the element number
-                else
-                    lagTables[w]->SetValue(i, 2, (j*numXCorrs)+w); // z value is the element number
-            }
-            //}
-            //}
-        }
-        
-        for (int w = 0; w < numXCorrs; ++w){
-            vtkNew<vtkPlotLine3D> plot;
-            plot->SetInputData(lagTables[w]);
-            plot->GetPen()->SetColorF(colors[w][0], colors[w][1],colors[w][2],colors[w][3]);
-            chart->AddPlot(plot.GetPointer());
-        }
-        vecOfLags.push_back(lagTables);
-    }
-    
-    // render scene
-    view->GetRenderWindow()->SetMultiSamples(0);
-    view->GetInteractor()->Initialize();
-    
-    
-    view->GetRenderWindow()->Render();
-    vtkContextMouseEvent mouseEvent;
-    mouseEvent.SetInteractor(view->GetInteractor());
-    vtkVector2i pos;
-    vtkVector2i lastPos;
-    // rotate
-    mouseEvent.SetButton(vtkContextMouseEvent::LEFT_BUTTON);
-    lastPos.Set(0, 0);
-    mouseEvent.SetLastScreenPos(lastPos);
-    pos.Set(0, 0);
-    mouseEvent.SetScreenPos(pos);
-    vtkVector2d sP(pos.Cast<double>().GetData());
-    vtkVector2d lSP(lastPos.Cast<double>().GetData());
-    vtkVector2d screenPos(mouseEvent.GetScreenPos().Cast<double>().GetData());
-    vtkVector2d lastScreenPos(mouseEvent.GetLastScreenPos().Cast<double>().GetData());
-    chart->MouseMoveEvent(mouseEvent);
-    // spin
-    mouseEvent.SetButton(vtkContextMouseEvent::LEFT_BUTTON);
-    mouseEvent.GetInteractor()->SetShiftKey(1);
-    lastPos.Set(0, 0);
-    mouseEvent.SetLastScreenPos(lastPos);
-    pos.Set(0, 0);
-    mouseEvent.SetScreenPos(pos);
-    chart->MouseMoveEvent(mouseEvent);
-    // zoom
-    mouseEvent.SetButton(vtkContextMouseEvent::RIGHT_BUTTON);
-    mouseEvent.GetInteractor()->SetShiftKey(0);
-    lastPos.Set(0, 0);
-    mouseEvent.SetLastScreenPos(lastPos);
-    pos.Set(0, 10);
-    mouseEvent.SetScreenPos(pos);
-    chart->MouseMoveEvent(mouseEvent);
-    // mouse wheel zoom
-    chart->MouseWheelEvent(mouseEvent, -1);
-    // pan
-    mouseEvent.SetButton(vtkContextMouseEvent::RIGHT_BUTTON);
-    mouseEvent.GetInteractor()->SetShiftKey(1);
-    lastPos.Set(10, 10);
-    mouseEvent.SetLastScreenPos(lastPos);
-    pos.Set(0, 0);
-    mouseEvent.SetScreenPos(pos);
-    chart->MouseMoveEvent(mouseEvent);
-    //// remove colors
-    //plot->SetInputData(table.GetPointer(), "X Axis", "Sine", "Cosine");
-    //view->GetRenderWindow()->Render();
-    //// add them back in
-    //plot->SetColors(arrColor.GetPointer());
-    
-    
-    /*
-      for (int w = 0; w < numXCorrs; ++w){
-            vtkNew<vtkPlotLine3D> plot;
-            plot->SetInputData(lagTables[w]);
-            plot->GetPen()->SetColorF(colors[w][0], colors[w][1],colors[w][2],colors[w][3]);
-            chart->AddPlot(plot.GetPointer());
-        }
-   */
-    view->GetInteractor()->Start();
-    
-    
-}
 
 
 DiagnosticSteward::DiagnosticSteward(DataSteward* dStewiep){
@@ -220,6 +34,20 @@ void DiagnosticSteward::runAdvancedDiagnostics(){
     for (auto mapIter : xcorrResults){
         fullXCorr[mapIter.first].push_back(mapIter.second);
     }
+}
+
+void DiagnosticSteward::tempVTKPlot(){
+    // convert fullxcorr to vtkFullxcorr
+    ortus::vtkFullxcorr* theXCorr = morphToVTK();
+    
+    // fix this 300... should be a var
+    OrtusXCorrVisualizer xcorrVizzer(300, dStewiep->NUM_ELEMS,dStewiep->XCORR_COMPUTATIONS);
+    
+    
+    xcorrVizzer.theXCorr = theXCorr;
+    
+    xcorrVizzer.visualize();
+    
 }
 
 
@@ -328,3 +156,42 @@ std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVo
     }
     return totalPartialXCorr;
 }
+
+
+
+ortus::vtkFullxcorr* DiagnosticSteward::morphToVTK(){
+    int save = 1;
+    int lagsSize = 4;
+    int outerElementIndex = 0;
+    ortus::vtkFullxcorr* theXCorr = new ortus::vtkFullxcorr();
+    for (auto outerElement : fullXCorr){
+        ortus::vtkTrivec* tempTri = new ortus::vtkTrivec();
+        for (auto xcorrWindow : outerElement.second){
+            int innerElementIndex = 0;
+            // each element in innerElement is a vector of lags corresponding to the
+            // xcorr computation between the outerElement starting at outerElement.first,
+            // and innerElement starting at index outerElement.first,
+            // and moving forward 3 windows (so, a total of 4)
+            
+            ortus::vtkVectrix* tempTrix = new ortus::vtkVectrix();
+            for (auto innerElement: xcorrWindow){
+                //printf("inner element size (expected 4): %d\n", innerElement.size());
+                // not using array just to make code more clear/readable
+                float* lags = new float[lagsSize];
+                for (int i = 0; i < lagsSize; ++i){
+                    lags[i] = innerElement[i]; // lag
+                }
+                ortus::vtkVector* tempVec = ortus::vtkVector::New();
+                tempVec->SetArray(lags, lagsSize, save);
+                tempTrix->push_back(tempVec);
+                
+                innerElementIndex++;
+            }
+            tempTri->push_back(tempTrix);
+        }
+        (*theXCorr)[outerElementIndex] = tempTri;
+        outerElementIndex++;
+    }
+    return theXCorr;
+}
+
