@@ -140,17 +140,16 @@ std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVo
     }
     printf("END THE VOLTAGE HISTORY VECTOR PRINTOUT\n");
     */
-    int startIndex = 0; // we want to start at the beginning of the voltage history
     
-    // endIndex is the startIndex, plus the length that we use for a single xcorr computation (but minus one because it's an index), plus the (XCORR_COMPUTATIONS -1) (because for each computation, we shift our window for 'B' over by 1, but not the first, because that has the starting offset)
-    // It's 2*(XCORR_COMPUTATIONS-1) because XCORRR_COMPUTATIONS == the length that we use for a single xcorr computation.
-    int endIndex = startIndex + 2*(dStewiep->XCORR_COMPUTATIONS - 1);
+    int startIndex =(dStewiep->VOLTAGE_HISTORY_SIZE-1)-dStewiep->XCORR_COMPUTATIONS; // xcorr_computation is assumed to be the same as the size of the array used for a single xcorr computation
+    
+   
     // This is going to be slow, and it would probably be best to either rad the resutls back from blade, or thread this computation...
     for (int i = 0; i < numIndices; ++i){// go through each element,
         ortus::vectrix tempXCorrRes(numElements);
         for (int j = 0; j < numElements; ++j){ // and compute the xcorr between it, and everything else (including itself)
             
-            tempXCorrRes[j] = statistician.xcorrLimited(voltageHistoryVector[indicesToUse[i]], voltageHistoryVector[j], startIndex, dStewiep->XCORR_COMPUTATIONS, endIndex);
+            tempXCorrRes[j] = statistician.xcorrLimited(voltageHistoryVector[indicesToUse[i]], voltageHistoryVector[j], startIndex, dStewiep->XCORR_COMPUTATIONS);
         }
         totalPartialXCorr[indicesToUse[i]] = tempXCorrRes;
     }

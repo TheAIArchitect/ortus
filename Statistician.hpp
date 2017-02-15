@@ -26,7 +26,7 @@ public:
     float xcorrMultiply(ortus::vector A, ortus::vector B, int windowNum);
     int computeXCorrNumWindows(int len);
     float xcorrMultiplyLimited(ortus::vector A, int aOffset, ortus::vector B, int bOffset, int len);
-    ortus::vector xcorrLimited(ortus::vector A, ortus::vector B, int start, int len, int end);
+    ortus::vector xcorrLimited(ortus::vector A, ortus::vector B, int start, int len);
     ortus::vector xcorr(ortus::vector A, ortus::vector B, float normalizer);
     ortus::vector normalizedXCorr(ortus::vector A, ortus::vector B);
 };

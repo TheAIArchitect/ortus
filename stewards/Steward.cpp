@@ -53,9 +53,10 @@ void Steward::run(){
         // Stimulate the sensors 
         sensoryStimulationStewardp->performSensoryStimulation();
         
-        diagnosticStewardp->runAdvancedDiagnostics();
+        //diagnosticStewardp->runAdvancedDiagnostics();
     }
-    diagnosticStewardp->plotXCorr();
+    //diagnosticStewardp->plotXCorr();
+    
     // temporary placement...
     dataStewardp->writeConnectome("doesn't matter yet");
 
@@ -74,7 +75,7 @@ void Steward::run(){
     }
      */
     //diagnosticStewardp->plotXCorr();
-    //diagnosticStewardp->runStandardDiagnostics();
+    diagnosticStewardp->runStandardDiagnostics();
     
     //initGraphics(&core);
     cleanUp();

@@ -74,36 +74,42 @@ float Statistician::xcorrMultiplyLimited(ortus::vector A, int aOffset, ortus::ve
 
 
 /* A is the 'static' one, meaning we compute the xcorr between A and B such that
- * a xcorr is computed between A[start] to A[len-1] and:
- *      -> B[start] to B[len-1]
- *      -> B[start+1] to B[len]
- *      -> B[start+2] to B[len+1]
- *      -> and so on, until len+n == end, which is the final xcorr computation (which means that 'end' is *inclusive*, because it is an index, and not a length, or size.
- 
+ * a xcorr is computed between A[start..start+(len-1)] (inclusive), and:
+ *      -> B[start..start+(len-1)]
+ *      -> B[(start-1)..(start-1)+(len-1)]
+ *      -> B[(start-2)..(start-2)+(len-1)]
+ *          ....
+ *      -> B[(start-(len-1))..(start-(len-1))+(len-1)]
+ * So, A indices are static, and B's create a backward sliding window.
  */
-ortus::vector Statistician::xcorrLimited(ortus::vector A, ortus::vector B, int start, int len, int end){
+ortus::vector Statistician::xcorrLimited(ortus::vector A, ortus::vector B, int start, int len){
     size_t aLen = A.size();
     size_t bLen = B.size();
     if ((aLen != bLen) || (aLen == 0)){
         printf("xcorr requires two non-zero arrays of equal length.\n");
     }
     size_t xcorrLoops = len;
-    int aOffset = 0;
+    int aOffset = start;
+    int bOffset = start;
     ortus::vector xcorrResults;
     float autoCorrA = 0;
     float autoCorrB = 0;
     float divisor = 0;
     autoCorrA = xcorrMultiplyLimited(A, aOffset, A, aOffset, len);
     for (int i = 0; i < xcorrLoops; ++i){
-        // 'i' is what we would set 'bOffset' to, but this comment should be enough to make that clear.
-        autoCorrB = xcorrMultiplyLimited(B, i, B, i, len);
+        if (bOffset < 0){
+            printf("bOffset == %d, must be >= 0...\n", bOffset);
+            exit(83);
+        }
+        autoCorrB = xcorrMultiplyLimited(B, bOffset, B, bOffset, len);
         divisor = sqrtf(autoCorrA * autoCorrB);
         if (divisor == 0){
             xcorrResults.push_back(0.f);// can't divide by 0, this means we don't have full data for this window of time, so there can't be any correlation. set it to 0.
         }
         else {
-            xcorrResults.push_back((xcorrMultiplyLimited(A, aOffset, B, i, len)/divisor));
+            xcorrResults.push_back((xcorrMultiplyLimited(A, aOffset, B, bOffset, len)/divisor));
         }
+        bOffset--;
     }
     return xcorrResults;
 }

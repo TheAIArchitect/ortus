@@ -319,12 +319,13 @@ __kernel void OrtusKernel( __global float *voltages, // read and write
                 float voltageRocTwo = voltageRateOfChangeScratchPad[spiTwo];
                 float voltageRocThree = voltageRateOfChangeScratchPad[spiThree];
                 float voltageRocFour = voltageRateOfChangeScratchPad[spiFour];
-                float vrocMin = .6;
+                float vrocMin = .3;
                 //float vrocMax = 2.0;
                 float xcorrMin = .95;
                 
                 //float avgVROC = (voltageRocOne+voltageRocTwo+voltageRocThree+voltageRocFour)/4.0;
-                if ((voltageRocOne >= vrocMin && voltageRocTwo >= vrocMin && voltageRocThree >= voltageRocFour && voltageRocFour >= vrocMin) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+//                if ((voltageRocOne >= vrocMin && voltageRocTwo >= vrocMin && voltageRocThree >= voltageRocFour && voltageRocFour >= vrocMin) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+                if ((voltageRocOne >= voltageRocTwo && voltageRocTwo >= voltageRocThree && voltageRocThree >= voltageRocFour && voltageRocFour >= vrocMin) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
                 //if ((avgVROC >= vrocMin && avgVROC <= vrocMax) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
                     // then we increase the CHEM weight (different rule for GJ)
                     //printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",kernelIterationNum, gid, i, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
@@ -385,12 +386,13 @@ void computeXCorr(__global float* outputVoltageHistory, int numElements, int vol
     // we do two auto xcorrs, one for 'a', and one for 'b' (each b), with them stacked on top of themselves,
     int i;
     int j;
-    int aIndex = getOutputVoltageHistoryIndex(gid, 0, voltageHistorySize);
-    int aOffset = 0; // 'a' is never offset. only 'b' gets offset... we're not actually going to add 0, because that would be silly.
+    int xcorrLength = numXCorrEntries; // This means that we use an array of this length (3, as of this writing) to compute the xcorr (e.g., indices 0, 1, and 2 of 'a')
+    int aOffset = (voltageHistorySize-1) - xcorrLength; // we want to start at the 'end' (farthest back possible), to look at A's most recent 'window'
+    int aIndex = getOutputVoltageHistoryIndex(gid, aOffset, voltageHistorySize);
     int bIndex = 0;
     int windowNum = 0; // because of
     int xcorrIteration = 0; // we'll use this to offset 'b' by 0, 1, and 2
-    int xcorrLength = numXCorrEntries; // This means that we use an array of this length (3, as of this writing) to compute the xcorr (e.g., indices 0, 1, and 2 of 'a')
+    int bOffset = aOffset; // start off with A and B lined up in time, and then decrement bOffset on each loop.
     // seems to make the most sense to use the full length of each signal for the autocorr. note, we are subtracting 1 from the voltageHistorySize due to the 1 'staging' index.
     //int autoCorrSize = voltageHistorySize - 1;
     float autoCorrA = XCorrMultiply(outputVoltageHistory,aIndex,aIndex, xcorrLength);
@@ -400,22 +402,23 @@ void computeXCorr(__global float* outputVoltageHistory, int numElements, int vol
     int scratchPadIndex = 0;
     for (i = 0; i < numElements; ++i){ // loop through outputVoltageHistory,
         xcorrIteration = 0;
-        bIndex = getOutputVoltageHistoryIndex(i,xcorrIteration,voltageHistorySize); // the beginning of element 'i's voltage history
+        bIndex = getOutputVoltageHistoryIndex(i, bOffset,voltageHistorySize); // the beginning of element 'i's voltage history
         for (xcorrIteration = 0; xcorrIteration < xcorrLength; ++xcorrIteration){
-            autoCorrB = XCorrMultiply(outputVoltageHistory, bIndex+xcorrIteration, bIndex+xcorrIteration, xcorrLength); // last arg used to be 'autoCorrSize', but now it's the same as xcorrLength
+            autoCorrB = XCorrMultiply(outputVoltageHistory, bIndex, bIndex, xcorrLength); // last arg used to be 'autoCorrSize', but now it's the same as xcorrLength
             divisor = sqrt(autoCorrA * autoCorrB);
             scratchPadIndex = getScratchPadIndex(startingScratchPadOffset, i, xcorrIteration, xcorrLength);
             if (divisor == 0){ // then correlation between two signals is zero
                 XCorrScratchPad[scratchPadIndex] = 0.f;
             }
             else{
-                xcorrResult = XCorrMultiply(outputVoltageHistory, aIndex, bIndex+xcorrIteration, xcorrLength);
+                xcorrResult = XCorrMultiply(outputVoltageHistory, aIndex, bIndex, xcorrLength);
                 XCorrScratchPad[scratchPadIndex] = xcorrResult/divisor;
             }
             /*
             if (scratchPadIndex == 117 || scratchPadIndex == 118 || scratchPadIndex == 119)
                 printf("xcorr: %2.f, divisor: %.2f, total: %.2f (idx: %d)\n",xcorrResult, divisor,XCorrScratchPad[scratchPadIndex], scratchPadIndex);
              */
+            bIndex--;
         }
         
     }
@@ -440,13 +443,16 @@ float computeVoltageRateOfChange(__global float* outputVoltageHistory, int numEl
     int elementLastIndex = -1;
     float rateOfChange = -1.f;
     int scratchPadIndex = -1;
+    int voltageHistoryIndexBase = 0;
     for (i = 0; i < numElements; ++i){
+        voltageHistoryIndexBase = (voltageHistorySize-1) - xcorrLength;
         for (j = 0; j < numXCorrEntries; ++j){
-            elementBaseIndex = getOutputVoltageHistoryIndex(i, j, voltageHistorySize);
+            elementBaseIndex = getOutputVoltageHistoryIndex(i, voltageHistoryIndexBase, voltageHistorySize);
             elementLastIndex = elementBaseIndex + xcorrLength;
             rateOfChange = (outputVoltageHistory[elementLastIndex] - outputVoltageHistory[elementBaseIndex])/timeSteps;
             scratchPadIndex = getScratchPadIndex(startingScratchPadOffset, i, j, xcorrLength);
             voltageRateOfChangeScratchPad[scratchPadIndex] = rateOfChange;
+            voltageHistoryIndexBase--;
         }
     }
 }
