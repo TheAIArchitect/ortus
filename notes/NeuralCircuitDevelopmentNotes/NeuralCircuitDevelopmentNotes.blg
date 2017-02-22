@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: NeuralCircuitDevelopmentNotes.aux
+The style file: ieeetr.bst
+Database file #1: NeuralCircuitDevelopment.bib
+Warning--can't use both volume and number fields in Simpson2009
+Warning--empty publisher in Weiner2015
+You've used 30 entries,
+            1876 wiz_defined-function locations,
+            683 strings with 8866 characters,
+and the built_in function-call counts, 8958 in all, are:
+= -- 935
+> -- 327
+< -- 0
++ -- 121
+- -- 91
+* -- 660
+:= -- 1256
+add.period$ -- 32
+call.type$ -- 30
+change.case$ -- 29
+chr.to.int$ -- 0
+cite$ -- 32
+duplicate$ -- 451
+empty$ -- 803
+format.name$ -- 91
+if$ -- 2187
+int.to.chr$ -- 0
+int.to.str$ -- 30
+missing$ -- 32
+newline$ -- 95
+num.names$ -- 30
+pop$ -- 60
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 329
+stack$ -- 0
+substring$ -- 674
+swap$ -- 209
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 2
+while$ -- 104
+width$ -- 32
+write$ -- 315
+(There were 2 warnings)

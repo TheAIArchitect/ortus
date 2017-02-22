@@ -412,6 +412,7 @@
 		F78093CA1E52E8D200749BE3 /* OrtusXCorrVisualizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = OrtusXCorrVisualizer.hpp; path = VTKTool/OrtusXCorrVisualizer.hpp; sourceTree = "<group>"; };
 		F78093CB1E52E8D200749BE3 /* StandardVTKHeader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = StandardVTKHeader.hpp; path = VTKTool/StandardVTKHeader.hpp; sourceTree = "<group>"; };
 		F78093CF1E52E8EB00749BE3 /* vtktool_note */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vtktool_note; path = VTKTool/vtktool_note; sourceTree = "<group>"; };
+		F7C175301E5652DC009A4940 /* neural_circuit_development_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = neural_circuit_development_notes.txt; path = notes/neural_circuit_development_notes.txt; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -553,6 +554,7 @@
 		44B6E62B1D8B46DC00A8DB7B /* notes */ = {
 			isa = PBXGroup;
 			children = (
+				F7C175301E5652DC009A4940 /* neural_circuit_development_notes.txt */,
 				444DE4611D8A717500247E36 /* workstations.txt */,
 				444DE44F1D8A717400247E36 /* README.md */,
 				F74880491E25AE210083763E /* todo.txt */,

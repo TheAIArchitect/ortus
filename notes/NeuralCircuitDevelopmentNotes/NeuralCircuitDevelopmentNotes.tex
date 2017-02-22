@@ -1,0 +1,250 @@
+\documentclass[11pt, a4paper, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=1in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{fullpage}
+\usepackage{enumerate}
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+%SetFonts
+
+%SetFonts
+
+
+\title{Neural Circuit Development Notes}
+\author{Andrew McDonald}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+%\section{Neural reuse: a fundamental organizational principle of the brain \cite{Anderson2010}}
+%\section{Functional roles of short-term synaptic plasticity with an emphasis on inhibition \cite{Anwar2017}}
+%\section{Emerging roles of astrocytes in neural circuit development \cite{Clarke2013}}
+%\section{Synapse Formation in Developing Neural Circuits \cite{Colon-Ramos2009}}
+
+\section{Thoughts}
+
+
+
+\textbf{Ortus basic premise:} entire system works similarly to the CO2 and O2 regulation mechanism. Aim is to keep a balance. E.g., if IFEAR goes up, this should inherently be bad. Could be that the reason for this is that it is tied to a very basic system, like breathing. So, if system is wired such that as INO2 increases, IFEAR increases, and an increase in INO2 causes an intake of O2, which decreases INO2, the system \textit{inherently} wants to minimize INO2 and IFEAR. Everything should build off of and/or expand this basic idea/structure.
+
+Take C. elegans, for example. It only has 302 neurons, and is a relatively simple organisim, with is connectome nearly entirely known. Despite its relative simplicity, it is capable of avoiding toxins (cite toxin avoidance), and withdrawing from a touch to the head. Both of these actions show a tendency to minimize certain conditions. In the context of an organism as simple as C. elegans, it becomes clear that this tendency arises from a circuit configuration that causes certain ``pre-wired'' responses to be preside over others. \textbf{This another premise of Ortus:} The idea of ``emotions'', as we know them, are simply the rise and fall in activation of different groups of neurons, tied to very fundamental behaviors. The concepts of ``good'' and ``bad'' sensations or emotions only carry meaning to us because of their associations to circuits that are either desirable or undesirable from a longevity perspective.
+
+
+\begin{enumerate}
+\item perhaps use a ``chemical'' to signal that a synapse may be be created
+\item may also need to factor location in\ldots that would be a pain, because each synapse would need a 3D coordinate.
+\item classical conditioning -- two stimuli paired, instrumental conditioning -- stimulus -> response -> reward
+\item as things get repeated, the pathway between input and output shortens (creates a ``reflexive reaction'', though not the same as a real reflex, like a knee jerk)
+  \subitem \textbf{Ortus premise:} Essentially, complex behaviors are more nuanced reflexes. A reflex goes from a sensory neuron to the spinal cord where interneurons redirect the signal to a motorneuron. Complex behaviors originate from some combination of existing neural activity and sensory input, which combine and, after being passed through a number of different interneurons, end up as signals to motor neurons, or loop back around to continue the ``thought'' process.
+\item Should have a loop that re--energizes (in a decaying way) neural pathways/circuits that were recently used. In this way, perhaps we can implement instrumental learning, and time--based/sequence--based knowledge.
+\end{enumerate}
+
+
+
+\subsection{Parts of the Brain}
+
+brain part info from:
+
+\begin{enumerate}
+    \item http://www.news-medical.net/health/What-does-the-Thalamus-do.aspx
+    \item http://neuroscience.uth.tmc.edu/s4/chapter06.html -- talks about fear response and amygdala
+    \item Britannica, and other places too\ldots
+\end{enumerate}
+
+
+
+
+\begin{enumerate}
+    \item cerebral cortex (cerebrum)
+        \subitem frontal lobe (top front) -- reasoning, planning, parts of speech, movement, emotions, problem solving
+        \subitem parietal lobe (top middle)-- movement,  orientation, recognition, perception of stimuli
+        \subitem occipital lobe -- visual processing
+        \subitem temporal lobe -- perception and recognition of auditory stimuli, memory, and speech
+    \item cerebellum (little brain)
+        \subitem associated with regulation and coordination of movement, posture, and balance
+        \subitem evolutionarily really old; reptiles have this as more or less their full brain
+    \item limbic system (emotional brain) -- buried within cerebrum, like cerebellum, fairly old
+      \subitem Thalamus - relays sensory impulses from receptors in various parts of the body to the cerebral cortex. Experts think of it as a gate. 98\% of sensory input is relayed by it (not olfaction? -- maybe olfaction is a more primitive sense that routes to cerebellum, and is similar to chemosensors in c. elegans?).
+      \subitem Hypothalamus  -- controls release of 8 major hormones, involved in temperature regulation, control of food and water intake,  sexual behavior,  daily cycles in physiological state and behavior, and mediation of emotional responses
+      \subitem Amygdala -- integrative center for emotions, emotional behavior, and motivation.  where memory and emotions are ``combined''. combines many different sensory inputs.
+        \subsubitem Amygdalofugal Pathway (link whereby motivaiton and drives can influence responses, and where responses are learned, rewards and punishments), stria terminalis (similar to fornix) -- both important, come back to this.
+      \subitem Hippocampus -- associated primarily with memory. looks like a seahorse. 
+    \item Brain Stem -- underneath limbic system, responsible for basic vital life functions such as breathing, heartbeat, and blood pressure.
+        \subitem Midbrain -- (tectum, the 'roof', and tegmentum, in front of the tectum). Tectum responsible for visual reflexes. Tegmentum coordinates sensorimotor  information. 
+        \subitem Pons -- connects the spinal cord to higher brain levels, and transfers info from cerebrum to cerebellum, some of which are part of the reticular formation, which  regulates alertness, sleep, and wakefulness.
+        \subitem Medulla -- transmits signals between the spinal cord and higher parts of the brain, controls autonomic functions like heartbeat and respiration. Also holds part of reticular formation.
+    \item grey matter: pinkish--grey, contains cell bodies, dendrites, and axon terminals -- so, this is where the synapses actually are. On outside of brain, but inside of spinal cord.
+    \item white matter: axons, which are connecting the different parts of grey matter to eachother. On inside of brain, but outside of spinal cord.
+\end{enumerate}
+
+
+So, basically, input goes into thalamus, and is then relayed, in this way, associations can be built. Thalamus has three groups of cells:
+\begin{enumerate}
+\item Sensory relay nuclei -- These include the ventral posterior nucleus and lateral and medial geniculate body. Relay primary sensations by passing specific sensory information to the corresponding cortical area. 
+\item Association nuclei -- receive input from specific areas of the cortex, which is proejcted back to the cortex to ``somewhat'' generalized association areas, where they regulate activity.
+\item non--specific nuclei (intralaminar and midline thalamic), which receive input from cerebral cortex and project information diffusely through it. Most of these interconnect brain activity between different areas of the brain and play a role in general functions such as alerting.
+\end{enumerate}
+
+
+\section{Neural reuse: a fundamental organizational principle of the brain. \cite{Anderson2010}}
+
+Test...
+
+\section{Functional roles of short-term synaptic plasticity with an emphasis on inhibition \cite{Anwar2017}}
+
+Test...
+
+\section{Emerging roles of astrocytes in neural circuit development. \cite{Clarke2013}}
+
+Test...
+
+\section{Synapse Formation in Developing Neural Circuits \cite{Colon-Ramos2009}}
+
+Test...
+
+\section{Astrocytes: Orchestrating synaptic plasticity? \cite{DePitta2016}}
+
+Test...
+
+\section{Two matrix metalloproteinase classes reciprocally regulate synaptogenesis \cite{Dear2015}}
+
+Test...
+
+\section{Neural circuits on a chip \cite{Hasan2016}}
+
+Test...
+
+\section{Understanding synaptogenesis and functional connectome in C. elegans by imaging technology \cite{Hong2016}}
+
+Test...
+
+\section{Single-Cell Memory Regulates a Neural Circuit for Sensory Behavior \cite{Kobayashi2016}}
+
+Test...
+
+\section{Neural circuit rewiring: insights from DD synapse remodeling. \cite{Kurup2016}}
+
+Test...
+
+\section{Rules for shaping neural connections in the developing brain \cite{Kutsarova2016}}
+
+Test...
+
+\section{Correlated Synaptic Inputs Drive Dendritic Calcium Amplification and Cooperative Plasticity during Clustered Synapse Development \cite{Lee2016}}
+
+Test...
+
+\section{Neuronal development: Signalling synaptogenesis \cite{Lewis2016}}
+
+Test...
+
+\section{Circuit Mechanisms of Sensorimotor Learning \cite{Makino2016}}
+
+Test...
+
+\section{Towards reverse engineering the brain: Modeling abstractions and simulation frameworks \cite{Nageswaran2010}}
+
+Test...
+
+\section{Biologically based neural circuit modelling for the study of fear learning and extinction \cite{Nair2016}}
+
+Test...
+
+\section{A feedback neural circuit for calibrating aversive memory strength \cite{Ozawa2016}}
+
+Test...
+
+\section{Neurotrophin regulation of neural circuit development and function \cite{Park2013}}
+
+Test...
+
+\section{Neural plasticity across the lifespan \cite{Power2016}}
+
+Test...
+
+\section{The Purkinje cell as a model of synaptogenesis and synaptic specificity \cite{Sasso??-Pognetto2016}}
+
+Test...
+
+\section{Synapse biology in the ?circuit-age'?paths toward molecular connectomics \cite{Schreiner2017}}
+
+Test...
+
+\section{Activity-Dependent Inhibitory Synaptogenesis in Cerebellar Cultures \cite{Seil2016}}
+
+Test...
+
+\section{Theoretical Models of Neural Circuit Development \cite{Simpson2009}}
+
+Test...
+
+\section{The development of cortical circuits for motion discrimination. \cite{Smith2015}}
+
+Test...
+
+\section{The interplay between neurons and glia in synapse development and plasticity \cite{Stogsdill2017}}
+
+Test...
+
+\section{Timing Rules for Synaptic Plasticity Matched to Behavioral Function \cite{Suvrathan2016}}
+
+Test...
+
+\section{Neural plasticity and behavior ??? sixty years of conceptual advances \cite{Sweatt2016}}
+
+Test...
+
+\section{Homeostatic Plasticity of Subcellular Neuronal Structures: From Inputs to Outputs \cite{Wefelmeyer2016}}
+
+Test...
+
+\section{Mechanisms of Neural Circuit Formation \cite{Weiner2015}}
+(Note: this is a book comprised of research articles, title of relevant articles as subsections)
+
+
+\subsection{Introduction to mechanisms of neural circuit formation}
+Topics in book:
+\begin{enumerate}
+\item cell adhesion molecules (and downstream roles in cell identity, recognition, and synaptic specificity)
+\item axon guidance, formation of terminals, and dendritic arborization
+\item formation of synaptic structures themselves (remains subject to remodeling and plasticity throughout development and even in adult animals)
+\end{enumerate}
+
+\subsection{Wired for Behaviors: from development to function of innate limbic system circuitry}
+
+
+
+\section{Synaptogenesis: A synaptic bridge \cite{Yates2016}}
+
+Test...
+
+
+%\subsection{}
+
+\bibliography{NeuralCircuitDevelopment}
+\bibliographystyle{ieeetr}
+\end{document}  
+
+%%%%%%%%%%%% 
+% There is a function, callable via ":call BibToSections()" in ~./vimrc that will run all these commands in successsion:
+
+%% command to delete .bib stuff except for @<thing> and title lines:
+% :g /^\(\<\(author\|doi\|file\|abstract\|publisher\|journal\|pages\|url\|year\|volume\|pmid\|keywords\|issn\|isbn\|booktitle\|number\|edition\)\>\|}\)\{1}.*$/ d 
+
+%% command to delete characters around reference 'name':
+% :%s/@.\{-}{\(.*\),/\1/g
+
+%% command to replace "}}," from the title line, with \cite{ and the reference name from the @... line:
+% :%s/}},/\=" \\cite{".getline(line('.')-1)."}}"/g    
+
+%% command to replace "title = {{" with "\section{"
+% :%s/title\ =\ {{\(.*}}\)/\\section{\1/g     
+
+%% and finally, a command to delete all lines that don't begin with \section
+% :g!/\\section.*/d 
+

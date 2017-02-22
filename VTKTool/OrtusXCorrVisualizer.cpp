@@ -53,7 +53,7 @@ void OrtusXCorrVisualizer::visualize(){
     // set up the chart itself 
     chart->SetGeometry(vtkRectf(0.0f, 0.0f, 1000, 1000));
     // this adds the plots to the chart
-    plotXCorrForStaticElement(2);
+    plotXCorrForStaticElement(7);
     
     //view->GetScene()->AddItem(chart.GetPointer());
     

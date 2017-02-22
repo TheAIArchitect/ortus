@@ -1,3 +1,14 @@
+there has to be a way to grow the brain, but there must be a way to tie things together...
+
+working memory: incoming signals trigger pathways, which loop back around to re-trigger themselves, in a decaying manner... via, perhaps, some generic pathway for this sort of thing -- the fact that some of the other neurons get input from here, doesn't matter, because they aren't "activated"... this would also allow associations to take place, because if certain ones are activated, this would impact them, and they would also 'activate'.  this depends upon the threshold level, then.
+    => think of a central 'cord' that extends out to various things. maybe even later have mini cords that extend from it
+
+feedback loops:
+    maybe something like a circuit gradually increases feedback as it lengthens, idk.
+
+associations: how to make them, without influencing non-related things that happen to be correlated??
+
+
 >>>>>>>>>> what about 'turning off' part(s) of ortus for a certain number of cycles to speed up computation? similar to how one might forget to breathe, or to do other things, when focused on another task... resource allocation? <<<<<<<<<<<<<<<<<'
 
 => altering and adding gap junction and chemical synapse weights
