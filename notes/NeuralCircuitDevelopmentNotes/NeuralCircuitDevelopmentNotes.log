@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  22 FEB 2017 01:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  22 FEB 2017 04:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -212,54 +212,13 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 22.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
+)
 
-{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (10.86115pt too wide) in paragraph at lines 103--103
-[]\OT1/cmr/bx/n/14.4 Two ma-trix met-al-lo-pro-teinase classes re-cip-ro-cally 
-reg-u-late synap-
- []
+LaTeX Warning: Reference `MNCF:wiredforbehaviors' on page 1 undefined on input 
+line 45.
 
-[3]
-Overfull \hbox (22.08932pt too wide) in paragraph at lines 147--147
-[]\OT1/cmr/bx/n/14.4 A feed-back neu-ral cir-cuit for cal-i-brat-ing aver-sive 
-mem-ory strength
- []
+[1
 
-[4] [5]
-Overfull \hbox (14.5978pt too wide) in paragraph at lines 191--191
-[]\OT1/cmr/bx/n/14.4 Homeostatic Plas-tic-ity of Sub-cel-lu-lar Neu-ronal Struc
--tures: From
- []
+{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
-(./NeuralCircuitDevelopmentNotes.bbl [6] [7]
-Missing character: There is no â in font cmr10!
-Missing character: There is no € in font cmr10!
-Missing character: There is no ˜ in font cmr10!
-Missing character: There is no â in font cmr10!
-Missing character: There is no € in font cmr10!
-Missing character: There is no ” in font cmr10!
-) [8]
-(./NeuralCircuitDevelopmentNotes.aux) ) 
-Here is how much of TeX's memory you used:
- 2318 strings out of 493014
- 32842 string characters out of 6133351
- 98367 words of memory out of 5000000
- 5834 multiletter control sequences out of 15000+600000
- 10450 words of font info for 39 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 37i,6n,32p,977b,203s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2016/texmf-dist/font
-s/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2016/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmti10.pfb>
-Output written on NeuralCircuitDevelopmentNotes.pdf (8 pages, 110193 bytes).
-PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
- 38 compressed objects within 1 object stream
- 0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+LaTeX Warning
