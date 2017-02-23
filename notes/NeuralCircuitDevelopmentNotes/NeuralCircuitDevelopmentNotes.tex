@@ -1,30 +1,54 @@
 \documentclass[11pt, a4paper, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
 \usepackage[margin=1in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
 %\usepackage{fullpage}
-\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{notetaking}
 \geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
 %\geometry{landscape}                		% Activate for rotated page geometry
 %\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
 								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{hyperref}
+\usepackage{xcolor}
 \usepackage{amssymb}
 
-%SetFonts
+\usepackage{mathtools} % look into this for math tools needs!
 
 %SetFonts
 
+%SetFonts
 
+%\setlist[enumerate]{label*=\arabic*.} % this allows enumerations to be nested and have a label like 1.3.2
+\setlist[enumerate,2]{label=\roman*)}
+\setlist[enumerate,3]{label=\alph*)}
+\setlist[enumerate,4]{label=\Alph*)}
+
+
+
+\renewcommand{\outlinei}{enumerate}
+\renewcommand{\outlineii}{enumerate}
+\renewcommand{\outlineiii}{enumerate}
+\renewcommand{\outlineiiii}{enumerate}
+
+
+
+
+
+\hypersetup{
+  colorlinks   = true,
+  citecolor    = gray
+}
 \title{Neural Circuit Development Notes}
 \author{Andrew McDonald}
 %\date{}							% Activate to display a given date or no date
-
 \begin{document}
 \maketitle
+\hypersetup{linkcolor=blue}
+\tableofcontents
+\hypersetup{linkcolor=blue}
+\listoffigures
+\hypersetup{linkcolor=blue} %red
 
-%\section{Neural reuse: a fundamental organizational principle of the brain \cite{Anderson2010}}
-%\section{Functional roles of short-term synaptic plasticity with an emphasis on inhibition \cite{Anwar2017}}
-%\section{Emerging roles of astrocytes in neural circuit development \cite{Clarke2013}}
-%\section{Synapse Formation in Developing Neural Circuits \cite{Colon-Ramos2009}}
 
 \section{Thoughts}
 
@@ -35,62 +59,98 @@
 Take C. elegans, for example. It only has 302 neurons, and is a relatively simple organisim, with is connectome nearly entirely known. Despite its relative simplicity, it is capable of avoiding toxins (cite toxin avoidance), and withdrawing from a touch to the head. Both of these actions show a tendency to minimize certain conditions. In the context of an organism as simple as C. elegans, it becomes clear that this tendency arises from a circuit configuration that causes certain ``pre-wired'' responses to be preside over others. \textbf{This another premise of Ortus:} The idea of ``emotions'', as we know them, are simply the rise and fall in activation of different groups of neurons, tied to very fundamental behaviors. The concepts of ``good'' and ``bad'' sensations or emotions only carry meaning to us because of their associations to circuits that are either desirable or undesirable from a longevity perspective.
 
 
-\begin{enumerate}
-\item perhaps use a ``chemical'' to signal that a synapse may be be created
-\item may also need to factor location in\ldots that would be a pain, because each synapse would need a 3D coordinate.
-\item classical conditioning -- two stimuli paired, instrumental conditioning -- stimulus -> response -> reward
-\item as things get repeated, the pathway between input and output shortens (creates a ``reflexive reaction'', though not the same as a real reflex, like a knee jerk)
-  \subitem \textbf{Ortus premise:} Essentially, complex behaviors are more nuanced reflexes. A reflex goes from a sensory neuron to the spinal cord where interneurons redirect the signal to a motorneuron. Complex behaviors originate from some combination of existing neural activity and sensory input, which combine and, after being passed through a number of different interneurons, end up as signals to motor neurons, or loop back around to continue the ``thought'' process.
-\item Should have a loop that re--energizes (in a decaying way) neural pathways/circuits that were recently used. In this way, perhaps we can implement instrumental learning, and time--based/sequence--based knowledge.
-\item rodent and human brain have same basic structure, it seems. things tend to be organized fairly similarly, relative to eachother. \ref{MNCF:wiredforbehaviors}
-\item \ref{MNCF:wiredforbehaviors} are discussing rodent experiments that cause lesions to regions of the brain, so ortus should be able to function by using single neurons to represent groups of neurons, while there isn't a requirement for greater behavioral nuance.
-\end{enumerate}
+\begin{outline}
+\point perhaps use a ``chemical'' to signal that a synapse may be be created
+\point may also need to factor location in\ldots that would be a pain, because each synapse would need a 3D coordinate.
+\point classical conditioning -- two stimuli paired, instrumental conditioning -- stimulus -> response -> reward
+\point as things get repeated, the pathway between input and output shortens (creates a ``reflexive reaction'', though not the same as a real reflex, like a knee jerk)
+  \subpoint \textbf{Ortus premise:} Essentially, complex behaviors are more nuanced reflexes. A reflex goes from a sensory neuron to the spinal cord where interneurons redirect the signal to a motorneuron. Complex behaviors originate from some combination of existing neural activity and sensory input, which combine and, after being passed through a number of different interneurons, end up as signals to motor neurons, or loop back around to continue the ``thought'' process.
+\point Should have a loop that re--energizes (in a decaying way) neural pathways/circuits that were recently used. In this way, perhaps we can implement instrumental learning, and time--based/sequence--based knowledge.
+\point rodent and human brain have same basic structure, it seems. things tend to be organized fairly similarly, relative to eachother. \ref{MNCF:wiredforbehaviors}
+\point \ref{MNCF:wiredforbehaviors} are discussing rodent experiments that cause lesions to regions of the brain, so ortus should be able to function by using single neurons to represent groups of neurons, while there isn't a requirement for greater behavioral nuance.
+\end{outline}
 
 
+\section{DNA, Genes, Proteins, and Cells}
 
-\subsection{Parts of the Brain}
+Genes\ldots
 
-brain part info from:
+\subsection{How Genes work}
+\href{``https://publications.nigms.nih.gov/thenewgenetics/chapter1.html''}{NIH -- How Genes Work}
+\href{``https://online.science.psu.edu/biol011_sandbox_7239/node/7260''}{PSU -- How Genes Work}
+\href{``http://genetics.thetech.org/about-genetics/how-do-genes-work''}{The Tech -- How Genes Work}
 
-\begin{enumerate}
-    \item http://www.news-medical.net/health/What-does-the-Thalamus-do.aspx
-    \item http://neuroscience.uth.tmc.edu/s4/chapter06.html -- talks about fear response and amygdala
-    \item Britannica, and other places too\ldots
-\end{enumerate}
+\subsection{Cell Signaling}
+\href{``http://www.nature.com/scitable/topicpage/cell-signaling-14047077''}{Nature -- Cell Signaling}
+
+\subsection{From DNA to protein}
+\href{``https://www.youtube.com/watch?v=gG7uCskUOrA''}{From DNA to protein - 3D}
+
+\begin{outline}
+  \nopoint My understanding is:
+  \point DNA is made up of nucleotides
+  \point Sections of DNA encode various genes
+    \subpoint Intergenic DNA (DNA between genes) seems to play a part in determining which genes are turned on/off, among other things. (this is part of the 98\% of DNA not coding for genes)
+  \point Enzymes unzip the DNA, and one side is transcribed to generate RNA---a single strand of nucleotides
+    \subpoint This happens for genes that are ``turned on'' 
+  \point Codons are groups of 3 nucleotides, from the RNA strand, that code for amino acids
+    \subpoint There are ``start'' and ``end'' codons that mark the start and end of each gene
+  \point Amino acids are protein building blocks
+  \point The ribosomes then convert the codons from the RNA strand to proteins
+    \subpoint Prior to this, parts of the RNA are cut out-- (how does cutting genes out work?)
+    \subpoint genes are instructions for making certain proteins
+  \point Some of these proteins are receptors for neurons 
+    \subpoint Some of these receptors are ligand--gated ion channels, that open to allow ions into or out of the neuron/cell.
+        \subsubpoint AKA ion--channel--linked receptors
+        \subsubpoint ligands are the neurotransmitters
+
+  
+\end{outline}
 
 
+\section{Parts of the Brain}
 
-
-\begin{enumerate}
-    \item cerebral cortex (cerebrum)
-        \subitem frontal lobe (top front) -- reasoning, planning, parts of speech, movement, emotions, problem solving
-        \subitem parietal lobe (top middle)-- movement,  orientation, recognition, perception of stimuli
-        \subitem occipital lobe -- visual processing
-        \subitem temporal lobe -- perception and recognition of auditory stimuli, memory, and speech
-    \item cerebellum (little brain)
-        \subitem associated with regulation and coordination of movement, posture, and balance
-        \subitem evolutionarily really old; reptiles have this as more or less their full brain
-    \item limbic system (emotional brain) -- buried within cerebrum, like cerebellum, fairly old
-      \subitem Thalamus - relays sensory impulses from receptors in various parts of the body to the cerebral cortex. Experts think of it as a gate. 98\% of sensory input is relayed by it (not olfaction? -- maybe olfaction is a more primitive sense that routes to cerebellum, and is similar to chemosensors in c. elegans?).
-      \subitem Hypothalamus  -- controls release of 8 major hormones, involved in temperature regulation, control of food and water intake,  sexual behavior,  daily cycles in physiological state and behavior, and mediation of emotional responses. 
-      \subitem Amygdala -- integrative center for emotions, emotional behavior, and motivation.  where memory and emotions are ``combined''. combines many different sensory inputs.
-        \subsubitem Amygdalofugal Pathway (link whereby motivaiton and drives can influence responses, and where responses are learned, rewards and punishments), stria terminalis (similar to fornix) -- both important, come back to this.
-      \subitem Hippocampus -- associated primarily with memory. looks like a seahorse. 
-    \item Brain Stem -- underneath limbic system, responsible for basic vital life functions such as breathing, heartbeat, and blood pressure.
-        \subitem Midbrain -- (tectum, the 'roof', and tegmentum, in front of the tectum). Tectum responsible for visual reflexes. Tegmentum coordinates sensorimotor  information. 
-        \subitem Pons -- connects the spinal cord to higher brain levels, and transfers info from cerebrum to cerebellum, some of which are part of the reticular formation, which  regulates alertness, sleep, and wakefulness.
-        \subitem Medulla -- transmits signals between the spinal cord and higher parts of the brain, controls autonomic functions like heartbeat and respiration. Also holds part of reticular formation.
-    \item grey matter: pinkish--grey, contains cell bodies, dendrites, and axon terminals -- so, this is where the synapses actually are. On outside of brain, but inside of spinal cord.
-    \item white matter: axons, which are connecting the different parts of grey matter to eachother. On inside of brain, but outside of spinal cord.
-\end{enumerate}
+\begin{outline}
+    \point cerebral cortex (cerebrum)
+        \subpoint frontal lobe (top front) -- reasoning, planning, parts of speech, movement, emotions, problem solving
+        \subpoint parietal lobe (top middle)-- movement,  orientation, recognition, perception of stimuli
+        \subpoint occipital lobe -- visual processing
+        \subpoint temporal lobe -- perception and recognition of auditory stimuli, memory, and speech
+    \point cerebellum (little brain)
+        \subpoint associated with regulation and coordination of movement, posture, and balance
+        \subpoint evolutionarily really old; reptiles have this as more or less their full brain
+    \point limbic system (emotional brain) -- buried within cerebrum, like cerebellum, fairly old
+      \subpoint Thalamus - relays sensory impulses from receptors in various parts of the body to the cerebral cortex. Experts think of it as a gate. 98\% of sensory input is relayed by it (not olfaction? -- maybe olfaction is a more primitive sense that routes to cerebellum, and is similar to chemosensors in c. elegans?).
+      \subpoint Hypothalamus  -- controls release of 8 major hormones, involved in temperature regulation, control of food and water intake,  sexual behavior,  daily cycles in physiological state and behavior, and mediation of emotional responses. 
+      \subpoint Amygdala -- integrative center for emotions, emotional behavior, and motivation.  where memory and emotions are ``combined''. combines many different sensory inputs.
+        \subsubpoint Amygdalofugal Pathway (link whereby motivaiton and drives can influence responses, and where responses are learned, rewards and punishments), stria terminalis (similar to fornix) -- both important, come back to this.
+      \subpoint Hippocampus -- associated primarily with memory. looks like a seahorse. 
+    \point Brain Stem -- underneath limbic system, responsible for basic vital life functions such as breathing, heartbeat, and blood pressure.
+        \subpoint Midbrain -- (tectum, the 'roof', and tegmentum, in front of the tectum). Tectum responsible for visual reflexes. Tegmentum coordinates sensorimotor  information. 
+        \subpoint Pons -- connects the spinal cord to higher brain levels, and transfers info from cerebrum to cerebellum, some of which are part of the reticular formation, which  regulates alertness, sleep, and wakefulness.
+        \subpoint Medulla -- transmits signals between the spinal cord and higher parts of the brain, controls autonomic functions like heartbeat and respiration. Also holds part of reticular formation.
+    \point grey matter: pinkish--grey, contains cell bodies, dendrites, and axon terminals -- so, this is where the synapses actually are. On outside of brain, but inside of spinal cord.
+    \point white matter: axons, which are connecting the different parts of grey matter to eachother. On inside of brain, but outside of spinal cord.
+\end{outline}
 
 
 So, basically, input goes into thalamus, and is then relayed, in this way, associations can be built. Thalamus has three groups of cells:
-\begin{enumerate}
-\item Sensory relay nuclei -- These include the ventral posterior nucleus and lateral and medial geniculate body. Relay primary sensations by passing specific sensory information to the corresponding cortical area. 
-\item Association nuclei -- receive input from specific areas of the cortex, which is proejcted back to the cortex to ``somewhat'' generalized association areas, where they regulate activity.
-\item non--specific nuclei (intralaminar and midline thalamic), which receive input from cerebral cortex and project information diffusely through it. Most of these interconnect brain activity between different areas of the brain and play a role in general functions such as alerting.
-\end{enumerate}
+\begin{outline}
+\point Sensory relay nuclei -- These include the ventral posterior nucleus and lateral and medial geniculate body. Relay primary sensations by passing specific sensory information to the corresponding cortical area. 
+\point Association nuclei -- receive input from specific areas of the cortex, which is proejcted back to the cortex to ``somewhat'' generalized association areas, where they regulate activity.
+\point non--specific nuclei (intralaminar and midline thalamic), which receive input from cerebral cortex and project information diffusely through it. Most of these interconnect brain activity between different areas of the brain and play a role in general functions such as alerting.
+\end{outline}
+
+\textbf{Note:} brain part info from
+
+\begin{outline}
+    \point http://www.news-medical.net/health/What-does-the-Thalamus-do.aspx
+    \point http://neuroscience.uth.tmc.edu/s4/chapter06.html -- talks about fear response and amygdala
+    \point Britannica, and other places too\ldots
+\end{outline}
+
+
+
 
 
 \section{Neural reuse: a fundamental organizational principle of the brain. \cite{Anderson2010}}
@@ -211,30 +271,34 @@ Test...
 
 \subsection{Introduction to mechanisms of neural circuit formation}
 Topics in book:
-\begin{enumerate}
-\item cell adhesion molecules (and downstream roles in cell identity, recognition, and synaptic specificity)
-\item axon guidance, formation of terminals, and dendritic arborization
-\item formation of synaptic structures themselves (remains subject to remodeling and plasticity throughout development and even in adult animals)
-\end{enumerate}
+\begin{outline}
+\point cell adhesion molecules (and downstream roles in cell identity, recognition, and synaptic specificity)
+\point axon guidance, formation of terminals, and dendritic arborization
+\point formation of synaptic structures themselves (remains subject to remodeling and plasticity throughout development and even in adult animals)
+\end{outline}
 
 \subsection{Wired for Behaviors: from development to function of innate limbic system circuitry, 2012}
 \label{MNCF:wiredforbehaviors}
 
-\begin{enumerate}
-  \item ``Limbic system links external cues possessing emotional, social, or motivational relefance to a specificed set of contextual and species--specific appropriate bahavioral outpts''
-  \item Some enhanced through experiential learning and reinforcement, but others are innate
-    \subitem courship, maternal care, defense, establishment of social hierarchy \rarrow all ensure survival of individual or offspring, and thus propagation of species
-    \subitem regulated and influenced by sensory stimuli
-  \item ``Emotional salience, produced in the amygdala, is generally thought of as a prime driving force behind innate human behaviors, typically social in nature''
-  \item This review focuses on the rodent, and because sensory inputs to rodents are primarily smell, audio, and touch, (with minimal visual inputs), the review focuses on chemosensation and how it relates to mating, maternal care, etc.
-    \item innate rodent behaviors, e.g.: female prefers male urine odors to female, or no odors (naive); mouse that has never encountered a predator will display signs of fear in response to preditor odors.
-    \subitem These chemicals are detected in the nose, processed by the Main and Accessory Olfactory Bulbs (MOB, AOB), projections from the AOB and MOB (directly or undirectly) synapse onto a number of higher order strucutres (olfactory cortex, amygdala), and the amygdala sents projections to the hypothalamus for further integration and coordination with the brain stem to initiate ``fight or flight'' responses.
-        \subsubitem although they will focus their attention on this circuit, they state that: ``we would like to emphasize that these brain hubs and their many feedback loops are not the sole components of a highly complex neural network imporant for the regulation of sociability an innate emotions''
-      \item disabling different parts of the aforementioned circuit, when looking at mating behaviors, can all have different effects on mating behavior (e.g., males seeking males)
-      \item defensive behaviors trigger slightly different areas of the amygdala and hypothalamus, depending upon whether the stimulus is a predator or a conspecific animal.
-        \subitem NOTE: this seems to back up the idea of building on / expanding existing structures to grow the brain in Ortus
-      \item VNO organ (receptors) appear(s) to have evolved specifically to respond to cues taht depend upon the animal's survival in the wild (so, to react to specific species)
-\end{enumerate}
+\begin{outline}
+  \point ``Limbic system links external cues possessing emotional, social, or motivational relefance to a specificed set of contextual and species--specific appropriate bahavioral outpts''
+  \point Some enhanced through experiential learning and reinforcement, but others are innate
+    \subpoint courship, maternal care, defense, establishment of social hierarchy $\rightarrow$ all ensure survival of individual or offspring, and thus propagation of species
+    \subpoint regulated and influenced by sensory stimuli
+  \point ``Emotional salience, produced in the amygdala, is generally thought of as a prime driving force behind innate human behaviors, typically social in nature''
+  \point This review focuses on the rodent, and because sensory inputs to rodents are primarily smell, audio, and touch, (with minimal visual inputs), the review focuses on chemosensation and how it relates to mating, maternal care, etc.
+    \point innate rodent behaviors, e.g.: female prefers male urine odors to female, or no odors (naive); mouse that has never encountered a predator will display signs of fear in response to preditor odors.
+    \subpoint These chemicals are detected in the nose, processed by the Main and Accessory Olfactory Bulbs (MOB, AOB), projections from the AOB and MOB (directly or undirectly) synapse onto a number of higher order strucutres (olfactory cortex, amygdala), and the amygdala sents projections to the hypothalamus for further integration and coordination with the brain stem to initiate ``fight or flight'' responses.
+        \subsubpoint although they will focus their attention on this circuit, they state that: ``we would like to emphasize that these brain hubs and their many feedback loops are not the sole components of a highly complex neural network imporant for the regulation of sociability an innate emotions''
+        \supersubpoint This is probably dumb.
+      \point disabling different parts of the aforementioned circuit, when looking at mating behaviors, can all have different effects on mating behavior (e.g., males seeking males)
+      \point defensive behaviors trigger slightly different areas of the amygdala and hypothalamus, depending upon whether the stimulus is a predator or a conspecific animal.
+        \subpoint NOTE: this seems to back up the idea of building on / expanding existing structures to grow the brain in Ortus
+      \point VNO organ (receptors) appear(s) to have evolved specifically to respond to cues taht depend upon the animal's survival in the wild (so, to react to specific species)
+    \point TEMP
+
+\end{outline}
+
 
 
 \subsection{Protocadherins, not prototypical: a complex tale of their interactions, expression, and functions}
@@ -259,13 +323,13 @@ Test...
 % :g /^\(\<\(author\|doi\|file\|abstract\|publisher\|journal\|pages\|url\|year\|volume\|pmid\|keywords\|issn\|isbn\|booktitle\|number\|edition\)\>\|}\)\{1}.*$/ d 
 
 %% command to delete characters around reference 'name':
-% :%s/@.\{-}{\(.*\),/\1/g
+% :%s/@.\{-}{\(.*\),/\point/g
 
 %% command to replace "}}," from the title line, with \cite{ and the reference name from the @... line:
 % :%s/}},/\=" \\cite{".getline(line('.')-1)."}}"/g    
 
 %% command to replace "title = {{" with "\section{"
-% :%s/title\ =\ {{\(.*}}\)/\\section{\1/g     
+% :%s/title\ =\ {{\(.*}}\)/\\section{\point/g     
 
 %% and finally, a command to delete all lines that don't begin with \section
 % :g!/\\section.*/d 
