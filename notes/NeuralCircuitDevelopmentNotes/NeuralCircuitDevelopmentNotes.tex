@@ -66,8 +66,11 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
 \point as things get repeated, the pathway between input and output shortens (creates a ``reflexive reaction'', though not the same as a real reflex, like a knee jerk)
   \subpoint \textbf{Ortus premise:} Essentially, complex behaviors are more nuanced reflexes. A reflex goes from a sensory neuron to the spinal cord where interneurons redirect the signal to a motorneuron. Complex behaviors originate from some combination of existing neural activity and sensory input, which combine and, after being passed through a number of different interneurons, end up as signals to motor neurons, or loop back around to continue the ``thought'' process.
 \point Should have a loop that re--energizes (in a decaying way) neural pathways/circuits that were recently used. In this way, perhaps we can implement instrumental learning, and time--based/sequence--based knowledge.
-\point rodent and human brain have same basic structure, it seems. things tend to be organized fairly similarly, relative to eachother. \ref{MNCF:wiredforbehaviors}
+\point rodent and human brain have same basic structure, it seems. things tend to be organized fairly similarly, relative to each other. \ref{MNCF:wiredforbehaviors}
 \point \ref{MNCF:wiredforbehaviors} are discussing rodent experiments that cause lesions to regions of the brain, so ortus should be able to function by using single neurons to represent groups of neurons, while there isn't a requirement for greater behavioral nuance.
+\point What if the inherent connections we have are the only ones that just 'grow', and the only way to grow new synapses from experiences/life is something similar to the ``triangle inequality''
+    \subpoint If A fires, and B fires, and C fires, and A has a CS with B, and B has a CS with C, then we create a synapse between A and C.
+    \subpoint For GJs, if A fires, and D fires, and at the same time, B fires and C fires, and A has a CS with D, and B has a CS with C, then we can create a GJ between C and D.
 \end{outline}
 
 
@@ -76,33 +79,43 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
 Genes\ldots
 
 \subsection{How Genes work}
-\href{``https://publications.nigms.nih.gov/thenewgenetics/chapter1.html''}{NIH -- How Genes Work}
-\href{``https://online.science.psu.edu/biol011_sandbox_7239/node/7260''}{PSU -- How Genes Work}
-\href{``http://genetics.thetech.org/about-genetics/how-do-genes-work''}{The Tech -- How Genes Work}
+\url{https://publications.nigms.nih.gov/thenewgenetics/chapter1.html}
+\url{https://online.science.psu.edu/biol011_sandbox_7239/node/7260}
+\url{http://genetics.thetech.org/about-genetics/how-do-genes-work}
 
 \subsection{Cell Signaling}
-\href{``http://www.nature.com/scitable/topicpage/cell-signaling-14047077''}{Nature -- Cell Signaling}
+\url{http://www.nature.com/scitable/topicpage/cell-signaling-14047077}
 
 \subsection{From DNA to protein}
-\href{``https://www.youtube.com/watch?v=gG7uCskUOrA''}{From DNA to protein - 3D}
+
+Video: From DNA to protein - 3D
+\url{https://www.youtube.com/watch?v=gG7uCskUOrA}
 
 \begin{outline}
   \nopoint My understanding is:
   \point DNA is made up of nucleotides
   \point Sections of DNA encode various genes
     \subpoint Intergenic DNA (DNA between genes) seems to play a part in determining which genes are turned on/off, among other things. (this is part of the 98\% of DNA not coding for genes)
+        \subsubpoint There is also DNA that sits in the middle of genes at times
+            \supersubpoint Exons $\rightarrow$ coding sequences, introns $\rightarrow$ intervening sequences
   \point Enzymes unzip the DNA, and one side is transcribed to generate RNA---a single strand of nucleotides
     \subpoint This happens for genes that are ``turned on'' 
+    \subpoint Each cell only ``turns on'' the genes it needs to do its job; this is due to proteins on the RNA polymerase
   \point Codons are groups of 3 nucleotides, from the RNA strand, that code for amino acids
     \subpoint There are ``start'' and ``end'' codons that mark the start and end of each gene
   \point Amino acids are protein building blocks
   \point The ribosomes then convert the codons from the RNA strand to proteins
-    \subpoint Prior to this, parts of the RNA are cut out-- (how does cutting genes out work?)
+    \subpoint Prior to this, parts of the RNA are cut out during RNA splicing
+        \subsubpoint Exons are stitched together, using introns to dictate things like ``alternative splicing''
     \subpoint genes are instructions for making certain proteins
+  \point The proteins ``made'' by some genes can act as switches
+    \subpoint If something goes wrong, a leg could grow instead of an antennae, for example.
+        \subsubpoint \textbf{This suggests that as replication happens, slight changes in the expressed genes are (more or less) deterministically carried out to ensure that things like arms, legs, vertebrae, etc. grow exactly as they should}
   \point Some of these proteins are receptors for neurons 
     \subpoint Some of these receptors are ligand--gated ion channels, that open to allow ions into or out of the neuron/cell.
         \subsubpoint AKA ion--channel--linked receptors
         \subsubpoint ligands are the neurotransmitters
+    
 
   
 \end{outline}
@@ -123,21 +136,21 @@ Genes\ldots
       \subpoint Thalamus - relays sensory impulses from receptors in various parts of the body to the cerebral cortex. Experts think of it as a gate. 98\% of sensory input is relayed by it (not olfaction? -- maybe olfaction is a more primitive sense that routes to cerebellum, and is similar to chemosensors in c. elegans?).
       \subpoint Hypothalamus  -- controls release of 8 major hormones, involved in temperature regulation, control of food and water intake,  sexual behavior,  daily cycles in physiological state and behavior, and mediation of emotional responses. 
       \subpoint Amygdala -- integrative center for emotions, emotional behavior, and motivation.  where memory and emotions are ``combined''. combines many different sensory inputs.
-        \subsubpoint Amygdalofugal Pathway (link whereby motivaiton and drives can influence responses, and where responses are learned, rewards and punishments), stria terminalis (similar to fornix) -- both important, come back to this.
+        \subsubpoint Amygdalofugal Pathway (link whereby motivation and drives can influence responses, and where responses are learned, rewards and punishments), stria terminalis (similar to fornix) -- both important, come back to this.
       \subpoint Hippocampus -- associated primarily with memory. looks like a seahorse. 
     \point Brain Stem -- underneath limbic system, responsible for basic vital life functions such as breathing, heartbeat, and blood pressure.
         \subpoint Midbrain -- (tectum, the 'roof', and tegmentum, in front of the tectum). Tectum responsible for visual reflexes. Tegmentum coordinates sensorimotor  information. 
         \subpoint Pons -- connects the spinal cord to higher brain levels, and transfers info from cerebrum to cerebellum, some of which are part of the reticular formation, which  regulates alertness, sleep, and wakefulness.
         \subpoint Medulla -- transmits signals between the spinal cord and higher parts of the brain, controls autonomic functions like heartbeat and respiration. Also holds part of reticular formation.
     \point grey matter: pinkish--grey, contains cell bodies, dendrites, and axon terminals -- so, this is where the synapses actually are. On outside of brain, but inside of spinal cord.
-    \point white matter: axons, which are connecting the different parts of grey matter to eachother. On inside of brain, but outside of spinal cord.
+    \point white matter: axons, which are connecting the different parts of grey matter to each other. On inside of brain, but outside of spinal cord.
 \end{outline}
 
 
 So, basically, input goes into thalamus, and is then relayed, in this way, associations can be built. Thalamus has three groups of cells:
 \begin{outline}
 \point Sensory relay nuclei -- These include the ventral posterior nucleus and lateral and medial geniculate body. Relay primary sensations by passing specific sensory information to the corresponding cortical area. 
-\point Association nuclei -- receive input from specific areas of the cortex, which is proejcted back to the cortex to ``somewhat'' generalized association areas, where they regulate activity.
+\point Association nuclei -- receive input from specific areas of the cortex, which is projected back to the cortex to ``somewhat'' generalized association areas, where they regulate activity.
 \point non--specific nuclei (intralaminar and midline thalamic), which receive input from cerebral cortex and project information diffusely through it. Most of these interconnect brain activity between different areas of the brain and play a role in general functions such as alerting.
 \end{outline}
 
@@ -225,6 +238,10 @@ Test...
 
 Test...
 
+\section{Roles of glial cells in synapse development \cite{frieger2009}}
+
+Test\ldots
+
 \section{Neural plasticity across the lifespan \cite{Power2016}}
 
 Test...
@@ -281,24 +298,45 @@ Topics in book:
 \label{MNCF:wiredforbehaviors}
 
 \begin{outline}
-  \point ``Limbic system links external cues possessing emotional, social, or motivational relefance to a specificed set of contextual and species--specific appropriate bahavioral outpts''
+  \point ``Limbic system links external cues possessing emotional, social, or motivational relevance to a specified set of contextual and species--specific appropriate behavioral outputs''
   \point Some enhanced through experiential learning and reinforcement, but others are innate
-    \subpoint courship, maternal care, defense, establishment of social hierarchy $\rightarrow$ all ensure survival of individual or offspring, and thus propagation of species
+    \subpoint courtship, maternal care, defense, establishment of social hierarchy $\rightarrow$ all ensure survival of individual or offspring, and thus propagation of species
     \subpoint regulated and influenced by sensory stimuli
   \point ``Emotional salience, produced in the amygdala, is generally thought of as a prime driving force behind innate human behaviors, typically social in nature''
   \point This review focuses on the rodent, and because sensory inputs to rodents are primarily smell, audio, and touch, (with minimal visual inputs), the review focuses on chemosensation and how it relates to mating, maternal care, etc.
-    \point innate rodent behaviors, e.g.: female prefers male urine odors to female, or no odors (naive); mouse that has never encountered a predator will display signs of fear in response to preditor odors.
-    \subpoint These chemicals are detected in the nose, processed by the Main and Accessory Olfactory Bulbs (MOB, AOB), projections from the AOB and MOB (directly or undirectly) synapse onto a number of higher order strucutres (olfactory cortex, amygdala), and the amygdala sents projections to the hypothalamus for further integration and coordination with the brain stem to initiate ``fight or flight'' responses.
-        \subsubpoint although they will focus their attention on this circuit, they state that: ``we would like to emphasize that these brain hubs and their many feedback loops are not the sole components of a highly complex neural network imporant for the regulation of sociability an innate emotions''
-        \supersubpoint This is probably dumb.
-      \point disabling different parts of the aforementioned circuit, when looking at mating behaviors, can all have different effects on mating behavior (e.g., males seeking males)
-      \point defensive behaviors trigger slightly different areas of the amygdala and hypothalamus, depending upon whether the stimulus is a predator or a conspecific animal.
-        \subpoint NOTE: this seems to back up the idea of building on / expanding existing structures to grow the brain in Ortus
-      \point VNO organ (receptors) appear(s) to have evolved specifically to respond to cues taht depend upon the animal's survival in the wild (so, to react to specific species)
-    \point TEMP
+  \point innate rodent behaviors, e.g.: female prefers male urine odors to female, or no odors (naive); mouse that has never encountered a predator will display signs of fear in response to predator odors.
+  \subpoint These chemicals are detected in the nose, processed by the Main and Accessory Olfactory Bulbs (MOB, AOB), projections from the AOB and MOB (directly or indirectly) synapse onto a number of higher order structures (olfactory cortex, amygdala), and the amygdala sent projections to the hypothalamus for further integration and coordination with the brain stem to initiate ``fight or flight'' responses.
+      \subsubpoint although they will focus their attention on this circuit, they state that: ``we would like to emphasize that these brain hubs and their many feedback loops are not the sole components of a highly complex neural network important for the regulation of sociability an innate emotions''
+  \point disabling different parts of the aforementioned circuit, when looking at mating behaviors, can all have different effects on mating behavior (e.g., males seeking males)
+  \point defensive behaviors trigger slightly different areas of the amygdala and hypothalamus, depending upon whether the stimulus is a predator or a conspecific animal.
+    \subpoint NOTE: this seems to back up the idea of building on / expanding existing structures to grow the brain in Ortus
+  \point VNO organ (receptors) appear(s) to have evolved specifically to respond to cues that depend upon the animal's survival in the wild (so, to react to specific species)
+  \point Gene expression is correlated with ``patterns to subsets of innate behaviors''
+  \point Estrogen and Testosterone both greatly impact (at least certain) the development of innate behaviors. In females, it is the primary hormone in the ``induction of maternal care''.
+    \subpoint Enzyme ``aromatose'' converts testosterone to estrogen in male brains. Without this, all aggressive behavior against intruder males disappears.
+        \subsubpoint Perhaps the hormonal state of an animal influences the connectivity? (note: that seems like it would require *very* plastic synapses\ldots)
+  \point Hormones (sex, and others) have an impact on the formation of neural circuits as well as the modulation of innate sex--specific behaviors.
+  \point By embryonic day (E) 18, most neurons dedicated for the limbic system have migrated to their final locations, and in some cases, begun to make connections.
+    \subpoint Early post--natal period is primarily characterized by elaboration of both short and long range connections, and shaping of circuits via experience and sex--specific hormone levels (note: what about other hormones?)
+    \point Neuronal patterning and specification of neurons is accomplished via the action sof delinated sets of transcription factors (typically homeodomain and bHLH classes)
+        \subpoint These genes have been conserved through evolution and act in many specices (fly, worm, mammals) -- so, they're important in neuronal dev.
+  \point Seems to be a genetically predetermined program of migration, differentiation, synaptogenesis, and maturation.
+  \point As a single olfactory sensory neuron matures, it will express a single olfactory receptor type, which detects a specific chemoical cue.
+    \subpoint During development, olfactory receptor genes are turned on synchronously in a spacially restricted manner, establishing zones.
+  \point Axons from olfactory receptor neurons form glomeruli (glomerulus, singular) in olfactory bulbs through a hierarchical process (olfactory sensory epithelial neurons expressing the same receptor type innervate common glomeruli)
+    \subpoint May be driven by olfactory receptor itself where a mechanism downstream of the actual olfactory receptors enables fasciculation of axons taht express simmilar receptors
+        \subsubpoint G--coupled receptors may generate  unique level of cAMP which regulates the expression of guidance factors Nrpl and Sema3A
+  \point Olfactory epithelial targeting of the olfactory bulb occurs at the same time that axonal projections from the olfactory bulb to deeper brain regions occur
+    \subpoint This suggests these guidance events are independent of each other, and sensory inputs.
+  \point Many neuronal cell types within the brain are generated far from the mature strucutres they will eventually populate (so, it's hard to draw connections btween embryonic development and post--natal structures---this was in reference to development of amygdala and hyothalamus)
+  \point
 
 \end{outline}
 
+
+\begin{outline}
+  
+\end{outline}
 
 
 \subsection{Protocadherins, not prototypical: a complex tale of their interactions, expression, and functions}
