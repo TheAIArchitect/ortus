@@ -71,6 +71,20 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
 \point What if the inherent connections we have are the only ones that just 'grow', and the only way to grow new synapses from experiences/life is something similar to the ``triangle inequality''
     \subpoint If A fires, and B fires, and C fires, and A has a CS with B, and B has a CS with C, then we create a synapse between A and C.
     \subpoint For GJs, if A fires, and D fires, and at the same time, B fires and C fires, and A has a CS with D, and B has a CS with C, then we can create a GJ between C and D.
+\point might make sense to have different ``genes'' responsible for excitatory and inhibitory synapses
+\point problem with worm was we would need to get too specific, and that doesn't necessarily help with generalized AI. For that goal, it makes sense to look at specific things, but then to figure out how to map that to a more generalized approach---e.g., map the concept of ``genes'' to something pluggable/switchable that can help shape a connectome.
+    \subpoint essentially, virtual DNA.
+        \subsubpoint InstructionUnits $\rightarrow$ CIU (ConnectomeInstructionUnit)
+  \point \textbf{Perhaps theres a chemical marker for simultaenous actions that tells the body to associate two or more sets of stimuli}
+\end{outline}
+
+\textbf{Example of CIU idea from above}
+Not going to model cell division, too low level. But, it's clear we need a set of sensory inputs, a set of motor outputs, a set of ``emotions'' (including things like pain, etc in that set), and an initial set of innate behaviors. For example:
+
+\textbf{Format: if ``A'' then ``B'' which is Rule #X}
+\begin{outline}
+\point -O2 $\rightarrow$ +MINHALE, -MEXHALE $\RightArrow$ R1
+\point +CO2 $\righarrow$ +MEXHALE, -MINHALE $\RightArrow$ R2
 \end{outline}
 
 
@@ -329,19 +343,31 @@ Topics in book:
   \point Olfactory epithelial targeting of the olfactory bulb occurs at the same time that axonal projections from the olfactory bulb to deeper brain regions occur
     \subpoint This suggests these guidance events are independent of each other, and sensory inputs.
   \point Many neuronal cell types within the brain are generated far from the mature strucutres they will eventually populate (so, it's hard to draw connections btween embryonic development and post--natal structures---this was in reference to development of amygdala and hyothalamus)
-  \point
+  \point Different nuceli of the amygdala, associated with different behaviors, express distinct patterns of LIM--homeodomain containing genes during development.
+    \subpoint The combinatorial expression patterns of LIM genes may provide a comprehensive mechanism for patterning the amygdala
+    \subpoint A nucleus, as it relates to neuroanatomy is a cluster of neurons that have roughly similar connections and functions
+  \point The same sort of gene encoding of transcription factors and regional specificity seen in the amygdala is seen in the hypothalamus.
+  \point Mice that don't have certain genes won't have proper positioning of certain neurons, or necessary hypothalamic nuclei (influenced by Sim1, and Otp transcription factors, respectively)
+  \point It's possible that in addition to patterning neuronal identity, key transcription factors encode subsets of genes (most likley cell adhesion molecules) that would be required for limbic circuit specific connectivity)
+  \point Gene ``Met'', a receptor tyrosine kinase, detected in key limbic areas (cortex, amygdala, hypothalamus, and septum, can alter arbor complexity, increase growth and excitatory synapse formation. 
 
 \end{outline}
 
 
-\begin{outline}
   
-\end{outline}
 
 
 \subsection{Protocadherins, not prototypical: a complex tale of their interactions, expression, and functions}
 
+Paper was very low--level, discusssed molecular adhesion relating to the specifics of Pcdhs---Protocadherins.
 
+\subsection{Molecular codes for neuronal individuality and cell assembly in the brain}
+
+Test\ldots
+
+\subsection{Synaptic clustering during development and learning: the why, when, and how}
+
+Test\ldots
 
 \section{Synaptogenesis: A synaptic bridge \cite{Yates2016}}
 
@@ -353,6 +379,22 @@ Test...
 \bibliography{NeuralCircuitDevelopment}
 \bibliographystyle{ieeetr}
 \end{document}  
+%%%% READ TOMORROW %%%%%%
+% Rules for shaping neural connections
+% Functional roles for short term synaptic plasticity
+% Timing Rules for Synaptic Plasticity\ldots
+% Neural Plasticity ACross the lifespan
+% Circuit Mechanisms of Sensory Motor Learning
+% Why Neurons have thousands of synapses (get citation from stupidfile.bib)
+
+
+
+
+
+
+
+
+
 
 %%%%%%%%%%%% 
 % There is a function, callable via ":call BibToSections()" in ~./vimrc that will run all these commands in successsion:
