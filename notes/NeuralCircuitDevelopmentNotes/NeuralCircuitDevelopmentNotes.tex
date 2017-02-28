@@ -76,15 +76,25 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
     \subpoint essentially, virtual DNA.
         \subsubpoint InstructionUnits $\rightarrow$ CIU (ConnectomeInstructionUnit)
   \point \textbf{Perhaps theres a chemical marker for simultaenous actions that tells the body to associate two or more sets of stimuli}
+  \point visual encoding (assume 16 pixels):
+    \subpoint group of 4 pixels in center, red, needs to be associated with a ``touch'', so some neuron gets the input from those 4 pixels, and passes that signal along to another neuron, which also gets the touch. this neuron passes that signal along.
+    \subpoint other 4 pixels, same operation, different neuronal chain.
+    \subpoint now, it sees both at once, so the second layer of neurons both go into a different 3rd layer (separate from the other 2 3rd layer ones that had other associations), and tie that together with some other sensory input.
+    \subpoint the more you do this, the more intertwined your visual system becomes.
+\point May need to work with space/location, but in a relative sense. A 3D coordinate may not be necessary or make sense, but perhaps each cell needs to know how close it is to other cells?
+    \subpoint might be able to use a proximity coefficient for any two neurons\ldots problem here is we would have to either have different ones for different synapses, or assume it's okay to assign neuron to neuron PCs as opposed to synapse to synapse ones.
+    \subpoint adjacent body parts, areas on skin, are ``represented'' by similarly adjacent neurons
+\point locally--correlated, patterned firing 
+\point grow synapses with nearby neurons, maybe try reaching out probabalistically or something?
 \end{outline}
 
 \textbf{Example of CIU idea from above}
 Not going to model cell division, too low level. But, it's clear we need a set of sensory inputs, a set of motor outputs, a set of ``emotions'' (including things like pain, etc in that set), and an initial set of innate behaviors. For example:
 
-\textbf{Format: if ``A'' then ``B'' which is Rule #X}
+\textbf{Format: if ``A'' then ``B'' which is Rule \#X}
 \begin{outline}
-\point -O2 $\rightarrow$ +MINHALE, -MEXHALE $\RightArrow$ R1
-\point +CO2 $\righarrow$ +MEXHALE, -MINHALE $\RightArrow$ R2
+\point -O2 $\rightarrow$ +MINHALE, -MEXHALE $\Rightarrow$ R1
+\point +CO2 $\rightarrow$ +MEXHALE, -MINHALE $\Rightarrow$ R2
 \end{outline}
 
 
@@ -222,7 +232,53 @@ Test...
 
 \section{Rules for shaping neural connections in the developing brain \cite{Kutsarova2016}}
 
-Test...
+Review article, proposes a detailed set of cellular rules that govern activity-dependent circuit refinement. Synthesizes what has been learned in the extensive experimental lit. on the dev. of the visual system. (strong emphasis on data obtained from live imaging of the retinotectal projection in fish and frogs). Unlike mammals, these animals rely extensively on vision for survival from very early dev. stages, and use this same visual info to direct circuit refinement.
+
+Note: Presumably this translates to other parts of the brain, mammal or not??
+
+\begin{outline}
+  \point In the contralateral optic tectum, axonal temrinals are organized such that they reconstitute a topographic map of the retina
+    \point Binocular projections segregate into alternating eye--specific bands in th rostral colliculus (in mammals)
+    \point the dorsal lateral geniculate nuclei (LGN) in the thalamus is thought to erve as the fundamental relay station through which visual information is passed to higher order cortical visual centers where increasingly complex features are extracted from visual scenes
+    \point the most prominent activity--dependent stages of brain circuit refinement do not necessarily take place at the same time in development (organization for different parts matures at different times), so the rules that control retinotectal refinement may be fundamentally different, or manifest themselves differently, during later refinement events.
+\end{outline}
+
+\textbf{Rules for Retinotectal Structural Plasticity}
+
+\begin{outline}
+ \point Molecular guidance cues provide information for coarse axonal targeting 
+    \subpoint Retinal Ganglion Cell (RGC) axons will regrow to roughly the same (correct) locations after having been sectioned
+    \subpoint Gradients of expressions of ligands cause axon attraction and repulsion, and seems to guide the path axons take
+        \subsubpoint Known as Sperry's ``Chomaffinity Hypothesis''
+ \point Inputs compete for available synaptic target space
+    \subpoint It seems that relative levels of ligand expression controls the organization of a topographically ordered map.
+    \subpoint At the single axon level, a transplanted RGC was allowed to innervate the optic tectum of a lakritz mutant fish, incapable of generating its own RGCs. The single axon was free to innervate its target in the complete absence of competition from other retinal afferents. The axon managed to target its topographically appropriate termination zone, but formed abnormally large terminal arbors. (note: they switched from singlar to pural midway though)
+        \subsubpoint this suggests that retinal axons do have at least a crudely defined inherent preferred termination zone within the target, presumably due to chemoaffinity cues, but that in the absence of competition for space, arbors can enlarge their coerage area (to an extent).
+    \subpoint Seems to be more--or--less independent of neural activity 
+        \subsubpoint reducing ability for some RGCs to fire decreases the size of arbors from those cells relative to those not restricted, however blocking all activity across the network restored normal arbor size to all cells.
+            \supersubpoint So, axon arbor size---important for the precision of connectivity--is regulated by activity--dependent competitive interactions
+ \point Axonal and dendritic arbors are highly dynaimc, even after seemingly mature morphology is attained
+    \subpoint Live imaging of axonal and dendritic remodeling in intact, transparent zebrafish and Xenopus (frog) embryos has shown that axons are perpetually extending and retracting extensive interstitial branch tips to prob the target area
+    \subpoint In zebrafish, the process by which an axon arrives at and elaborates extensive branch tips within its final terminaltion zone is not directed growth, but rather what appears to be be a process of random branch extension in which the overall progression of branch elongation and stabilization favors the future termination zone
+    \subpoint Similar in Xenopus, but individual arbors occupy a relatively larger proportion of the total tectal neuropil from earlier stages, creating a situation in which the topographic map increases in precision with age (by both restricting axonal branches to appropriate locations, and constant growth of the total retinorecipient field with age)
+    \subpoint As the tectum expands by adding cells, RGC arbors adjust and improve their relative retinotopic order by gradually shifting their positions
+    \subpoint even in relativley mature tadpoles, in which RGC axons have attained their mature size and complexity, time lapse imaging still reveals ongoing remodeling and exploratory probing at branch tips (at considerably slower rates)
+ \point Patterened neuronal activity provides instructive cues that help refine inputs:
+    \subpoint Synchronous firing stabilizes synapses and prolongs branch lifetimes while actively suppressing branch dynamics via N--methyl D--aspartate receptor (NMDAR)--dependent retrograde signaling
+    \subpoint Asynchronous activity weakens synapses (LTD)  and actively promotes axonal branch dynamics, including addition and elongation, as well as branch elimination (Stentian mechanisms)
+
+ \point In the absence of sensory input, correlated spontaneous firing provides surrogate patterned activity
+  \subpoint dark--rearing -- seems not to impact refinement of visual system, but dark rearing also doesn't necessarily deprive the visual system of all activity
+  \subpoint in contrast to dark--rearing, using TTX to block action potential firing during optic nerge regeneration (in adult goldfish) prevented the refinement of multiunit receptive field sizes, and resulted in the degradation of precision in the anatomical projection
+  \subsubpoint axonal arbors were significantly enlarged
+    \supersubpoint in Xenopus tadpoles, blocking retinal APs led to a rapid increase in axonal branch dynamics measured as number of branches added and lost per 2 h.
+  \subsubpoint Locally--correlated, patterned firing in the retina, whether mediated by visual stimuli or spontaneous retinal waves, carries information about the relative locations of RGCs with respect to one another that the system can use to instruct map refinement.
+
+ \point New axonal branch tips emerge near existing synapses
+ \point Stronger synapses help stabilize the axons and dendrites on which they form (Synaptotropism)
+ \point Homeostatic mechanisms help maintain the overall level of functional synaptic input to the target
+
+\end{outline}
 
 \section{Correlated Synaptic Inputs Drive Dendritic Calcium Amplification and Cooperative Plasticity during Clustered Synapse Development \cite{Lee2016}}
 
@@ -388,6 +444,7 @@ Test...
 % Why Neurons have thousands of synapses (get citation from stupidfile.bib)
 
 
+%fuzzy image fusion, 
 
 
 
