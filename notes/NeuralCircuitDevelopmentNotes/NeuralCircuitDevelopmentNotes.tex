@@ -86,7 +86,10 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
     \subpoint adjacent body parts, areas on skin, are ``represented'' by similarly adjacent neurons
 \point locally--correlated, patterned firing 
 \point grow synapses with nearby neurons, maybe try reaching out probabalistically or something?
+\point The fact that new axonal branch tips emerge near existing synapses means that behavior gets reinforced and things ortus repeats will become more and more ingrained\ldots this seems to have implications for forming new memories, and short term memories.
 \end{outline}
+
+A neuron is kind of like a person\ldots You go out and meet 5 people. 3 of them you get along with, and 2 you don't. You end up meeting the friends of those 3 people, and maybe like a few of them, and then your network will grow/strengthen in much the same way as a neuron's axon does.
 
 \textbf{Example of CIU idea from above}
 Not going to model cell division, too low level. But, it's clear we need a set of sensory inputs, a set of motor outputs, a set of ``emotions'' (including things like pain, etc in that set), and an initial set of innate behaviors. For example:
@@ -232,6 +235,8 @@ Test...
 
 \section{Rules for shaping neural connections in the developing brain \cite{Kutsarova2016}}
 
+\textbf{note: get flow chart image, figure 2, on page 12}
+
 Review article, proposes a detailed set of cellular rules that govern activity-dependent circuit refinement. Synthesizes what has been learned in the extensive experimental lit. on the dev. of the visual system. (strong emphasis on data obtained from live imaging of the retinotectal projection in fish and frogs). Unlike mammals, these animals rely extensively on vision for survival from very early dev. stages, and use this same visual info to direct circuit refinement.
 
 Note: Presumably this translates to other parts of the brain, mammal or not??
@@ -263,20 +268,62 @@ Note: Presumably this translates to other parts of the brain, mammal or not??
     \subpoint Similar in Xenopus, but individual arbors occupy a relatively larger proportion of the total tectal neuropil from earlier stages, creating a situation in which the topographic map increases in precision with age (by both restricting axonal branches to appropriate locations, and constant growth of the total retinorecipient field with age)
     \subpoint As the tectum expands by adding cells, RGC arbors adjust and improve their relative retinotopic order by gradually shifting their positions
     \subpoint even in relativley mature tadpoles, in which RGC axons have attained their mature size and complexity, time lapse imaging still reveals ongoing remodeling and exploratory probing at branch tips (at considerably slower rates)
+
+
  \point Patterened neuronal activity provides instructive cues that help refine inputs:
-    \subpoint Synchronous firing stabilizes synapses and prolongs branch lifetimes while actively suppressing branch dynamics via N--methyl D--aspartate receptor (NMDAR)--dependent retrograde signaling
-    \subpoint Asynchronous activity weakens synapses (LTD)  and actively promotes axonal branch dynamics, including addition and elongation, as well as branch elimination (Stentian mechanisms)
 
- \point In the absence of sensory input, correlated spontaneous firing provides surrogate patterned activity
   \subpoint dark--rearing -- seems not to impact refinement of visual system, but dark rearing also doesn't necessarily deprive the visual system of all activity
-  \subpoint in contrast to dark--rearing, using TTX to block action potential firing during optic nerge regeneration (in adult goldfish) prevented the refinement of multiunit receptive field sizes, and resulted in the degradation of precision in the anatomical projection
-  \subsubpoint axonal arbors were significantly enlarged
-    \supersubpoint in Xenopus tadpoles, blocking retinal APs led to a rapid increase in axonal branch dynamics measured as number of branches added and lost per 2 h.
-  \subsubpoint Locally--correlated, patterned firing in the retina, whether mediated by visual stimuli or spontaneous retinal waves, carries information about the relative locations of RGCs with respect to one another that the system can use to instruct map refinement.
+    \subpoint in contrast to dark--rearing, using TTX to block action potential firing during optic nerge regeneration (in adult goldfish) prevented the refinement of multiunit receptive field sizes, and resulted in the degradation of precision in the anatomical projection
+      \subsubpoint axonal arbors were significantly enlarged
+        \supersubpoint in Xenopus tadpoles, blocking retinal APs led to a rapid increase in axonal branch dynamics measured as number of branches added and lost per 2 h.
+    \subpoint Locally--correlated, patterned firing in the retina, whether mediated by visual stimuli or spontaneous retinal waves, carries information about the relative locations of RGCs with respect to one another that the system can use to instruct map refinement.
+      \subsubpoint The notion of correlated firing between pre and post synaptic cells modifying synaptic strength in response to coo-activation (Hebb synapse) comes from the observation of basal occlusion by $Mg^{2+}$ of the ion channel of NMDA receptors; which is the principal glutamate receptor type found at newly formed synapses
+        \supersubpoint only when the dual requirements of glutamate binding and simulataneous postsynaptic depolariziation to relieve the $Mg^{2+}$ block of the pore are satisfied can the NMDAR flux current. This property of the NMDAR means that it can function as a molecular detector of correlated activity.
+        \supersubpoint \url{https://en.wikipedia.org/wiki/NMDA_receptor}
+      \subsubpoint blocking NMDARs with APV (which blocks the glutamate binding site) prevents refinement of retinotectal maps, meaning that NMDARs presumably act as correlation detectors.
+    \subpoint Stroboscopic rearing---producing an atypically high degree of correlation in the firing activity of RGCs---in goldfish, caused retinotectal projections to substantitally overlap, and fail to refine throught development.
+        \subsubpoint these animals showed poor topographic refinement, with atypically large response fields.
+            \supersubpoint regenerating projections exhibit a similar failure to refine under conditions of stroboscopic illumination
+        \subsubpoint individual RGCs showed long axonal arbors that were diffusely branched (rather than having formed dense clusters of branches at the temrination zone)
+        \subsubpoint Though it seems that mice, which normally have binocular innervation of the SC, that had experienced optogenetic simultaneous co--activation of the two eye during the period of retinotectal axon ingrowth prio to eye--opening, ipsilateral eye afferent were no longer restricted to deeper tectal layers but instead appeared able to stabilize inputs within the more superficial layers where contralateral inputs normally terminate exclusively.
+        \supersubpoint (Note: my understanding of this, is that the stimulation impacted the growth of the axons such that they tried to account for the activation, suggesting that the correlated stimulation of both eyes caused the axons to grow as if they were coming from the same eye---in a sense) \textbf{look into this\ldots}
 
+    \subpoint Synchronous firing stabilizes synapses and prolongs branch lifetimes while actively suppressing branch dynamics via N--methyl D--aspartate receptor (NMDAR)--dependent retrograde signaling
+
+        \subsubpoint In order for Hebbian structural plasticity to be relevant to map refinement, postsynaptic signaling must be able to drive changes in the presynaptic axons through the production of one or more retrograde signals that can act back on the presynaptic terminal
+        \subsubpoint normal visual experience during the period of developmental refinement can activate postsynaptic NMDARs, and blocking NMDARs (with APV) results in a rapid upregulation of presynaptic RGC axon branch dynamics (greater number of new branch tips added and retracted) at the axon terminal.
+        \subsubpoint further, virually infecting postsynaptic tectal neurons, but not presynaptic RGCs with tCaMKII (a constitutively active truncated form of CaMKII, which lacks the autoinhibitory regulatory domaon, but mimics the activation of CaMKII that takes place in LTP induction), showed the expected enhancement in synaptic AMPAR currents as NMDAR--only ``silent synapses'' matures en masse to become AMPAR-containing functional synapses
+            \supersubpoint also found that RGC axon arbors grew less and had a much lower branch tip density than control cells, suggesting the existence of a retrograde signal downstream of CaMKII activation that stabilizes existing branches and suppresses branch elaboration as it drives synaptic maturation
+
+    \subpoint Asynchronous activity weakens synapses (LTD)  and actively promotes axonal branch dynamics, including addition and elongation, as well as branch elimination (Stentian mechanisms)
+        \subsubpoint most retinotectal projection in Xenopus tadpoles is almost purely contralateral, occasionally one or two RGC axons end up projecting to the ipsilateral optictectum (accidentally). These end up forming synaptic contacts within the ipsilateral tectum, presumably responding to the same molecular cues that guide the contralateral RGC axons to form a crude map.
+        \subsubpoint can test Hebbian ``fire together, wire together'' on these animals  because the only way the lone ipsilateral RGC will fire tectal neurons is to make it fire at the same time as the contralateral inputs (so, flash light at one eye vs both eyes).
+        \subsubpoint electrophysiological recordings showed that when both eyes were stimulated together, the ipsilateral input maintained or even slightly increased its synpatic strength relavite to the contralateral inputs, but when the two eyes were stimulated 1 second apart, the ipsilateral eye input (which by itself is usually not strong enough to drive the postsynaptic neurons to fire action potentials), very rapidly declines in synaptic strength and in many cases entirely loses its ability to evoke an AMPAR--mediated postsynaptic current.
+        \subsubpoint Asynchronous stimulation of the two eyes resulted in a rapid (within 30 min) and dramatic uprgulation of new branch additions, and a significant increase in branch tip elognation compared with axon dynamics during a preceeding period of darkness. Elimination of branch tips was also enhanced, indicating that rather than prouducing a larger arbour, aysynchronous stimulation makes the axon more dynamic and exploratory (similar to the effects of the NMDAR blockade).
+          \supersubpoint its unlikely that the lone ipsilateral axon would by itself be able to drive sufficient depolarlization of the postsynaptic tectal cell to permit $Ca^{2+}$ flux through NMDARs, and addition of MK801 to block NMDARs did not prevent the increased rate of branch additions in response to asynchronous stimulation. It is therefore possible that the source of the branch promoting signal may not be postsynaptic in origin, but could, for example be released by surrounding glial cells, or come directly from nearby axon terminals.
+        \subsubpoint in contrast, synchronous stimulation of the two eyes resulted in a rapid decrease in the rate of branch additions to levels seen in darkness. This decrease in branch dynamic behavior was completely prevented in the presence of MK801, or if tetanus toxin was expressed in the ipsilateral axon to render it incapable of releasing neurotransmitter.
+            \supersubpoint this indicates that the activation of postsynaptic NMDARs likley leads to the release of a retrograde branch suppressing factor. In addition, branches that did form during synchronous stimulation had longer lifetimes on average than those that emerged during periods of asynchronous stimulation, indicating that they were more stable overall.
+        \subsubpoint In the normal process of activity--dependent developmental refinement, a typical axon might be expected to experience a more modest range of local correlation and asynchrony that would lead to a slight upregulation of exploratory branching and synapse dissasembly on those branches that extend away from the proper termination zone (promoting them to keep growing until they land in more welcoming territory), and a stabilization and synaptic strengthening on those branches that extend into the appropriate part of the map where inputs with similar activity patterns converge (promoting consolidation and further synaptogenesis at this site). See figure 1 in ppaper if interested\ldots
+    
+ \point In the absence of sensory input, correlated spontaneous firing provides surrogate patterned activity
+    \subpoint ``retinal waves'' are patterns of spontaneous activity that exhibit a high degree of local correlation in firing, observed in the fetal retinal
+    \subpoint RGCs located in close proximity overlap their bursting activity in time, whereas RGCs that reside further away from each other are less likley to be co-active. This spaciotemporal pattern of RGC activity results from a local initiation of depolarization, which propagates to adjacent neurons, spreading over long distances across the retina.
+  
  \point New axonal branch tips emerge near existing synapses
+    \subpoint wherever a synapse strengthens (or weakens) through activity--dependent plasticity, it will be available (or not) to nucleate new branches from which new synapses can form.
+        \subsubpoint This consitutes a positive feedback loop that will lead to the targeted alaboration of axonal arbor at the site where that axon has formed effective, strong synaptic contacts, and the scaling back of branch inititation at inappropriate sites where synapses may form transiently but are subseqently eliminated.
+
  \point Stronger synapses help stabilize the axons and dendrites on which they form (Synaptotropism)
+    \subpoint Synaptic sites are fairly labile (easily changed). The dendritic tree elaborates through a process of dynamic filopodial extensions followed rapidly by synapse formation.
+    \subpoint As synapses form, those synapse--bearing branches become consolidated, and further branch extension then proceeds by building upon those more stable sites.
+        \subsubpoint blocking neurexin/neuroligin signaling or AMPAR trafficking (in Xenopus) tectal neurons prevents synaptogenesis or synapse maturation (respectively)---resulting in a failure to elaborate normal complex dendritic arbors.
+    \subpoint in zebrafish and Xenopus tadpoles, within minutes of RGC axonal branch extension, synaptophysin-GFP puncta could be oberved accumulating int he wake of the advancing growth cone. Some synaptic puncta were later lost, while other became more mature over time. When these branches later attempted to retract, the presence of a mature synaptic site conferred structural stability, preventing the branch from withdrawing beyond that site.
+
  \point Homeostatic mechanisms help maintain the overall level of functional synaptic input to the target
+    \subpoint Both the Hebbian and Stentian mechanisms in the context of changes in synaptic efficacy are inherently unstable
+        \subsubpoint for Hebbian, the positive feedback loop would become unsustainable, and for Stent's extension, each time the synapse weakened, it would become less and less likely that it would strengthen again (because it would be less likley that they pre and post cells would be correlated)
+    \subpoint The brain overcomes this inherent instability by enforcing a range of synaptic transmission within which bidirectional changes in synaptic efficacy can occur---known as ``homeostatic plasticity''
+    \subsubpoint \textbf{look into this.}
 
 \end{outline}
 
