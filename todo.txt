@@ -1,5 +1,11 @@
 ortus todo
 
+*** need to add location to synapses, perhaps neurons,
+** implement "DNA" (see Thoughts in latex notes
+** alter synaptic plasticity (see Thoughts in latex notes)
+
+GOAL: get through any immediate reading prior to doing the above work on ortus (or anything else on it) tomorrow, and take wednesday to plan and implement these things.
+
 * alter writeConnectome to have it re-order to put all sensors before inters before motors (before muscles)
 * fix Probe
 * re-implement checks from get_conns (checks for ablated elements, etc.)

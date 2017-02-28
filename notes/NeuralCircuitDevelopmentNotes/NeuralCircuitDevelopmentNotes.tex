@@ -87,6 +87,8 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
 \point locally--correlated, patterned firing 
 \point grow synapses with nearby neurons, maybe try reaching out probabalistically or something?
 \point The fact that new axonal branch tips emerge near existing synapses means that behavior gets reinforced and things ortus repeats will become more and more ingrained\ldots this seems to have implications for forming new memories, and short term memories.
+\point look into integration (signal, sensory)
+\point for a sequence, you need to have a chain of neurons fire, and then that signal loops back to a sensory or inter neuron, that starts off a new chain (but slightly differently)
 \end{outline}
 
 A neuron is kind of like a person\ldots You go out and meet 5 people. 3 of them you get along with, and 2 you don't. You end up meeting the friends of those 3 people, and maybe like a few of them, and then your network will grow/strengthen in much the same way as a neuron's axon does.
@@ -199,7 +201,30 @@ Test...
 
 \section{Functional roles of short-term synaptic plasticity with an emphasis on inhibition \cite{Anwar2017}}
 
-Test...
+
+\textbf{Note: paper was too high level to be immediately relevant}
+
+\begin{outline}
+    \point STP refers to transient activity--dependent changes in synaptic strength
+        \subpoint examples include short--term depression and facilitation in the millisecond range, but also longer--lasting changes in response to highly repetive activity, such as augmentation (lasting seconds), and post--teanic potentiation (lasting minutes).
+        \subpoint also: adaptation/sensitization, and gain control.
+    \point predominantly presynaptic
+        \subpoint STP leads to stronger synaptic connections at some firing frequencies over others $\rightarrow$ conveys frequency--filtering properties
+    \point Adaptation and sensitization allow sensory networks to change their sensitivity and properly relay fluctuating sensory signals, can be fast or slow, and happen at the receptor level as well as higher processing centers
+        \subpoint A study investigated the effect of STP in bipolar and amacrine synapses on contrast adaptation. Some bipolar to RGC synapses depressed while a similar number facilitated. the corresponding RGCs showed adaptation or sensitization to contrast, respectively. The facilitation observed in bipolar cell synapses is caused by depression of inhibitory feedback from amacrine cells. 
+    \point In the auditory system of birds, STP contributes to differences in the processing of different sound frequencies. Neurons in the chicken nucleus magnocellularis are organized in a tonotopic manner, and higher fequencies show less depression than lower ones. 
+  
+\end{outline}
+
+
+
+
+
+
+
+
+
+
 
 \section{Emerging roles of astrocytes in neural circuit development. \cite{Clarke2013}}
 
@@ -389,7 +414,31 @@ Test...
 
 \section{Timing Rules for Synaptic Plasticity Matched to Behavioral Function \cite{Suvrathan2016}}
 
-Test...
+
+
+
+
+
+
+\begin{outline}
+    \point Synaptic plsticity rules themselves can be highly specialized to match the functional requirements of a learning task
+    \point The fundamental requirement of associative learning is to store information about the correlations between events
+        \subpoint synaptic plasticity mechanisms have been described that can capture the correlations between coincident, or nearly coincident events
+           \subsubpoint \textbf{Feldman, D.E. (2012). The spike-timing dependence of plasticity. Neuron 75, 556–571.}
+        \subpoint Behavioral observations indicate the brain is also able to associate events separated in time, with equisite temporal precision
+            \subsubpoint During feedback--based learning, a delayed error signal must selectively modify synapses active at the specific, earlier time when the neural command leading to an error was generated
+            \supersubpoint known as the ``temporal credit assignment'' problem -- think of feedback delay when throwing a ball
+    \point During cerebellum--dependent learning, delayed feedback about performance errors is conveyed to the cerebellum by its climbing fiber input.
+        \subpoint Each spike in a climbing fiber produces a ``complex spike'', and concomitant calcium influx in its Purkinje cell targets. Releated pairings of climbing fiber (CF) activation with the activation of parallel fiber (PF) synapses onto the Pukinje cells result in depression of the parallel fiber--to--Purkinje cell (PF--to--PC) cynapses.
+            \subsubpoint Thus, error signals carried by the climbing fibers are thought to sculpt away, through associate synaptic depression, PF--to--PC synapses taht were active around the time that an error was generated
+
+    
+\end{outline}
+
+
+
+
+
 
 \section{Neural plasticity and behavior ??? sixty years of conceptual advances \cite{Sweatt2016}}
 
@@ -483,8 +532,8 @@ Test...
 \bibliographystyle{ieeetr}
 \end{document}  
 %%%% READ TOMORROW %%%%%%
-% Rules for shaping neural connections
-% Functional roles for short term synaptic plasticity
+% DONE % Rules for shaping neural connections
+% LOOKED AT / SKIMMED % Functional roles for short term synaptic plasticity
 % Timing Rules for Synaptic Plasticity\ldots
 % Neural Plasticity ACross the lifespan
 % Circuit Mechanisms of Sensory Motor Learning
