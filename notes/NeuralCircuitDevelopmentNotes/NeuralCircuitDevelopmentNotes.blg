@@ -3,47 +3,59 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: NeuralCircuitDevelopmentNotes.aux
 The style file: ieeetr.bst
 Database file #1: NeuralCircuitDevelopment.bib
+Repeated entry---line 467 of file NeuralCircuitDevelopment.bib
+ : @article{DePitta2016
+ :                     ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 629 of file NeuralCircuitDevelopment.bib
+ : @article{Makino2016
+ :                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 661 of file NeuralCircuitDevelopment.bib
+ : @article{Nair2016
+ :                  ,
+I'm skipping whatever remains of this entry
 Warning--can't use both volume and number fields in Simpson2009
 Warning--empty publisher in Weiner2015
-You've used 30 entries,
+You've used 50 entries,
             1876 wiz_defined-function locations,
-            683 strings with 8866 characters,
-and the built_in function-call counts, 8958 in all, are:
-= -- 935
-> -- 327
+            818 strings with 13561 characters,
+and the built_in function-call counts, 16267 in all, are:
+= -- 1681
+> -- 658
 < -- 0
-+ -- 121
-- -- 91
-* -- 660
-:= -- 1256
-add.period$ -- 32
-call.type$ -- 30
-change.case$ -- 29
++ -- 239
+- -- 189
+* -- 1218
+:= -- 2269
+add.period$ -- 52
+call.type$ -- 50
+change.case$ -- 49
 chr.to.int$ -- 0
-cite$ -- 32
-duplicate$ -- 451
-empty$ -- 803
-format.name$ -- 91
-if$ -- 2187
+cite$ -- 52
+duplicate$ -- 809
+empty$ -- 1389
+format.name$ -- 189
+if$ -- 3958
 int.to.chr$ -- 0
-int.to.str$ -- 30
-missing$ -- 32
-newline$ -- 95
-num.names$ -- 30
-pop$ -- 60
+int.to.str$ -- 50
+missing$ -- 52
+newline$ -- 155
+num.names$ -- 50
+pop$ -- 87
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 329
+skip$ -- 638
 stack$ -- 0
-substring$ -- 674
-swap$ -- 209
+substring$ -- 1263
+swap$ -- 407
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 2
-while$ -- 104
-width$ -- 32
-write$ -- 315
-(There were 2 warnings)
+while$ -- 176
+width$ -- 52
+write$ -- 532
+(There were 3 error messages)
