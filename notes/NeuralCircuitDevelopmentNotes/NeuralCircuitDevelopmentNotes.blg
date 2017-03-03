@@ -11,51 +11,48 @@ Repeated entry---line 629 of file NeuralCircuitDevelopment.bib
  : @article{Makino2016
  :                    ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 661 of file NeuralCircuitDevelopment.bib
- : @article{Nair2016
- :                  ,
-I'm skipping whatever remains of this entry
-Warning--can't use both volume and number fields in Simpson2009
 Warning--empty publisher in Weiner2015
-You've used 50 entries,
+Warning--empty journal in Fox2017
+Warning--empty journal in Kaneko2017
+You've used 29 entries,
             1876 wiz_defined-function locations,
-            818 strings with 13561 characters,
-and the built_in function-call counts, 16267 in all, are:
-= -- 1681
-> -- 658
+            676 strings with 9688 characters,
+and the built_in function-call counts, 9601 in all, are:
+= -- 960
+> -- 449
 < -- 0
-+ -- 239
-- -- 189
-* -- 1218
-:= -- 2269
-add.period$ -- 52
-call.type$ -- 50
-change.case$ -- 49
++ -- 160
+- -- 131
+* -- 745
+:= -- 1371
+add.period$ -- 30
+call.type$ -- 29
+change.case$ -- 28
 chr.to.int$ -- 0
-cite$ -- 52
-duplicate$ -- 809
-empty$ -- 1389
-format.name$ -- 189
-if$ -- 3958
+cite$ -- 32
+duplicate$ -- 465
+empty$ -- 791
+format.name$ -- 131
+if$ -- 2308
 int.to.chr$ -- 0
-int.to.str$ -- 50
-missing$ -- 52
-newline$ -- 155
-num.names$ -- 50
-pop$ -- 87
+int.to.str$ -- 29
+missing$ -- 30
+newline$ -- 91
+num.names$ -- 29
+pop$ -- 52
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 638
+skip$ -- 363
 stack$ -- 0
-substring$ -- 1263
-swap$ -- 407
+substring$ -- 705
+swap$ -- 231
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 2
-while$ -- 176
-width$ -- 52
-write$ -- 532
-(There were 3 error messages)
+warning$ -- 3
+while$ -- 99
+width$ -- 31
+write$ -- 307
+(There were 2 error messages)
