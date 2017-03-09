@@ -14,45 +14,45 @@ I'm skipping whatever remains of this entry
 Warning--empty publisher in Weiner2015
 Warning--empty journal in Fox2017
 Warning--empty journal in Kaneko2017
-You've used 29 entries,
+You've used 31 entries,
             1876 wiz_defined-function locations,
-            676 strings with 9688 characters,
-and the built_in function-call counts, 9601 in all, are:
-= -- 960
-> -- 449
+            688 strings with 10057 characters,
+and the built_in function-call counts, 10324 in all, are:
+= -- 1040
+> -- 471
 < -- 0
-+ -- 160
-- -- 131
-* -- 745
-:= -- 1371
-add.period$ -- 30
-call.type$ -- 29
-change.case$ -- 28
++ -- 168
+- -- 137
+* -- 796
+:= -- 1465
+add.period$ -- 32
+call.type$ -- 31
+change.case$ -- 30
 chr.to.int$ -- 0
-cite$ -- 32
-duplicate$ -- 465
-empty$ -- 791
-format.name$ -- 131
-if$ -- 2308
+cite$ -- 34
+duplicate$ -- 501
+empty$ -- 854
+format.name$ -- 137
+if$ -- 2487
 int.to.chr$ -- 0
-int.to.str$ -- 29
-missing$ -- 30
-newline$ -- 91
-num.names$ -- 29
-pop$ -- 52
+int.to.str$ -- 31
+missing$ -- 32
+newline$ -- 97
+num.names$ -- 31
+pop$ -- 55
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 363
+skip$ -- 395
 stack$ -- 0
-substring$ -- 705
-swap$ -- 231
+substring$ -- 777
+swap$ -- 251
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 3
-while$ -- 99
-width$ -- 31
-write$ -- 307
+while$ -- 107
+width$ -- 33
+write$ -- 328
 (There were 2 error messages)

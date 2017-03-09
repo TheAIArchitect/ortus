@@ -30,7 +30,8 @@
 \renewcommand{\outlineiii}{enumerate}
 \renewcommand{\outlineiiii}{enumerate}
 
-
+\usepackage{tikz}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
 
 
 
@@ -49,6 +50,43 @@
 \listoffigures
 \hypersetup{linkcolor=blue} %red
 
+\section{Ortus: Moving Forward}
+
+\begin{outline}
+    \point Location--based synaptic growth and decay
+        \subpoint will need to assign each neuron a 3D location
+            \subsubpoint initial synapse between two neurons will be midpoint between them, plus a little randomness to help ensure CSs and GJs between the same two neurons don't overlap
+        \subpoint then each synapse will ``look around'' by looking at near by synapses, and either probabalistically attempting to create a synapse, or (and probably better), creating a synapse if one near by (from the same neuron) is sufficiently strong (perhaps 2 at 1/2 of the required strength would be fine too?)
+            \subsubpoint the speed and strength of this will decay with age\ldots perhaps
+        \subpoint perhaps the location of synapses formed between two neurons could be the midpoint of the two closest synapses 
+    \point Connectome Instruction Units
+    \point Synaptic plasticity
+        \subpoint one way to fix the issue of needing to interact with the postsynaptic neuron and presynaptic neuron at the same time is to have a second connectome, just for writing, with modifications that should be made to the presynapses. This would be written by the postsynapses, informing the presynapse that it should increase or decrease strength.
+            \subsubpoint right now, the postsynapse increases the strength of the presynapse\ldots maybe that's not an issue? The only problem with that, as I currently see it, is that there's no good way to tell the presynaptic neuron that it should ``grow'' new exploratory synapses near a given synapse. 
+                \supersubpoint what about making the synapse matrix 3D, so that synapse exploration can occur based upon positive or negative change of surrounding synapses? Could probably get away with 2 or 3 ``history'' weights.
+\end{outline}
+
+Initiial Goals:
+
+\begin{outline}
+    \point List of CIUs in place of connectome
+        \subpoint CIUs should have rules for CS vs GJ
+        \subpoint Build connectome using a 
+    \point Ortus should form connectome from list of CIUs
+    \point \checkmark Innate behavior should cause a breathing cycle, lack of O2/increased CO2 should cause fear
+    \point Ortus should learn to fear water alone, via association with lack of O2/increased CO2
+    \point Ortus should learn to like water in the presence of food, while retaining fear of water in the absence of food
+        \subpoint This will require a fear center, as well as a happy center (food should cause happiness) 
+\end{outline}
+
+Why these goals? 
+
+They approximate the most basic functionality of living organisms. From there, we can expand the number of sensors via CIUs, and allow Ortus to add interneurons as needed while constructing the initial connectome. It will add neurons as it needs to in order to learn more things.
+
+From there, the next set of goals revolve around the implementation of a very simple (e.g. 16 ``pixel'') visual system, that will enable ortus to ``see'', and associate visual stimuli with emotion. After the ``Initital Goals'', during which we will have added fear and happy centers, we might add anger and sad centers.
+
+
+Also want to create muscles so the outputs (actions) of Ortus can be visualized.
 
 \section{Thoughts}
 
@@ -96,7 +134,11 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
 \point Need to give synapses 3D location, and then we need to see which neurons have synapses within some range of that synapse. 
     \subpoint Based upon that, a new synapse can grow, and if it doesn't get reinforced, it goes away. This seems like it would be done on the presynaptic side.
 \point to communicate with pre--synaptic neurons, there can be a read/write array that post--synaptic neurons can use to send ``messages'' to the pre--synaptic neurons on the next time--step (iteration). 
+\point the way to build normal associations is the same way you would go about building associations between any pair/set of stimuli.
+\point GJ formation implementation is wrong; don't look for exactly lined up correlation, it should be one time--step off. Think about how the worm's muscles are connected via GJs. They don't all activate at once, they activate in succession.
+\point Article talking about synaptic strength scaling with connections (more or less inversely proprotional), seems to further suggest that it's alright to model regions of the brain with one or a few neurons, and expand as necessary for more nuanced behavior.
 \end{outline}
+
 
 A neuron is kind of like a person\ldots You go out and meet 5 people. 3 of them you get along with, and 2 you don't. You end up meeting the friends of those 3 people, and maybe like a few of them, and then your network will grow/strengthen in much the same way as a neuron's axon does.
 
@@ -554,7 +596,17 @@ Coming soon\ldots
 
 \section{Synaptic mechanisms of associative memory in the amygdala \cite{Maren2005}}
 
-Coming soon\ldots
+\begin{outline}
+    \point NMDA receptor antagonists prevent the acuisition of fear memory
+    \point Rumpel et al, 2005, used modified AMPA-type glutamate receptors to measure learning--induced synaptic potentiation in single LA neurons after fear conditioning and to examine the consequences of blocking synaptic plasticity in a subset of LA neurons on fear learning and memory.
+        \subpoint Induction of LTP drives GluR1--containing AMPARs into synapses, and preventing AMPAR delivery reduces magnitude of LTP
+    \point LTP is expressed through an increase in synaptic AMPARs
+    \point Thalamo--amygdala: the induction and expression of LTP relies primarily on postsynaptic mechanisms (thought presynaptic increases in NTs may also occur after LTP induction)
+    \point Cortico--amygdala: plasticity may be induced either pre or post synaptically, but is mediated primarly by increases in presynaptic NT release.
+        \subpoint Presynaptic LTP induction is mediated by a novel synaptic mechanism in which activation of presynaptic NMDA receptors on cortical terminals by thalamic afferents induces an associative and heterosynaptic LTP at the cortico--amygdala synapse.
+\end{outline}
+
+Note: it seems like I should know this, but it's not clear to me what signal comes from the thalamus, and what signal comes from the cortical region\ldots
 
 %\section{Biologically based neural circuit modelling for the study of fear learning and extinction \cite{Nair2016}}
 \section{A circuit mechanism for differentiating positive and negative associations \cite{Namburi2015}}
@@ -586,7 +638,11 @@ Note: Just glanced at paper, but this suggests that the approach I want to take 
 
 \section{Hunger Promotes Fear Extinction by Activation of an Amygdala Microcircuit. \cite{Verma2015}}
 
-Coming soon\ldots
+NOTE: first point backs up Ortus premises (well, at least the one about emotions driving everything, and motivations, in a sense, because very simple/fundamental motivations are a result of emotions -- e.g., motivation is to not have fear, and to balance O2 and CO2; fear is obviously the emotion.)
+
+\begin{outline}
+   \point Emotions, motivations, and reinforcement lare a closely related, evolutionarily--conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment. 
+\end{outline}
 
 \section{Why Neurons Have Thousands of Synapses, a Theory of Sequence Memory in Neocortex \cite{Hawkins2016}}
 
@@ -607,6 +663,15 @@ Coming soon\ldots
 
 \bibliography{NeuralCircuitDevelopment}
 \bibliographystyle{ieeetr}
+\section{Mechanisms underlying the formation of the amygdalar fear memory trace: A computational perspective \cite{Feng2016}}
+
+Coming Very Soon\ldots
+
+\section{Synaptic scaling rule preserves excitatory–inhibitory balance and salient neuronal network dynamics \cite{Barral2016}}
+
+Coming Soon\ldots
+
+
 \end{document}  
 %%%% READ TOMORROW %%%%%%
 % DONE % Rules for shaping neural connections
