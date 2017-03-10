@@ -5,39 +5,49 @@
 \BOOKMARK [2][-]{subsection.3.2}{Cell Signaling}{section.3}% 5
 \BOOKMARK [2][-]{subsection.3.3}{From DNA to protein}{section.3}% 6
 \BOOKMARK [1][-]{section.4}{Parts of the Brain}{}% 7
-\BOOKMARK [1][-]{section.5}{Functional roles of short-term synaptic plasticity with an emphasis on inhibition Anwar2017}{}% 8
-\BOOKMARK [1][-]{section.6}{Astrocytes: Orchestrating synaptic plasticity? DePitta2016}{}% 9
-\BOOKMARK [1][-]{section.7}{Single-Cell Memory Regulates a Neural Circuit for Sensory Behavior Kobayashi2016}{}% 10
-\BOOKMARK [1][-]{section.8}{Rules for shaping neural connections in the developing brain Kutsarova2016}{}% 11
-\BOOKMARK [1][-]{section.9}{Circuit Mechanisms of Sensorimotor Learning Makino2016}{}% 12
-\BOOKMARK [1][-]{section.10}{A feedback neural circuit for calibrating aversive memory strength Ozawa2016}{}% 13
-\BOOKMARK [1][-]{section.11}{Neural plasticity across the lifespan Power2016}{}% 14
-\BOOKMARK [1][-]{section.12}{The development of cortical circuits for motion discrimination. Smith2015}{}% 15
-\BOOKMARK [1][-]{section.13}{The interplay between neurons and glia in synapse development and plasticity Stogsdill2017}{}% 16
-\BOOKMARK [1][-]{section.14}{Timing Rules for Synaptic Plasticity Matched to Behavioral Function Suvrathan2016}{}% 17
-\BOOKMARK [1][-]{section.15}{Homeostatic Plasticity of Subcellular Neuronal Structures: From Inputs to Outputs Wefelmeyer2016}{}% 18
-\BOOKMARK [1][-]{section.16}{[Book]Mechanisms of Neural Circuit Formation Weiner2015}{}% 19
-\BOOKMARK [2][-]{subsection.16.1}{Introduction to mechanisms of neural circuit formation}{section.16}% 20
-\BOOKMARK [2][-]{subsection.16.2}{Wired for Behaviors: from development to function of innate limbic system circuitry, 2012}{section.16}% 21
-\BOOKMARK [2][-]{subsection.16.3}{Protocadherins, not prototypical: a complex tale of their interactions, expression, and functions}{section.16}% 22
-\BOOKMARK [2][-]{subsection.16.4}{Molecular codes for neuronal individuality and cell assembly in the brain}{section.16}% 23
-\BOOKMARK [2][-]{subsection.16.5}{Synaptic clustering during development and learning: the why, when, and how}{section.16}% 24
-\BOOKMARK [1][-]{section.17}{Gating of hippocampal activity, plasticity, and memory by entorhinal cortex long-range inhibition Basu2016}{}% 25
-\BOOKMARK [1][-]{section.18}{Mind the Gap Junctions: The Importance of Electrical Synapses to Visual Processing Demb2016}{}% 26
-\BOOKMARK [1][-]{section.19}{Molecular mechanisms underlying formation of long-term reward memories and extinction memories in the honeybee \(Apis mellifera\). Eisenhardt2014}{}% 27
-\BOOKMARK [1][-]{section.20}{Neural Representations of Unconditioned Stimuli in Basolateral Amygdala Mediate Innate and Learned Responses Gore2015}{}% 28
-\BOOKMARK [1][-]{section.21}{Relational associative learning induces cross-modal plasticity in early visual cortex Headley2015}{}% 29
-\BOOKMARK [1][-]{section.22}{Distinct neural mechanisms for remembering when an event occurred Jenkins2016}{}% 30
-\BOOKMARK [1][-]{section.23}{Reward-Guided Learning with and without Causal Attribution Jocham2016}{}% 31
-\BOOKMARK [1][-]{section.24}{Hebbian and neuromodulatory mechanisms interact to trigger associative memory formation Johansen2014}{}% 32
-\BOOKMARK [1][-]{section.25}{Evaluation of ambiguous associations in the amygdala by learning the structure of the environment Madarasz2016}{}% 33
-\BOOKMARK [1][-]{section.26}{Synaptic mechanisms of associative memory in the amygdala Maren2005}{}% 34
-\BOOKMARK [1][-]{section.27}{A circuit mechanism for differentiating positive and negative associations Namburi2015}{}% 35
-\BOOKMARK [1][-]{section.28}{Neuroscience: When perceptual learning occurs Sasaki2017}{}% 36
-\BOOKMARK [1][-]{section.29}{Hunger Promotes Fear Extinction by Activation of an Amygdala Microcircuit. Verma2015}{}% 37
-\BOOKMARK [1][-]{section.30}{Why Neurons Have Thousands of Synapses, a Theory of Sequence Memory in Neocortex Hawkins2016}{}% 38
-\BOOKMARK [1][-]{section.31}{Micro-connectomics: probing the organization of neuronal networks at the cellular scale Schroter2017}{}% 39
-\BOOKMARK [1][-]{section.32}{Integrating Hebbian and homeostatic plasticity : introduction Fox2017}{}% 40
-\BOOKMARK [1][-]{section.33}{Homeostatic plasticity mechanisms in mouse V1 Kaneko2017}{}% 41
-\BOOKMARK [1][-]{section.34}{Mechanisms underlying the formation of the amygdalar fear memory trace: A computational perspective Feng2016}{}% 42
-\BOOKMARK [1][-]{section.35}{Synaptic scaling rule preserves excitatory–inhibitory balance and salient neuronal network dynamics Barral2016}{}% 43
+\BOOKMARK [1][-]{section.5}{Hebbian Learning notes form cornell: ``Lecture 12: Hebbian learning and plasticity''}{}% 8
+\BOOKMARK [1][-]{section.6}{Functional roles of short-term synaptic plasticity with an emphasis on inhibition Anwar2017}{}% 9
+\BOOKMARK [1][-]{section.7}{Astrocytes: Orchestrating synaptic plasticity? DePitta2016}{}% 10
+\BOOKMARK [1][-]{section.8}{Single-Cell Memory Regulates a Neural Circuit for Sensory Behavior Kobayashi2016}{}% 11
+\BOOKMARK [1][-]{section.9}{Rules for shaping neural connections in the developing brain Kutsarova2016}{}% 12
+\BOOKMARK [1][-]{section.10}{Circuit Mechanisms of Sensorimotor Learning Makino2016}{}% 13
+\BOOKMARK [1][-]{section.11}{A feedback neural circuit for calibrating aversive memory strength Ozawa2016}{}% 14
+\BOOKMARK [1][-]{section.12}{Neural plasticity across the lifespan Power2016}{}% 15
+\BOOKMARK [1][-]{section.13}{The development of cortical circuits for motion discrimination. Smith2015}{}% 16
+\BOOKMARK [1][-]{section.14}{The interplay between neurons and glia in synapse development and plasticity Stogsdill2017}{}% 17
+\BOOKMARK [1][-]{section.15}{Timing Rules for Synaptic Plasticity Matched to Behavioral Function Suvrathan2016}{}% 18
+\BOOKMARK [1][-]{section.16}{Homeostatic Plasticity of Subcellular Neuronal Structures: From Inputs to Outputs Wefelmeyer2016}{}% 19
+\BOOKMARK [1][-]{section.17}{[Book]Mechanisms of Neural Circuit Formation Weiner2015}{}% 20
+\BOOKMARK [2][-]{subsection.17.1}{Introduction to mechanisms of neural circuit formation}{section.17}% 21
+\BOOKMARK [2][-]{subsection.17.2}{Wired for Behaviors: from development to function of innate limbic system circuitry, 2012}{section.17}% 22
+\BOOKMARK [2][-]{subsection.17.3}{Protocadherins, not prototypical: a complex tale of their interactions, expression, and functions}{section.17}% 23
+\BOOKMARK [2][-]{subsection.17.4}{Molecular codes for neuronal individuality and cell assembly in the brain}{section.17}% 24
+\BOOKMARK [2][-]{subsection.17.5}{Synaptic clustering during development and learning: the why, when, and how}{section.17}% 25
+\BOOKMARK [1][-]{section.18}{Gating of hippocampal activity, plasticity, and memory by entorhinal cortex long-range inhibition Basu2016}{}% 26
+\BOOKMARK [1][-]{section.19}{Mind the Gap Junctions: The Importance of Electrical Synapses to Visual Processing Demb2016}{}% 27
+\BOOKMARK [1][-]{section.20}{Molecular mechanisms underlying formation of long-term reward memories and extinction memories in the honeybee \(Apis mellifera\). Eisenhardt2014}{}% 28
+\BOOKMARK [1][-]{section.21}{Neural Representations of Unconditioned Stimuli in Basolateral Amygdala Mediate Innate and Learned Responses Gore2015}{}% 29
+\BOOKMARK [1][-]{section.22}{Relational associative learning induces cross-modal plasticity in early visual cortex Headley2015}{}% 30
+\BOOKMARK [1][-]{section.23}{Distinct neural mechanisms for remembering when an event occurred Jenkins2016}{}% 31
+\BOOKMARK [1][-]{section.24}{Reward-Guided Learning with and without Causal Attribution Jocham2016}{}% 32
+\BOOKMARK [1][-]{section.25}{Hebbian and neuromodulatory mechanisms interact to trigger associative memory formation Johansen2014}{}% 33
+\BOOKMARK [1][-]{section.26}{Evaluation of ambiguous associations in the amygdala by learning the structure of the environment Madarasz2016}{}% 34
+\BOOKMARK [1][-]{section.27}{Synaptic mechanisms of associative memory in the amygdala Maren2005}{}% 35
+\BOOKMARK [1][-]{section.28}{A circuit mechanism for differentiating positive and negative associations Namburi2015}{}% 36
+\BOOKMARK [1][-]{section.29}{Neuroscience: When perceptual learning occurs Sasaki2017}{}% 37
+\BOOKMARK [1][-]{section.30}{Hunger Promotes Fear Extinction by Activation of an Amygdala Microcircuit. Verma2015}{}% 38
+\BOOKMARK [1][-]{section.31}{Why Neurons Have Thousands of Synapses, a Theory of Sequence Memory in Neocortex Hawkins2016}{}% 39
+\BOOKMARK [1][-]{section.32}{Micro-connectomics: probing the organization of neuronal networks at the cellular scale Schroter2017}{}% 40
+\BOOKMARK [1][-]{section.33}{Integrating Hebbian and homeostatic plasticity : introduction Fox2017}{}% 41
+\BOOKMARK [1][-]{section.34}{Homeostatic plasticity mechanisms in mouse V1 Kaneko2017}{}% 42
+\BOOKMARK [1][-]{section.35}{Mechanisms underlying the formation of the amygdalar fear memory trace: A computational perspective Feng2016}{}% 43
+\BOOKMARK [1][-]{section.36}{Synaptic scaling rule preserves excitatory–inhibitory balance and salient neuronal network dynamics Barral2016}{}% 44
+\BOOKMARK [1][-]{section.37}{Rapid Encoding of New Memories by Individual Neurons in the Human Brain Ison2015}{}% 45
+\BOOKMARK [1][-]{section.38}{Functional and structural underpinnings of neuronal assembly formation in learning Holtmaat2016}{}% 46
+\BOOKMARK [1][-]{section.39}{Mirror Neurons from Associative Learning Catmur2016}{}% 47
+\BOOKMARK [1][-]{section.40}{Functional basis of associative learning and their relationships with long-term potentiation evoked in the involved neural circuits: Lessons from studies in behaving mammals Gruart2015}{}% 48
+\BOOKMARK [1][-]{section.41}{Associative learning and sensory neuroplasticity: how does it happen and what is it good for? McGann2015}{}% 49
+\BOOKMARK [1][-]{section.42}{Associative learning and CA3-CA1 synaptic plasticity are impaired in D1R null, Drd1a-/- mice and in hippocampal siRNA silenced Drd1a mice. Ortiz2010}{}% 50
+\BOOKMARK [1][-]{section.43}{The synaptic plasticity and memory hypothesis : encoding , storage and persistence Takeuchi2013}{}% 51
+\BOOKMARK [1][-]{section.44}{Associative learning rapidly establishes neuronal representations of upcoming behavioral choices in crows. Veit2015}{}% 52
+\BOOKMARK [1][-]{section.45}{Associative Learning Drives the Formation of Silent Synapses in Neuronal Ensembles of the Nucleus Accumbens Whitaker2015}{}% 53

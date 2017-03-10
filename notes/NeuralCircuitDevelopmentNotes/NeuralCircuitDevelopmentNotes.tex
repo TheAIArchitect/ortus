@@ -56,7 +56,7 @@
     \point Location--based synaptic growth and decay
         \subpoint will need to assign each neuron a 3D location
             \subsubpoint initial synapse between two neurons will be midpoint between them, plus a little randomness to help ensure CSs and GJs between the same two neurons don't overlap
-        \subpoint then each synapse will ``look around'' by looking at near by synapses, and either probabalistically attempting to create a synapse, or (and probably better), creating a synapse if one near by (from the same neuron) is sufficiently strong (perhaps 2 at 1/2 of the required strength would be fine too?)
+        \subpoint then each synapse will ``look around'' by looking at near by synapses, and either probabilistically attempting to create a synapse, or (and probably better), creating a synapse if one near by (from the same neuron) is sufficiently strong (perhaps 2 at 1/2 of the required strength would be fine too?)
             \subsubpoint the speed and strength of this will decay with age\ldots perhaps
         \subpoint perhaps the location of synapses formed between two neurons could be the midpoint of the two closest synapses 
     \point Connectome Instruction Units
@@ -66,7 +66,7 @@
                 \supersubpoint what about making the synapse matrix 3D, so that synapse exploration can occur based upon positive or negative change of surrounding synapses? Could probably get away with 2 or 3 ``history'' weights.
 \end{outline}
 
-Initiial Goals:
+Initial Goals:
 
 \begin{outline}
     \point List of CIUs in place of connectome
@@ -83,7 +83,7 @@ Why these goals?
 
 They approximate the most basic functionality of living organisms. From there, we can expand the number of sensors via CIUs, and allow Ortus to add interneurons as needed while constructing the initial connectome. It will add neurons as it needs to in order to learn more things.
 
-From there, the next set of goals revolve around the implementation of a very simple (e.g. 16 ``pixel'') visual system, that will enable ortus to ``see'', and associate visual stimuli with emotion. After the ``Initital Goals'', during which we will have added fear and happy centers, we might add anger and sad centers.
+From there, the next set of goals revolve around the implementation of a very simple (e.g. 16 ``pixel'') visual system, that will enable ortus to ``see'', and associate visual stimuli with emotion. After the ``Initial Goals'', during which we will have added fear and happy centers, we might add anger and sad centers.
 
 
 Also want to create muscles so the outputs (actions) of Ortus can be visualized.
@@ -117,7 +117,7 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
 \point problem with worm was we would need to get too specific, and that doesn't necessarily help with generalized AI. For that goal, it makes sense to look at specific things, but then to figure out how to map that to a more generalized approach---e.g., map the concept of ``genes'' to something pluggable/switchable that can help shape a connectome.
     \subpoint careful\ldots don't want to go down rabbit hole.
     \subpoint essentially, virtual DNA (see example further down)
-        \subsubpoint InstructionUnits $\rightarrow$ CIU (ConnectomeInstructionUnit)
+        \subsubpoint InstructionUnits $\rightarrow$ CIU (Connectome Instruction Unit)
   \point Perhaps theres a chemical marker for simultaneous actions that tells the body to associate two or more sets of stimuli?
   \point visual encoding (assume 16 pixels):
     \subpoint group of 4 pixels in center, red, needs to be associated with a ``touch'', so some neuron gets the input from those 4 pixels, and passes that signal along to another neuron, which also gets the touch. this neuron passes that signal along.
@@ -136,9 +136,16 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
 \point to communicate with pre--synaptic neurons, there can be a read/write array that post--synaptic neurons can use to send ``messages'' to the pre--synaptic neurons on the next time--step (iteration). 
 \point the way to build normal associations is the same way you would go about building associations between any pair/set of stimuli.
 \point GJ formation implementation is wrong; don't look for exactly lined up correlation, it should be one time--step off. Think about how the worm's muscles are connected via GJs. They don't all activate at once, they activate in succession.
-\point Article talking about synaptic strength scaling with connections (more or less inversely proprotional), seems to further suggest that it's alright to model regions of the brain with one or a few neurons, and expand as necessary for more nuanced behavior.
+\point Article talking about synaptic strength scaling with connections (more or less inversely proportional), seems to further suggest that it's alright to model regions of the brain with one or a few neurons, and expand as necessary for more nuanced behavior.
+\point Perhaps humans, as well as other living things, are essentially very complex state--machines
+    \subpoint maybe we know to do various tasks (like sequences) because we learn that when we are in state X, then we do Y, which brings us to state Z, so we do W (e.g., playing a song)
+\point when someone asks you a question, essentially, they are causing you to activate the parts of your brain that are related 
+\point if you have A that fires, which causes C to fire, when CO2 increases (or O2 decreases), and you have B that fires when H2O is present, and A and B fire together, A should cause B to fire C.
+    \subpoint i suspect this all hinges upon an inherent interconnection  -- i.e., the auditory system, visual system, and somatic system are all very much intertwined.
+        \subsubpoint possibly why it takes babies such a long time to learn to speak. initially they try to talk and just spew a bunch of sounds.
 \end{outline}
 
+NOTE: Look into ``recurrent inhibition'': \url{http://neuroscience.uth.tmc.edu/s1/introduction.html}
 
 A neuron is kind of like a person\ldots You go out and meet 5 people. 3 of them you get along with, and 2 you don't. You end up meeting the friends of those 3 people, and maybe like a few of them, and then your network will grow/strengthen in much the same way as a neuron's axon does.
 
@@ -245,7 +252,16 @@ So, basically, input goes into thalamus, and is then relayed, in this way, assoc
     \point Britannica, and other places too\ldots
 \end{outline}
 
+\section{Hebbian Learning notes form cornell: ``Lecture 12: Hebbian learning and plasticity''}
 
+\url{http://www.nbb.cornell.edu/neurobio/linster/BioNB420/hebb.pdf}
+
+
+\begin{outline}
+    \point In sea mollusk Aplysia, a touch to the siphon results in gill withdrawal. This response habituates with repeated stimulation (note: repitition suppression?), but if the touch is \textit{then} accompanied by an electrical stimulation to the tail, the gill withdrawl response returns (so, it seems that the ``noxious'' stimulus to the tail sensitizes the gill withdrawal reflex).
+    \point 
+
+\end{outline}
 
 
 
@@ -596,13 +612,15 @@ Coming soon\ldots
 
 \section{Synaptic mechanisms of associative memory in the amygdala \cite{Maren2005}}
 
+search for ``pavlonian learning mechanisms''
+
 \begin{outline}
     \point NMDA receptor antagonists prevent the acuisition of fear memory
     \point Rumpel et al, 2005, used modified AMPA-type glutamate receptors to measure learning--induced synaptic potentiation in single LA neurons after fear conditioning and to examine the consequences of blocking synaptic plasticity in a subset of LA neurons on fear learning and memory.
         \subpoint Induction of LTP drives GluR1--containing AMPARs into synapses, and preventing AMPAR delivery reduces magnitude of LTP
     \point LTP is expressed through an increase in synaptic AMPARs
     \point Thalamo--amygdala: the induction and expression of LTP relies primarily on postsynaptic mechanisms (thought presynaptic increases in NTs may also occur after LTP induction)
-    \point Cortico--amygdala: plasticity may be induced either pre or post synaptically, but is mediated primarly by increases in presynaptic NT release.
+    \point Cortico--amygdala: plasticity may be induced either pre or post synaptically, but is mediated primarily by increases in presynaptic NT release.
         \subpoint Presynaptic LTP induction is mediated by a novel synaptic mechanism in which activation of presynaptic NMDA receptors on cortical terminals by thalamic afferents induces an associative and heterosynaptic LTP at the cortico--amygdala synapse.
 \end{outline}
 
@@ -640,8 +658,30 @@ Note: Just glanced at paper, but this suggests that the approach I want to take 
 
 NOTE: first point backs up Ortus premises (well, at least the one about emotions driving everything, and motivations, in a sense, because very simple/fundamental motivations are a result of emotions -- e.g., motivation is to not have fear, and to balance O2 and CO2; fear is obviously the emotion.)
 
+
 \begin{outline}
-   \point Emotions, motivations, and reinforcement lare a closely related, evolutionarily--conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment. 
+   \point Emotions, motivations, and reinforcement are a closely related, evolutionarily--conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment. 
+   \point The hypothesized that modulation of one survival circuit will provoke a significant impact on the other survival circuits
+        \subpoint e.g., if blood glucose levels fall, hormones are released and hypothalamic nucei will be activated, and food intake and search for food will prevail and emotional behavior will be adapted accordingly
+            \subsubpoint NOTE: similar to idea of O2, CO2, Water, fear, etc. in Ortus
+    \point Amygdala receives information about fear--provoking stimuli via thalamic and cortical afferents and regulates the resulting fear response by efferent projectiosn targeting hypothalamus and brain stem
+    \point The central Amygdala (CEA) represents major output station for generating an adaptive fear response
+        \subpoint receives afferent projections from the adjacent basolateral amygdala (BLA)
+        \subpoint recent evidences suggests that CEA is also essential for suppression of food intake and directing motivational behavior
+            \subsubpoint perhaps a hub for integration of survival circuits for fear and hunger
+    \point Neuropepdtide Y system is involved in both feeding and fear
+        \subpoint Neuropeptide Y4 receptors  are targeted by pancreatic polypeptide
+    \point Fear extinction is the process of repeatedly presenting a conditioned stimulus in the absence of a shock (for example) will result in a reduction of the acquired fear reaction (this is the underlying principle of exposure therapy in human patients)
+    \point This study provides evidence that the fear--related mechanisms controlled by amygdala circuitries are strongly correlated with those regulating food intake and energy balance.  They also demonstrate that short--term fasting results in the suppression of fear by enhancing feed--forward inhibition in an amygdala microcircuit, but genetic deletion of the Y4 receptor reduced appetite and impaired fear extinction.
+        \subpoint When hungry, the mice were more inclined to take on more risk (to explore), but when not hungry, safety is of greater concern
+        \subpoint Short-term fasting resutls in a drop in glucose, which activates the autonomic nervous system, and causes the release of stress hormones; this is important, because a certain degree of arousal is essential for successful fear extinction
+           \subsubpoint Essentially, it seems that being in a fasted state contributed to the ability to overcome a fear, even in the long term
+           \subsubpoint extinction learning is promoted by the fasted state, it seems, as evidenced by feed--forward inhibition increasing from the BLA to the CEm (note: presumably inhibiting the fear response, thus causing the synapse(s) to decay due to non--correlated firing?)
+                \supersubpoint (going off of ``note'' above, the reason for the inhibition might be the system prioritizing food over fear, so the brain inhibits fear to get the body to seek food (within reason, so, the amount of inhibitory connections, or at least the degree of inhibition may be relative to the severity of the hunger, so it wouldn't put itself into a great deal of danger if it was only moderately hungry).
+                \supersubpoint note: above point seems to support the idea of a hierarchical system for ortus.
+        \subpoint Feedforward inhibition:  A presynaptic cell excites an inhibitory interneuron (an interneuron is a neuron interposed between two neurons) and that inhibitory interneuron then inhibits the next follower cell.  This is a way of shutting down or limiting excitation in a downstream neuron in a neural circuit.
+
+
 \end{outline}
 
 \section{Why Neurons Have Thousands of Synapses, a Theory of Sequence Memory in Neocortex \cite{Hawkins2016}}
@@ -661,8 +701,6 @@ Coming soon\ldots
 
 Coming soon\ldots
 
-\bibliography{NeuralCircuitDevelopment}
-\bibliographystyle{ieeetr}
 \section{Mechanisms underlying the formation of the amygdalar fear memory trace: A computational perspective \cite{Feng2016}}
 
 Coming Very Soon\ldots
@@ -672,6 +710,62 @@ Coming Very Soon\ldots
 Coming Soon\ldots
 
 
+\section{Rapid Encoding of New Memories by Individual Neurons in the Human Brain \cite{Ison2015}}
+
+\begin{outline}
+    \point individual neurons were measured upon showing subjects a picture of a family member, the Eiffel tower, and both together in order to attempt to create an association. The family member alone caused a mean firing rate of 13.1 spikes/s, the Eiffel tower along caused a mean firing rate of 3.6 spikes/s, After a single exposure to the composite picture, the mean response to the Eiffel tower alone rose to 7.6 spikes/s. The study did tests to ensure that the change in firing rate was a result of the association rather than familiarity.  
+    \point The authors suggest this is a result of single--cell encoding, however, to me:
+        \subpoint NOTE: This suggests that there is an immediate change in the structure of the brain, that occurs as a result of new associations forming
+        \subpoint NOTE: Further, as it was individual neurons that were being measured, there must be a chain of reactions (or numerous parallel reactions) occurring, that cause formation and strengthening of synapses (otherwise, it seems highly unlikely that the study happened to measure the one neuron that would undergo changes).
+            \subsubpoint NOTE: this suggests a global rule\ldots
+\point ``repetition suppression'' is a neural mechanism that gradually decreases the intensity of response to a repeated stimulus
+    \subpoint can have repetition suppression with plasticity; which might be why it's better to learn things over a long period of time rather than all at once. due to repetition suppression, the stimulus decreases in intensity, so the strengthening of new synapses slows. But, if you do it over time, the repetition suppression decays, and you get the full strength of the stimulus back.
+\end{outline}
+
+
+\section{Functional and structural underpinnings of neuronal assembly formation in learning \cite{Holtmaat2016}}
+
+Coming Soon\ldots
+
+
+\section{Mirror Neurons from Associative Learning \cite{Catmur2016}}
+
+Coming Soon\ldots
+
+
+\section{Functional basis of associative learning and their relationships with long-term potentiation evoked in the involved neural circuits: Lessons from studies in behaving mammals \cite{Gruart2015}}
+
+Coming Soon\ldots
+
+
+\section{Associative learning and sensory neuroplasticity: how does it happen and what is it good for? \cite{McGann2015}}
+
+
+Coming Soon\ldots
+
+
+\section{Associative learning and CA3-CA1 synaptic plasticity are impaired in D1R null, Drd1a-/- mice and in hippocampal siRNA silenced Drd1a mice. \cite{Ortiz2010}}
+
+Coming Soon\ldots
+
+
+\section{The synaptic plasticity and memory hypothesis : encoding , storage and persistence \cite{Takeuchi2013}}
+
+Coming Soon\ldots
+
+
+\section{Associative learning rapidly establishes neuronal representations of upcoming behavioral choices in crows. \cite{Veit2015}}
+
+Coming Soon\ldots
+
+
+\section{Associative Learning Drives the Formation of Silent Synapses in Neuronal Ensembles of the Nucleus Accumbens \cite{Whitaker2015}}
+
+Coming Soon\ldots
+
+
+\bibliography{NeuralCircuitDevelopment}
+\bibliographystyle{ieeetr}
 \end{document}  
 %%%% READ TOMORROW %%%%%%
 % DONE % Rules for shaping neural connections
@@ -684,9 +778,6 @@ Coming Soon\ldots
 % the purkinje cell
 
 %fuzzy image fusion, 
-
-
-
 
 
 
