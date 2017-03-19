@@ -1,0 +1,15 @@
+//R1: -O2 >> +MINHALE { lit=SOMENEURON }
+//R2: -O2 >> -MEXHALE { mit=OTHERTHING3 }
+//R3: +C02 >> +MEXHALE {}
+//R4: +C02 >> -MINHALE {}
+R1: SO2 >> INO2
+R2: SCO2 >> +INO2
+
+
++MINHALE causes +SO2
++MEXHALE causes -SCO2
+
+
+SO2 > 
+
+

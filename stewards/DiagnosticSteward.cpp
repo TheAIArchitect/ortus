@@ -50,7 +50,9 @@ void DiagnosticSteward::tempVTKPlot(){
     
 }
 
-
+/**
+ oh nice
+ */
 void DiagnosticSteward::plotXCorr(){
     tempVTKPlot();
     return;
