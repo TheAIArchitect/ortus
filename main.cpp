@@ -12,18 +12,13 @@
 //#include "TSQueue.hpp"
 #include "GraphicsGovernor.hpp"
 #include "DataVisualizer.hpp"
-#include "ODRdev/OdrParser.hpp"
-
-using std::cout;
-using std::endl;
-
+#include "Incubator.hpp"
 
 int main(int argc, char** argv){
     
-    /* ODR Parser */
-    OdrParser odrParser;
-    std::vector<std::vector<float> > CS;
-    odrParser.getConnectome(CS);
+    /* Incubator */
+    Incubator incubator("ort/simple.ort");
+    incubator.parseOdr();
   
 
     /* Ortus

@@ -1,3 +1,4 @@
+/*
 +SO2 causes -INO2
 +SO2 causes +IPO2
 +SCO2 causes +INO2
@@ -13,6 +14,7 @@
 +MEXHALE causes -SCO2
 
 +IFEAR is bad
+*/
 //+IHAPPY is good
 //+O2 dominates +IHUNGRY
 //+IFEAR dominates +IHAPPY

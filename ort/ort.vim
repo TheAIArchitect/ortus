@@ -54,6 +54,7 @@ hi neuronNeg guifg=#af0000 guibg=NONE guisp=NONE gui=NONE ctermfg=124 ctermbg=NO
 hi neuronNeutral guifg=#af00af guibg=NONE guisp=NONE gui=NONE ctermfg=127 ctermbg=NONE cterm=NONE
 hi neuronPos guifg=#00af00 guibg=NONE guisp=NONE gui=NONE ctermfg=34 ctermbg=NONE cterm=NONE
 
+
 " want something for it to fall back on, i think... don't know if this is the
 " way to do it or not.
 "hi link neuronNeg String
@@ -64,8 +65,13 @@ hi neuronPos guifg=#00af00 guibg=NONE guisp=NONE gui=NONE ctermfg=34 ctermbg=NON
 syn keyword odrTodo contained TODO FIXME XXX NOTE
 syn match odrComment "//.*$" contains=odrTodo
 
+
+"syn region odrBlockComment start="/*" end="*/" transparent
+
+
 hi link odrTodo Todo
 hi link odrComment Comment
+"hi link odrBlockComment Comment
 
 hi link ruleNum Statement
 
@@ -76,6 +82,8 @@ hi link odrOper Operator
 hi link attributeKeys Type
 
 hi link attributeBlock String
+
+
 
 let b:current_syntax = "ort"
 
