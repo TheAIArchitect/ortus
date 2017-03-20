@@ -9,7 +9,7 @@ std::string OdrParser::removeComment(std::string s){
     std::string newS;
     int commentPos = s.find("//");
     if (commentPos != std::string::npos && commentPos > 0){
-        newS = s.substr(0,commentPos+1); // second parameter is length 
+        newS = s.substr(0, commentPos);
     }   
     else if ( commentPos == 0){
         return ""; // entire line is a comment
@@ -38,7 +38,7 @@ std::vector<std::string> OdrParser::getOdr(std::string fname){
 }
 
 void OdrParser::getConnectome(std::vector<std::vector<float> >& CS){
-    getOdr("../../pythonCode/connectomeCreator/simple.ort");
+    getOdr("simple.ort");
 }
 
 int main(int argc, char** argv){

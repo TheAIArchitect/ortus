@@ -12,6 +12,7 @@
 #include "TSQueue.hpp"
 #include "GraphicsGovernor.hpp"
 #include "DataVisualizer.hpp"
+#include "ODRdev/OdrParser.hpp"
 
 using std::cout;
 using std::endl;
@@ -19,11 +20,16 @@ using std::endl;
 
 int main(int argc, char** argv){
     
+    /* ODR Parser */
+    
   
 
+    /* Ortus
     Steward theStewie;
     theStewie.initialize();
     theStewie.run();
+    */
+    
     
     
     // this runs the 3d model.

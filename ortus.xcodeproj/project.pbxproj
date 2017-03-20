@@ -270,6 +270,7 @@
 		663A75BC1D0B1A6800F6B561 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		663A75C61D0B1AF000F6B561 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		F715148B1E7F96CD008F6292 /* ODRdev */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ODRdev; sourceTree = "<group>"; };
 		F748803A1E2448A00083763E /* ComputeSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComputeSteward.cpp; path = stewards/ComputeSteward.cpp; sourceTree = "<group>"; };
 		F748803B1E2448A00083763E /* ComputeSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComputeSteward.hpp; path = stewards/ComputeSteward.hpp; sourceTree = "<group>"; };
 		F748803C1E2448A00083763E /* DataSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataSteward.cpp; path = stewards/DataSteward.cpp; sourceTree = "<group>"; };
@@ -735,6 +736,7 @@
 		663A758A1D0B193D00F6B561 = {
 			isa = PBXGroup;
 			children = (
+				F715148A1E7F966E008F6292 /* ODRParser */,
 				F78093C41E52E84500749BE3 /* VTKTool */,
 				F77158651E4DE74F00D51FEB /* temp */,
 				44FDA2ED1DCC7B38005897DB /* Plotr */,
@@ -807,6 +809,14 @@
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
 			);
 			name = src;
+			sourceTree = "<group>";
+		};
+		F715148A1E7F966E008F6292 /* ODRParser */ = {
+			isa = PBXGroup;
+			children = (
+				F715148B1E7F96CD008F6292 /* ODRdev */,
+			);
+			name = ODRParser;
 			sourceTree = "<group>";
 		};
 		F74880391E2448510083763E /* stewards */ = {

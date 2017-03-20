@@ -1,15 +1,31 @@
-//R1: -O2 >> +MINHALE { lit=SOMENEURON }
-//R2: -O2 >> -MEXHALE { mit=OTHERTHING3 }
-//R3: +C02 >> +MEXHALE {}
-//R4: +C02 >> -MINHALE {}
-R1: SO2 >> INO2
-R2: SCO2 >> +INO2
++SO2 causes -INO2
++SO2 causes +IPO2
++SCO2 causes +INO2
++SCO2 causes -IPO2
++INO2 causes +MINHALE
++INO2 causes -MEXHALE
++IPO2 causes -MINHALE
++IPO2 causes +MEXHALE // note, need to trim whitespace
 
++INO2 causes +IFEAR
 
 +MINHALE causes +SO2
 +MEXHALE causes -SCO2
 
++IFEAR is bad
+//+IHAPPY is good
+//+O2 dominates +IHUNGRY
+//+IFEAR dominates +IHAPPY
 
-SO2 > 
+////////////////////////////////
 
++O2 is good { type=sense }
++CO2 is bad { type=sense }
++FEAR is bad { type=emotion }
+//+HAPPY is good { type=emotion }
+//+PAIN is bad { type=emotion }
+//+
++INHALE increases O2 { type=muscle }
++EXHALE decreases CO2 { type=muscle }
++CO2 causes +FEAR 
 

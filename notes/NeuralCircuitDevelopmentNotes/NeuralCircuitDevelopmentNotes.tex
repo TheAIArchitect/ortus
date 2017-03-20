@@ -52,6 +52,8 @@
 
 \section{Ortus: Moving Forward}
 
+\textbf{The \textit{key} idea behind Ortus is: Ortus intrinsically \textit{knows} that different inputs are different, if they are different (to the extent to which it can differentiate them, based upon available sensors and its sensors' resolution), and it figures out what those differences mean, relative to eachother, and various \textit{other} sensory inputs and acceptable outputs (motor or otherwise). We can help teach it, by stimulating various sensors or 'feelings' (so, interneurons) together.}
+
 \begin{outline}
     \point Location--based synaptic growth and decay
         \subpoint will need to assign each neuron a 3D location
@@ -143,7 +145,15 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
 \point if you have A that fires, which causes C to fire, when CO2 increases (or O2 decreases), and you have B that fires when H2O is present, and A and B fire together, A should cause B to fire C.
     \subpoint i suspect this all hinges upon an inherent interconnection  -- i.e., the auditory system, visual system, and somatic system are all very much intertwined.
         \subsubpoint possibly why it takes babies such a long time to learn to speak. initially they try to talk and just spew a bunch of sounds.
+\point as you do something more and more, the ``sensory'' impact of it decreases, but the pathways that deal with learning the behavior get stronger.
+    \subpoint there seems to be an inverse relationship here. The more novel a stimulus, the more quickly connections are formed, and as the stimulus is repeated and connection strengths grow, there is generally less action (due to a less excited/activated neuron
+        \subsubpoint should have a large reaction to new stimuli, and that should decrease as ``novelty'' wears down
+            \supersubpoint can possibly just be implemented by strength of synapse, which would require sensory (or other sort of) habituation, so that really strong synapses don't create an unstable situation
+        \subsubpoint need some way to measure the age of a connection, and a way to know how novel a stimulus is (either simple or composite)
+\point I searched for ``Artificial Neural Network Life'', ``Artificial Life AND Neural Network'', ``Self--organizing Neural Network'', ``Artificial life neurons'' to find related work\ldots good keywords might be:
+    \subpoint \ldotsnot sure yet.
 \end{outline}
+
 
 NOTE: Look into ``recurrent inhibition'': \url{http://neuroscience.uth.tmc.edu/s1/introduction.html}
 
@@ -693,7 +703,16 @@ Coming soon\ldots
 
 \section{Micro-connectomics: probing the organization of neuronal networks at the cellular scale \cite{Schroter2017}}
 
-Coming soon\ldots
+\begin{outline}
+   \point Evidence exists of organizational motiefs that may underlie elementary units of neuronal information processing and provide a structural architecture for flexible adaptation to environmental constraints (e.g., C. elegans)
+    \point This study finds parallels between network motifs of small nervous systems and the cellular connectivity found in neuronal tissue from bigger brains
+        \subpoint Further empirical validation and conceptual work required to establish a more comprehensive and mechanistic understanding of links between neuronal tpology, computation, and behavior
+    \point key question: which generative mechanisms give rise to common comple structural proterties in neuronal network organization?
+    \point C. elegans is (apparently) not minimally wired, but the ``expensive'' wiring presumably adds justifiable functional value, e.g.:
+        \subpoint the GJ hub neurons RMG links several important sensory neurons and is of great importance in controlling the global state of the animal
+    \point Many neurons of C. elegans have multiplexed functions -- they contribute to more than one behavior
+    \point  \ldots
+\end{outline}
 
 \section{Integrating Hebbian and homeostatic plasticity : introduction \cite{Fox2017}}
 
@@ -765,6 +784,46 @@ Coming Soon\ldots
 \section{Associative Learning Drives the Formation of Silent Synapses in Neuronal Ensembles of the Nucleus Accumbens \cite{Whitaker2015}}
 
 Coming Soon\ldots
+
+\section{Neuroscience of affect: Brain mechanisms of pleasure and displeasure \cite{Berridge2013}}
+
+\begin{outline}
+    \point ``Affect'' is the hedonic quality of pleasure of displeasure, and is what distinguishes emotion from other psychological processes
+    \point Reward involves the hedonic affect of pleasure (``liking''), motivation to obtain the reward (``wanting''), and reward--related learning
+    \point Pleasure is never merely a sensation; even a sensory pleasure such as a sweet taste requires the co--recruitment of additional specialized pleasure--generating neural ciruitry to add the positive hedonic impact to the sweetness that elicits ``liking'' reactions
+    \point Joseph LeDoux (works with memory and emotion at the center for neural science at NYU) suggested that, ``By focusing on survivial functions instantiated in conserved circuits, key phenomena relevant to emotions and feelings are discussed with the natural direction of brain evolution in mind (by asking to what extent are functions and circuits that are present in other mammals are also present in humans)\ldots''
+    \point It appears that there is heavy overlap between seemingly disparate pleasures (e.g., delicious food, sex, drugs, seeing a loved one, listening to music)
+        \subpoint This suggests that the same hedonic generating circuit could give a ``pleasurable gloss'' to all such rewards, even when the final experience of each seems unique
+    \point Causation of affect suggests that affective reactions may be generated chiefly in the subcortical brain structures 
+        \subpoint This inclues fear, as well
+    \point Dopamine helps generate intense levels of ``wanting''
+    \point there seem to be ``hedonic hotspots'' where mu opiod stimulation more than doubles the intensity of ``liking'' reactions elicited by sweetness, but the same stimulations elsewhere only generate more ``wanting''
+    \point Hotspots in NAc and ventral pallidum interact together as a single integrated circuit, and unanimous recruitment of both hotspots seems necessary to magnify pleasure. Blocking either completely prevents opioid stimulation of the other hotspot from producing any ``liking'' enhancement
+    \point Damage to ventral pallidum can cause even sweet sucrose taste to elicit purely negative gapes and other digust reactions for days or weeks afterward
+    \point The NAc can generate many mixtures of desire versus fear, with each mixture dirggered at a different location (think of a musical keyboard generating different notes according to key location -- their example)
+\end{outline}
+
+
+\section{The neurobiology shaping affective touch: Expectation, motivation, and meaning in the multisensory context \cite{Ellingsen2016}}
+
+Coming Soon\ldots
+
+\section{A common neurobiology for pain and pleasure \cite{Leknes2008}}
+
+\begin{outline}
+    \point Rewards and punishments are defined as something that an animal will work to achieve or avoid, respectively
+        \subpoint Seeking pleasure and avoiding pain is important for survival, and these two motivations probably compete in the brain (which of two coinciding pain and pleasure events should be processed and acted on first?)
+        \subpoint Evidence exists suggesting significant overlap in the neural circuitry and chemistry of pain and pleasure processing systems
+    \point The Motivation--Decision Model suggests that anything that is more important for survival than pain should exert nociceptive effects.
+    \point pain is decreased by pleasant odors, images, pleasurable music, palatable food, and sexual behavior.
+    \point expectation of reward (even just pain stopping) decreases pain
+    \point Dopamine increases motivation for (but not pleasure of) something (``wanting''), while opioids influence the pain/pleasure one feels (``liking'')
+        \subpoint opioids are necessary for liking, dopamine is necessary for wanting
+    \point mu--opioids are released during painful stimulation in humans
+    \point pain decreases pleasure, and rewards induce analgesia (inability to feel pain)
+    
+\end{outline}
+
 
 
 \bibliography{NeuralCircuitDevelopment}
