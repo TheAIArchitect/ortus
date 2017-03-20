@@ -40,11 +40,3 @@ std::vector<std::string> OdrParser::getOdr(std::string fname){
 void OdrParser::getConnectome(std::vector<std::vector<float> >& CS){
     getOdr("simple.ort");
 }
-
-int main(int argc, char** argv){
-    OdrParser odrParser;
-    std::vector<std::vector<float> > CS;
-    odrParser.getConnectome(CS);
-
-    return 0;
-}

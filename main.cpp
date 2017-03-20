@@ -9,7 +9,7 @@
 //
 
 #include "Steward.hpp"
-#include "TSQueue.hpp"
+//#include "TSQueue.hpp"
 #include "GraphicsGovernor.hpp"
 #include "DataVisualizer.hpp"
 #include "ODRdev/OdrParser.hpp"
@@ -21,7 +21,9 @@ using std::endl;
 int main(int argc, char** argv){
     
     /* ODR Parser */
-    
+    OdrParser odrParser;
+    std::vector<std::vector<float> > CS;
+    odrParser.getConnectome(CS);
   
 
     /* Ortus
