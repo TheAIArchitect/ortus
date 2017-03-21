@@ -80,6 +80,13 @@ std::string OrtUtil::removeCommented(std::string line, bool& startBlockComment){
     return noComment;
 }
 
+void OrtUtil::setElements(){
+        fixedLine = StrUtils::trim(fixedLine); // remove any remaining whitespace
+    
+   // auto iter = elementMap.find()
+    
+}
+
 
 /**
  * Reads fname as an .ort file -- essentially, as of now, 
@@ -87,7 +94,7 @@ std::string OrtUtil::removeCommented(std::string line, bool& startBlockComment){
  * after removing comments that start with "//",
  * from the start location to the end of the line.
  */
-std::vector<std::string> OrtUtil::getOdr(std::string fname){
+std::vector<std::string> OrtUtil::getOdrLines(std::string fname){
     std::vector<std::string> odrVec;
     std::ifstream odrFile(fname);
     if (!odrFile.is_open()){
@@ -96,7 +103,7 @@ std::vector<std::string> OrtUtil::getOdr(std::string fname){
     }
     bool startBlockComment = false;
     std::string line;
-    //int lineNo = 0;
+    int lineNo = 0;
     std::string fixedLine;
     unsigned long noPos = std::string::npos;
     while (std::getline(odrFile,line)){
@@ -106,14 +113,12 @@ std::vector<std::string> OrtUtil::getOdr(std::string fname){
             printf("Only one block comment may be 'opened' at a time in .ort files.\n");
             exit(53);
         }
-                
         fixedLine = removeLineComment(line);
         if (!fixedLine.empty()){
             odrVec.push_back(fixedLine); 
-            //printf("%s\n",odrVec[lineNo].c_str());
-            //lineNo++;
+            printf(">>%s<<\n",odrVec[lineNo].c_str());
+            lineNo++;
         }
     }
-    odrVec = StrUtils::trimStrVec(odrVec); // gets rid of whitespace
-    return odrVec;
+    return odrVec; // note, there is still whitespace here, because we need the tabs/spaces at the beginning of lines... like python
 }

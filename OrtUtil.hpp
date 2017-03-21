@@ -4,6 +4,8 @@
 #include <sstream>
 #include <vector>
 #include "StrUtils.hpp"
+#include <unordered_map>
+#include "ElementInfoModule.hpp"
 
 /**
  * Eventually, this should save the comments from the file it reads in.
@@ -13,8 +15,10 @@
 class OrtUtil {
     public:
         OrtUtil();
-        std::vector<std::string> getOdr(std::string fname);
+        std::vector<std::string> getOdrLines(std::string fname);
+        void setElements();
         std::string removeLineComment(std::string s);
+        std::unordered_map<std::string,ElementInfoModule> elementMap;
     
 private:
         std::string removeCommented(std::string line, bool& startBlockComment);

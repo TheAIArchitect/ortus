@@ -21,6 +21,9 @@ enum ElementType { SENSORY, MOTOR, INTER, MUSCLE, WFK, UH_OH};
 
 
 
+/**
+ * the data here should actually be held in blades, so that it is stored centrally, and can easily be pushed to opencl, but can also easily be used to generate graphical results.
+ */
 class ElementInfoModule{
     
 public:

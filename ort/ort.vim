@@ -6,6 +6,7 @@
 " NOTE: run:
 " :so $VIMRUNTIME/syntax/hitest.vim 
 " to see the colors vim uses for different highlight groups
+"
 
 if exists("b:current_syntax")
     finish
@@ -17,7 +18,9 @@ endif
 " lit => less important than
 " mit => more important than
 "
-syn keyword attributeKeys lit mit bad good type
+syn keyword attributeKeys lit mit bad good type thresh elements opposite
+syn match attributeKeys "+affect"
+syn match attributeKeys "-affect"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " if referring to a neuron's negative change, it's a '-' followed by captial
@@ -66,26 +69,16 @@ syn keyword odrTodo contained TODO FIXME XXX NOTE
 syn match odrComment "//.*$" contains=odrTodo
 
 
-"syn region odrBlockComment start="/*" end="*/" transparent
+syn region odrBlockComment start=/\/\*/ end=/\*\//
 
 
 hi link odrTodo Todo
 hi link odrComment Comment
-"hi link odrBlockComment Comment
-
+hi link odrBlockComment Comment
 hi link ruleNum Statement
-
-
 hi link odrOper Operator 
-
-
 hi link attributeKeys Type
-
 hi link attributeBlock String
 
-
-
 let b:current_syntax = "ort"
-
-"hi def link ConnectionTypes    Operator 
 
