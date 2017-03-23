@@ -1,40 +1,32 @@
-/*
-+SO2 causes -INO2
-+SO2 causes +IPO2
-+SCO2 causes +INO2
-+SCO2 causes -IPO2
-+INO2 causes +MINHALE
-+INO2 causes -MEXHALE
-+IPO2 causes -MINHALE
-+IPO2 causes +MEXHALE // note, need to trim whitespace
-+INO2 causes +IFEAR
-+MINHALE causes +SO2
-+MEXHALE causes -SCO2
-+IFEAR is bad
-*/
-//+IHAPPY is good
-//+O2 dominates +IHUNGRY
-//+IFEAR dominates +IHAPPY
-////////////////////////////////
-
 elements:
-    O2: {type=sense, +affect=pos, -affect=neg, opposite=CO2 } // can -affect be removed?
-    CO2: { type=sense, +affect=neg, opposite=O2 }//, affect=neg } // no affect should mean no P/N interneurons are created... maybe?
+    O2: {type=sense, affect=pos} 
+    CO2: { type=sense, affect=neg }//, affect=neg } // no affect should mean no P/N interneurons are created... maybe? or, one of each??
     H2O: {type=sense}
-    FEAR: { type=emotion, +affect=neg }
-    //HAPPY { type=emotion, +affect=pos }
-// neither pain nor pleasure are really emotions, but maybe that label will work for now?
-    //PLEASURE { type=emotion, +affect=pos, opposite=PAIN }
-    //PAIN { type=emotion, +affect=neg, opposite=PAIN }
+    FEAR: { type=emotion, affect=neg }
+    //HAPPY { type=emotion, affect=pos }
+    // neither pain nor pleasure are really emotions, but maybe that label will work for now?
+    //PLEASURE { type=emotion, affect=pos, opposite=PAIN }
+    //PAIN { type=emotion, affect=neg, opposite=PAIN }
     INHALE: { type=motor }
     EXHALE: { type=motor }
-
+    LUNG: { type=muscle }
+opposes:
+    O2:
+        CO2:
+    //PLEASURE:
+        //PAIN:
 causes:
     +INHALE:
-        +O2
+        +O2:
     +EXHALE:
-        -CO2
-    +CO2
-        +FEAR { thresh=high } // only abnormally high levels of CO2 cause fear
-// "attempting" to breath, and not being able to, should cause fear too.
+        -CO2:
+    +CO2:
+        +FEAR: { thresh=high } // only abnormally high levels of CO2 cause fear
+    // "attempting" to breath, and not being able to, should cause fear too.
+dominates:
+    //+O2:
+        //+IHUNGRY:
+    //+IFEAR:
+        //+IHAPPY:
+    //maybe the + is irrelevant?
 

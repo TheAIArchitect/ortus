@@ -16,7 +16,7 @@
 #include "Connection.hpp"
 
 
-enum ElementType { SENSORY, MOTOR, INTER, MUSCLE, WFK, UH_OH};
+enum ElementType { SENSE, EMOTION, INTER, MOTOR, MUSCLE};
 
 
 
@@ -31,18 +31,13 @@ public:
     
     ElementInfoModule();
     ~ElementInfoModule();
-    void setElementType(ElementType etype);
-    ElementType getEType();
-    std::string getSType();
-    float getFType();
+    
     glm::vec3 getCenterPoint(); // allows us to use muscles and neurons for creating graphical connections
     
     std::string* namep;
     std::string graphicalName; // name used in graphics -- with 'graphical identifier": either "-(I)", "-(S)", "-(M)", or "-<M>" -- inter, sensory, motor, or muscle
     int* idp; // the id of this element with respect to all other elements
     int massPoint_id = -1; // -1 means no mass point
-    
-    std::vector<Connection> out_conns; // will all have same pre (this)
     
     bool marked = false; // used for stack
     bool ablated = false; // if true, we treat the element as non-existent
@@ -54,10 +49,22 @@ public:
     int id();
     
     
+    void setAffect(std::string affect);
+    std::string getSAffect();
+    float getFAffect();
+    
+        
+    void setType(std::string type);
+    ElementType getEType();
+    std::string getSType();
+    float getFType();
+    
 private:
-    ElementType element_type;
-    std::string stype; // string type
-    float ftype; // float type
+    std::string sAffect;
+    float fAffect;
+    ElementType eType;
+    std::string sType; // string type
+    float fType; // float type
     
 };
 

@@ -18,9 +18,8 @@ endif
 " lit => less important than
 " mit => more important than
 "
-syn keyword attributeKeys lit mit bad good type thresh elements opposite
-syn match attributeKeys "+affect"
-syn match attributeKeys "-affect"
+syn keyword attributeKeys lit mit bad good type thresh elements affect
+"syn match attributeKeys \"-affect"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " if referring to a neuron's negative change, it's a '-' followed by captial
@@ -49,7 +48,7 @@ syn match attributeBlock /}/
 syn match odrOper /==/
 " Chemical Synapse denoted by >>
 syn match odrOper />>/
-syn keyword odrOper causes is dominates increases decreases
+syn keyword odrOper causes is dominates increases decreases opposes 
 """"""""""""""""""""""""""""""""""""""""""""
 
 

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		443247AB1DAE5B33001D153B /* ConnectionComrade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 443247A91DAE5B33001D153B /* ConnectionComrade.cpp */; };
-		443247B11DB059CE001D153B /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 443247AF1DB059CE001D153B /* Connection.cpp */; };
+		443247B11DB059CE001D153B /* ElementRelation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 443247AF1DB059CE001D153B /* ElementRelation.cpp */; };
 		443247B41DB60187001D153B /* AblationStation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 443247B21DB60187001D153B /* AblationStation.cpp */; };
 		444DE4031D8A5D7F00247E36 /* MuscleInfoModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE3E11D8A5D7F00247E36 /* MuscleInfoModule.cpp */; };
 		444DE4041D8A5D7F00247E36 /* NeuronInfoModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE3E31D8A5D7F00247E36 /* NeuronInfoModule.cpp */; };
@@ -164,6 +164,7 @@
 		F78093CC1E52E8D200749BE3 /* Ortus3DChart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F78093C51E52E8D200749BE3 /* Ortus3DChart.cpp */; };
 		F78093CD1E52E8D300749BE3 /* OrtusVisualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F78093C71E52E8D200749BE3 /* OrtusVisualizer.cpp */; };
 		F78093CE1E52E8D300749BE3 /* OrtusXCorrVisualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F78093C91E52E8D200749BE3 /* OrtusXCorrVisualizer.cpp */; };
+		F78DC1221E837A7C0030C688 /* Connectome.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F78DC1201E837A7C0030C688 /* Connectome.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
@@ -188,8 +189,8 @@
 		443247A71DA62732001D153B /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = System/Library/Frameworks/Python.framework; sourceTree = SDKROOT; };
 		443247A91DAE5B33001D153B /* ConnectionComrade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectionComrade.cpp; sourceTree = "<group>"; };
 		443247AA1DAE5B33001D153B /* ConnectionComrade.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ConnectionComrade.hpp; sourceTree = "<group>"; };
-		443247AF1DB059CE001D153B /* Connection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
-		443247B01DB059CE001D153B /* Connection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connection.hpp; sourceTree = "<group>"; };
+		443247AF1DB059CE001D153B /* ElementRelation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ElementRelation.cpp; sourceTree = "<group>"; };
+		443247B01DB059CE001D153B /* ElementRelation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ElementRelation.hpp; sourceTree = "<group>"; };
 		443247B21DB60187001D153B /* AblationStation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AblationStation.cpp; sourceTree = "<group>"; };
 		443247B31DB60187001D153B /* AblationStation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AblationStation.hpp; sourceTree = "<group>"; };
 		444DE3D91D8A5D7F00247E36 /* axes_frag_shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = axes_frag_shader.frag; sourceTree = "<group>"; };
@@ -419,6 +420,8 @@
 		F78093CA1E52E8D200749BE3 /* OrtusXCorrVisualizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = OrtusXCorrVisualizer.hpp; path = VTKTool/OrtusXCorrVisualizer.hpp; sourceTree = "<group>"; };
 		F78093CB1E52E8D200749BE3 /* StandardVTKHeader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = StandardVTKHeader.hpp; path = VTKTool/StandardVTKHeader.hpp; sourceTree = "<group>"; };
 		F78093CF1E52E8EB00749BE3 /* vtktool_note */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vtktool_note; path = VTKTool/vtktool_note; sourceTree = "<group>"; };
+		F78DC1201E837A7C0030C688 /* Connectome.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connectome.cpp; sourceTree = "<group>"; };
+		F78DC1211E837A7C0030C688 /* Connectome.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connectome.hpp; sourceTree = "<group>"; };
 		F7C175301E5652DC009A4940 /* neural_circuit_development_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = neural_circuit_development_notes.txt; path = notes/neural_circuit_development_notes.txt; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
@@ -787,8 +790,8 @@
 				443247B21DB60187001D153B /* AblationStation.cpp */,
 				443247B31DB60187001D153B /* AblationStation.hpp */,
 				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
-				443247AF1DB059CE001D153B /* Connection.cpp */,
-				443247B01DB059CE001D153B /* Connection.hpp */,
+				443247AF1DB059CE001D153B /* ElementRelation.cpp */,
+				443247B01DB059CE001D153B /* ElementRelation.hpp */,
 				44FDA2EA1DCC7995005897DB /* DataVisualizer.cpp */,
 				44FDA2EB1DCC7995005897DB /* DataVisualizer.hpp */,
 				444DE3E51D8A5D7F00247E36 /* ElementInfoModule.cpp */,
@@ -817,6 +820,8 @@
 				F757ADCD1E35E3DF00A8B181 /* Statistician.cpp */,
 				F757ADCE1E35E3DF00A8B181 /* Statistician.hpp */,
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
+				F78DC1201E837A7C0030C688 /* Connectome.cpp */,
+				F78DC1211E837A7C0030C688 /* Connectome.hpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1010,6 +1015,7 @@
 				F74880481E25AA760083763E /* StimuliSteward.cpp in Sources */,
 				F75903AD1E2E49FB00879481 /* Plotr.cpp in Sources */,
 				F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */,
+				F78DC1221E837A7C0030C688 /* Connectome.cpp in Sources */,
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE46C1D8A717500247E36 /* main.cpp in Sources */,
 				444DE40C1D8A5D7F00247E36 /* Shader.cpp in Sources */,
@@ -1024,7 +1030,7 @@
 				F74880501E25FB1E0083763E /* OrtusKernelOne.cl in Sources */,
 				444DE4661D8A717500247E36 /* GraphicsGovernor.cpp in Sources */,
 				F71514951E7F9E68008F6292 /* Incubator.cpp in Sources */,
-				443247B11DB059CE001D153B /* Connection.cpp in Sources */,
+				443247B11DB059CE001D153B /* ElementRelation.cpp in Sources */,
 				443247B41DB60187001D153B /* AblationStation.cpp in Sources */,
 				444DE41E1D8A63F800247E36 /* stb_image_aug.c in Sources */,
 				F748804C1E25B7020083763E /* DevelopmentSteward.cpp in Sources */,
