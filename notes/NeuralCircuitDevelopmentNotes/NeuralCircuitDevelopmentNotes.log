@@ -1,8 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  10 MAR 2017 01:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  23 MAR 2017 14:56
 entering extended mode
  restricted \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
-**NeuralCircuitDevelopmentNotes
+**NeuralCircuitDevelopmentNotes.tex
 (./NeuralCircuitDevelopmentNotes.tex
 LaTeX2e <2016/03/31>
 Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
@@ -723,62 +724,51 @@ Missing character: There is no ì in font cmbx10!
 \openout6 = `NeuralCircuitDevelopmentNotes.lof'.
 
 
-[3] [4] [5] [6]
-Overfull \hbox (18.54851pt too wide) in paragraph at lines 148--149
+[3] [4] [5] [6] [7]
+
+LaTeX Warning: Reference `Gardoni2015' on page 8 undefined on input line 156.
+
+
+Overfull \hbox (18.54851pt too wide) in paragraph at lines 160--161
 []\OT1/cmr/m/n/10.95 NOTE: Look into ``re-cur-rent in-hi-bi-tion'': [][]$\OT1/c
 mtt/m/n/10.95 http : / / neuroscience . uth . tmc . edu / s1 / introduction .
  []
 
 
-Overfull \hbox (27.06546pt too wide) in paragraph at lines 172--175
+Overfull \hbox (27.06546pt too wide) in paragraph at lines 184--187
 [][]$\OT1/cmtt/m/n/10.95 https : / / publications . nigms . nih . gov / thenewg
 enetics / chapter1 . html$[][] [][]$https : / / online . science .
  []
 
-[7] [8]
-Overfull \hbox (2.34871pt too wide) in paragraph at lines 229--230
+[8] [9]
+Overfull \hbox (2.34871pt too wide) in paragraph at lines 241--242
 []\OT1/cmr/m/n/10.95 Amygdalofugal Path-way (link whereby mo-ti-va-tion and dri
 ves can in-flu-ence re-sponses,
  []
 
-[9]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 270.
-
 [10]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 290.
+(hyperref)                removing `\@ifnextchar' on input line 285.
+
+[11]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 305.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 300.
+(hyperref)                removing `\@ifnextchar' on input line 315.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 307.
+(hyperref)                removing `\@ifnextchar' on input line 322.
 
-[11] [12] [13] [14]
-Overfull \hbox (3.83919pt too wide) in paragraph at lines 372--373
+[12] [13] [14] [15]
+Overfull \hbox (3.83919pt too wide) in paragraph at lines 387--388
 \OT1/cmr/m/n/10.95 gether, the ip-si-lat-eral in-put main-tained or even slight
 ly in-creased its synap-tic strength
  []
-
-[15]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 406.
-
-
-Overfull \hbox (22.08932pt too wide) in paragraph at lines 414--414
-[]\OT1/cmr/bx/n/14.4 A feed-back neu-ral cir-cuit for cal-i-brat-ing aver-sive 
-mem-ory strength
- []
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 414.
 
 [16]
 
@@ -786,206 +776,259 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\@ifnextchar' on input line 421.
 
 
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 430.
+Overfull \hbox (22.08932pt too wide) in paragraph at lines 429--429
+[]\OT1/cmr/bx/n/14.4 A feed-back neu-ral cir-cuit for cal-i-brat-ing aver-sive 
+mem-ory strength
+ []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 434.
+(hyperref)                removing `\@ifnextchar' on input line 429.
+
+[17]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 436.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 438.
+(hyperref)                removing `\@ifnextchar' on input line 445.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 449.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 453.
 
 Missing character: There is no ‚ in font cmbx10!
 Missing character: There is no Ä in font cmbx10!
 Missing character: There is no ì in font cmbx10!
-[17]
-Overfull \hbox (14.5978pt too wide) in paragraph at lines 471--471
+[18]
+Overfull \hbox (14.5978pt too wide) in paragraph at lines 486--486
 []\OT1/cmr/bx/n/14.4 Homeostatic Plas-tic-ity of Sub-cel-lu-lar Neu-ronal Struc
 -tures: From
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 471.
+(hyperref)                removing `\@ifnextchar' on input line 486.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 475.
+(hyperref)                removing `\@ifnextchar' on input line 490.
 
-[18] [19]
-Overfull \hbox (27.46678pt too wide) in paragraph at lines 537--538
+[19] [20]
+Overfull \hbox (27.46678pt too wide) in paragraph at lines 552--553
 \OT1/cmr/m/n/10.95 Paper was very low--level, dis-cussed molec-u-lar ad-he-sion
  re-lat-ing to the specifics of Pcdhs---Protocadherins. 
  []
 
-[20]
+[21]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 553.
+(hyperref)                removing `\@ifnextchar' on input line 568.
 
 
-Overfull \hbox (9.15617pt too wide) in paragraph at lines 557--557
+Overfull \hbox (9.15617pt too wide) in paragraph at lines 572--572
 []\OT1/cmr/bx/n/14.4 Mind the Gap Junc-tions: The Im-por-tance of Elec-tri-cal 
 Synapses
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 557.
+(hyperref)                removing `\@ifnextchar' on input line 572.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 561.
+(hyperref)                removing `\@ifnextchar' on input line 576.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 567.
+(hyperref)                removing `\@ifnextchar' on input line 582.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 575.
+(hyperref)                removing `\@ifnextchar' on input line 592.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 579.
-
-[21]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 583.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 587.
+(hyperref)                removing `\@ifnextchar' on input line 596.
 
 [22]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 609.
+(hyperref)                removing `\@ifnextchar' on input line 600.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 613.
+(hyperref)                removing `\@ifnextchar' on input line 604.
+
+[23]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 626.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\@ifnextchar' on input line 630.
 
-[23]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 636.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 657.
+(hyperref)                removing `\@ifnextchar' on input line 647.
 
 [24]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 687.
+(hyperref)                removing `\@ifnextchar' on input line 653.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 691.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 695.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 700.
+(hyperref)                removing `\@ifnextchar' on input line 674.
 
 [25]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\@ifnextchar' on input line 704.
 
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 708.
+
+[26]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 724.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 729.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 733.
+
 Missing character: There is no ‚ in font cmbx12!
 Missing character: There is no Ä in font cmbx12!
 Missing character: There is no ì in font cmbx12!
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 708.
+(hyperref)                removing `\@ifnextchar' on input line 737.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 713.
+(hyperref)                removing `\@ifnextchar' on input line 742.
 
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 726.
-
+[27]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 731.
-
-[26]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 736.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 741.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 747.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 752.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 757.
+(hyperref)                removing `\@ifnextchar' on input line 755.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\@ifnextchar' on input line 762.
 
-(./NeuralCircuitDevelopmentNotes.bbl [27] [28]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 767.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 772.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 779.
+
+[28]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 784.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 789.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 794.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 798.
+
+[29]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 817.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 821.
+
+[30]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 837.
+
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
+
+LaTeX Warning: Reference `Broussard2016' on page 31 undefined on input line 853
+.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 861.
+
+(./NeuralCircuitDevelopmentNotes.bbl [31] [32] [33]
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ì in font cmr10!
- [29]) [30]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 769.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 769.
+ [34]) [35]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 868.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 868.
 
 (./NeuralCircuitDevelopmentNotes.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 769.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 769.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 868.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 868.
 Package rerunfilecheck Info: File `NeuralCircuitDevelopmentNotes.out' has not c
 hanged.
-(rerunfilecheck)             Checksum: 59371FEA0E91C1C83E8E09DC85655D4A;6263.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 769.
+(rerunfilecheck)             Checksum: 092287A0D3DC93D8A925C1B7DF94DA20;6951.
+
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 868.
  ) 
 Here is how much of TeX's memory you used:
- 17626 strings out of 493014
- 323760 string characters out of 6133351
- 396590 words of memory out of 5000000
- 20456 multiletter control sequences out of 15000+600000
- 11866 words of font info for 45 fonts, out of 8000000 for 9000
+ 17713 strings out of 493014
+ 324577 string characters out of 6133351
+ 396765 words of memory out of 5000000
+ 20469 multiletter control sequences out of 15000+600000
+ 12225 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,6n,54p,764b,912s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,6n,54p,768b,912s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
-sr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr
-/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/l
-ocal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loca
-l/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local
-/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/
-texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on NeuralCircuitDevelopmentNotes.pdf (30 pages, 242952 bytes).
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb
+></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
+usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
+r/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/
+local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loc
+al/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
+l/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local
+/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on NeuralCircuitDevelopmentNotes.pdf (35 pages, 266165 bytes).
 PDF statistics:
- 986 PDF objects out of 1000 (max. 8388607)
- 934 compressed objects within 10 object streams
- 413 named destinations out of 1000 (max. 500000)
- 437 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1128 PDF objects out of 1200 (max. 8388607)
+ 1069 compressed objects within 11 object streams
+ 486 named destinations out of 1000 (max. 500000)
+ 477 words of extra memory for PDF output out of 10000 (max. 10000000)
 

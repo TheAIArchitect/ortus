@@ -16,45 +16,45 @@ Warning--empty journal in Fox2017
 Warning--empty journal in Kaneko2017
 Warning--empty journal in Catmur2016
 Warning--empty journal in Takeuchi2013
-You've used 40 entries,
+You've used 45 entries,
             1876 wiz_defined-function locations,
-            746 strings with 12260 characters,
-and the built_in function-call counts, 13280 in all, are:
-= -- 1343
-> -- 593
+            776 strings with 13359 characters,
+and the built_in function-call counts, 14948 in all, are:
+= -- 1512
+> -- 669
 < -- 0
-+ -- 212
-- -- 172
-* -- 1018
-:= -- 1875
-add.period$ -- 41
-call.type$ -- 40
-change.case$ -- 39
++ -- 239
+- -- 194
+* -- 1150
+:= -- 2113
+add.period$ -- 46
+call.type$ -- 45
+change.case$ -- 44
 chr.to.int$ -- 0
-cite$ -- 45
-duplicate$ -- 644
-empty$ -- 1108
-format.name$ -- 172
-if$ -- 3201
+cite$ -- 50
+duplicate$ -- 723
+empty$ -- 1246
+format.name$ -- 194
+if$ -- 3603
 int.to.chr$ -- 0
-int.to.str$ -- 40
-missing$ -- 41
-newline$ -- 124
-num.names$ -- 40
-pop$ -- 76
+int.to.str$ -- 45
+missing$ -- 46
+newline$ -- 139
+num.names$ -- 45
+pop$ -- 82
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 506
+skip$ -- 569
 stack$ -- 0
-substring$ -- 1025
-swap$ -- 320
+substring$ -- 1152
+swap$ -- 359
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 5
-while$ -- 140
-width$ -- 42
-write$ -- 417
+while$ -- 158
+width$ -- 47
+write$ -- 472
 (There were 2 error messages)

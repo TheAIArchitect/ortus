@@ -13,8 +13,7 @@ Connectome::Connectome(){
     
 }
 
-void Connectome::initializeData(){
+void Connectome::buildDataStructures(){
     
 }
 
-void Connectome::buildConnectome

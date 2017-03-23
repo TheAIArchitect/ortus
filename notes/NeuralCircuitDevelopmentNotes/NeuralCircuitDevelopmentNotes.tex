@@ -151,8 +151,9 @@ Take C. elegans, for example. It only has 302 neurons, and is a relatively simpl
             \supersubpoint can possibly just be implemented by strength of synapse, which would require sensory (or other sort of) habituation, so that really strong synapses don't create an unstable situation
         \subsubpoint need some way to measure the age of a connection, and a way to know how novel a stimulus is (either simple or composite)
 \point I searched for ``Artificial Neural Network Life'', ``Artificial Life AND Neural Network'', ``Self--organizing Neural Network'', ``Artificial life neurons'' to find related work\ldots good keywords might be:
-    \subpoint \ldotsnot sure yet.
+    \subpoint \ldots not sure yet.
 \point conscious vs sub--conscious could just be some activity threshold being crossed
+\point dopamine seems key to synaptic plasticity / hebbian learning, see notes for \ref{Gardoni2015}.
 \end{outline}
 
 
@@ -580,6 +581,8 @@ Coming soon\ldots
 
 \section{Neural Representations of Unconditioned Stimuli in Basolateral Amygdala Mediate Innate and Learned Responses \cite{Gore2015}}
 
+NEXT PAPER
+ 
 Coming soon\ldots But, from the first page ``In Brief'':
 
 Neurons in the basolateral amygdala that mediate responses to intrinsically rewarding or aversive stimuli also elicit learned responses, indicating that associative learning is funneled through innate behavioral circuits to assign positive or negative emotions to neutral sensory stimuli.
@@ -713,6 +716,9 @@ Coming soon\ldots
         \subpoint the GJ hub neurons RMG links several important sensory neurons and is of great importance in controlling the global state of the animal
     \point Many neurons of C. elegans have multiplexed functions -- they contribute to more than one behavior
     \point  \ldots
+
+    CURRENT PAPER
+
 \end{outline}
 
 \section{Integrating Hebbian and homeostatic plasticity : introduction \cite{Fox2017}}
@@ -722,6 +728,8 @@ Coming soon\ldots
 
 \section{Homeostatic plasticity mechanisms in mouse V1 \cite{Kaneko2017}}
 
+NEXT AS WELL PAPER 
+
 Coming soon\ldots
 
 \section{Mechanisms underlying the formation of the amygdalar fear memory trace: A computational perspective \cite{Feng2016}}
@@ -729,6 +737,8 @@ Coming soon\ldots
 Coming Very Soon\ldots
 
 \section{Synaptic scaling rule preserves excitatory–inhibitory balance and salient neuronal network dynamics \cite{Barral2016}}
+
+NEXT NEXT NEXT NEXT PAPER
 
 Coming Soon\ldots
 
@@ -748,6 +758,8 @@ Coming Soon\ldots
 
 \section{Functional and structural underpinnings of neuronal assembly formation in learning \cite{Holtmaat2016}}
 
+NEXT NEXT PAPER
+
 Coming Soon\ldots
 
 
@@ -763,7 +775,8 @@ Coming Soon\ldots
 
 \section{Associative learning and sensory neuroplasticity: how does it happen and what is it good for? \cite{McGann2015}}
 
-
+NEXT NEXT NEXT PAPER
+ 
 Coming Soon\ldots
 
 
@@ -825,7 +838,34 @@ Coming Soon\ldots
     
 \end{outline}
 
+\section{Modulation of the glutamatergic transmission by Dopamine: a focus on Parkinson, Huntington and Addiction diseases \cite{Gardoni2015}}
 
+Note: from wikipedia, NMDA Receptor page, it seems that GluN2A (aka NR2A, I think) receptors replace GluN2B (NR2B?) with age, and that  NR2B receptors stay open longer than NR2A, which could have implications for learning ability when young.
+
+Note: from wikipedia, AMPA Receptor page, The typical LTP induction protocol involves a “tetanus” stimulation, which is a 100 Hz stimulation for 1 second. When one applies this protocol to a pair of cells, one will see a sustained increase of the amplitude of the EPSP following tetanus.
+\begin{outline}
+   \point Dopamine (DA) plays a major role in cognitive functions as well as in reward processing by regulating glutamatergic inputs
+   \point It rapidly influences synaptic transmission modulating AMPA and NMDA receptors
+   \point DA can regulate the activity of ionotropic glutamate receptors with a reduction of AMPA receptor (AMPAR) evoked responses, and an increase of NMDA receptor (NMDAR) evoked responses
+    \subpoint Activation of D1R leads to potentiation of NMDAR--dependent currents
+        \subsubpoint wikinote: Activaiton of NMDAR seems to increase learning, but NMDARs are only activated once the cell has been depolarized (fires), and expells the magnesium blocking its pore(s). It's effectively a correlation detector.
+    \subpoint Activation of D2R induces a decrease of AMPAR--dependent responses
+        \subsubpoint wikinote: Activation of AMPAR causes the cell to depolarize, 
+    \subpoint NOTE: the above points suggest to me that:
+        \subsubpoint D1R is utilized primarily for positive reinforcement/LTP
+        \subsubpoint D2R is utilized primarily for negative reinforcement/LTD
+        \subsubpoint see below paper, \ref{Broussard2016} 
+    \point LTP is induced when postsynaptic spiking follows synaptic activity (positive timing)
+        \subpoint positive timing only gives rise to LTP when D1Rs are stimulated, otherwise it leads to LTD
+    \point LTD is induced when postsynaptic spiking preceeds synaptic activity (negative timing)
+        \subpoint D2R stimulation is necessary for LTD when the postsynaptic spiking is followed by synaptic stimulation
+
+\end{outline}
+
+\section{Dopamine Regulates Aversive Contextual Learning and Associated In Vivo Synaptic Plasticity in the Hippocampus \cite{Broussard2016}}
+ 
+
+Coming soon\ldots
 
 \bibliography{NeuralCircuitDevelopment}
 \bibliographystyle{ieeetr}
