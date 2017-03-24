@@ -9,11 +9,36 @@
 #include "Connectome.hpp"
 
 
-Connectome::Connectome(){
+Connectome::Connectome(std::string ortFileName){
     
+    // parse the .ort file, and create the elements and element relations specified
+    ortUtil.makeAndSetElements(ortFileName, elementModules, elementRelations, elementMap);
+    buildAdditionalDataStructures();
 }
 
-void Connectome::buildDataStructures(){
+/**
+ * Once the .ort file has been parsed,
+ * and the elements and element relations have been created,
+ * we use this function to create:
+ *
+ * - nameMap ==> mapping between name and index in elementModules vector
+ * - indexMap ==> mapping between index in elementModules vector and name
+ * - correlatedRelations ==> mapping between the index of the pre element and all ElementRelations (pointers) that have post elements correlated with the pre
+ * - causesRelations ==> mapping between the index of the pre element and all ElementRelations (pointers) that have post elements effected by the pre
+ * - dominatesRelations ==> mapping between the index of the pre element and all ElementRelations (pointers) that have post elements dominates by the pre
+ * - opposesRelations ==> mapping between the index of the pre element and all ElementRelations (pointers) that have post elements opposed by the pre
+ *
+ */
+void Connectome::buildAdditionalDataStructures(){
+    for (auto thing : elementModules){
+        printf("%s\n",thing->toString().c_str());
+    }
+    for (auto thing : elementRelations){
+        printf("%s\n",thing->toString().c_str());
+    }
+    
+    
+    return;
     
 }
 

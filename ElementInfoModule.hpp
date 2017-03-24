@@ -13,7 +13,6 @@
 #include <vector>
 #include <string>
 #include "MassPoint.hpp"
-#include "Connection.hpp"
 
 
 enum ElementType { SENSE, EMOTION, INTER, MOTOR, MUSCLE};
@@ -34,9 +33,11 @@ public:
     
     glm::vec3 getCenterPoint(); // allows us to use muscles and neurons for creating graphical connections
     
-    std::string* namep;
+    //std::string* namep;
+    std::string name;
     std::string graphicalName; // name used in graphics -- with 'graphical identifier": either "-(I)", "-(S)", "-(M)", or "-<M>" -- inter, sensory, motor, or muscle
     int* idp; // the id of this element with respect to all other elements
+    int id;
     int massPoint_id = -1; // -1 means no mass point
     
     bool marked = false; // used for stack
@@ -44,9 +45,9 @@ public:
     float v_0 = 0; // initial voltage
     float* vCurrp; // current voltage
     
-    std::string name();
+    std::string getName();
     float vCurr();
-    int id();
+    int getId();
     
     
     void setAffect(std::string affect);
@@ -58,6 +59,8 @@ public:
     ElementType getEType();
     std::string getSType();
     float getFType();
+    
+    std::string toString();
     
 private:
     std::string sAffect;

@@ -489,6 +489,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             std::string res = OptionForewoman::keyboardOptionGauntlet(SHOW_ACTIVATION,std::to_string(!OptionForewoman::WormOpts[SHOW_ACTIVATION]));
             printf("%s\n",res.c_str());
         }
+        /*
         else if (key == GLFW_KEY_G){
             ConnectionComrade::doGaps = !ConnectionComrade::doGaps;
             OptionForewoman::REFRESH_CONNS = true;
@@ -502,6 +503,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             std::string res = OptionForewoman::keyboardOptionGauntlet(SHOW_WEIGHTS,std::to_string(!OptionForewoman::WormOpts[SHOW_WEIGHTS]));
             printf("%s\n",res.c_str());
         }
+         */
     }
     else if(action == GLFW_RELEASE){
             keys[key] = false;

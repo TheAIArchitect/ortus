@@ -73,7 +73,6 @@ void FileAssistant::readConnectomeCSV(std::string csv_name, std::vector<std::vec
 
 /*
  * graphical identifier is either "-(I)", "-(S)", "-(M)", or "-<M>" -- inter, sensory, motor, or muscle
- */
 ElementType FileAssistant::string_to_etype(std::string s, std::string& graphical_identifier){
     std::string string_types[] = {"SENSORY", "INTER",  "MOTOR", "MUSCLE"};
     if (s.find(string_types[0]) != std::string::npos){
@@ -98,6 +97,7 @@ ElementType FileAssistant::string_to_etype(std::string s, std::string& graphical
     }
     throw std::runtime_error("Unable to convert string to ElementType");
 }
+ */
 
 float FileAssistant::str_type_to_float(std::string str){
     const char* in_str = str.c_str();
@@ -114,6 +114,7 @@ float FileAssistant::str_type_to_float(std::string str){
     return -1.0f;
 }
 
+/*
 ElementType FileAssistant::str_type_to_enum(std::string str){
     const char* in_str = str.c_str();
     if (!strcmp(in_str,"inter"))
@@ -128,6 +129,7 @@ ElementType FileAssistant::str_type_to_enum(std::string str){
         return WFK; // gray
     return UH_OH;
 }
+ */
 
 void FileAssistant::remove_leading_zero_from_anywhere(std::string* in){
     // any character, any number of times, followed by a zero, then a digit, and then any character any number of times

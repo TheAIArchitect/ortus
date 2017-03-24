@@ -27,12 +27,12 @@
 
 #include <queue>
 
-#include "Artist.hpp"
+//#include "Artist.hpp"
 
 
 #include "OptionForewoman.hpp"
 
-#include "ConnectionComrade.hpp"
+//#include "ConnectionComrade.hpp"
 #include "Probe.hpp"
 
 

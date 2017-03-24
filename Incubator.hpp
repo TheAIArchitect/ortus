@@ -13,18 +13,18 @@
 #include <string>
 #include <vector>
 #include "Blade.hpp"
-#include "OrtUtil.hpp"
+#include "Connectome.hpp"
 
 
 class Incubator {
 public:
-    Incubator(std::string OrtFileName);
-    std::vector<std::string> odrVec;
+    Incubator();
+    ~Incubator();
     
-    OrtUtil ortUtil;
+    void conceive(std::string ortFileName);
     
-    void parseOdr();
-    
+    Connectome* ctome;
+    bool ctomeNewed = false;
 };
 
 

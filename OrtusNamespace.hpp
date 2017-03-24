@@ -13,12 +13,15 @@
 #include <vector>
 #include "vtkFloatArray.h"
 #include "ElementInfoModule.hpp"
+#include "ElementRelation.hpp"
 
 namespace ortus {
     
     using element_map = std::unordered_map<std::string, ElementInfoModule*>;
     using name_map = std::unordered_map<std::string, int>;
     using index_map = std::unordered_map<int, std::string>;
+    
+    using relation_map = std::unordered_map<int, std::vector<ElementRelation*>>;
     
     
     using vector = std::vector<float>;

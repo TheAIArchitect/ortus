@@ -20,7 +20,7 @@
 #include "Mesher.hpp"
 #include "DataSteward.hpp"
 #include "OptionForewoman.hpp"
-#include "ConnectionComrade.hpp"
+//#include "ConnectionComrade.hpp"
 
 
 class Artist{
@@ -108,7 +108,6 @@ public:
     GLuint connVbo;
     void prep_conns(int num_all_indices, int num_chem_indices, int num_gap_indices, float* all_conns);
     void draw_conns(Shader axesShader, Camera camera, glm::mat4* projection_ptr, glm::mat4* view_ptr);
-    void draw_conn_weights(Shader textShader, ConnectionComrade* commie, Camera camera, glm::mat4* projection_ptr, glm::mat4* view_ptr);
     
     int numAllIndices;
     int numChemIndices;

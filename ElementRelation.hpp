@@ -15,23 +15,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
+#include "ElementInfoModule.hpp"
 
 //enum ElementRelationType {GAP, CHEM};
 // idea is: pre <ElementRelationType> post, e.g., pre CAUSES post
 // if CORRELATES_WITH or CAUSES, 'Direction' must be specified (-1 or 1)
-enum ElementRelationType {CORRELATES_WITH, CAUSES, DOMINATES, OPPOSES};
+// note, "ERT" <==> "ElementRelationType"
+enum ElementRelationType {CORRELATED, CAUSES, DOMINATES, OPPOSES, NONE};
 
-class ElementInfoModule;
-    
 
-/* GABA is a primary inhibitory NT
- * Glutamate is a primary excitatory NT
- * Dopamine is responsible for reinforcement/"wanting"
- *      - perhaps we can just do 1 inhibitory and 1 excitatory for now
- *  Not clear on differences between NTs like glutamate and dopamine
- *      - specifically, what one does that the other can't, and why they aren't interchangable (e.g., replace dopamine receptors with glutamate ones, assuming both groups excitatory)
- */
-    
 class ElementRelation {
     
 public:
@@ -41,15 +33,23 @@ public:
     static float ZEROF;
     
     ElementInfoModule* pre;
-    std::string preName; // leave it for this for now
+    std::string preName;
     ElementInfoModule* post;
     std::string postName;
     ElementRelationType type;
     std::string sType;
-    float* polarityp; // perhaps we can 'model' different neurotransmitters by non-integer valued polarities?
+    
+    float* polarityp;
+    float* directionp; // used for CAUSES ERT
+    float* agep;
+    // need measure of habituation, but not here, i don't think.
+    
     std::string toString();
 
     float* weightp;
+    
+    // right now, high or low, needs to change...
+    std::string thresh;
     
     std::string weightLabel;
     bool marked = false; // used for search

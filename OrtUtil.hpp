@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "OrtusNamespace.hpp"
 #include "ElementInfoModule.hpp"
+#include "ElementRelation.hpp"
 
 /**
  * Eventually, this should save the comments from the file it reads in.
@@ -15,16 +16,32 @@
 
 class OrtUtil {
     public:
-    OrtUtil(std::string ortFile);
+        OrtUtil();
+    
         std::vector<std::string> getOdrLines(std::string fname);
-        void setElements(std::vector<std::string>& theLines, ortus::element_map& elementMap);
+    
+        void setElements(std::vector<std::string>& theLines, std::vector<ElementInfoModule*>& elementModules, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap);
+    
         std::string removeLineComment(std::string s);
-        ortus::element_map* makeAndGetElements();
+    
+        void makeAndSetElements(std::string ortFile, std::vector<ElementInfoModule*>& elementModules, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap);
+    
         std::string determineIndentationAndStripWhitespace(std::string line, int& indendationLevel);
+    
+        std::vector<std::unordered_map<std::string, std::string>> createVecOfAttributeMapsContainingRelevantLines(std::vector<std::string>& theLines, int& curLineNum);
+    
         std::unordered_map<std::string, std::string> createAttributeMap(std::string line);
     
-        void addElement(std::unordered_map<std::string, std::string> attributeMap, ortus::element_map& elementMap);
-        void addOpposites(std::vector<std::unordered_map<std::string, std::string>> vecOfAttributeMaps, ortus::element_map& elementMap);
+        void addElement(std::unordered_map<std::string, std::string> attributeMap, std::vector<ElementInfoModule*>& elementModules, ortus::element_map& elementMap);
+    
+        ElementInfoModule* checkMapAndGetElementPointer(std::unordered_map<std::string, std::string>& attributeMap, ortus::element_map& elementMap);
+    
+        std::string checkMapAndGetValue(std::unordered_map<std::string, std::string>& attributeMap, std::string key);
+    
+        void addRelation(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap, ElementRelationType ert);
+    
+    
+    
     
 public:
         static int NUM_ELEMENTS;

@@ -13,19 +13,38 @@
 #include "ElementInfoModule.hpp"
 #include "ElementRelation.hpp"
 #include "OrtusNamespace.hpp"
+#include "OrtUtil.hpp"
+#include <vector>
+#include <string>
 
 class Connectome {
     
 public:
-    Connectome();
-    void Connectome::initializeData();
+    Connectome(std::string ortFileName);
+    void buildAdditionalDataStructures();
+    
+     // primary element pointer holder -- the index in this vector is the element's 'id'
+    std::vector<ElementInfoModule*> elementModules;
+    std::vector<ElementRelation*> elementRelations; // primary relation pointer holder
+    ortus::element_map elementMap; // name to element pointer
     
     
-    ortus::element_map* elementMap;
+    ortus::name_map nameMap; // name to index
+    ortus::index_map indexMap; // index to name
+   
     
-    // want a vector of all ElementRelations
-    // want a map of each ElementRelationType, with element index as key
-}
-
+    ortus::relation_map correlatedRelations;
+    // for the below 3 maps, the key is the index of the 'pre' element,
+    // and relationships are created such that "pre" <ElementRelationType> "post"
+    // e.g., "pre" CAUSES "post" (along with
+    ortus::relation_map causesRelations;
+    ortus::relation_map dominatesRelations;
+    ortus::relation_map opposesRelations;
+    
+    
+    
+    std::vector<std::string> odrVec;
+    OrtUtil ortUtil;
+};
 
 #endif /* Connectome_hpp */

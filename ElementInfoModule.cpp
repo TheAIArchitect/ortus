@@ -25,14 +25,19 @@ float ElementInfoModule::getFType(){
     return fType;
 }
 
-std::string ElementInfoModule::name(){
-    return *namep;
+std::string ElementInfoModule::getName(){
+    //return *namep;
+    return name;
 }
 
-int ElementInfoModule::id(){
-    return *idp;
+int ElementInfoModule::getId(){
+    //return *idp;
+    return id;
 }
 
+// this needs to change to call it from the blade.
+// should also have another function that allows calling for a specific time window,
+// that would come from the voltage history... wherever that's being kept.
 float ElementInfoModule::vCurr(){
     return *vCurrp;
 }
@@ -84,4 +89,31 @@ void ElementInfoModule::setType(std::string type){
         exit(58);
     }
     return;
+}
+
+
+std::string ElementInfoModule::toString(){
+    int max = 512;
+    char buffer[max];
+    switch (eType) {
+        case SENSE:
+            snprintf(buffer, max,"<SENSE> (%s, affect: %s)",name.c_str(),sAffect.c_str());
+            break;
+        case EMOTION:
+            snprintf(buffer, max,"<EMOTION> (%s, affect: %s)",name.c_str(),sAffect.c_str());
+            break;
+        case INTER:
+            snprintf(buffer, max,"<INTER> (%s, affect: %s)",name.c_str(),sAffect.c_str());
+            break;
+        case MOTOR:
+            snprintf(buffer, max,"<MOTOR> (%s, affect: %s)",name.c_str(),sAffect.c_str());
+            break;
+        case MUSCLE:
+            snprintf(buffer, max,"<MUSCLE> (%s, affect: %s)",name.c_str(),sAffect.c_str());
+            break;
+        default:
+            snprintf(buffer,max,"-- ERROR -- CAN'T PRINT ELEMENT TYPE '%d'",eType);
+            break;
+    }
+    return std::string(buffer);
 }

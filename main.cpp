@@ -10,18 +10,17 @@
 
 #include "Steward.hpp"
 //#include "TSQueue.hpp"
-#include "GraphicsGovernor.hpp"
+//#include "GraphicsGovernor.hpp"
 #include "DataVisualizer.hpp"
 #include "Incubator.hpp"
 #include "CLHelper.hpp"
 
 int main(int argc, char** argv){
     
-    CLHelper clhelper;
     
     /* Incubator */
-    //Incubator incubator("ort/simple.ort");
-    //incubator.parseOdr();
+    Incubator incubator;
+    incubator.conceive("ort/simple.ort");
   
 
     /* Ortus

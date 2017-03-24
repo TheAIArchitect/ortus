@@ -300,6 +300,7 @@ void DataSteward::createConnections(){
                 exit(3);
             }
             
+            /*
             if (gapWeight > 0){ // can only be positive
                 gaps->set(post_id, pre_id, gapWeight); // swap post and pre so that we have row as post and col as pre
                 Connection c;
@@ -324,6 +325,7 @@ void DataSteward::createConnections(){
                 printf("%s\n",c.toString().c_str());
                 elements[pre_id]->out_conns.push_back(c);
             }
+             */
         }
         //printf("i = %d\n",i);
         ++start_at;
@@ -371,13 +373,15 @@ void DataSteward::createElements(){
     int neuron_id = 0;
     int muscle_id = 0;
     for (int i = CSV_OFFSET; i < csv_rows; i++){
-        if (!(csvDat[i][0] == "")){ // else, we keep the same etype
-            etype = FileAssistant::string_to_etype(csvDat[i][0], graphicalIdentifier);
-        }
+       ////////////////// TODO NOTE FIXME : THIS BREAKS ORTUS AS IT USED TO BE!!!!
+       ////////// if (!(csvDat[i][0] == "")){ // else, we keep the same etype
+       /////////////////     etype = FileAssistant::string_to_etype(csvDat[i][0], graphicalIdentifier);
+       ///////////////// }
         std::string* temp_namep = new std::string(csvDat[i][1]);
         FileAssistant::remove_leading_zero_from_anywhere(temp_namep);
         officialNamepVector.push_back(temp_namep);
         officialNameToIndexMap[*temp_namep] = element_id;
+        /*
         if (etype != MUSCLE){
             NeuronInfoModule* nim = new NeuronInfoModule();
             nim->namep = officialNamepVector[element_id];
@@ -405,6 +409,7 @@ void DataSteward::createElements(){
             }
             elements.push_back(mim); // must add ablated muscles to elements array so that we can find them when we do chems
         }
+         */
         element_id++;
     }
     for(int i = 0; i < officialNamepVector. size(); i++){

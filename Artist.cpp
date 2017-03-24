@@ -850,67 +850,8 @@ void Artist::draw_conns(Shader axesShader, Camera camera, glm::mat4* projection_
     
 }
 
-void Artist::draw_conn_weights(Shader textShader, ConnectionComrade* commie, Camera camera, glm::mat4* projection_ptr, glm::mat4* view_ptr){
-    glUseProgram(textShader.Program);
-    int numConns = commie->currentlyUsedConns.size();
-    for (int i = 0; i < numConns; ++i){
-        /*
-        if ((!OptionForewoman::WormOpts[SHOW_ALL_NEURONS] && !fakeStewie->elements[i]->marked) || (!OptionForewoman::WormOpts[SHOW_MUSCLES] && !fakeStewie->elements[i]->marked)){
-            // if we don't want to show all neurons, and it's not marked, then we don't want to show it
-            continue;
-        }
-         */
-        glm::mat4 billboard_mat(1.0f);
-        glm::vec3 pos;
-       // if (fakeStewie->elements[i]->getEType() == MUSCLE){
-       //     MuscleInfoModule* tmim = (MuscleInfoModule*)fakeStewie->elements[i];
-        //    pos = tmim->centerMassPoint->center;
-            
-         //   billboard_mat = glm::scale(billboard_mat, MuscleInfoModule::MUSCLE_SIZE_SCALE*glm::vec3(1.f, 1.f, MuscleInfoModule::length_z_scale));
-          //  billboard_mat = glm::translate(billboard_mat,(MuscleInfoModule::MUSCLE_TRANS_SCALE*pos)*glm::vec3(1.f, 1.f,MuscleInfoModule::trans_z_scale));// 2.5 is half of the night of the muscle model (i think)
-            billboard_mat = glm::translate(billboard_mat,commie->currentlyUsedConns[i]->midpoint);
-            
-            //billboard_mat = glm::translate(billboard_mat,(pos*MuscleInfoModule::MUSCLE_TRANS_SCALE));
-            
-            //billboard_mat = glm::translate(billboard_mat, pos); // translate and then offset from center of neuron
-            //billboard_mat = glm::translate(billboard_mat, pos+(MuscleInfoModule::MUSCLE_SIZE_SCALE*2.f/2.f)); // translate and then offset from center of neuron
-        //}
-        //else {
-        /*
-            NeuronInfoModule* tnim = (NeuronInfoModule*)fakeStewie->elements[i];
-            glm::vec3 pos = tnim->massPoint->center;// - (nim[i].soma_diameter/2.0f);
-            billboard_mat = glm::translate(billboard_mat, ((NEURON_TRANS_SCALE*pos) + (NEURON_SIZE_SCALE*tnim->soma_diameter/2.f))); // translate and then offset from center of neuron
-        }
-         */
-        billboard_mat = glm::rotate(billboard_mat, camera.m_theta, glm::vec3(0,1,0));
-         
-        billboard_mat = glm::rotate(billboard_mat, camera.m_phi - ((float)M_PI/2.f), glm::vec3(1,0,0));
-        //billboard_mat = glm::scale(billboard_mat, (.1f/NEURON_SIZE_SCALE*glm::vec3(1.f, 1.f, 1.f)));
-        glUniformMatrix4fv(glGetUniformLocation(textShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(*projection_ptr));
-        glUniformMatrix4fv(glGetUniformLocation(textShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(*view_ptr));
-        glUniformMatrix4fv(glGetUniformLocation(textShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(billboard_mat));
-        //printf("creating text: %s\n",fakeStewie->nim[i]->name.c_str());
-        
-        /*
-        if (OptionForewoman::WormOpts[SHOW_ACTIVATION]){
-            // get activation
-            int eid = fakeStewie->elements[i]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
-            float currentActivation = (*voltages)[Camera::voltageFrame][eid];
-            label =fakeStewie->elements[i]->graphicalName + ": "+std::to_string(currentActivation);
-        }
-        else {
-            label = fakeStewie->elements[i]->graphicalName;
-        }
-        */
-        //if (fakeStewie->elements[i]->getEType() == MUSCLE){ // maybe we want a different scale or something for muscle labels
-        textMaker.make_text(textShader, commie->currentlyUsedConns[i]->weightLabel, pos, 1.f/NeuronInfoModule::NEURON_TRANS_SCALE, glm::vec3(1.0f, 1.0f, 1.0f));
-        //}
-        //else{
-            //textMaker.make_text(textShader, label, pos, .5f/NEURON_TRANS_SCALE, glm::vec3(1.0f, 1.0f, 1.0f));
-        //}
-        //textMaker.make_text(textShader, label, pos, 1.f, glm::vec3(1.0f, 1.0f, 1.0f));
-    }
-}
+
+
 
 /* -100 - 100  ... 0 is grey */
 glm::vec4 Artist::colorByActivation(float activation){

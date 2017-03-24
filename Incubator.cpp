@@ -8,21 +8,24 @@
 
 #include "Incubator.hpp"
 
-Incubator::Incubator(std::string ortFileName){
+Incubator::Incubator(){
     
-   odrVec = ortUtil.getOdr(ortFileName);
 }
 
-void Incubator::parseOdr(){
-    
-    for (auto line : odrVec){
-        printf("%s\n",line.c_str());
-        
+Incubator::~Incubator(){
+    if(ctomeNewed){
+        delete ctome;
     }
-   
-    
-    
+    ctomeNewed = false;
 }
+
+void Incubator::conceive(std::string ortFileName){
+    ctome = new Connectome(ortFileName);
+    ctomeNewed = true;
+}
+
+
+
 
 /**
  * 
