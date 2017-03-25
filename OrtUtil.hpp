@@ -49,6 +49,8 @@ public:
         static std::vector<std::string> ORT_DEFINITION_LEVELS;
         static bool INDENTATION_DETERMINED;
         static std::string INDENTATION_STRING;
+        static int INDENTATION_STRING_LENGTH;
+    
     
 private:
         std::string removeCommented(std::string line, bool& startBlockComment);

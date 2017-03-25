@@ -13,6 +13,7 @@ std::vector<std::string> OrtUtil::ORT_DEFINITION_LEVELS = {"elements", "opposes"
  */
 bool OrtUtil::INDENTATION_DETERMINED = false;
 std::string OrtUtil::INDENTATION_STRING = "";
+int OrtUtil::INDENTATION_STRING_LENGTH = 0;
 
 
 OrtUtil::OrtUtil(){
@@ -97,8 +98,9 @@ std::string OrtUtil::removeCommented(std::string line, bool& startBlockComment){
 std::string OrtUtil::determineIndentationAndStripWhitespace(std::string line, int& indentationLevel){
     if (!INDENTATION_DETERMINED){
         unsigned long spaceCharCount = line.find_first_not_of("\t ");
-        if (spaceCharCount != std::string::npos){ // then we found the first indented line
+        if (spaceCharCount > 0){ // then we found the first indented line
             INDENTATION_STRING = line.substr(0,spaceCharCount);
+            INDENTATION_STRING_LENGTH = INDENTATION_STRING.size();
             INDENTATION_DETERMINED = true;
             indentationLevel = 1;
         }
@@ -107,14 +109,18 @@ std::string OrtUtil::determineIndentationAndStripWhitespace(std::string line, in
         }
     }
     else {// we just check to see how many times we find INDENTATION_STRING at the start of line, which is our indentationLevel
-        int indentation_level = 0;
+        int localIndentationLevel = 0;
         unsigned long pos = std::string::npos;
         std::string tempLine = line;
         while ((pos = tempLine.find(INDENTATION_STRING)) != std::string::npos){
-            indentation_level++;
-            tempLine = tempLine.substr(0,pos);
+            localIndentationLevel++;
+            tempLine = tempLine.substr(INDENTATION_STRING_LENGTH);// we want to grab from one past where the match ended, so we can try to match again -- the match should have started at 0, and ended at (length of indentation string - 1)
+            if (localIndentationLevel > 25){// then we probably screwed up, becuase that's a huge indent...
+                printf("ERROR: indentation level now at '%d' -- if this is not an error, find this line of code, and increase the number that allows the if block this statement is in to return true. But, it's probably an error...\n",localIndentationLevel);
+                exit(60);
+            }
         }
-        indentationLevel = indentation_level;
+        indentationLevel = localIndentationLevel;
     }
     return StrUtils::trim(line);// strip leading and trailing whitespace
 }
@@ -138,12 +144,15 @@ std::unordered_map<std::string, std::string> OrtUtil::createAttributeMap(std::st
     }
     // deal with the element's name, and the sign prepended (e.g., +CO2)
     if (line[0] == '+'){
-        attributeMap["name"] = line.substr(1,colonPos);
+        attributeMap["name"] = line.substr(1,colonPos-1); // -1 to account for sign
         attributeMap["direction"] = "pos";
     }
     else if (line[0] == '-'){
-        attributeMap["name"] = line.substr(1,colonPos);
+        attributeMap["name"] = line.substr(1,colonPos-1); // -1 to account for sign
         attributeMap["direction"] = "neg";
+    }
+    else { // no sign
+        attributeMap["name"] = line.substr(0,colonPos); // no sign, no -1
     }
     // now see if there's a 'dictionary' -- { ... }
     unsigned long openBracketPos = line.find("{");
@@ -191,6 +200,7 @@ void OrtUtil::addElement(std::unordered_map<std::string, std::string> attributeM
     std::string name = attributeMap["name"];
     if (elementMap.find(name) == elementMap.end()){// that's good, and we'll add it.
         elementMap[name] = new ElementInfoModule();
+        elementMap[name]->name = name;
         elementMap[name]->id = elementModules.size();// new index will always be 1 more than current largest index, which will always be equal to the size of the vector.
         elementModules.push_back(elementMap[name]);
     }
@@ -219,7 +229,7 @@ ElementInfoModule* OrtUtil::checkMapAndGetElementPointer(std::unordered_map<std:
     std::string name = attributeMap["name"];
     if (elementMap.find(name) == elementMap.end()){// something isn't right.
         // specifically, we're looking for an element that doesn't seem to exist.
-        printf("Error: missing 'name' attribute in attribute map.\n");
+        printf("Error: missing 'name' attribute in element map, '%s'.\n(This probably means a relation was defined without first defining all elements involved.)\n",name.c_str());
         exit(58);// i used 57 above. not sure about 58. this isn't a very good system.
     }
     else { // we have it!
@@ -263,20 +273,33 @@ void OrtUtil::addRelation(std::vector<std::unordered_map<std::string, std::strin
         minorE = checkMapAndGetElementPointer(minorMap, elementMap);
         ElementRelation* elrel = new ElementRelation();
         elrel->pre = majorE;// NOTE: if 'major' has attributes to set, they must be re-set for each ElementRelation
+        elrel->preName = majorE->name;
+        elrel->preId = majorE->id;
         elrel->post = minorE;
+        elrel->postName = minorE->name;
+        elrel->postId = minorE->id;
         // NOTE: as this grows, it might make more sense to have a function take an array of attributes to check for for each case.
         switch(ert){ 
             case CORRELATED:
-                // none yet...
+                elrel->type = CORRELATED;
+                tempAttrib = checkMapAndGetValue(minorMap, "direction");
+                elrel->sDirection = tempAttrib.empty() ? elrel->sDirection : tempAttrib;
+                tempAttrib = checkMapAndGetValue(minorMap, "age");
+                elrel->sAge = tempAttrib.empty() ? elrel->sAge : tempAttrib;
                 break;
             case CAUSES:
+                elrel->type = CAUSES;
                 tempAttrib = checkMapAndGetValue(minorMap, "thresh");
-                elrel->thresh = tempAttrib.empty() ? elrel->thresh : tempAttrib;
+                elrel->sThresh = tempAttrib.empty() ? elrel->sThresh : tempAttrib;
+                tempAttrib = checkMapAndGetValue(minorMap, "age");
+                elrel->sAge = tempAttrib.empty() ? elrel->sAge : tempAttrib;
                 break;
             case DOMINATES:
+                elrel->type = DOMINATES;
                 // none yet...
                 break;
             case OPPOSES:
+                elrel->type = OPPOSES;
                 // none yet...
                 break;
             default:
@@ -358,7 +381,6 @@ void OrtUtil::setElements(std::vector<std::string>& theLines, std::vector<Elemen
     int definitionLevel = -1;
     std::string trimmedLine = "";
     int indentationLevel = 0;
-    int prevIdentationLevel = -1;
     // NOTE: at end of level 0, update NUM_ELEMENTS!!!
     int numLines = theLines.size();
     int lineNum = 0;
@@ -366,17 +388,17 @@ void OrtUtil::setElements(std::vector<std::string>& theLines, std::vector<Elemen
     std::string line;
     ElementRelationType ert;
     while (lineNum < numLines){
+        //printf("lineNum: %d/%d\n", lineNum, numLines);
         vecOfAttributeMaps.clear();
         line = theLines[lineNum];
         trimmedLine = determineIndentationAndStripWhitespace(line, indentationLevel);
-        if (indentationLevel == 0 && prevIdentationLevel != 0){
+        if (indentationLevel == 0){
             definitionLevel++; // move to new definition level if we drop back to no indentation
-            prevIdentationLevel = 0;
             lineNum++;
             continue; // nothing else on this line
         }
         if ("elements" == ORT_DEFINITION_LEVELS[definitionLevel]){ // just one line
-            std::unordered_map<std::string, std::string> attributeMap = createAttributeMap(line);
+            std::unordered_map<std::string, std::string> attributeMap = createAttributeMap(trimmedLine);
             addElement(attributeMap, elementModules, elementMap);
         }
         else {
@@ -418,16 +440,19 @@ std::vector<std::string> OrtUtil::getOdrLines(std::string fname){
     std::string line;
     int lineNo = 0;
     std::string fixedLine;
+    std::string trimTest;
     unsigned long noPos = std::string::npos;
     while (std::getline(odrFile,line)){
         
-        line = removeCommented(line, startBlockComment);
+        line = removeCommented(line, startBlockComment); // this is for block comments
         if (noPos != line.find("/*") && noPos != line.find("*/")){
             printf("Only one block comment may be 'opened' at a time in .ort files.\n");
             exit(53);
         }
-        fixedLine = removeLineComment(line);
-        if (!fixedLine.empty()){
+        fixedLine = removeLineComment(line); // this is for single line comments
+        // because we use whitespace to parse the file, we can't store the trimmed version yet, but we do want to make sure we're not including any empty lines
+        trimTest = StrUtils::trim(fixedLine);
+        if (!trimTest.empty()){
             odrVec.push_back(fixedLine); 
             printf(">>%s<<\n",odrVec[lineNo].c_str());
             lineNo++;

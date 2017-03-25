@@ -30,9 +30,11 @@ Connectome::Connectome(std::string ortFileName){
  *
  */
 void Connectome::buildAdditionalDataStructures(){
+    printf("Element Modules (%d)\n",elementModules.size());
     for (auto thing : elementModules){
         printf("%s\n",thing->toString().c_str());
     }
+    printf("Element Relations (%d)\n", elementRelations.size());
     for (auto thing : elementRelations){
         printf("%s\n",thing->toString().c_str());
     }

@@ -3,10 +3,11 @@ elements:
     CO2: { type=sense, affect=neg }//, affect=neg } // no affect should mean no P/N interneurons are created... maybe? or, one of each??
     H2O: {type=sense}
     FEAR: { type=emotion, affect=neg }
-    //HAPPY { type=emotion, affect=pos }
+    //HAPPY: { type=emotion, affect=pos }
+    //HUNGRY: {type=emotion, affect=neg }
     // neither pain nor pleasure are really emotions, but maybe that label will work for now?
-    //PLEASURE { type=emotion, affect=pos, opposite=PAIN }
-    //PAIN { type=emotion, affect=neg, opposite=PAIN }
+    //PLEASURE: { type=emotion, affect=pos }
+    //PAIN: { type=emotion, affect=neg}
     INHALE: { type=motor }
     EXHALE: { type=motor }
     LUNG: { type=muscle }
@@ -25,8 +26,8 @@ causes:
     // "attempting" to breath, and not being able to, should cause fear too.
 dominates:
     //+O2:
-        //+IHUNGRY:
-    //+IFEAR:
-        //+IHAPPY:
+        //+HUNGRY:
+    //+FEAR:
+        //+HAPPY:
     //maybe the + is irrelevant?
 

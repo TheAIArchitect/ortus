@@ -28,28 +28,37 @@ class ElementRelation {
     
 public:
     ElementRelation();
-    float polarity();
-    float weight();
+    float getPolarity();
+    float getWeight();
+    void setAge(std::string sAge);
+    void setThresh(std::string thresh);
     static float ZEROF;
     
     ElementInfoModule* pre;
     std::string preName;
+    int preId;
     ElementInfoModule* post;
     std::string postName;
+    int postId;
     ElementRelationType type;
     std::string sType;
     
-    float* polarityp;
-    float* directionp; // used for CAUSES ERT
-    float* agep;
-    // need measure of habituation, but not here, i don't think.
+    float polarity;
+    // used for CAUSES and CORRELATED ERT
+    std::string sDirection;
+    float fDirection;
+    
+    std::string sAge;
+    float fAge;
+    // need measure of habituation... here??
     
     std::string toString();
 
-    float* weightp;
+    float weight;
     
     // right now, high or low, needs to change...
-    std::string thresh;
+    std::string sThresh;
+    float fThresh;
     
     std::string weightLabel;
     bool marked = false; // used for search
