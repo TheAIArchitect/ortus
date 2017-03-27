@@ -13,7 +13,8 @@
 #include <vector>
 #include "vtkFloatArray.h"
 #include "ElementInfoModule.hpp"
-#include "ElementRelation.hpp"
+
+class ElementRelation;
 
 namespace ortus {
     
@@ -23,6 +24,7 @@ namespace ortus {
     
     using relation_map = std::unordered_map<int, std::vector<ElementRelation*>>;
     
+    using attribute_map = std::vector<float*>;
     
     using vector = std::vector<float>;
     using vectrix = std::vector<vector>;
@@ -58,7 +60,6 @@ namespace ortus {
     using vtkVectrix = std::vector<vtkVector*>;
     using vtkTrivec = std::vector<vtkVectrix*>;
     using vtkFullxcorr = std::unordered_map<int, vtkTrivec*>;
-    
     
     
 }

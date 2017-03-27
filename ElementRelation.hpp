@@ -16,6 +16,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include "ElementInfoModule.hpp"
+#include "OrtusNamespace.hpp"
+#include "Attribute.hpp"
 
 //enum ElementRelationType {GAP, CHEM};
 // idea is: pre <ElementRelationType> post, e.g., pre CAUSES post
@@ -28,11 +30,15 @@ class ElementRelation {
     
 public:
     ElementRelation();
-    float getPolarity();
-    float getWeight();
-    void setAge(std::string sAge);
-    void setThresh(std::string thresh);
+    ~ElementRelation();
     static float ZEROF;
+    
+    static const int NUM_ATTRIBUTES = static_cast<int>(Attribute::NUM_ATTRIBUTES);
+    // this is actually a vector!
+    ortus::attribute_map attributeMap;
+    float getAttribute(Attribute attribute);
+    void setAttribute(Attribute attribute, float value);
+    
     
     ElementInfoModule* pre;
     std::string preName;
@@ -43,29 +49,19 @@ public:
     ElementRelationType type;
     std::string sType;
     
-    float polarity;
-    // used for CAUSES and CORRELATED ERT
-    std::string sDirection;
-    float fDirection;
-    
-    std::string sAge;
-    float fAge;
-    // need measure of habituation... here??
     
     std::string toString();
 
-    float weight;
-    
-    // right now, high or low, needs to change...
-    std::string sThresh;
-    float fThresh;
     
     std::string weightLabel;
     bool marked = false; // used for search
     int path_len = -1; // used for search
     glm::vec3 midpoint; // used to for the label's location
     
+private:
     
+    // probably acts like a bitvector!
+    std::vector<bool> attributeTracker; // keeps track of floats that have been 'newed'
     
 };
 

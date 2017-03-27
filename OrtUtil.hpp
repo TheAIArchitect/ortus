@@ -1,3 +1,6 @@
+#ifndef OrtUtil_hpp
+#define OrtUtil_hpp
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -8,6 +11,7 @@
 #include "OrtusNamespace.hpp"
 #include "ElementInfoModule.hpp"
 #include "ElementRelation.hpp"
+#include "Attribute.hpp"
 
 /**
  * Eventually, this should save the comments from the file it reads in.
@@ -15,28 +19,34 @@
  */
 
 class OrtUtil {
+private:
+    std::vector<std::string> getOdrLines(std::string fname);
+    
+    
     public:
         OrtUtil();
     
-        std::vector<std::string> getOdrLines(std::string fname);
+        void getLines(std::string ortFile, std::vector<std::string>& theLines);
     
         void setElements(std::vector<std::string>& theLines, std::vector<ElementInfoModule*>& elementModules, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap);
     
         std::string removeLineComment(std::string s);
     
-        void makeAndSetElements(std::string ortFile, std::vector<ElementInfoModule*>& elementModules, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap);
     
         std::string determineIndentationAndStripWhitespace(std::string line, int& indendationLevel);
     
         std::vector<std::unordered_map<std::string, std::string>> createVecOfAttributeMapsContainingRelevantLines(std::vector<std::string>& theLines, int& curLineNum);
     
-        std::unordered_map<std::string, std::string> createAttributeMap(std::string line);
+    
+        std::unordered_map<Attribute,std::string> getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings);
+    
+        std::unordered_map<std::string, std::string> createAttributeMapStrings(std::string line);
     
         void addElement(std::unordered_map<std::string, std::string> attributeMap, std::vector<ElementInfoModule*>& elementModules, ortus::element_map& elementMap);
     
         ElementInfoModule* checkMapAndGetElementPointer(std::unordered_map<std::string, std::string>& attributeMap, ortus::element_map& elementMap);
     
-        std::string checkMapAndGetValue(std::unordered_map<std::string, std::string>& attributeMap, std::string key);
+        static std::string checkMapAndGetValue(std::unordered_map<std::string, std::string>& attributeMap, std::string key);
     
         void addRelation(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap, ElementRelationType ert);
     
@@ -83,3 +93,5 @@ private:
  * and O2 and it's dictionary would be the first map,
  * with proceeding maps being the things that +O2 causes (along with their dictionaries).
  */
+
+#endif

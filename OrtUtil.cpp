@@ -116,13 +116,34 @@ std::string OrtUtil::determineIndentationAndStripWhitespace(std::string line, in
             localIndentationLevel++;
             tempLine = tempLine.substr(INDENTATION_STRING_LENGTH);// we want to grab from one past where the match ended, so we can try to match again -- the match should have started at 0, and ended at (length of indentation string - 1)
             if (localIndentationLevel > 25){// then we probably screwed up, becuase that's a huge indent...
-                printf("ERROR: indentation level now at '%d' -- if this is not an error, find this line of code, and increase the number that allows the if block this statement is in to return true. But, it's probably an error...\n",localIndentationLevel);
+                printf("Error: indentation level now at '%d' -- if this is not an error, find this line of code, and increase the number that allows the if block this statement is in to return true. But, it's probably an error...\n",localIndentationLevel);
                 exit(60);
             }
         }
         indentationLevel = localIndentationLevel;
     }
     return StrUtils::trim(line);// strip leading and trailing whitespace
+}
+
+/**
+ * converts the attribute keys from strings to enumerated values.
+ *
+ * this step leaves the corresponding attribute values as strings,
+ * the Connectome class takes care of that, because it is more of a program execution concern,
+ * rather than a parsing concern.
+ */
+std::unordered_map<Attribute,std::string> OrtUtil::getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings){
+    std::unordered_map<Attribute,std::string> newMap;
+    newMap.reserve(attributeMapStrings.size());
+    int i = 0;
+    for (auto entry : attributeMapStrings){
+        for (i = 0; i <  ElementRelation::NUM_ATTRIBUTES; ++i){
+            if (entry.first == ATTRIBUTE_STRINGS[i]){
+                newMap[static_cast<Attribute>(i)] = entry.second;
+            }
+        }
+    }
+    return newMap;
 }
 
 /**
@@ -134,9 +155,12 @@ std::string OrtUtil::determineIndentationAndStripWhitespace(std::string line, in
  * there may be any number of attributes.
  * there *must* not be any leading whitespace,
  * but whitespace within the line is irrelevant.
+ *
+ * NOTE: this doesn't convert the 'keys' to their enumerated values yet,
+ * that happens later, (among other reasons, the name is in this map at the moment)
  */
-std::unordered_map<std::string, std::string> OrtUtil::createAttributeMap(std::string line){
-    std::unordered_map<std::string, std::string> attributeMap;
+std::unordered_map<std::string, std::string> OrtUtil::createAttributeMapStrings(std::string line){
+    std::unordered_map<std::string, std::string> attributeMapStrings;
     unsigned long colonPos = line.find(":");
     if (colonPos == std::string::npos){
         printf("Error: no colon found in line '%s'\n", line.c_str());
@@ -144,15 +168,15 @@ std::unordered_map<std::string, std::string> OrtUtil::createAttributeMap(std::st
     }
     // deal with the element's name, and the sign prepended (e.g., +CO2)
     if (line[0] == '+'){
-        attributeMap["name"] = line.substr(1,colonPos-1); // -1 to account for sign
-        attributeMap["direction"] = "pos";
+        attributeMapStrings["name"] = line.substr(1,colonPos-1); // -1 to account for sign
+        attributeMapStrings["direction"] = "pos";
     }
     else if (line[0] == '-'){
-        attributeMap["name"] = line.substr(1,colonPos-1); // -1 to account for sign
-        attributeMap["direction"] = "neg";
+        attributeMapStrings["name"] = line.substr(1,colonPos-1); // -1 to account for sign
+        attributeMapStrings["direction"] = "neg";
     }
     else { // no sign
-        attributeMap["name"] = line.substr(0,colonPos); // no sign, no -1
+        attributeMapStrings["name"] = line.substr(0,colonPos); // no sign, no -1
     }
     // now see if there's a 'dictionary' -- { ... }
     unsigned long openBracketPos = line.find("{");
@@ -171,52 +195,14 @@ std::unordered_map<std::string, std::string> OrtUtil::createAttributeMap(std::st
             for (auto pair : splitDict){
                 // now split each pair on the '=', and trim before putting into map
                 std::vector<std::string> pairVec = StrUtils::parseOnCharDelim(pair, '=');
-                attributeMap[StrUtils::trim(pairVec[0])] = StrUtils::trim(pairVec[1]);
+                attributeMapStrings[StrUtils::trim(pairVec[0])] = StrUtils::trim(pairVec[1]);
             }
         }
     }
-    return attributeMap;
+    return attributeMapStrings;
 }
 
-/**
- * new's an ElementInfoModule, and fills it according to the data in the attributeMap
- * 
- * NOTE: This is sets the id for each element.
- *
- * list of recognized attributes (all others are ignored):
- *  # type -- either sense, emotion, motor, or muscle
- *  # affect -- either pos or neg
- *  # opposite -- the name of an element that has an opposing funciton (e.g, CO2 and O2 sensors)
- *
- * NOTE: to add more attributes, add a block, similar to the blocks for currently recognized attributes,
- * and update the above list.
- */
-void OrtUtil::addElement(std::unordered_map<std::string, std::string> attributeMap, std::vector<ElementInfoModule*>& elementModules, ortus::element_map& elementMap){
-    
-    if (attributeMap.find("name") == attributeMap.end()){
-        printf("Error: missing 'name' attribute in attribute map.\n");
-        exit(56);
-    }
-    std::string name = attributeMap["name"];
-    if (elementMap.find(name) == elementMap.end()){// that's good, and we'll add it.
-        elementMap[name] = new ElementInfoModule();
-        elementMap[name]->name = name;
-        elementMap[name]->id = elementModules.size();// new index will always be 1 more than current largest index, which will always be equal to the size of the vector.
-        elementModules.push_back(elementMap[name]);
-    }
-    else {
-        printf("Error: attempting to add duplicate element '%s' to elementMap.\n");
-        exit(57);
-    }
-    ElementInfoModule* eim = elementMap[name];
-    
-    if (attributeMap.find("type") != attributeMap.end()){
-        eim->setType(attributeMap["type"]);
-    }
-    if (attributeMap.find("affect") != attributeMap.end()){
-        eim->setAffect(attributeMap["affect"]);
-    }
-}
+
 
 /**
  * main reason for is the error checking
@@ -251,64 +237,7 @@ std::string OrtUtil::checkMapAndGetValue(std::unordered_map<std::string, std::st
 }
 
 
-/**
- *
- */
-void OrtUtil::addRelation(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap, ElementRelationType ert){
-    int numMaps = -1;
-    if ((numMaps = vecOfAttributeMaps.size()) < 2){
-        printf("Error: must have at least one opposing element, only found '%d' attribute maps, one of which should be the 'pre' element.\n",numMaps);
-        exit(59);
-    }
-    // the first one is always the 'pre' (we'll call it major here, just for fun)
-    std::unordered_map<std::string, std::string> majorMap = vecOfAttributeMaps[0];
-    std::unordered_map<std::string, std::string> minorMap;
-    ElementInfoModule* majorE = checkMapAndGetElementPointer(majorMap, elementMap);
-    ElementInfoModule* minorE;
-    std::string tempAttrib;
-    // start at 1; we already took care of 0
-    for (int i = 1; i < numMaps; ++i){
-        tempAttrib = "";
-        minorMap = vecOfAttributeMaps[i];
-        minorE = checkMapAndGetElementPointer(minorMap, elementMap);
-        ElementRelation* elrel = new ElementRelation();
-        elrel->pre = majorE;// NOTE: if 'major' has attributes to set, they must be re-set for each ElementRelation
-        elrel->preName = majorE->name;
-        elrel->preId = majorE->id;
-        elrel->post = minorE;
-        elrel->postName = minorE->name;
-        elrel->postId = minorE->id;
-        // NOTE: as this grows, it might make more sense to have a function take an array of attributes to check for for each case.
-        switch(ert){ 
-            case CORRELATED:
-                elrel->type = CORRELATED;
-                tempAttrib = checkMapAndGetValue(minorMap, "direction");
-                elrel->sDirection = tempAttrib.empty() ? elrel->sDirection : tempAttrib;
-                tempAttrib = checkMapAndGetValue(minorMap, "age");
-                elrel->sAge = tempAttrib.empty() ? elrel->sAge : tempAttrib;
-                break;
-            case CAUSES:
-                elrel->type = CAUSES;
-                tempAttrib = checkMapAndGetValue(minorMap, "thresh");
-                elrel->sThresh = tempAttrib.empty() ? elrel->sThresh : tempAttrib;
-                tempAttrib = checkMapAndGetValue(minorMap, "age");
-                elrel->sAge = tempAttrib.empty() ? elrel->sAge : tempAttrib;
-                break;
-            case DOMINATES:
-                elrel->type = DOMINATES;
-                // none yet...
-                break;
-            case OPPOSES:
-                elrel->type = OPPOSES;
-                // none yet...
-                break;
-            default:
-                printf("Error: unknown ElementRelationType, '%d'\n",ert);
-                break;
-        }
-        elementRelations.push_back(elrel);
-    }
-}
+
 
 /**
  * -----------------------------------------------------------------------------------------
@@ -371,56 +300,7 @@ std::vector<std::unordered_map<std::string, std::string>> OrtUtil::createVecOfAt
 }
 
 
-void OrtUtil::setElements(std::vector<std::string>& theLines, std::vector<ElementInfoModule*>& elementModules, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap){
-    //    fixedLine = StrUtils::trim(fixedLine); // remove any remaining whitespace
-    /*
-     definitionLevel = 0: elements => neurons/areas/muscles, with attributes (type, +affect, etc.)
-     definitionLevel = 1: causes => how increases or decreases in neurons/areas impact other things
-     definitionLevel = 2: dominates => defines hierarchy of neurons/areas
-    */
-    int definitionLevel = -1;
-    std::string trimmedLine = "";
-    int indentationLevel = 0;
-    // NOTE: at end of level 0, update NUM_ELEMENTS!!!
-    int numLines = theLines.size();
-    int lineNum = 0;
-    std::vector<std::unordered_map<std::string, std::string>> vecOfAttributeMaps;
-    std::string line;
-    ElementRelationType ert;
-    while (lineNum < numLines){
-        //printf("lineNum: %d/%d\n", lineNum, numLines);
-        vecOfAttributeMaps.clear();
-        line = theLines[lineNum];
-        trimmedLine = determineIndentationAndStripWhitespace(line, indentationLevel);
-        if (indentationLevel == 0){
-            definitionLevel++; // move to new definition level if we drop back to no indentation
-            lineNum++;
-            continue; // nothing else on this line
-        }
-        if ("elements" == ORT_DEFINITION_LEVELS[definitionLevel]){ // just one line
-            std::unordered_map<std::string, std::string> attributeMap = createAttributeMap(trimmedLine);
-            addElement(attributeMap, elementModules, elementMap);
-        }
-        else {
-            vecOfAttributeMaps = createVecOfAttributeMapsContainingRelevantLines(theLines, lineNum);
-            ert = NONE;
-            if ("opposes" == ORT_DEFINITION_LEVELS[definitionLevel]){ // at least 2 lines
-                ert = OPPOSES;
-                
-            }
-            else if ("causes" == ORT_DEFINITION_LEVELS[definitionLevel]){ // at least 2 lines
-                ert = CAUSES;
-                
-            }
-            else if ("dominates" == ORT_DEFINITION_LEVELS[definitionLevel]){ // at least 2 lines
-                ert = DOMINATES;
-            }
-            addRelation(vecOfAttributeMaps, elementRelations, elementMap, ert);
-        }
-        lineNum++;
-    }
-    printf("cool.\n");
-}
+
 
 
 /**
@@ -433,7 +313,7 @@ std::vector<std::string> OrtUtil::getOdrLines(std::string fname){
     std::vector<std::string> odrVec;
     std::ifstream odrFile(fname);
     if (!odrFile.is_open()){
-        printf("Unable to locate the Ortus Development Rules (.ort) file. This is a BFD. Please rectify.\n");
+        printf("Error: Unable to locate the Ortus Development Rules (.ort) file. This is a BFD. Please rectify.\n");
         exit(52);
     }
     bool startBlockComment = false;
@@ -446,7 +326,7 @@ std::vector<std::string> OrtUtil::getOdrLines(std::string fname){
         
         line = removeCommented(line, startBlockComment); // this is for block comments
         if (noPos != line.find("/*") && noPos != line.find("*/")){
-            printf("Only one block comment may be 'opened' at a time in .ort files.\n");
+            printf("Error: Only one block comment may be 'opened' at a time in .ort files.\n");
             exit(53);
         }
         fixedLine = removeLineComment(line); // this is for single line comments
@@ -454,15 +334,15 @@ std::vector<std::string> OrtUtil::getOdrLines(std::string fname){
         trimTest = StrUtils::trim(fixedLine);
         if (!trimTest.empty()){
             odrVec.push_back(fixedLine); 
-            printf(">>%s<<\n",odrVec[lineNo].c_str());
+            //printf(">>%s<<\n",odrVec[lineNo].c_str());
             lineNo++;
         }
     }
     return odrVec; // note, there is still whitespace here, because we need the tabs/spaces at the beginning of lines... like python
 }
 
-void OrtUtil::makeAndSetElements(std::string ortFile, std::vector<ElementInfoModule*>& elementModules, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap){
+void OrtUtil::getLines(std::string ortFile, std::vector<std::string>& theLines){
     ORT_FILE = ortFile;
-    std::vector<std::string> theLines = getOdrLines(ORT_FILE);
-    setElements(theLines, elementModules, elementRelations, elementMap);
+    theLines = getOdrLines(ORT_FILE);
+    //setElements(theLines, elementModules, elementRelations, elementMap);
 }

@@ -372,6 +372,7 @@
 		F78DC1201E837A7C0030C688 /* Connectome.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connectome.cpp; sourceTree = "<group>"; };
 		F78DC1211E837A7C0030C688 /* Connectome.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connectome.hpp; sourceTree = "<group>"; };
 		F7C175301E5652DC009A4940 /* neural_circuit_development_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = neural_circuit_development_notes.txt; path = notes/neural_circuit_development_notes.txt; sourceTree = "<group>"; };
+		F7CAA13F1E88C1C300DE81E4 /* Attribute.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Attribute.hpp; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -765,6 +766,7 @@
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
 				F78DC1201E837A7C0030C688 /* Connectome.cpp */,
 				F78DC1211E837A7C0030C688 /* Connectome.hpp */,
+				F7CAA13F1E88C1C300DE81E4 /* Attribute.hpp */,
 			);
 			name = src;
 			sourceTree = "<group>";

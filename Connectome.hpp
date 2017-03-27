@@ -16,12 +16,35 @@
 #include "OrtUtil.hpp"
 #include <vector>
 #include <string>
+#include "Attribute.hpp"
+
+/**
+ * NOTE: if more relation types are added, code in the following functions must be modified:
+ *
+ * # addRelationAttributesFromOrt -- for parsing a .ort file
+ * # addRelationFromOrt -- for parsing a .ort file
+ * # addRelationAttribute -- for adding attributes during program execution
+ * # addRelation -- for adding relations from .ort files and during program execution
+ * #
+ */
+
 
 class Connectome {
     
 public:
     Connectome(std::string ortFileName);
     void buildAdditionalDataStructures();
+    ElementRelation* addRelation(ElementInfoModule* ePre, ElementInfoModule* ePost, ElementRelationType ert);
+    
+    void addRelationAttributesFromOrt(std::unordered_map<std::string,std::string>& preAttributeMapStrings, std::unordered_map<std::string,std::string>& postAttributeMapStrings, ElementRelation* elrel);
+    
+    void addRelationFromOrt(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, ElementRelationType ert);
+    
+    void addElement(std::unordered_map<std::string, std::string> attributeMap);
+    
+    friend void addToRelationMap(ortus::relation_map& remap, int preIndex, ElementRelation* elrel, ElementRelationType ert);
+    
+    void setElements(std::vector<std::string>& theLines);
     
      // primary element pointer holder -- the index in this vector is the element's 'id'
     std::vector<ElementInfoModule*> elementModules;
@@ -30,7 +53,7 @@ public:
     
     
     ortus::name_map nameMap; // name to index
-    ortus::index_map indexMap; // index to name
+    ortus::index_map indexMap; // index to name... but it's acutally a vector. because after i named it, i realized it would be stupid for this to be a map, when a vector would do the same thing, more quickly.
    
     
     ortus::relation_map correlatedRelations;
