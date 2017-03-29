@@ -38,7 +38,7 @@ private:
         std::vector<std::unordered_map<std::string, std::string>> createVecOfAttributeMapsContainingRelevantLines(std::vector<std::string>& theLines, int& curLineNum);
     
     
-        std::unordered_map<Attribute,std::string> getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings);
+        ortus::attribute_unordered_map getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings);
     
         std::unordered_map<std::string, std::string> createAttributeMapStrings(std::string line);
     

@@ -38,7 +38,7 @@ public:
     
     void addRelationAttributesFromOrt(std::unordered_map<std::string,std::string>& preAttributeMapStrings, std::unordered_map<std::string,std::string>& postAttributeMapStrings, ElementRelation* elrel);
     
-    void addRelationFromOrt(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, ElementRelationType ert);
+    void addRelationsFromOrt(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, ElementRelationType ert);
     
     void addElement(std::unordered_map<std::string, std::string> attributeMap);
     

@@ -16,10 +16,20 @@
     # UPDATE "ATTRIBUTE_STRINGS" below... order *must* be parallel.
  */
 
-enum class Attribute { Weight, Polarity, Direction, Age, Thresh, Decay, Mutability, NUM_ATTRIBUTES};
+enum class Attribute { Type, Affect, Activation, Weight, Polarity, Direction, Age, Thresh, Decay, Mutability, NUM_ATTRIBUTES};
 
 // these are all lowercase in the .ort file, which is what they match against
 static std::string ATTRIBUTE_STRINGS[static_cast<int>(Attribute::NUM_ATTRIBUTES)] =
-{"weight", "polarity", "direction", "age", "thresh", "decay", "mutability"};
+{"type", "affect", "activation", "weight", "polarity", "direction", "age", "thresh", "decay", "mutability"};
+
+/* so that Attribute can be used as an unordered_map key with c++11... thanks Sean  for the encouragment */
+struct AttributeHash
+{
+    std::size_t operator()(const Attribute& a) const
+    {
+        return static_cast<std::size_t>(a);
+    }
+};
+
 
 #endif /* Attribute_hpp */

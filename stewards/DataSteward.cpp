@@ -89,10 +89,12 @@ void DataSteward::executePostRunMemoryTransfers(){
 
 void DataSteward::readOpenCLBuffers(){
     // get output voltages
+    /*
     voltages->readCLBuffer();
     outputVoltageHistory->readCLBuffer();
     chems->readCLBuffer();
     gaps->readCLBuffer();
+     */
 }
 
 void DataSteward::reconfigureConnectomeStructure(){
@@ -194,6 +196,7 @@ void DataSteward::updateMetadataBlade(int kernelIterationNum){
 }
 
 void DataSteward::setOpenCLKernelArgs(){
+    /*
     voltages->setCLArgIndex(0, kernelp);
     outputVoltageHistory->setCLArgIndex(1, kernelp);
     gaps->setCLArgIndex(2, kernelp);
@@ -207,12 +210,14 @@ void DataSteward::setOpenCLKernelArgs(){
     metadata->setCLArgIndex(9, kernelp);
     deviceScratchPadXCorr->setCLArgIndex(10,kernelp);
     deviceScratchPadVoltageROC->setCLArgIndex(11,kernelp);
+     */
     
 }
 
 void DataSteward::pushOpenCLBuffers(){
     //Timer et;
     //et.start_timer();
+    /*
     voltages->pushCLBuffer();
     outputVoltageHistory->pushCLBuffer();
     gaps->pushCLBuffer();
@@ -220,6 +225,7 @@ void DataSteward::pushOpenCLBuffers(){
     chemContrib->pushCLBuffer();
     gapContrib->pushCLBuffer();
     metadata->pushCLBuffer();
+     */
     //et.stop_timer();
 }
 

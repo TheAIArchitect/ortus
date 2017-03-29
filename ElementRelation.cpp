@@ -8,6 +8,7 @@
 
 #include "ElementRelation.hpp"
 
+float ElementRelation::ZEROF = 0.0f;
 
 ElementRelation::ElementRelation(){
     attributeMap.reserve(NUM_ATTRIBUTES);
@@ -55,7 +56,7 @@ std::string ElementRelation::toString(){
             snprintf(buffer, max,"<DOMINATES> (%s->%s)",preName.c_str(),postName.c_str());
             break;
         case OPPOSES:
-            snprintf(buffer, max,"<OPPOSES> (%s->%s, thresh: %s)",preName.c_str(),postName.c_str(), sThresh.c_str());
+            snprintf(buffer, max,"<OPPOSES> (%s->%s, thresh: %f)",preName.c_str(),postName.c_str(), getAttribute(Attribute::Thresh));
             break;
         default:
             snprintf(buffer,max,"-- ERROR -- CAN'T PRINT ELEMENT RELATION TYPE '%d'",type);

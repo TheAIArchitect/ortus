@@ -76,8 +76,54 @@ int getScratchPadIndex(int startingScratchPadOffset, int elementId, int XCorrEnt
     return startingScratchPadOffset+get2DIndexAs1D(elementId, XCorrEntry, numXCorrEntries);
 }
 
+__kernel void OrtusKernel( __global float* elementThings,
+                          __global float* relationThings){
+    
+    
+    /**
+     stopping point:
+     
+     next need to convert Thing into a real class, and start adding in the 'meta' paramters, and re-write the kernel, along with slowly adding in the new data.
+     
+     also need to fix the ElementInfoModules and ElementRelations to use the Blades
+     */
+    __local unsigned int dimidx;
+    dimidx = 0;
+    // PRIVATE VARS
+    int gid = get_global_id(dimidx); // gives id of current work-item
+    int lid = get_local_id(dimidx);
+    int offset = 0;
+    int len = 100;
+    int bigLen = 100*100;
+    
+    //printf("gid, lid: %d, %d\n",gid, lid);
+    if (gid == 1){
+        printf("should be 2: %f\n",elementThings[offset]);
+        offset = offset + len;
+        printf("should be 4: %f\n",elementThings[offset]);
+        offset = offset + len;
+        printf("should be 6: %f\n",elementThings[offset]);
+       
+        offset = 0;
+        printf("should be 3: %f\n",relationThings[offset]);
+        offset = offset + bigLen;
+        printf("should be 5: %f\n",relationThings[offset]);
+        offset = offset + bigLen;
+        printf("should be 7: %f\n",relationThings[offset]);
+        
+        /*
+        int i = 0;
+        for (i = 10000; i < 11000; ++i){
+            printf("should be 3: %f\n",relationThings[i]);
+            //printf("should be 3: %f\n",elementThings[i]);
+        }
+         */
+        
+    }
+    
+}
 
-__kernel void OrtusKernelTwo( __global float *voltages, // read and write
+__kernel void refOrtusKernel( __global float *voltages, // read and write
                          __global float *outputVoltageHistory, // read and write
                          __global float *gapWeights, // read and write
                          __global float *chemWeights, // read and write

@@ -132,8 +132,8 @@ std::string OrtUtil::determineIndentationAndStripWhitespace(std::string line, in
  * the Connectome class takes care of that, because it is more of a program execution concern,
  * rather than a parsing concern.
  */
-std::unordered_map<Attribute,std::string> OrtUtil::getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings){
-    std::unordered_map<Attribute,std::string> newMap;
+ortus::attribute_unordered_map OrtUtil::getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings){
+    ortus::attribute_unordered_map newMap;
     newMap.reserve(attributeMapStrings.size());
     int i = 0;
     for (auto entry : attributeMapStrings){
@@ -292,7 +292,7 @@ std::vector<std::unordered_map<std::string, std::string>> OrtUtil::createVecOfAt
     // now that we have all the lines we care about, we loop through them and create 'attribute maps'
     std::vector<std::unordered_map<std::string, std::string>> vecOfAttributeMaps;
     for (auto relevantLine : relevantLines){
-        vecOfAttributeMaps.push_back(createAttributeMap(relevantLine));
+        vecOfAttributeMaps.push_back(createAttributeMapStrings(relevantLine));
     }
     // and finally, update our curLineNum ref
     curLineNum = tempLineNum;

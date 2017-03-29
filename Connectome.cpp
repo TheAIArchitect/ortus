@@ -60,44 +60,19 @@ void Connectome::buildAdditionalDataStructures(){
 void Connectome::addRelationAttributesFromOrt(std::unordered_map<std::string,std::string>& preAttributeMapStrings, std::unordered_map<std::string,std::string>& postAttributeMapStrings, ElementRelation* elrel){
     std::string tempAttrib = "";
     
-    std::unordered_map<Attribute,std::string> preAttributeMap = ortUtil.getAttributeEnumsFromStrings(preAttributeMapStrings);
+    ortus::attribute_unordered_map preAttributeMap = ortUtil.getAttributeEnumsFromStrings(preAttributeMapStrings);
     
-    std::unordered_map<Attribute,std::string> postAttributeMap = ortUtil.getAttributeEnumsFromStrings(postAttributeMapStrings);
+    ortus::attribute_unordered_map postAttributeMap = ortUtil.getAttributeEnumsFromStrings(postAttributeMapStrings);
     
     
     /** STOPPING POINT:
         # convert .ort values to floats, no text... right? probably,.
         # then add attribs, and set Blades, BladePacks, and Kernel(C/K)arton up.
      
+     */
     
     for (auto attrib : preAttributeMap){
-        
-   //     elrel->setAttribute(attrib.first, )
-        
-    }
-    
-    switch(elrel->type){
-        case CORRELATED:
-            tempAttrib = OrtUtil::checkMapAndGetValue(postAttributeMap, "direction");
-            elrel->sDirection = tempAttrib.empty() ? elrel->sDirection : tempAttrib;
-            tempAttrib = OrtUtil::checkMapAndGetValue(postAttributeMap, "age");
-            elrel->sAge = tempAttrib.empty() ? elrel->sAge : tempAttrib;
-            break;
-        case CAUSES:
-            tempAttrib = OrtUtil::checkMapAndGetValue(postAttributeMap, "thresh");
-            elrel->sThresh = tempAttrib.empty() ? elrel->sThresh : tempAttrib;
-            tempAttrib = OrtUtil::checkMapAndGetValue(postAttributeMap, "age");
-            elrel->sAge = tempAttrib.empty() ? elrel->sAge : tempAttrib;
-            break;
-        case DOMINATES:
-            // none yet...
-            break;
-        case OPPOSES:
-            // none yet...
-            break;
-        default:
-            printf("Error: unknown ElementRelationType, '%d'\n(This is particularly odd because the ElementRelation has this type, despite it being unknown. Perhaps updates were made, without updating everything?)\n",elrel);
-            break;
+        elrel->setAttribute(attrib.first,std::stof(attrib.second));
     }
 }
 
@@ -147,27 +122,31 @@ void addToRelationMap(ortus::relation_map& remap, int preIndex, ElementRelation*
 
 /**
  * This is only used for when parsing the .ort file. 
+ * 
+ * The first entry in the vector is the 'pre' element and its attirbutes,
+ * and the rest (could be only one) are/is the 'post' element/s. 
+ *
  * To add a relation during execution, (.....FIXME.......) is called
  */
-void Connectome::addRelationFromOrt(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, ElementRelationType ert){
+void Connectome::addRelationsFromOrt(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, ElementRelationType ert){
     int numMaps = -1;
     if ((numMaps = vecOfAttributeMaps.size()) < 2){
         printf("Error: must have at least one opposing element, only found '%d' attribute maps, one of which should be the 'pre' element.\n",numMaps);
         exit(59);
     }
     // the first one is always the 'pre' (we'll call it major here, just for fun)
-    std::unordered_map<std::string, std::string> preAttributeMap = vecOfAttributeMaps[0];
-    std::unordered_map<std::string, std::string> postAttributeMap;
-    ElementInfoModule* ePre = ortUtil.checkMapAndGetElementPointer(preAttributeMap, elementMap);
+    std::unordered_map<std::string, std::string> preAttributeMapStrings = vecOfAttributeMaps[0];
+    std::unordered_map<std::string, std::string> postAttributeMapStrings;
+    ElementInfoModule* ePre = ortUtil.checkMapAndGetElementPointer(preAttributeMapStrings, elementMap);
     ElementInfoModule* ePost;
     std::string tempAttrib;
     // start at 1; we already took care of 0
     for (int i = 1; i < numMaps; ++i){
         tempAttrib = "";
-        postAttributeMap = vecOfAttributeMaps[i];
-        ePost = ortUtil.checkMapAndGetElementPointer(postAttributeMap, elementMap);
-        
-        
+        postAttributeMapStrings = vecOfAttributeMaps[i];
+        ePost = ortUtil.checkMapAndGetElementPointer(postAttributeMapStrings, elementMap);
+        ElementRelation* elrel = addRelation(ePre, ePost, ert);
+        addRelationAttributesFromOrt(preAttributeMapStrings, postAttributeMapStrings, elrel);
     }
 }
 
@@ -241,7 +220,7 @@ void Connectome::setElements(std::vector<std::string>& theLines){
             continue; // nothing else on this line
         }
         if ("elements" == OrtUtil::ORT_DEFINITION_LEVELS[definitionLevel]){ // just one line
-            std::unordered_map<std::string, std::string> attributeMap = ortUtil.createAttributeMap(trimmedLine);
+            std::unordered_map<std::string, std::string> attributeMap = ortUtil.createAttributeMapStrings(trimmedLine);
             addElement(attributeMap);
         }
         else {
@@ -258,7 +237,7 @@ void Connectome::setElements(std::vector<std::string>& theLines){
             else if ("dominates" == OrtUtil::ORT_DEFINITION_LEVELS[definitionLevel]){ // 0 or at least 2 lines
                 ert = DOMINATES;
             }
-            addRelation(vecOfAttributeMaps, elementRelations, elementMap, ert);
+            addRelationsFromOrt(vecOfAttributeMaps, ert);
             //addRelation(vecOfAttributeMaps, elementRelations, elementMap, ert);
         }
         lineNum++;

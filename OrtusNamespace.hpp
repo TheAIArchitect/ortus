@@ -13,6 +13,8 @@
 #include <vector>
 #include "vtkFloatArray.h"
 #include "ElementInfoModule.hpp"
+#include "Attribute.hpp"
+#include "Blade.hpp"
 
 class ElementRelation;
 
@@ -25,6 +27,11 @@ namespace ortus {
     using relation_map = std::unordered_map<int, std::vector<ElementRelation*>>;
     
     using attribute_map = std::vector<float*>;
+    
+    //using attribute_blade_map = std::vector<Blade<cl_float>*>;
+    using attribute_blade_unordered_map = std::unordered_map<Attribute,Blade<cl_float>*,AttributeHash>;
+    
+    using attribute_unordered_map = std::unordered_map<Attribute,std::string, AttributeHash>;
     
     using vector = std::vector<float>;
     using vectrix = std::vector<vector>;

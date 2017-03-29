@@ -17,9 +17,12 @@
 #include <CL/cl.h>
 #endif
 
+#include <vector>
+#include "CLBuffer.hpp"
+
 template<class T>
 class Blade {
-   
+    
 public:
     bool scalar;
     bool vector;
@@ -38,8 +41,9 @@ public:
     size_t maxSize;
     T* data;
     T* zeros;
-    cl_mem clData;
-    cl_uint clArgIndex;
+    cl_mem* clDatap;
+    size_t clBufferOffset;
+    cl_uint clReadOnlyScalarArgIndex;// ONLY USED IF NO BUFFER IS USED/CREATED!!! (so, if Blade is being used for a read-only scalar)
     CLHelper* clhelper;
     
 public:
@@ -71,15 +75,15 @@ public:
         data = new T[maxSize](); // init zeroed with '()'
         zeros = new T[maxSize]();
         deleteDataBuffers = true;
-        // OpenCL buffer creation
         this->clhelper = clhelper;
         memFlags = flags;
+        // OpenCL buffer creation
         if ((memFlags & CL_MEM_READ_ONLY) && scalar){ // then we don't need to create a buffer
             readOnly = true;
-        } else {
+        }/* else {
             createCLBuffer();
             clMemAllocated = true;
-        }
+        }*/
     }
     
     /* Simplified constructor for a vector (1D) */
@@ -115,10 +119,10 @@ public:
             delete[] zeros;
             deleteDataBuffers = false;
         }
-        if (clMemAllocated){
+        /*if (clMemAllocated){
             clReleaseMemObject(clData);
             clMemAllocated = false;
-        }
+        }*/
     }
     
     /* returns a pointer to the data at row, col. NULL if out of range. */
@@ -200,6 +204,7 @@ public:
         return false;
     }
     
+    /* only valid for a vector. adds 'value' to the data contained at location 'col'. will return false if not a 1D vector */
     bool add(int col, T value){
         if (maxRows == 1 && col < currentCols){
             data[col] += value;
@@ -241,7 +246,6 @@ public:
         updateCurrentSize();
     }
     
-
     
     /* copys the data array from otherBlade to this blade's data, overwriting the contents.
      *
@@ -256,51 +260,66 @@ public:
         return true;
     }
     
-    /* sets the openCL kernel argument index, to be used when calling clSetKernelArg */
-    void setCLArgIndex(cl_uint argIndex, cl_kernel* kernel){
-        clArgIndex = argIndex;
+    
+    /* sets the openCL kernel argument index, to be used when calling clSetKernelArg
+     * NOTE: NOT FOR THE 'normal'  USE CASE WHERE WE NEED TO PUSH DATA -- IN THAT CASE, USE 'CLBuffer' to push the buffer*/
+    void setCLReadOnlyScalarArgIndex(cl_uint readOnlyScalarArgIndex, cl_kernel* kernel){
+        clReadOnlyScalarArgIndex = readOnlyScalarArgIndex;
         if (scalar && readOnly){ // then we don't need a buffer, and just send the data over (which is already a pointer... don't send a reference to it.
-            this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(T), data);
+            this->clHelper->err = clSetKernelArg(*kernel, clReadOnlyScalarArgIndex, sizeof(T), data);
         }
+        else{
+            printf("Error: Attempting to set kernel argument from Blade, however Blade is not a read-only scalar. This action *must* be completed using the 'CLBuffer'.\n");
+            exit(43);
+        }
+        /* NOTE: BELOW CASE (the general use case) *MUST* BE TAKEN CARE OF IN 'CLBuffer'!!!
+         * this->clHelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(cl_mem), &clData);
         else if (deviceScratchPad){
-            this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, currentSize*sizeof(T), NULL);// note, we don't set an address for the arg, BUT, we tell the kernel how big the __local buffer needs to be!
+            this->clHelper->err = clSetKernelArg(*kernel, clArgIndex, currentSize*sizeof(T), NULL);// note, we don't set an address for the arg, BUT, we tell the kernel how big the __local buffer needs to be!
         }
         else {
-            this->clhelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(cl_mem), &clData);
-        }
-        this->clhelper->check_and_print_cl_err(this->clhelper->err);
+        
+        */
+        this->clHelper->check_and_print_cl_err(this->clHelper->err);
     }
     
-    /* create the buffer with the maxSize (when we push the buffer, we'll only use currentSize) */
-    void createCLBuffer(){
-        clData = clCreateBuffer(this->clhelper->context, memFlags, sizeof(T) * maxSize, NULL,&this->clhelper->err);
-        this->clhelper->check_and_print_cl_err(this->clhelper->err);
+    
+    /*
+     * NOTE: we need to use the buffer wrapper so we can use one buffer for multiple blades if we like*/
+    void setCLBufferAndOffset(CLBuffer<T>* clBuffer, size_t bufferOffset){
+        clDatap = &clBuffer->clData;
+        clBufferOffset = bufferOffset;
+        //clData = clCreateBuffer(this->clhelper->context, memFlags, sizeof(T) * maxSize, NULL,&this->clhelper->err);
+        //this->clhelper->check_and_print_cl_err(this->clhelper->err);
     }
     
-    /* moves data into clData, ready for use by the kernel */
-    void pushCLBuffer(){
-        this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, clData, CL_TRUE, 0, sizeof(T) * currentSize, data, 0, NULL, NULL);
+    /** NOTE: add a 'createCLBuffer()' funciton, BUT, specify that it is only to be used if the blade will have a dedicated buffer (not shared with multiple Blades) */
+    
+    /* moves data into the buffer pointed to by 'clDatap', ready for use by the kernel starting at 'clBufferOffset' bytes (set when buffer is set with 'setCLBuffer()') */
+    void pushDataToDevice(){
+        this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * currentSize, data, 0, NULL, NULL);
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
         dataPushed = true;
         dataRead = false; // we know current data is invalid
     }
     
-    /* reads data from the OpenCL buffer into data. This will overwrite anything in data.
+    /* reads data from the OpenCL buffer into data, starting at 'bufferOffset' bytes (set when buffer is set with 'setCLBuffer()'). This will overwrite anything in data.
      * NOTE: if the cl_mem_flags variable set during buffer creation does not permit writing (for OpenCL), nothing will be read, and readCLBuffer will return false. */
-    bool readCLBuffer(){
+    bool readDataFromDevice(){
         if (!((memFlags & CL_MEM_READ_WRITE) || (memFlags & CL_MEM_WRITE_ONLY))){
             return false;
         }
-        this->clhelper->err = clEnqueueReadBuffer(this->clhelper->commands, clData, CL_TRUE, 0, sizeof(T) * currentSize, data, 0, NULL, NULL);
+        this->clhelper->err = clEnqueueReadBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * currentSize, data, 0, NULL, NULL);
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
         dataPushed = false;
         dataRead = true;
         return true;
     }
     
-    /* writes zeros to the OpenCL buffer, to ensure it is empty */
+    /* writes zeros to the OpenCL buffer, to ensure it is empty
+     * NOTE: if this is a 'shared buffer', it only clears this Blade's part (so, it clears from 'bufferOfffset' to 'maxSize' */
     void clearCLBuffer(){
-        this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, clData, CL_TRUE, 0, sizeof(T) * maxSize, zeros, 0, NULL, NULL);
+        this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * maxSize, zeros, 0, NULL, NULL);
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
     }
     
