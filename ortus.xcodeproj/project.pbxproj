@@ -26,7 +26,6 @@
 		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
 		F71514921E7F991C008F6292 /* OrtUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F71514901E7F991C008F6292 /* OrtUtil.cpp */; };
 		F71514951E7F9E68008F6292 /* Incubator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F71514931E7F9E68008F6292 /* Incubator.cpp */; };
-		F74880401E2448A00083763E /* ComputeSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803A1E2448A00083763E /* ComputeSteward.cpp */; };
 		F74880411E2448A00083763E /* DataSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803C1E2448A00083763E /* DataSteward.cpp */; };
 		F74880421E2448A00083763E /* Steward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803E1E2448A00083763E /* Steward.cpp */; };
 		F74880451E245C930083763E /* SensoryStimulationSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F74880431E245C930083763E /* SensoryStimulationSteward.cpp */; };
@@ -148,10 +147,11 @@
 		F78093CD1E52E8D300749BE3 /* OrtusVisualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F78093C71E52E8D200749BE3 /* OrtusVisualizer.cpp */; };
 		F78093CE1E52E8D300749BE3 /* OrtusXCorrVisualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F78093C91E52E8D200749BE3 /* OrtusXCorrVisualizer.cpp */; };
 		F78DC1221E837A7C0030C688 /* Connectome.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F78DC1201E837A7C0030C688 /* Connectome.cpp */; };
-		F7CAA1421E89C75E00DE81E4 /* BladePack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA1401E89C75E00DE81E4 /* BladePack.cpp */; };
-		F7CAA1451E8AD40B00DE81E4 /* CLBuddy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA1431E8AD40B00DE81E4 /* CLBuddy.cpp */; };
+		F7CAA1451E8AD40B00DE81E4 /* ComputeSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA1431E8AD40B00DE81E4 /* ComputeSteward.cpp */; };
 		F7CAA1471E8AD5E100DE81E4 /* NewOrtusTestKernel.cl in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA1461E8AD5E100DE81E4 /* NewOrtusTestKernel.cl */; };
 		F7CAA14A1E8B3A1200DE81E4 /* CLBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA1481E8B3A1200DE81E4 /* CLBuffer.cpp */; };
+		F7CAA14D1E8C6BC800DE81E4 /* KernelBuddy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA14B1E8C6BC800DE81E4 /* KernelBuddy.cpp */; };
+		F7CAA14E1E8CB51900DE81E4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4451D8A717400247E36 /* main.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
 		F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0A51E2205BF0068BD3E /* ConstantSignal.cpp */; };
@@ -230,8 +230,6 @@
 		F71514911E7F991C008F6292 /* OrtUtil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OrtUtil.hpp; sourceTree = "<group>"; };
 		F71514931E7F9E68008F6292 /* Incubator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Incubator.cpp; sourceTree = "<group>"; };
 		F71514941E7F9E68008F6292 /* Incubator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Incubator.hpp; sourceTree = "<group>"; };
-		F748803A1E2448A00083763E /* ComputeSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComputeSteward.cpp; path = stewards/ComputeSteward.cpp; sourceTree = "<group>"; };
-		F748803B1E2448A00083763E /* ComputeSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComputeSteward.hpp; path = stewards/ComputeSteward.hpp; sourceTree = "<group>"; };
 		F748803C1E2448A00083763E /* DataSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataSteward.cpp; path = stewards/DataSteward.cpp; sourceTree = "<group>"; };
 		F748803D1E2448A00083763E /* DataSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DataSteward.hpp; path = stewards/DataSteward.hpp; sourceTree = "<group>"; };
 		F748803E1E2448A00083763E /* Steward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Steward.cpp; path = stewards/Steward.cpp; sourceTree = "<group>"; };
@@ -376,13 +374,14 @@
 		F78DC1211E837A7C0030C688 /* Connectome.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connectome.hpp; sourceTree = "<group>"; };
 		F7C175301E5652DC009A4940 /* neural_circuit_development_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = neural_circuit_development_notes.txt; path = notes/neural_circuit_development_notes.txt; sourceTree = "<group>"; };
 		F7CAA13F1E88C1C300DE81E4 /* Attribute.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Attribute.hpp; sourceTree = "<group>"; };
-		F7CAA1401E89C75E00DE81E4 /* BladePack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BladePack.cpp; sourceTree = "<group>"; };
-		F7CAA1411E89C75E00DE81E4 /* BladePack.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BladePack.hpp; sourceTree = "<group>"; };
-		F7CAA1431E8AD40B00DE81E4 /* CLBuddy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CLBuddy.cpp; path = stewards/CLBuddy.cpp; sourceTree = "<group>"; };
-		F7CAA1441E8AD40B00DE81E4 /* CLBuddy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CLBuddy.hpp; path = stewards/CLBuddy.hpp; sourceTree = "<group>"; };
+		F7CAA1431E8AD40B00DE81E4 /* ComputeSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComputeSteward.cpp; path = stewards/ComputeSteward.cpp; sourceTree = "<group>"; };
+		F7CAA1441E8AD40B00DE81E4 /* ComputeSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComputeSteward.hpp; path = stewards/ComputeSteward.hpp; sourceTree = "<group>"; };
 		F7CAA1461E8AD5E100DE81E4 /* NewOrtusTestKernel.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = NewOrtusTestKernel.cl; path = kernels/NewOrtusTestKernel.cl; sourceTree = "<group>"; };
 		F7CAA1481E8B3A1200DE81E4 /* CLBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CLBuffer.cpp; sourceTree = "<group>"; };
 		F7CAA1491E8B3A1200DE81E4 /* CLBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CLBuffer.hpp; sourceTree = "<group>"; };
+		F7CAA14B1E8C6BC800DE81E4 /* KernelBuddy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KernelBuddy.cpp; sourceTree = "<group>"; };
+		F7CAA14C1E8C6BC800DE81E4 /* KernelBuddy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KernelBuddy.hpp; sourceTree = "<group>"; };
+		F7CAA1501E8CD6A900DE81E4 /* KernelArg.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KernelArg.hpp; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
 		F7E7A0911E20C1FB0068BD3E /* cppcommon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppcommon; sourceTree = "<group>"; };
@@ -750,11 +749,10 @@
 				F7E7A0B71E2260620068BD3E /* stimuli */,
 				443247B21DB60187001D153B /* AblationStation.cpp */,
 				443247B31DB60187001D153B /* AblationStation.hpp */,
+				F7CAA13F1E88C1C300DE81E4 /* Attribute.hpp */,
 				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
-				F7CAA1401E89C75E00DE81E4 /* BladePack.cpp */,
-				F7CAA1411E89C75E00DE81E4 /* BladePack.hpp */,
-				F7CAA1431E8AD40B00DE81E4 /* CLBuddy.cpp */,
-				F7CAA1441E8AD40B00DE81E4 /* CLBuddy.hpp */,
+				F78DC1201E837A7C0030C688 /* Connectome.cpp */,
+				F78DC1211E837A7C0030C688 /* Connectome.hpp */,
 				F7CAA1481E8B3A1200DE81E4 /* CLBuffer.cpp */,
 				F7CAA1491E8B3A1200DE81E4 /* CLBuffer.hpp */,
 				443247AF1DB059CE001D153B /* ElementRelation.cpp */,
@@ -767,6 +765,9 @@
 				F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */,
 				F71514931E7F9E68008F6292 /* Incubator.cpp */,
 				F71514941E7F9E68008F6292 /* Incubator.hpp */,
+				F7CAA1501E8CD6A900DE81E4 /* KernelArg.hpp */,
+				F7CAA14B1E8C6BC800DE81E4 /* KernelBuddy.cpp */,
+				F7CAA14C1E8C6BC800DE81E4 /* KernelBuddy.hpp */,
 				444DE4441D8A717400247E36 /* log.txt */,
 				444DE44A1D8A717400247E36 /* myDebug.cpp */,
 				444DE44B1D8A717400247E36 /* myDebug.hpp */,
@@ -781,9 +782,6 @@
 				F757ADCD1E35E3DF00A8B181 /* Statistician.cpp */,
 				F757ADCE1E35E3DF00A8B181 /* Statistician.hpp */,
 				F7DA053C1E1FC943009FA734 /* CurrentlyUnused */,
-				F78DC1201E837A7C0030C688 /* Connectome.cpp */,
-				F78DC1211E837A7C0030C688 /* Connectome.hpp */,
-				F7CAA13F1E88C1C300DE81E4 /* Attribute.hpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -791,8 +789,8 @@
 		F74880391E2448510083763E /* stewards */ = {
 			isa = PBXGroup;
 			children = (
-				F748803A1E2448A00083763E /* ComputeSteward.cpp */,
-				F748803B1E2448A00083763E /* ComputeSteward.hpp */,
+				F7CAA1431E8AD40B00DE81E4 /* ComputeSteward.cpp */,
+				F7CAA1441E8AD40B00DE81E4 /* ComputeSteward.hpp */,
 				F748803C1E2448A00083763E /* DataSteward.cpp */,
 				F748803D1E2448A00083763E /* DataSteward.hpp */,
 				F748804A1E25B7020083763E /* DevelopmentSteward.cpp */,
@@ -923,7 +921,6 @@
 				444DE46F1D8A717500247E36 /* myDebug.cpp in Sources */,
 				F74880421E2448A00083763E /* Steward.cpp in Sources */,
 				F75903AF1E2E49FB00879481 /* Pytils.cpp in Sources */,
-				F7CAA1421E89C75E00DE81E4 /* BladePack.cpp in Sources */,
 				F74880511E25FB1E0083763E /* OrtusKernelTwo.cl in Sources */,
 				F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */,
 				449019C81DBA13CF00569854 /* Probe.cpp in Sources */,
@@ -934,7 +931,6 @@
 				444DE4051D8A5D7F00247E36 /* ElementInfoModule.cpp in Sources */,
 				F78093CD1E52E8D300749BE3 /* OrtusVisualizer.cpp in Sources */,
 				444DE4701D8A717500247E36 /* README.md in Sources */,
-				F74880401E2448A00083763E /* ComputeSteward.cpp in Sources */,
 				F74880451E245C930083763E /* SensoryStimulationSteward.cpp in Sources */,
 				F7CAA1471E8AD5E100DE81E4 /* NewOrtusTestKernel.cl in Sources */,
 				F75903AE1E2E49FB00879481 /* Pyterpreter.cpp in Sources */,
@@ -943,10 +939,12 @@
 				F75903AD1E2E49FB00879481 /* Plotr.cpp in Sources */,
 				F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */,
 				F78DC1221E837A7C0030C688 /* Connectome.cpp in Sources */,
-				F7CAA1451E8AD40B00DE81E4 /* CLBuddy.cpp in Sources */,
+				F7CAA14E1E8CB51900DE81E4 /* main.cpp in Sources */,
+				F7CAA1451E8AD40B00DE81E4 /* ComputeSteward.cpp in Sources */,
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE46E1D8A717500247E36 /* makefile in Sources */,
 				F7E7A0B41E2260350068BD3E /* PrimitiveStimulus.cpp in Sources */,
+				F7CAA14D1E8C6BC800DE81E4 /* KernelBuddy.cpp in Sources */,
 				F74880411E2448A00083763E /* DataSteward.cpp in Sources */,
 				44AF538D1DA46F89009546BC /* OptionForewoman.cpp in Sources */,
 				F78093CE1E52E8D300749BE3 /* OrtusXCorrVisualizer.cpp in Sources */,
@@ -1047,7 +1045,7 @@
 		663A759B1D0B193D00F6B561 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -1085,7 +1083,7 @@
 		663A759C1D0B193D00F6B561 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",

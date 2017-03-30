@@ -76,8 +76,7 @@ int getScratchPadIndex(int startingScratchPadOffset, int elementId, int XCorrEnt
     return startingScratchPadOffset+get2DIndexAs1D(elementId, XCorrEntry, numXCorrEntries);
 }
 
-__kernel void OrtusKernel( __global float* elementThings,
-                          __global float* relationThings){
+__kernel void OrtusKernel( __global float* elementThings, __global float* relationThings){
     
     
     /**

@@ -37,9 +37,9 @@
 class DataSteward{
     
 public: // super important variables
-    std::unordered_map<std::string,int> officialNameToIndexMap;
-    std::unordered_map<int,std::string> officialIndexToNameMap;
-    std::vector<std::string*> officialNamepVector; // change name to master
+    //std::unordered_map<std::string,int> officialNameToIndexMap;
+    //std::unordered_map<int,std::string> officialIndexToNameMap;
+    //std::vector<std::string*> officialNamepVector; // change name to master
     // NOTE: the voltages Blade gets read from and written to by opencl!!!
     Blade<float>* voltages;
     // NOTE: the outputVotlageHistory Blade has one neuron's voltages per ROW (so, it's an n x 5 'matrix', if we store 5 previous values)
@@ -73,25 +73,26 @@ public:
     DataSteward();
     ~DataSteward();
     void init(size_t openCLWorkGroupSize);
-    void createElements();
-    void createConnections();
+    //void createElements();
+    //void createConnections();
     void initializeData();
     void executePostRunMemoryTransfers();
     
-    void growConnectome();
-    void reconfigureConnectomeStructure();
-    bool writeConnectome(std::string csv_name);
+    //void growConnectome();
+    //void reconfigureConnectomeStructure();
+    //bool writeConnectome(std::string csv_name);
     
-    void setKernelp(cl_kernel* kp);
+    //void setKernelp(cl_kernel* kp);
     void setCLHelperp(CLHelper* clhp);
     
     
     void initializeBlades();
     void updateMetadataBlade(int knernelIterationNum);
-    void fillInputVoltageBlade();
-    void pushOpenCLBuffers();
-    void readOpenCLBuffers();
-    void setOpenCLKernelArgs();
+    //void fillInputVoltageBlade();
+    // these two might be irrelevant now, if we carry these ops out in KernelBuddy
+    // void pushOpenCLBuffers();
+    // void readOpenCLBuffers();
+    // void setOpenCLKernelArgs();
 
     void feedProbe();
     void run(size_t global, size_t local, int numIterations = 1);
@@ -102,7 +103,7 @@ public:
 public:
     std::vector<float> outputVoltageVector;
     std::vector<ElementInfoModule*> elements;
-    std::vector<std::vector<std::string>> csvDat;
+    //std::vector<std::vector<std::string>> csvDat;
     float maxGapWeight;
     float maxChemWeight;
     size_t openCLWorkGroupSize;
@@ -117,15 +118,17 @@ public:
     
     
     // static and/or constant vars
-    static double constexpr CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000;
+    //static double constexpr CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000;
 #warning -- NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 in Core.hpp uses NUM_ELEMS... NUM_ELEMS either must remain a multiple of 8, or we need to change how we set NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8
-    static unsigned int NUM_ELEMS;
-    static unsigned int NUM_ROWS;
-    const static int CSV_OFFSET = 2;// first two rows and columns in both csv files are column/row information
-    static int CSV_ROWS;
-    static int CSV_COLS;
-    static int CONNECTOME_ROWS;
-    static int CONNECTOME_COLS;
+    static unsigned int NUM_ELEMENTS;
+    //static unsigned int NUM_ROWS;
+    //const static int CSV_OFFSET = 2;// first two rows and columns in both csv files are column/row information
+    //static int CSV_ROWS;
+    //static int CSV_COLS;
+    //static int CONNECTOME_ROWS;
+    //static int CONNECTOME_COLS;
+    
+    
     const static int MAX_ELEMENTS = 200;
     const static int VOLTAGE_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
     const static int METADATA_COUNT = 5; // see 'metadata' definition for metadata metadata. haha.

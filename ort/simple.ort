@@ -1,16 +1,16 @@
 elements:
-    O2: {type=sense, affect=pos} 
-    CO2: { type=sense, affect=neg }//, affect=neg } // no affect should mean no P/N interneurons are created... maybe? or, one of each??
-    H2O: {type=sense}
-    FEAR: { type=emotion, affect=neg }
-    //HAPPY: { type=emotion, affect=pos }
-    //HUNGRY: {type=emotion, affect=neg }
+    O2: {etype=sense, affect=pos} 
+    CO2: { etype=sense, affect=neg }//, affect=neg } // no affect should mean no P/N interneurons are created... maybe? or, one of each??
+    H2O: {etype=sense}
+    FEAR: { etype=emotion, affect=neg }
+    //HAPPY: { etype=emotion, affect=pos }
+    //HUNGRY: {etype=emotion, affect=neg }
     // neither pain nor pleasure are really emotions, but maybe that label will work for now?
-    //PLEASURE: { type=emotion, affect=pos }
-    //PAIN: { type=emotion, affect=neg}
-    INHALE: { type=motor }
-    EXHALE: { type=motor }
-    LUNG: { type=muscle }
+    //PLEASURE: { etype=emotion, affect=pos }
+    //PAIN: { etype=emotion, affect=neg}
+    INHALE: { etype=motor }
+    EXHALE: { etype=motor }
+    LUNG: { etype=muscle }
 opposes:
     O2:
         CO2:
@@ -22,7 +22,7 @@ causes:
     +EXHALE:
         -CO2:
     +CO2:
-        +FEAR: { thresh=2 } // 1 is normal, 2 is high, for now. only abnormally high levels of CO2 cause fear
+        +FEAR: { rthresh=2 } // 1 is normal, 2 is high, for now. only abnormally high levels of CO2 cause fear
     // "attempting" to breath, and not being able to, should cause fear too.
 dominates:
     //+O2:

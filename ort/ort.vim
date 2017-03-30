@@ -18,7 +18,7 @@ endif
 " lit => less important than
 " mit => more important than
 "
-syn keyword attributeKeys lit mit bad good type thresh elements affect
+syn keyword attributeKeys lit mit bad good etype rthresh elements affect
 "syn match attributeKeys \"-affect"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

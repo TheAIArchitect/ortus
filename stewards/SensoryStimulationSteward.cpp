@@ -60,8 +60,8 @@ void SensoryStimulationSteward::createH2OStimulator(){
 
 
 void SensoryStimulationSteward::addStimulus(std::string elementName, Stimulus* stimulusp){
-    int elementIndex = dStewiep->officialNameToIndexMap[elementName];
-    stimuliStewardp->addStimulus(elementIndex, stimulusp);
+    ////int elementIndex = dStewiep->officialNameToIndexMap[elementName];
+    ////stimuliStewardp->addStimulus(elementIndex, stimulusp);
 }
 
 /** NOTE: this is a poorly implemented bit of functionality -- as it is now, we push back the element to stimulate, perhaps more than once if we don't check, and if we make ComplexStimuli, we have no way to differentitate a part of the signal that should stimulate one element from another. we should have a set of elements that are getting stimulated, and when we call that element, we get the total stimulation for that element... OR, we could run through each stimulus and add to each element's stimulation total, and then run through all the totals, and then stimulate each element that we have a non-zero total for. that might make the most sense
@@ -70,13 +70,13 @@ void SensoryStimulationSteward::performSensoryStimulation(){
     bool inhibitO2 = false;
     
     for (auto& vecIter : elementsToStimulate){
-        int elementIndex = dStewiep->officialNameToIndexMap[vecIter];
-        float finalStimulus = stimuliStewardp->getStimuliForElement(elementIndex);
+        ////int elementIndex = dStewiep->officialNameToIndexMap[vecIter];
+        ////float finalStimulus = stimuliStewardp->getStimuliForElement(elementIndex);
         // ... this call should *probably* really tell DataSteward to do it... we probably shouldn't do it ourselves....
-        dStewiep->voltages->add(elementIndex, finalStimulus);
-        if (vecIter == "SO2" && finalStimulus == -1.0){
-            inhibitO2 = true;
-        }
+        ////dStewiep->voltages->add(elementIndex, finalStimulus);
+        ////if (vecIter == "SO2" && finalStimulus == -1.0){
+        ////    inhibitO2 = true;
+        ////}
     }
     
     /**NOTE:
@@ -96,16 +96,16 @@ void SensoryStimulationSteward::performSensoryStimulation(){
     float sensorV;
     float vFromMotor = 0.f;
     if (!inhibitO2){
-        motorIndex = dStewiep->officialNameToIndexMap["MINHALE"];
+        ////motorIndex = dStewiep->officialNameToIndexMap["MINHALE"];
         motorV = dStewiep->voltages->getv(motorIndex);
-        sensorIndex = dStewiep->officialNameToIndexMap["SO2"];
+        ////sensorIndex = dStewiep->officialNameToIndexMap["SO2"];
         sensorV = dStewiep->voltages->getv(sensorIndex);
         vFromMotor = chemicalSynapseSimulator(1, motorV, sensorV);
         dStewiep->voltages->add(sensorIndex, vFromMotor);
         // exhale and CO2
-        motorIndex = dStewiep->officialNameToIndexMap["MEXHALE"];
+        ////motorIndex = dStewiep->officialNameToIndexMap["MEXHALE"];
         motorV = dStewiep->voltages->getv(motorIndex);
-        sensorIndex = dStewiep->officialNameToIndexMap["SCO2"];
+        ////sensorIndex = dStewiep->officialNameToIndexMap["SCO2"];
         sensorV = dStewiep->voltages->getv(sensorIndex);
         vFromMotor = chemicalSynapseSimulator(-1, motorV, sensorV);
         dStewiep->voltages->add(sensorIndex, vFromMotor);

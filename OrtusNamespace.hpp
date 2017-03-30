@@ -12,13 +12,17 @@
 #include <unordered_map>
 #include <vector>
 #include "vtkFloatArray.h"
-#include "ElementInfoModule.hpp"
 #include "Attribute.hpp"
 #include "Blade.hpp"
 
 class ElementRelation;
+class ElementInfoModule;
 
 namespace ortus {
+    
+    static int NUM_ELEMENTS = 10;
+    static int MAX_ELEMENTS = 100;
+    static const int NUM_ATTRIBUTES = static_cast<int>(Attribute::NUM_ATTRIBUTES);
     
     using element_map = std::unordered_map<std::string, ElementInfoModule*>;
     using name_map = std::unordered_map<std::string, int>;

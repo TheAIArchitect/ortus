@@ -23,7 +23,7 @@ DiagnosticSteward::~DiagnosticSteward(){
 // standard information that we always want (either printed to console, or graphed)
 void DiagnosticSteward::runStandardDiagnostics(){
     //vizzer.plotAll();
-    vizzer->makePlots();
+    ////vizzer->makePlots();
     //vizzer.plotSet(plotSet, plotSetSize);
     
 }
@@ -41,7 +41,7 @@ void DiagnosticSteward::tempVTKPlot(){
     ortus::vtkFullxcorr* theXCorr = morphToVTK();
     
     // fix this 300... should be a var
-    OrtusXCorrVisualizer xcorrVizzer(300, dStewiep->NUM_ELEMS,dStewiep->XCORR_COMPUTATIONS);
+    OrtusXCorrVisualizer xcorrVizzer(300, ortus::NUM_ELEMENTS,dStewiep->XCORR_COMPUTATIONS);
     
     
     xcorrVizzer.theXCorr = theXCorr;
@@ -110,18 +110,18 @@ void DiagnosticSteward::plotXCorr(){
 std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVoltages(const std::string* computeList, int numToCompute){
     
     // this allows us to have the 'key' in the map be the same as the index the actual element has, so we can access what amounts to a sparse 3D matrix as if it were just that.
-    ortus::vector indicesToUse(dStewiep->NUM_ELEMS);
+    ortus::vector indicesToUse(ortus::NUM_ELEMENTS);
     int numIndices = 0;
     if (numToCompute < 0){ // then we do all
         // doing this just so that if numToCompute is not empty, we can use the same code
-        for (int i = 0; i < dStewiep->NUM_ELEMS; ++i){
+        for (int i = 0; i < ortus::NUM_ELEMENTS; ++i){
             indicesToUse[i] = i;
         }
-        numIndices = dStewiep->NUM_ELEMS;
+        numIndices = ortus::NUM_ELEMENTS;
     }
     else {
         for (int i = 0; i < numToCompute; ++i){
-            indicesToUse[i] = dStewiep->officialNameToIndexMap[computeList[i]];
+            ////indicesToUse[i] = dStewiep->officialNameToIndexMap[computeList[i]];
         }
         numIndices = numToCompute;
     }

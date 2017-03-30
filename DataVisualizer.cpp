@@ -37,6 +37,8 @@ void DataVisualizer::plotXCorr(std::vector<double>& dataX, std::vector<double>& 
     
 }
 
+
+/**
 void DataVisualizer::makePlots(){
     const int plotOneSize = 6;
     std::string plotOneSet[plotOneSize] = {"SO2","SCO2","IPO2", "INO2", "MINHALE", "MEXHALE"};
@@ -89,33 +91,7 @@ void DataVisualizer::makePlots(){
     
 }
 
-/*
-void DataVisualizer::plotAll(){
 
-    int numWindows = stewie->kernelVoltages.size();
-    std::vector<double> xVals;// windows
-    std::vector<double> yVals;// neuron voltages
-    for ( int i = 0; i < numWindows; ++i){
-        xVals.push_back(i);//window number
-    }
-    
-    Plotr plt;
-    std::map<std::string, std::string> kwArgs;
-    for (int i = 0; i < DataSteward::NUM_ELEMS; ++i){
-        kwArgs["label"] = stewie->elements[i]->name();
-        yVals.clear();
-        for (int j = 0; j < numWindows; ++j){
-            yVals.push_back(stewie->kernelVoltages[j][i]);
-        }
-        plt.plot(xVals, yVals, kwArgs);
-        
-    }
-    plt.legend();
-    plt.show();
-    
-    
-}
-*/
 
 void DataVisualizer::plotSet(std::string* names, int numNames){
 
@@ -147,3 +123,32 @@ void DataVisualizer::plotSet(std::string* names, int numNames){
     
     
 }
+*/
+
+/*
+void DataVisualizer::plotAll(){
+
+    int numWindows = stewie->kernelVoltages.size();
+    std::vector<double> xVals;// windows
+    std::vector<double> yVals;// neuron voltages
+    for ( int i = 0; i < numWindows; ++i){
+        xVals.push_back(i);//window number
+    }
+    
+    Plotr plt;
+    std::map<std::string, std::string> kwArgs;
+    for (int i = 0; i < DataSteward::NUM_ELEMS; ++i){
+        kwArgs["label"] = stewie->elements[i]->name();
+        yVals.clear();
+        for (int j = 0; j < numWindows; ++j){
+            yVals.push_back(stewie->kernelVoltages[j][i]);
+        }
+        plt.plot(xVals, yVals, kwArgs);
+        
+    }
+    plt.legend();
+    plt.show();
+    
+    
+}
+*/

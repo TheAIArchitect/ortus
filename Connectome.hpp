@@ -18,15 +18,6 @@
 #include <string>
 #include "Attribute.hpp"
 
-/**
- * NOTE: if more relation types are added, code in the following functions must be modified:
- *
- * # addRelationAttributesFromOrt -- for parsing a .ort file
- * # addRelationFromOrt -- for parsing a .ort file
- * # addRelationAttribute -- for adding attributes during program execution
- * # addRelation -- for adding relations from .ort files and during program execution
- * #
- */
 
 
 class Connectome {

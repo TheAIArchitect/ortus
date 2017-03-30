@@ -18,6 +18,7 @@
 #include "ElementInfoModule.hpp"
 #include "OrtusNamespace.hpp"
 #include "Attribute.hpp"
+#include "KernelBuddy.hpp"
 
 //enum ElementRelationType {GAP, CHEM};
 // idea is: pre <ElementRelationType> post, e.g., pre CAUSES post
@@ -33,9 +34,12 @@ public:
     ~ElementRelation();
     static float ZEROF;
     
-    static const int NUM_ATTRIBUTES = static_cast<int>(Attribute::NUM_ATTRIBUTES);
+    
     // this is actually a vector!
     ortus::attribute_map attributeMap;
+    void setDataPointers(KernelBuddy* kbp);
+    
+    
     float getAttribute(Attribute attribute);
     void setAttribute(Attribute attribute, float value);
     
@@ -46,7 +50,7 @@ public:
     ElementInfoModule* post;
     std::string postName;
     int postId;
-    ElementRelationType type;
+    ElementRelationType rtype;
     std::string sType;
     
     

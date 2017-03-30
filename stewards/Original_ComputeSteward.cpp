@@ -1,13 +1,15 @@
 //
-//  CLBuddy.cpp
+//  ComputeSteward.cpp
 //  ortus
 //
+//  Created by andrew on 1/8/17.
+// Sean Grimes
 //  Copyright © 2017 Andrew W.E. McDonald. All rights reserved.
 //
 
-#include "CLBuddy.hpp"
+#include "ComputeSteward.hpp"
 
-CLBuddy::CLBuddy(size_t globalSize, size_t localSize){
+ComputeSteward::ComputeSteward(size_t globalSize, size_t localSize){
     global = globalSize;
     local = localSize;
     // make sure we'll have a work-group size that's an integer power of 2:
@@ -22,14 +24,12 @@ CLBuddy::CLBuddy(size_t globalSize, size_t localSize){
     currentIteration = 0;
 }
 
-void CLBuddy::run(){
+void ComputeSteward::run(){
     enqueueKernel();
     currentIteration++;
 }
 
-void CLBuddy::executePreRunOperations(){
-    /*
-    // 
+void ComputeSteward::executePreRunOperations(){
     dStewiep->updateMetadataBlade(currentIteration);
     dStewiep->setOpenCLKernelArgs();
     //printf("Set OpenCL Kernel Args... prior to iteration '%d'\n",currentIteration);
@@ -41,26 +41,27 @@ void CLBuddy::executePreRunOperations(){
     }
     else {// just push the ones we want to push on each iteration (so, the ones that we made changes to)
         
+        /*
         dStewiep->voltages->pushCLBuffer();
         dStewiep->metadata->pushCLBuffer();
         dStewiep->outputVoltageHistory->pushCLBuffer();
         dStewiep->chems->pushCLBuffer();
         dStewiep->gaps->pushCLBuffer();
+         */
     }
-     */
 }
 
 
-void CLBuddy::executePostRunOperations(){
-    //dStewiep->executePostRunMemoryTransfers();
+void ComputeSteward::executePostRunOperations(){
+    dStewiep->executePostRunMemoryTransfers();
 }
 
 
 
 /* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
-void CLBuddy::initializeOpenCL(){
+void ComputeSteward::initializeOpenCL(){
     clHelper.setup_opencl();
-    clHelper.read_kernels_from_file("kernels/NewOrtusTestKernel.cl", &programBuffer);
+    clHelper.read_kernels_from_file("kernels/OrtusKernelTwo.cl", &programBuffer);
     program = clCreateProgramWithSource(clHelper.context, 1, (const char**) &programBuffer, NULL, &clHelper.err);
     clHelper.check_and_print_cl_err(clHelper.err);
     clHelper.err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
@@ -68,22 +69,22 @@ void CLBuddy::initializeOpenCL(){
     kernel = clCreateKernel(program, "OrtusKernel", &clHelper.err);
     clHelper.check_and_print_cl_err(clHelper.err);
     
-    //dStewiep->setKernelp(&kernel);
-    //dStewiep->setCLHelperp(&clHelper);
+    dStewiep->setKernelp(&kernel);
+    dStewiep->setCLHelperp(&clHelper);
 }
 
-void CLBuddy::cleanUpOpenCL(){
+void ComputeSteward::cleanUpOpenCL(){
     clReleaseProgram(program);
     clReleaseKernel(kernel);
     clReleaseCommandQueue(clHelper.commands);
     clReleaseContext(clHelper.context);
 }
 
-void CLBuddy::cleanUp(){
+void ComputeSteward::cleanUp(){
     cleanUpOpenCL();
 }
 
-void CLBuddy::printReport(int num_runs){
+void ComputeSteward::printReport(int num_runs){
     /*
     std::cout << "\n\n\n";
     total_run_time += opencl_run_time;
@@ -99,7 +100,7 @@ void CLBuddy::printReport(int num_runs){
 }
 
 // NOTE: store the global and local... stop passing.
-void CLBuddy::enqueueKernel(){
+void ComputeSteward::enqueueKernel(){
     cl_event timing_event;
     
     clHelper.err = clEnqueueNDRangeKernel(clHelper.commands, kernel, 1, NULL, &global, &local, 0, NULL, &timing_event);

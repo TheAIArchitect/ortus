@@ -2,8 +2,6 @@
 //  ComputeSteward.cpp
 //  ortus
 //
-//  Created by andrew on 1/8/17.
-// Sean Grimes
 //  Copyright © 2017 Andrew W.E. McDonald. All rights reserved.
 //
 
@@ -30,6 +28,8 @@ void ComputeSteward::run(){
 }
 
 void ComputeSteward::executePreRunOperations(){
+    /*
+    // 
     dStewiep->updateMetadataBlade(currentIteration);
     dStewiep->setOpenCLKernelArgs();
     //printf("Set OpenCL Kernel Args... prior to iteration '%d'\n",currentIteration);
@@ -41,19 +41,18 @@ void ComputeSteward::executePreRunOperations(){
     }
     else {// just push the ones we want to push on each iteration (so, the ones that we made changes to)
         
-        /*
         dStewiep->voltages->pushCLBuffer();
         dStewiep->metadata->pushCLBuffer();
         dStewiep->outputVoltageHistory->pushCLBuffer();
         dStewiep->chems->pushCLBuffer();
         dStewiep->gaps->pushCLBuffer();
-         */
     }
+     */
 }
 
 
 void ComputeSteward::executePostRunOperations(){
-    dStewiep->executePostRunMemoryTransfers();
+    //dStewiep->executePostRunMemoryTransfers();
 }
 
 
@@ -61,7 +60,7 @@ void ComputeSteward::executePostRunOperations(){
 /* initialize the actual OpenCL system -- must be done before creating any Blade objects, because we need a valid OpenCL context in order for the Blade to create its buffer, which it does upon initialization */
 void ComputeSteward::initializeOpenCL(){
     clHelper.setup_opencl();
-    clHelper.read_kernels_from_file("kernels/OrtusKernelTwo.cl", &programBuffer);
+    clHelper.read_kernels_from_file("kernels/NewOrtusTestKernel.cl", &programBuffer);
     program = clCreateProgramWithSource(clHelper.context, 1, (const char**) &programBuffer, NULL, &clHelper.err);
     clHelper.check_and_print_cl_err(clHelper.err);
     clHelper.err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
@@ -69,8 +68,8 @@ void ComputeSteward::initializeOpenCL(){
     kernel = clCreateKernel(program, "OrtusKernel", &clHelper.err);
     clHelper.check_and_print_cl_err(clHelper.err);
     
-    dStewiep->setKernelp(&kernel);
-    dStewiep->setCLHelperp(&clHelper);
+    //dStewiep->setKernelp(&kernel);
+    //dStewiep->setCLHelperp(&clHelper);
 }
 
 void ComputeSteward::cleanUpOpenCL(){

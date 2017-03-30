@@ -26,39 +26,77 @@ Steward::Steward(){
 }
 
 void Steward::initialize(){
-    size_t globalSize = 512; // total work-items to execute (number of times to call kernel)
-    size_t localSize = 64;// 16 or 32? // number of work-items to group into a work-group
+    size_t globalSize = 64; ///512; // total work-items to execute (number of times to call kernel)
+    size_t localSize = 8;///64;// 16 or 32? // number of work-items to group into a work-group
     // assuming global = 512 and local = 64:
     // the number of work-groups = global / local = 512/64  = 8 work-groups
+ 
     
-    dataStewardp = new DataSteward();
+    
+    //dataStewardp = new DataSteward();
     computeStewardp = new ComputeSteward(globalSize, localSize);
-    computeStewardp->dStewiep = dataStewardp;
+    
+    //computeStewardp->dStewiep = dataStewardp;
     computeStewardp->initializeOpenCL();
-    dataStewardp->init(computeStewardp->workGroupSize);
-    sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
-    sensoryStimulationStewardp->setStimuli();
-    diagnosticStewardp = new DiagnosticSteward(dataStewardp);
+    
+    // maybe DataSteward should hold the actual blades, and KB just accesses them? seems screwy...
+    // maybe KernelBuddy should just be DataSteward... 
+    kernelBuddyp = new KernelBuddy(static_cast<int>(Attribute::NUM_ATTRIBUTES), &computeStewardp->clHelper, &computeStewardp->kernel);
+    
+    //dataStewardp->init(computeStewardp->workGroupSize);
+    //sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
+    //sensoryStimulationStewardp->setStimuli();
+    //diagnosticStewardp = new DiagnosticSteward(dataStewardp);
     
 }
 
+/** TEMPORARY FUNCTION */
+void fillBlade(bool _2D, int size, KernelBuddy& thing, Attribute attrib, float value){
+    if (_2D){
+        int i,j;
+        for (i = 0; i < size; ++i){
+            for (j = 0; j < size; ++j){
+                thing.addThing(attrib, i, j, value);
+            }
+        }
+    }
+    else {
+        int i;
+        for (i = 0; i < size; ++i){
+            thing.addThing(attrib, i, value);
+        }
+    }
+}
+/** END TEMPORARY FUNCTION */
+
 void Steward::run(){
     
-    numIterations = 300;// SHOULD BE ~600!!!
+    
+    fillBlade(false, ortus::NUM_ELEMENTS, *kernelBuddyp, Attribute::Type, 2.0);
+    fillBlade(false, ortus::NUM_ELEMENTS, *kernelBuddyp, Attribute::Affect, 4.0);
+    fillBlade(false, ortus::NUM_ELEMENTS, *kernelBuddyp, Attribute::Activation, 6.0);
+    fillBlade(true, ortus::NUM_ELEMENTS, *kernelBuddyp, Attribute::Weight, 3.0);
+    fillBlade(true, ortus::NUM_ELEMENTS, *kernelBuddyp, Attribute::Polarity, 5.0);
+    fillBlade(true, ortus::NUM_ELEMENTS, *kernelBuddyp, Attribute::Thresh, 7.0);
+    
+    
+    kernelBuddyp->pushToOpenCL();
+    
+    numIterations = 1;//300;// SHOULD BE ~600!!!
     for (int i = 0; i < numIterations; ++i){
         computeStewardp->executePreRunOperations();
         computeStewardp->run();
         computeStewardp->executePostRunOperations();
         
         // Stimulate the sensors 
-        sensoryStimulationStewardp->performSensoryStimulation();
+        //sensoryStimulationStewardp->performSensoryStimulation();
         
-        diagnosticStewardp->runAdvancedDiagnostics();
+        //diagnosticStewardp->runAdvancedDiagnostics();
     }
-    diagnosticStewardp->plotXCorr();
+    //diagnosticStewardp->plotXCorr();
     
     // temporary placement...
-    dataStewardp->writeConnectome("doesn't matter yet");
+    //dataStewardp->writeConnectome("doesn't matter yet");
 
     // Just a basic runtime report and small sample of elements
     //stewie.printReport(DataSteward::numKernelLoops);
@@ -75,7 +113,7 @@ void Steward::run(){
     }
      */
     //diagnosticStewardp->plotXCorr();
-    diagnosticStewardp->runStandardDiagnostics();
+    //diagnosticStewardp->runStandardDiagnostics();
     
     //initGraphics(&core);
     cleanUp();
@@ -89,6 +127,6 @@ void Steward::cleanUp(){
     delete diagnosticStewardp;
     delete sensoryStimulationStewardp;
     delete computeStewardp;
-    delete dataStewardp;
+    //delete dataStewardp;
 }
 

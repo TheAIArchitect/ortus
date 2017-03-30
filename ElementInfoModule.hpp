@@ -9,14 +9,24 @@
 #ifndef ElementInfoModule_hpp
 #define ElementInfoModule_hpp
 
+#ifdef __APPLE__
+#include <OpenCL/opencl.h>
+#else
+#include <CL/cl.h>
+#endif
+
+#include "OrtusNamespace.hpp"
 #include <stdio.h>
 #include <vector>
 #include <string>
-#include "MassPoint.hpp"
+#include "KernelBuddy.hpp"
+#include "Blade.hpp"
 
 
-enum ElementType { SENSE, EMOTION, INTER, MOTOR, MUSCLE};
+enum class ElementType { SENSE, EMOTION, INTER, MOTOR, MUSCLE, NUM_ELEMENT_TYPES};
 
+
+enum class ElementAffect { NEG = -1, NEUTRAL, POS};
 
 
 
@@ -31,7 +41,9 @@ public:
     ElementInfoModule();
     ~ElementInfoModule();
     
-    glm::vec3 getCenterPoint(); // allows us to use muscles and neurons for creating graphical connections
+    void setAttributeDataPointers(KernelBuddy* kbp);
+    void setActivationDataPointer(KernelBuddy* kbp);
+    //glm::vec3 getCenterPoint(); // allows us to use muscles and neurons for creating graphical connections
     
     //std::string* namep;
     std::string name;
@@ -42,8 +54,13 @@ public:
     
     bool marked = false; // used for stack
     bool ablated = false; // if true, we treat the element as non-existent
-    float v_0 = 0; // initial voltage
-    float* vCurrp; // current voltage
+    
+    cl_float* activationp;
+    cl_float* affectp;
+    cl_float* typep;
+    
+    
+    
     
     std::string getName();
     float vCurr();
@@ -62,12 +79,14 @@ public:
     
     std::string toString();
     
-private:
     std::string sAffect;
-    float fAffect;
     ElementType eType;
     std::string sType; // string type
-    float fType; // float type
+    
+private:
+    float activation;
+    float fAffect;
+    float fType;
     
 };
 

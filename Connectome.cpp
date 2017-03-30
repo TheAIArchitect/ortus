@@ -64,14 +64,11 @@ void Connectome::addRelationAttributesFromOrt(std::unordered_map<std::string,std
     
     ortus::attribute_unordered_map postAttributeMap = ortUtil.getAttributeEnumsFromStrings(postAttributeMapStrings);
     
-    
-    /** STOPPING POINT:
-        # convert .ort values to floats, no text... right? probably,.
-        # then add attribs, and set Blades, BladePacks, and Kernel(C/K)arton up.
-     
-     */
-    
     for (auto attrib : preAttributeMap){
+        elrel->setAttribute(attrib.first,std::stof(attrib.second));
+    }
+    
+    for (auto attrib : postAttributeMap){
         elrel->setAttribute(attrib.first,std::stof(attrib.second));
     }
 }
@@ -184,7 +181,9 @@ void Connectome::addElement(std::unordered_map<std::string, std::string> attribu
     }
     ElementInfoModule* eim = elementMap[name];
     
+    // these are spe
     if (attributeMap.find("type") != attributeMap.end()){
+        
         eim->setType(attributeMap["type"]);
     }
     if (attributeMap.find("affect") != attributeMap.end()){

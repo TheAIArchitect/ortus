@@ -15,6 +15,9 @@
 #include "DataVisualizer.hpp"
 #include "SensoryStimulationSteward.hpp"
 #include "DiagnosticSteward.hpp"
+#include "KernelBuddy.hpp"
+#include "OrtusNamespace.hpp"
+#include "Attribute.hpp"
 
 class Steward {
 public:
@@ -24,7 +27,9 @@ public:
     
     void run();
     
-    DataSteward* dataStewardp;
+    //DataSteward* dataStewardp;
+    
+    KernelBuddy* kernelBuddyp;
     ComputeSteward* computeStewardp;
     SensoryStimulationSteward* sensoryStimulationStewardp;
     DiagnosticSteward* diagnosticStewardp;

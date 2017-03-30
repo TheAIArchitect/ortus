@@ -37,7 +37,7 @@ public:
     void cleanUpOpenCL();
     void cleanUp();
     
-    DataSteward* dStewiep;
+    //DataSteward* dStewiep;
     
     int currentIteration;
     

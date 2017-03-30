@@ -11,19 +11,19 @@
 float ElementRelation::ZEROF = 0.0f;
 
 ElementRelation::ElementRelation(){
-    attributeMap.reserve(NUM_ATTRIBUTES);
-    attributeTracker.reserve(NUM_ATTRIBUTES);
+    attributeMap.reserve(ortus::NUM_ATTRIBUTES);
+    attributeTracker.reserve(ortus::NUM_ATTRIBUTES);
     // should be a fast way to ensure all float* point to something valid
     // from SO, seems like gcc unrolls the loop a bit
     std::fill(attributeMap.begin(), attributeMap.end(),&ZEROF);
 };
 
 ElementRelation::~ElementRelation(){
-    for (int i = 0; i < NUM_ATTRIBUTES; ++i){
-        if (attributeTracker[i]){
-            delete attributeMap[i];
-        }
-    }
+    //for (int i = 0; i < ortus::NUM_ATTRIBUTES; ++i){
+        //if (attributeTracker[i]){
+            //delete attributeMap[i];
+        //}
+    //}
 }
 
 
@@ -31,16 +31,24 @@ float ElementRelation::getAttribute(Attribute attribute){
     return *attributeMap[static_cast<int>(attribute)];
 }
 
+/** NOTE: this must only be called *afteR* calling 'setDataPointers()' */
 void ElementRelation::setAttribute(Attribute attribute, float value){
     attributeMap[static_cast<int>(attribute)] = new float(value);
-    // with the blades, this will still be used, but will be used to detect what things have been set/are being used
     attributeTracker[static_cast<int>(attribute)] = true;
+}
+
+/** Note: for this to work, preId and postId must be set... */
+void ElementRelation::setDataPointers(KernelBuddy* kbp){
+    for (auto blade : kbp->attributeBladeMap){
+        attributeMap[static_cast<int>(blade.first)] = blade.second->getp(preId, postId);
+    }
+    
 }
 
 std::string ElementRelation::toString(){
     int max = 512;
     char buffer[max];
-    switch (type) {
+    switch (rtype) {
         case CORRELATED:
             snprintf(buffer, max,"<CORRELATED> (%s->%s, weight: %.2f, age: %f)",preName.c_str(),postName.c_str(),
                      getAttribute(Attribute::Weight),
@@ -59,7 +67,7 @@ std::string ElementRelation::toString(){
             snprintf(buffer, max,"<OPPOSES> (%s->%s, thresh: %f)",preName.c_str(),postName.c_str(), getAttribute(Attribute::Thresh));
             break;
         default:
-            snprintf(buffer,max,"-- ERROR -- CAN'T PRINT ELEMENT RELATION TYPE '%d'",type);
+            snprintf(buffer,max,"-- ERROR -- CAN'T PRINT ELEMENT RELATION TYPE '%d'",rtype);
             break;
     }
     return std::string(buffer);

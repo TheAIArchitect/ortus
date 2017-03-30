@@ -19,20 +19,26 @@ int main(int argc, char** argv){
     
     
     /* Incubator */
-    Incubator incubator;
-    incubator.conceive("ort/simple.ort");
+    //Incubator incubator;
+    //incubator.conceive("ort/simple.ort");
   
 
-    /* Ortus
+    /* Ortus */
     Steward theStewie;
     theStewie.initialize();
     theStewie.run();
-    */
     
     
     
     // this runs the 3d model.
     //gitErDone(&argc, argv);
+    
+    
+
+
+    
+    printf("I work.\n");
+    
     
     
     

@@ -1,5 +1,5 @@
 //
-//  CLBuddy.hpp
+//  ComputeSteward.hpp
 //  ortus
 //
 //  Created by andrew on 1/8/17.
@@ -7,8 +7,8 @@
 //  Copyright © 2017 Andrew W.E. McDonald. All rights reserved.
 //
 
-#ifndef CLBuddy_hpp
-#define CLBuddy_hpp
+#ifndef ComputeSteward_hpp
+#define ComputeSteward_hpp
 
 
 #ifdef __APPLE__
@@ -23,10 +23,10 @@
 #include "CLHelper.hpp"
 #include "DataSteward.hpp"
 
-class CLBuddy {
+class ComputeSteward {
     
 public:
-    CLBuddy(size_t globalSize, size_t localSize);
+    ComputeSteward(size_t globalSize, size_t localSize);
     void enqueueKernel();
     void printReport(int num_runs);
     
@@ -73,4 +73,4 @@ public:
     
 };
 
-#endif /* CLBuddy_hpp */
+#endif /* ComputeSteward_hpp */

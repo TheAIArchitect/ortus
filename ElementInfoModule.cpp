@@ -13,6 +13,17 @@ ElementInfoModule::ElementInfoModule(){
 
 ElementInfoModule::~ElementInfoModule(){};
 
+
+
+void ElementInfoModule::setAttributeDataPointers(KernelBuddy* kbp){
+    typep = kbp->attributeBladeMap[Attribute::Type]->getp(id); // types correspond to ElementType enum class
+    affectp = kbp->attributeBladeMap[Attribute::Affect]->getp(id); // types correspond to ElementAffect enum class
+}
+
+void ElementInfoModule::setActivationDataPointer(KernelBuddy* kbp){
+    activationp = kbp->activationBlade->getp(id);
+}
+
 ElementType ElementInfoModule::getEType(){
     return eType;
 }
@@ -22,7 +33,7 @@ std::string ElementInfoModule::getSType(){
 }
 
 float ElementInfoModule::getFType(){
-    return fType;
+    return *typep;
 }
 
 std::string ElementInfoModule::getName(){
@@ -39,19 +50,21 @@ int ElementInfoModule::getId(){
 // should also have another function that allows calling for a specific time window,
 // that would come from the voltage history... wherever that's being kept.
 float ElementInfoModule::vCurr(){
-    return *vCurrp;
+ //   return *activation;
+    return *activationp;
 }
 
 /**
  * Sets the affect of the element; input may be 'pos', or 'neg'.
+ * NOTE: must be set *AFTER* setting typep to point to the right address (via setDataPointers())
  */
 void ElementInfoModule::setAffect(std::string affect){
     sAffect = affect;
     if (affect == "pos"){
-        fAffect= 1.f;
+        *affectp = 1.f;
     }
     else if (affect == "neg"){
-        fAffect= -1.f;
+        *affectp = -1.f;
     }
     else {
         printf("Error: attempting to set non-recognized affect '%s'.\n", affect.c_str());
@@ -61,33 +74,30 @@ void ElementInfoModule::setAffect(std::string affect){
 
 /*
  * Sets the ElementType enum, the string type (stype), and the float type, (ftype), of the element
+ * NOTE: must be set *AFTER* setting typep to point to the right address (via setDataPointers())
  */
 void ElementInfoModule::setType(std::string type){
     sType = type;
     if (sType == "sense"){
-        eType = SENSE;
-        fType = 0.f;
+        eType = ElementType::SENSE;
     }
     else if (sType == "emotion"){
-        eType = EMOTION;
-        fType = 1.f;
+        eType = ElementType::EMOTION;
     }
     else if (sType == "inter"){
-        eType = INTER;
-        fType = 2.f;
+        eType = ElementType::INTER;
     }
     else if (sType == "motor"){
-        eType = MOTOR;
-        fType = 3.f;
+        eType = ElementType::MOTOR;
     }
     else if (sType == "muscle"){
-        eType = MUSCLE;
-        fType = 4.f;
+        eType = ElementType::MUSCLE;
     }
     else {
         printf("Error: attempting to set non-recognized element type '%s'.\n", type.c_str());
         exit(58);
     }
+    *typep = (float) eType;
     return;
 }
 
@@ -96,19 +106,19 @@ std::string ElementInfoModule::toString(){
     int max = 512;
     char buffer[max];
     switch (eType) {
-        case SENSE:
+        case ElementType::SENSE:
             snprintf(buffer, max,"<SENSE> (%s, affect: %s)",name.c_str(),sAffect.c_str());
             break;
-        case EMOTION:
+        case ElementType::EMOTION:
             snprintf(buffer, max,"<EMOTION> (%s, affect: %s)",name.c_str(),sAffect.c_str());
             break;
-        case INTER:
+        case ElementType::INTER:
             snprintf(buffer, max,"<INTER> (%s, affect: %s)",name.c_str(),sAffect.c_str());
             break;
-        case MOTOR:
+        case ElementType::MOTOR:
             snprintf(buffer, max,"<MOTOR> (%s, affect: %s)",name.c_str(),sAffect.c_str());
             break;
-        case MUSCLE:
+        case ElementType::MUSCLE:
             snprintf(buffer, max,"<MUSCLE> (%s, affect: %s)",name.c_str(),sAffect.c_str());
             break;
         default:

@@ -137,7 +137,7 @@ ortus::attribute_unordered_map OrtUtil::getAttributeEnumsFromStrings(std::unorde
     newMap.reserve(attributeMapStrings.size());
     int i = 0;
     for (auto entry : attributeMapStrings){
-        for (i = 0; i <  ElementRelation::NUM_ATTRIBUTES; ++i){
+        for (i = 0; i <  ortus::NUM_ATTRIBUTES; ++i){
             if (entry.first == ATTRIBUTE_STRINGS[i]){
                 newMap[static_cast<Attribute>(i)] = entry.second;
             }
