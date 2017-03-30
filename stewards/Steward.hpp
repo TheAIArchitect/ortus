@@ -27,7 +27,7 @@ public:
     
     void run();
     
-    //DataSteward* dataStewardp;
+    DataSteward* dataStewardp;
     
     KernelBuddy* kernelBuddyp;
     ComputeSteward* computeStewardp;

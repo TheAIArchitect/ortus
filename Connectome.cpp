@@ -84,19 +84,19 @@ ElementRelation* Connectome::addRelation(ElementInfoModule* ePre, ElementInfoMod
         // NOTE: as this grows, it might make more sense to have a function take an array of attributes to check for for each case.
         switch(ert){ 
             case CORRELATED:
-                elrel->type = CORRELATED;
+                elrel->rtype = CORRELATED;
                 correlatedRelations[ePre->id].push_back(elrel);
                 break;
             case CAUSES:
-                elrel->type = CAUSES;
+                elrel->rtype = CAUSES;
                 causesRelations[ePre->id].push_back(elrel);
                 break;
             case DOMINATES:
-                elrel->type = DOMINATES;
+                elrel->rtype = DOMINATES;
                 dominatesRelations[ePre->id].push_back(elrel);
                 break;
             case OPPOSES:
-                elrel->type = OPPOSES;
+                elrel->rtype = OPPOSES;
                 opposesRelations[ePre->id].push_back(elrel);
                 break;
             default:

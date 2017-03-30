@@ -24,19 +24,56 @@
 #include <time.h>
 #include "NumUtils.hpp"
 #include "StrUtils.hpp"
-#include "NeuronInfoModule.hpp"
 #include "ElementInfoModule.hpp"
-#include "MuscleInfoModule.hpp"
 #include "FileAssistant.hpp"
 #include "AblationStation.hpp"
 #include "Blade.hpp"
 #include "Probe.hpp"
 #include "CLHelper.hpp"
+#include "OrtusNamespace.hpp"
+#include "KernelBuddy.hpp"
 
+class ElementInfoModule;
+class ElementRelation;
 
 class DataSteward{
     
+public: /** NEW */
+    DataSteward();
+    ~DataSteward();
+    
+    void initializeKernelArgsAndBlades();
+    void executePreRunOperations();
+    void pushOpenCLBuffers();
+    
+    // Blade maps -- this is where the data is *actually* held...
+    // Everything else just points here.
+    std::unordered_map<Attribute, Blade<cl_float>*> attributeBladeMap;
+    Blade<cl_float>* activationBlade;
+    
+    KernelBuddy* kernelBuddyp;
+    
+    // static??
+    std::vector<Attribute> elementThings;
+    std::vector<Attribute> relationThings;
+    
+    
+protected: // private?
+    // are these needed??
+    //cl_kernel* kernelp;
+    //CLHelper* clHelperp;
+    
+    /** OLD */
 public: // super important variables
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //std::unordered_map<std::string,int> officialNameToIndexMap;
     //std::unordered_map<int,std::string> officialIndexToNameMap;
     //std::vector<std::string*> officialNamepVector; // change name to master
@@ -63,15 +100,12 @@ public: // super important variables
     Blade<cl_float>* deviceScratchPadXCorr; // memory is local on device, so size depends upon work-group size, XCorr comptuations
     Blade<cl_float>* deviceScratchPadVoltageROC; // memory is local on device, so size depends upon work-group size, voltage rate of change computations
     
-protected: // private?
-    cl_kernel* kernelp;
-    CLHelper* clHelperp;
+
     
 public:
     
     
-    DataSteward();
-    ~DataSteward();
+   
     void init(size_t openCLWorkGroupSize);
     //void createElements();
     //void createConnections();
@@ -90,7 +124,6 @@ public:
     void updateMetadataBlade(int knernelIterationNum);
     //void fillInputVoltageBlade();
     // these two might be irrelevant now, if we carry these ops out in KernelBuddy
-    // void pushOpenCLBuffers();
     // void readOpenCLBuffers();
     // void setOpenCLKernelArgs();
 
@@ -133,7 +166,7 @@ public:
     const static int VOLTAGE_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
     const static int METADATA_COUNT = 5; // see 'metadata' definition for metadata metadata. haha.
     const static int XCORR_COMPUTATIONS = 4; // see notes/correlationNotes.txt, but note that insead of 3, it's now 4 (for testing purposes -- may or may not stay that way.)
-    static unsigned int NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8;
+    //static unsigned int NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8;
     
     
 

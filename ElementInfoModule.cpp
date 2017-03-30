@@ -7,6 +7,7 @@
 //
 
 #include "ElementInfoModule.hpp"
+#include "DataSteward.hpp"
 
 ElementInfoModule::ElementInfoModule(){
 };
@@ -15,13 +16,13 @@ ElementInfoModule::~ElementInfoModule(){};
 
 
 
-void ElementInfoModule::setAttributeDataPointers(KernelBuddy* kbp){
-    typep = kbp->attributeBladeMap[Attribute::Type]->getp(id); // types correspond to ElementType enum class
-    affectp = kbp->attributeBladeMap[Attribute::Affect]->getp(id); // types correspond to ElementAffect enum class
+void ElementInfoModule::setAttributeDataPointers(DataSteward* dsp){
+    typep = dsp->attributeBladeMap[Attribute::RType]->getp(id); // types correspond to ElementType enum class
+    affectp = dsp->attributeBladeMap[Attribute::Affect]->getp(id); // types correspond to ElementAffect enum class
 }
 
-void ElementInfoModule::setActivationDataPointer(KernelBuddy* kbp){
-    activationp = kbp->activationBlade->getp(id);
+void ElementInfoModule::setActivationDataPointer(DataSteward* dsp){
+    activationp = dsp->activationBlade->getp(id);
 }
 
 ElementType ElementInfoModule::getEType(){

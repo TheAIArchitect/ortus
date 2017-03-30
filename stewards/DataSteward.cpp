@@ -25,9 +25,10 @@
 
 #include "DataSteward.hpp"
 
+#include "ElementInfoModule.hpp"
+#include "ElementRelation.hpp"
 
-
-unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
+//unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
 
 
 DataSteward::DataSteward(){}
@@ -54,6 +55,18 @@ void DataSteward::init(size_t openCLWorkGroupSize){
     initializeData();
 }
 
+void DataSteward::initializeData(){
+    /*
+    createElements();
+    createConnections();
+    NUM_ELEMS = elements.size();
+    NUM_ROWS = NUM_ELEMS;
+    int modEight = NUM_ELEMS % 8;
+    NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
+    initializeBlades();
+    probe = new Probe(); // NOTE: probe not working right now. needs to be re-worked.
+     */
+}
 
 void DataSteward::executePostRunMemoryTransfers(){
     //readOpenCLBuffers();
@@ -65,6 +78,10 @@ void DataSteward::executePostRunMemoryTransfers(){
 
 
 //void DataSteward::readOpenCLBuffers(){
+    ////for (auto blade : attributeBladeMap){
+    ////    blade.second->readDataFromDevice();
+    ////}
+
     // get output voltages
     /*
     voltages->readCLBuffer();
@@ -89,6 +106,7 @@ void DataSteward::updateOutputVoltageVector(){
     kernelVoltages.push_back(outputVoltageVector);
 }
 
+//// create new blade for this (all scalars, or one that rarely changes, and one that changes all the time, just like the other blades), and access it via enum or something
 /* this must be called for each kernel iteration... */
 void DataSteward::updateMetadataBlade(int kernelIterationNum){
     /*
@@ -119,7 +137,16 @@ void DataSteward::updateMetadataBlade(int kernelIterationNum){
     
 //}
 
-//void DataSteward::pushOpenCLBuffers(){
+void DataSteward::executePreRunOperations(){
+    pushOpenCLBuffers();
+}
+
+void DataSteward::pushOpenCLBuffers(){
+    for (auto blade : attributeBladeMap){
+        blade.second->pushDataToDevice();
+    }
+
+
     //Timer et;
     //et.start_timer();
     /*
@@ -132,11 +159,52 @@ void DataSteward::updateMetadataBlade(int kernelIterationNum){
     metadata->pushCLBuffer();
      */
     //et.stop_timer();
-//}
+}
 
 
-/* initializes the Blades that aren't used for the gj or cs weights */
-void DataSteward::initializeBlades(){
+
+
+/** creates KernelArgs, CLBuffers, and Blades
+ **/
+void DataSteward::initializeKernelArgsAndBlades(){
+    
+     /* these are the kernel args we want */
+    /* NOTE: 'static' prefix suggests set items should rarely change,
+     * while 'dynamic' suggests items in the set may change value every iteration */
+    // staticElement = {Attribute::ElementType, Attribute::Affect};//, Attribute::EThresh}
+    // dynamicElement = {Attribute::Activation}; // this one needs to have the history
+    // staticRelation = {Attribute::RType, Attribute::Polarity, Attribute::Direction, Attribute::RThresh};
+    // dynamicRelation = {Attribute::a
+    /*
+     In addition to the above, we need:
+        # metadata (see metadata from old DataSteward)
+        # scalars -- separate from metadata scalars
+        # offset info
+        # scratchpads
+     */
+    // way to approach offset info:
+        // 1) each kernel arg *must* only have data that is seperable by the same offset (so, either scalar, 1D, or 2D, but not a combination)
+        // 2) there will be 1 '2d' kernel arg formatted like so (kai <=> kernel arg index):
+            // [kai][0] => number of 'keys', [kai][1] => offset size between keys,
+            // it will be up to the implementor to ensure that the proper order of attributes/etc. are being accessed.
+    
+
+    
+    // MOVE THESE!!!
+    elementThings = { Attribute::EType, Attribute::Affect, Attribute::Activation };
+    relationThings = { Attribute::Weight, Attribute::Polarity, Attribute::RThresh };
+    
+    
+    std::unordered_map<Attribute, Blade<cl_float>*>* tempAttribToFloatBladeMap;
+    tempAttribToFloatBladeMap = kernelBuddyp->addKernelArgAndBlades<cl_float,Attribute>(0, elementThings, 1, ortus::NUM_ELEMENTS, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE);
+    for (auto entry : *tempAttribToFloatBladeMap){
+        attributeBladeMap[entry.first] = entry.second;
+    }
+    
+    tempAttribToFloatBladeMap = kernelBuddyp->addKernelArgAndBlades<cl_float,Attribute>(1, relationThings, 2, ortus::NUM_ELEMENTS, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE);
+    for (auto entry : *tempAttribToFloatBladeMap){
+        attributeBladeMap[entry.first] = entry.second;
+    }
     /*
     // need a gj and cs contrib (one of each) -- these are NxN
     chemContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
@@ -162,15 +230,30 @@ void DataSteward::initializeBlades(){
 }
      
 
-void DataSteward::initializeData(){
-    /*
-    createElements();
-    createConnections();
-    NUM_ELEMS = elements.size();
-    NUM_ROWS = NUM_ELEMS;
-    int modEight = NUM_ELEMS % 8;
-    NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
-    initializeBlades();
-    probe = new Probe(); // NOTE: probe not working right now. needs to be re-worked.
-     */
-}
+
+
+// the probe.
+/*
+ void DataSteward::feedProbe(){
+ // cs contrib
+ clhc.err = clEnqueueReadBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, (sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS), cs_1d_contrib, 0, NULL, NULL);
+ clhc.check_and_print_cl_err(clhc.err);
+ // gj contrib
+ clhc.err = clEnqueueReadBuffer(clhc.commands, gj_contrib, CL_TRUE, 0, (sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS), gj_1d_contrib, 0, NULL, NULL);
+ clhc.check_and_print_cl_err(clhc.err);
+ 
+ 
+ cs_2d_contrib_t = stewie.convert_1d_to_2d(cs_1d_contrib, DataSteward::NUM_ELEMS, DataSteward::NUM_ELEMS);
+ gj_2d_contrib_t = stewie.convert_1d_to_2d(gj_1d_contrib, DataSteward::NUM_ELEMS, DataSteward::NUM_ELEMS);
+ probe->csContribVec.push_back(cs_2d_contrib_t);
+ probe->gjContribVec.push_back(gj_2d_contrib_t);
+ 
+ // clear the cs_contrib buffer
+ clhc.err = clEnqueueWriteBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS, zeros1D, 0, NULL, NULL);
+ clhc.check_and_print_cl_err(clhc.err);
+ // do the same with the gj_contrib buffer
+ clhc.err = clEnqueueWriteBuffer(clhc.commands, cs_contrib, CL_TRUE, 0, sizeof(float) * DataSteward::NUM_ELEMS * DataSteward::NUM_ELEMS, zeros1D, 0, NULL, NULL);
+ clhc.check_and_print_cl_err(clhc.err);
+ 
+ }
+ */

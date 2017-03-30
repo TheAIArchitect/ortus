@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
-#include "KernelBuddy.hpp"
+//#include "DataSteward.hpp"
 #include "Blade.hpp"
 
 
@@ -28,7 +28,7 @@ enum class ElementType { SENSE, EMOTION, INTER, MOTOR, MUSCLE, NUM_ELEMENT_TYPES
 
 enum class ElementAffect { NEG = -1, NEUTRAL, POS};
 
-
+class DataSteward;
 
 /**
  * the data here should actually be held in blades, so that it is stored centrally, and can easily be pushed to opencl, but can also easily be used to generate graphical results.
@@ -41,8 +41,8 @@ public:
     ElementInfoModule();
     ~ElementInfoModule();
     
-    void setAttributeDataPointers(KernelBuddy* kbp);
-    void setActivationDataPointer(KernelBuddy* kbp);
+    void setAttributeDataPointers(DataSteward* dsp);
+    void setActivationDataPointer(DataSteward* dsp);
     //glm::vec3 getCenterPoint(); // allows us to use muscles and neurons for creating graphical connections
     
     //std::string* namep;

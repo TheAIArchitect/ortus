@@ -8,6 +8,8 @@
 
 #include "ElementRelation.hpp"
 
+#include "DataSteward.hpp"
+
 float ElementRelation::ZEROF = 0.0f;
 
 ElementRelation::ElementRelation(){
@@ -38,8 +40,8 @@ void ElementRelation::setAttribute(Attribute attribute, float value){
 }
 
 /** Note: for this to work, preId and postId must be set... */
-void ElementRelation::setDataPointers(KernelBuddy* kbp){
-    for (auto blade : kbp->attributeBladeMap){
+void ElementRelation::setDataPointers(DataSteward* dsp){
+    for (auto blade : dsp->attributeBladeMap){
         attributeMap[static_cast<int>(blade.first)] = blade.second->getp(preId, postId);
     }
     
@@ -58,13 +60,13 @@ std::string ElementRelation::toString(){
             snprintf(buffer, max,"<CAUSES> (%s->%s, weight: %.2f, polarity: %.2f, age: %f, thresh: %f)",preName.c_str(),postName.c_str(),getAttribute(Attribute::Weight),
                      getAttribute(Attribute::Polarity),
                     getAttribute(Attribute::Age),
-                     getAttribute(Attribute::Thresh));
+                     getAttribute(Attribute::RThresh));
             break;
         case DOMINATES:
             snprintf(buffer, max,"<DOMINATES> (%s->%s)",preName.c_str(),postName.c_str());
             break;
         case OPPOSES:
-            snprintf(buffer, max,"<OPPOSES> (%s->%s, thresh: %f)",preName.c_str(),postName.c_str(), getAttribute(Attribute::Thresh));
+            snprintf(buffer, max,"<OPPOSES> (%s->%s, thresh: %f)",preName.c_str(),postName.c_str(), getAttribute(Attribute::RThresh));
             break;
         default:
             snprintf(buffer,max,"-- ERROR -- CAN'T PRINT ELEMENT RELATION TYPE '%d'",rtype);

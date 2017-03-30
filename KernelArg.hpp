@@ -15,8 +15,6 @@
 #include <unordered_map>
 #include <vector>
 
-
-
 template<class T, class U>
 class KernelArg {
 public:
@@ -74,7 +72,7 @@ public:
      *  # 1 - vector
      *  # 2 - "2D" array
      */
-    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(int dimensions, int currentEntriesPerKey, int maxEntriesPerKey, cl_mem_flags memFlags){
+    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(int dimensions, size_t currentEntriesPerKey, size_t maxEntriesPerKey, cl_mem_flags memFlags){
         if (dimensions < 0 || dimensions > 2){
             printf("Error: Blade dimensions may only be 0, 1, or 2.\n");
             exit(39);

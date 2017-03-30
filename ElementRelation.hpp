@@ -26,6 +26,7 @@
 // note, "ERT" <==> "ElementRelationType"
 enum ElementRelationType {CORRELATED, CAUSES, DOMINATES, OPPOSES, NONE};
 
+class DataSteward;
 
 class ElementRelation {
     
@@ -37,7 +38,7 @@ public:
     
     // this is actually a vector!
     ortus::attribute_map attributeMap;
-    void setDataPointers(KernelBuddy* kbp);
+    void setDataPointers(DataSteward* dsp);
     
     
     float getAttribute(Attribute attribute);

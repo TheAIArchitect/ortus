@@ -28,6 +28,7 @@ void ComputeSteward::run(){
 }
 
 void ComputeSteward::executePreRunOperations(){
+    dStewiep->executePreRunOperations();
     /*
     // 
     dStewiep->updateMetadataBlade(currentIteration);
