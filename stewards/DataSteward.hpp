@@ -32,6 +32,7 @@
 #include "CLHelper.hpp"
 #include "OrtusNamespace.hpp"
 #include "KernelBuddy.hpp"
+#include "Connectome.hpp"
 
 class ElementInfoModule;
 class ElementRelation;
@@ -42,6 +43,11 @@ public: /** NEW */
     DataSteward();
     ~DataSteward();
     
+    Connectome* connectomep;
+    bool connectomeNewed;
+    
+    
+    void loadConnectome(std::string connectomeFile);
     void initializeKernelArgsAndBlades();
     void executePreRunOperations();
     void pushOpenCLBuffers();

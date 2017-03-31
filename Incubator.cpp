@@ -8,21 +8,15 @@
 
 #include "Incubator.hpp"
 
-Incubator::Incubator(){
-    
+Incubator::Incubator(Connectome* ctomep){
+    this->ctomep = ctomep;
 }
 
 Incubator::~Incubator(){
-    if(ctomeNewed){
-        delete ctome;
-    }
-    ctomeNewed = false;
+    
 }
 
-void Incubator::conceive(std::string ortFileName){
-    ctome = new Connectome(ortFileName);
-    ctomeNewed = true;
-}
+
 
 
 

@@ -18,13 +18,10 @@
 
 class Incubator {
 public:
-    Incubator();
+    Incubator(Connectome* ctomep);
     ~Incubator();
     
-    void conceive(std::string ortFileName);
-    
-    Connectome* ctome;
-    bool ctomeNewed = false;
+    Connectome* ctomep;
 };
 
 

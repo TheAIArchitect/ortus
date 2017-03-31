@@ -25,13 +25,23 @@
 
 #include "DataSteward.hpp"
 
+// these two headers need to be included here,
+// and these two classes are 'declared' above
+// DataSteward's definition in DataSteward.hpp.
+//
+// Both of the below classes do the same sort of thing with
+// DataSteward and its header, so that DataSteward can access
+// ElementInfoModules and ElementRelations,
+// and they can both access DataSteward.
 #include "ElementInfoModule.hpp"
 #include "ElementRelation.hpp"
 
 //unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
 
 
-DataSteward::DataSteward(){}
+DataSteward::DataSteward(){
+    connectomeNewed = false;
+}
 
 DataSteward::~DataSteward(){
     delete voltages;
@@ -47,6 +57,10 @@ DataSteward::~DataSteward(){
     delete metadata;
     
     delete probe;
+    if (connectomeNewed){
+        delete connectomep;
+        connectomeNewed = false;
+    }
     
 }
 
@@ -55,7 +69,13 @@ void DataSteward::init(size_t openCLWorkGroupSize){
     initializeData();
 }
 
+void DataSteward::loadConnectome(std::string connectomeFile){
+    connectomep = new Connectome(connectomeFile);
+    connectomeNewed = true;
+}
+
 void DataSteward::initializeData(){
+    
     /*
     createElements();
     createConnections();

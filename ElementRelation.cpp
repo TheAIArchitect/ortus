@@ -39,7 +39,17 @@ void ElementRelation::setAttribute(Attribute attribute, float value){
     attributeTracker[static_cast<int>(attribute)] = true;
 }
 
-/** Note: for this to work, preId and postId must be set... */
+/** Note: for this to work, preId and postId must be set...
+ *
+ * The effect of setDataPointers() is:
+ *   # if there is a Blade in attributeBladeMap for a given attribute in attributeMap,
+ *      the address of &ZEROF will be replaced with the appropriate address to access
+ *      **THIS** relation's value, based upon the preId and postID,
+ *      for any given attribute. 
+ *      That is, attributeMap becomes a map of pointers that all point to the position 
+ *      in each attribute's relative Blade, which is where the data actually resides.
+ *   # if there is no Blade (that would be quite odd...), then the address remains 
+ */
 void ElementRelation::setDataPointers(DataSteward* dsp){
     for (auto blade : dsp->attributeBladeMap){
         attributeMap[static_cast<int>(blade.first)] = blade.second->getp(preId, postId);

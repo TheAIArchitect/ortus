@@ -18,6 +18,7 @@
 #include "KernelBuddy.hpp"
 #include "OrtusNamespace.hpp"
 #include "Attribute.hpp"
+#include "Incubator.hpp"
 
 class Steward {
 public:
@@ -28,7 +29,7 @@ public:
     void run();
     
     DataSteward* dataStewardp;
-    
+    Incubator* incubatorp;
     KernelBuddy* kernelBuddyp;
     ComputeSteward* computeStewardp;
     SensoryStimulationSteward* sensoryStimulationStewardp;

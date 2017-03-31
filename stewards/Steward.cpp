@@ -42,6 +42,7 @@ void Steward::initialize(){
     
     kernelBuddyp = new KernelBuddy(&computeStewardp->clHelper, &computeStewardp->kernel);
     dataStewardp->kernelBuddyp = kernelBuddyp;
+    dataStewardp->initializeKernelArgsAndBlades();
     
     //dataStewardp->init(computeStewardp->workGroupSize);
     //sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);

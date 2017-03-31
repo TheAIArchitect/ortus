@@ -48,7 +48,7 @@ public:
     //std::string* namep;
     std::string name;
     std::string graphicalName; // name used in graphics -- with 'graphical identifier": either "-(I)", "-(S)", "-(M)", or "-<M>" -- inter, sensory, motor, or muscle
-    int* idp; // the id of this element with respect to all other elements
+    //int* idp; // the id of this element with respect to all other elements
     int id;
     int massPoint_id = -1; // -1 means no mass point
     
@@ -63,7 +63,7 @@ public:
     
     
     std::string getName();
-    float vCurr();
+    float vCurr(); //// NOTE: change this to 'getActivation()' -- held of because of potential errors it would generate
     int getId();
     
     
@@ -82,11 +82,6 @@ public:
     std::string sAffect;
     ElementType eType;
     std::string sType; // string type
-    
-private:
-    float activation;
-    float fAffect;
-    float fType;
     
 };
 

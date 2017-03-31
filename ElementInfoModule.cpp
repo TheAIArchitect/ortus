@@ -18,11 +18,14 @@ ElementInfoModule::~ElementInfoModule(){};
 
 void ElementInfoModule::setAttributeDataPointers(DataSteward* dsp){
     typep = dsp->attributeBladeMap[Attribute::RType]->getp(id); // types correspond to ElementType enum class
+    *typep = -1.f; // easy way to tell if a type has been set
     affectp = dsp->attributeBladeMap[Attribute::Affect]->getp(id); // types correspond to ElementAffect enum class
+    *affectp = (float) ElementAffect::NEUTRAL; // 0, at least, when this was written it was...
 }
 
 void ElementInfoModule::setActivationDataPointer(DataSteward* dsp){
     activationp = dsp->activationBlade->getp(id);
+    *activationp = 0; // default to 0
 }
 
 ElementType ElementInfoModule::getEType(){
