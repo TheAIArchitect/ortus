@@ -8,10 +8,9 @@
 #include <vector>
 #include "StrUtils.hpp"
 #include <unordered_map>
-#include "OrtusNamespace.hpp"
+#include "OrtusStd.hpp"
 #include "ElementInfoModule.hpp"
 #include "ElementRelation.hpp"
-#include "Attribute.hpp"
 
 /**
  * Eventually, this should save the comments from the file it reads in.
@@ -38,7 +37,9 @@ private:
         std::vector<std::unordered_map<std::string, std::string>> createVecOfAttributeMapsContainingRelevantLines(std::vector<std::string>& theLines, int& curLineNum);
     
     
-        ortus::attribute_unordered_map getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings);
+        template <class T>
+        ortus::enum_string_unordered_map<T> getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings, bool isElement);
+    
     
         std::unordered_map<std::string, std::string> createAttributeMapStrings(std::string line);
     

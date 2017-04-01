@@ -55,7 +55,7 @@ public:
     
     /* Allows creation of a 1D array that allows accessing like a 2D array, and allows quick 'growth'.
      */
-    Blade(CLHelper* clhelper, int currentRows, int currentCols, int currentPages, int maxRows, int maxCols, int maxPages, cl_mem_flags flags, bool isDeviceScratchPad = false){
+    Blade(CLHelper* clhelper, int currentRows, int currentCols, int currentPages, int maxRows, int maxCols, int maxPages, cl_mem_flags flags, bool isDeviceScratchPad){
         if ((currentRows < 1 ) || (maxRows < 1 ) || (currentCols < 1 ) || (maxCols < 1 ) || (currentPages < 1 ) || (maxPages < 1 )){
             printf("Error: Cannot create a blade with less than 1 current or max parameter.\n");
             exit(24);
@@ -73,7 +73,7 @@ public:
         if ((maxCols == maxRows) && (maxPages == maxRows) && (maxRows == 1)){ // it's a scalar
             dimensions = 0; // we'll say a scalar has 0 dimensions... like a point.
         }
-        else if ((currentRows == maxRows) && (maxPages == maxRows) && (maxRows == 1) && ) { // it's a vector
+        else if ((currentRows == maxRows) && (maxPages == maxRows) && (maxRows == 1)) { // it's a vector
             dimensions = 1;
         }
         else if ((currentPages == maxPages) && (maxPages == 1)){ // it's a 2D matrix

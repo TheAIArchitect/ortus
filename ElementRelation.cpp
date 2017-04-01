@@ -17,26 +17,26 @@ ElementRelation::ElementRelation(){
     attributeTracker.reserve(ortus::NUM_ELEMENT_ATTRIBUTES);
     // should be a fast way to ensure all float* point to something valid
     // from SO, seems like gcc unrolls the loop a bit
-    std::fill(attributeMap.begin(), attributeMap.end(),&ZEROF);
+    std::fill(relationAttributeMap.begin(), relationAttributeMap.end(),&ZEROF);
 };
 
 ElementRelation::~ElementRelation(){
     //for (int i = 0; i < ortus::NUM_ATTRIBUTES; ++i){
         //if (attributeTracker[i]){
-            //delete attributeMap[i];
+            //delete relationAttributeMap[i];
         //}
     //}
 }
 
 
 float ElementRelation::getAttribute(RelationAttribute rAttribute){
-    return *attributeMap[static_cast<int>(rAttribute)];
+    return *relationAttributeMap[static_cast<int>(rAttribute)];
 }
 
 /** NOTE: this must only be called *afteR* calling 'setDataPointers()' */
 
 void ElementRelation::setAttribute(RelationAttribute rAttribute, float value){
-    attributeMap[static_cast<int>(rAttribute)] = value;
+    *relationAttributeMap[static_cast<int>(rAttribute)] = value;
     // below might be totally unnecessary.
     attributeTracker[static_cast<int>(rAttribute)] = true;
 }
@@ -44,26 +44,26 @@ void ElementRelation::setAttribute(RelationAttribute rAttribute, float value){
 /** Note: for this to work, preId and postId must be set...
  *
  * The effect of setDataPointers() is:
- *   # if there is a Blade in attributeBladeMap for a given attribute in attributeMap,
+ *   # if there is a Blade in attributeBladeMap for a given attribute in relationAttributeMap,
  *      the address of &ZEROF will be replaced with the appropriate address to access
  *      **THIS** relation's value, based upon the preId and postID,
  *      for any given attribute.
- *      That is, attributeMap becomes a map of pointers that all point to the position 
+ *      That is, relationAttributeMap becomes a map of pointers that all point to the position 
  *      in each attribute's relative Blade, which is where the data actually resides.
  *   # if there is no Blade (that would be quite odd...), then the address remains
  */
 void ElementRelation::setDataPointers(std::unordered_map<RelationAttribute, Blade<cl_float>*> relationAttributeBladeMap){
     for (auto entry : relationAttributeBladeMap){
         // entry.second is a Blade*
-        attributeMap[static_cast<int>(entry.first)] = entry.second->getp(preId, postId);
+        relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(preId, postId);
     }
 }
 
 /**
- * if a value is set in the attributeMap,
+ * if a value is set in the relationAttributeMap,
  * and a pointer to a location in a Blade hasn't been set,
  * it will change the value of ZEROF from 0.f to something else.
- * (all values in the attributeMap are set to point to ZEROF,
+ * (all values in the relationAttributeMap are set to point to ZEROF,
  * so if an attribute is set before reassigning the pointer, 
  * ZEROF will change)
  *
@@ -81,12 +81,11 @@ std::string ElementRelation::toString(){
     char buffer[max];
     switch (rtype) {
         case CORRELATED:
-            snprintf(buffer, max,"<CORRELATED> (%s->%s, weight: %.2f, age: %f)",preName.c_str(),postName.c_str(),
-                     getAttribute(RelationAttribute::Weight),
+            snprintf(buffer, max,"<CORRELATED> (%s->%s,  weight (cs, gj): (%.3f, %.3f), age: %f)",preName.c_str(),postName.c_str(), *csWeight, *gjWeight,
                      getAttribute(RelationAttribute::Age));
             break;
         case CAUSES:
-            snprintf(buffer, max,"<CAUSES> (%s->%s, weight: %.2f, polarity: %.2f, age: %f, thresh: %f)",preName.c_str(),postName.c_str(),getAttribute(RelationAttribute::Weight),
+            snprintf(buffer, max,"<CAUSES> (%s->%s, weight (cs, gj): (%.3f, %.3f), polarity: %.2f, age: %f, thresh: %f)",preName.c_str(),postName.c_str(), *csWeight, *gjWeight,
                      getAttribute(RelationAttribute::Polarity),
                     getAttribute(RelationAttribute::Age),
                      getAttribute(RelationAttribute::Thresh));

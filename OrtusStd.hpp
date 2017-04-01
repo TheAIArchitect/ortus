@@ -44,6 +44,18 @@ const static std::string ELEMENT_ATTRIBUTE_STRINGS[static_cast<int>(ElementAttri
 const static std::string RELATION_ATTRIBUTE_STRINGS[static_cast<int>(RelationAttribute::NUM_RELATION_ATTRIBUTES)] = {"type", "polarity", "direction", "age", "thresh", "decay", "mutability"};
 
 
+/* so that an enum can be used as an unordered_map key with c++11... thanks Sean  for the encouragment */
+template <typename T>
+struct EnumHash
+{
+    std::size_t operator()(const T& t) const
+    {
+        return static_cast<std::size_t>(t);
+    }
+};
+
+
+
 class ElementRelation;
 class ElementInfoModule;
 
@@ -65,9 +77,12 @@ namespace ortus {
     using attribute_map = std::vector<float*>;
     
     //using attribute_blade_map = std::vector<Blade<cl_float>*>;
-    using attribute_blade_unordered_map = std::unordered_map<Attribute,Blade<cl_float>*,AttributeHash>;
     
-    using attribute_unordered_map = std::unordered_map<Attribute,std::string, AttributeHash>;
+    template <class T, class U>
+    using enum_blade_unordered_map = std::unordered_map<T,Blade<U>*,EnumHash<T>>;
+    
+    template <class T>
+    using enum_string_unordered_map = std::unordered_map<T,std::string, EnumHash<T>>;
     
     using vector = std::vector<float>;
     using vectrix = std::vector<vector>;
@@ -106,16 +121,6 @@ namespace ortus {
     
     
 }
-
-
-/* so that Attribute can be used as an unordered_map key with c++11... thanks Sean  for the encouragment */
-struct AttributeHash
-{
-    std::size_t operator()(const Attribute& a) const
-    {
-        return static_cast<std::size_t>(a);
-    }
-};
 
 
 

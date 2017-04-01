@@ -31,11 +31,16 @@
 #include "Probe.hpp"
 #include "CLHelper.hpp"
 #include "OrtusStd.hpp"
-#include "KernelBuddy.hpp"
 #include "Connectome.hpp"
+#include "KernelArg.hpp"
+
+// only used to make it clear that it's irrelevant,
+// like when creating KernelArgs without keys (so, 1 Blade to 1 CLBuffer)
+enum class DummyType { Dummy };
 
 class ElementInfoModule;
 class ElementRelation;
+
 
 class DataSteward{
     
@@ -48,31 +53,30 @@ public: /** NEW */
     
     
     void loadConnectome(std::string connectomeFile);
-    void initializeKernelArgsAndBlades();
+    void initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp);
     void executePreRunOperations();
     void pushOpenCLBuffers();
     
     // Blade maps -- this is where the data is *actually* held...
     // Everything else just points here.
     
+    /** NOTE: change the template in ortus:: to bladeMap, then fix naming issue in KernelArg, 
+     then the name issue isn't, and it's a bit shorter... then again, who cares? */
     // 1d -- r/w
     std::unordered_map<ElementAttribute, Blade<cl_float>*> elementAttributeBladeMap;
     // 2d -- r/w
-    std::unordered_map<WeightAttribute, Blade<cl_float>*> relationWeightBladeMap;
+    std::unordered_map<Scratchpad, Blade<cl_float>*> scratchpadBladeMap;
     std::unordered_map<RelationAttribute, Blade<cl_float>*> relationAttributeBladeMap;
     // scalar -- r/w
-    std::unordered_map<ScalarAttribute, Blade<cl_float>*> scalarAttributeBladeMap;
+    std::unordered_map<GlobalAttribute, Blade<cl_float>*> globalAttributeBladeMap;
     std::unordered_map<MetadataAttribute, Blade<cl_float>*> metadataAttributeBladeMap;
     
-    
-    // 3D in a weird way... not yet though.
+    // 3D
+    std::unordered_map<WeightAttribute, Blade<cl_float>*> relationWeightBladeMap;
     Blade<cl_float>* activationBlade;
     
     // last kernelArg
     Blade<cl_int>* kernelArgInfo;
-    
-    
-    KernelBuddy* kernelBuddyp;
     
     
     const static std::vector<WeightAttribute> WEIGHT_KEYS;

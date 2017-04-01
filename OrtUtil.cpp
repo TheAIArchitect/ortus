@@ -131,20 +131,52 @@ std::string OrtUtil::determineIndentationAndStripWhitespace(std::string line, in
  * this step leaves the corresponding attribute values as strings,
  * the Connectome class takes care of that, because it is more of a program execution concern,
  * rather than a parsing concern.
+ *
+ * NOTE: the last argument, 'isElement', *must* be set to true if extracting an element,
+ * and *must* be set to false if extracting an element relation (e.g. 'causes')
+ *  -> different string arrays are used to match against the arguments for an element vs relation
+ *
+ * NOTE 2: Immediately after modifying this function to work with templates,
+ * it came to my attention that this function is not actually used to parse elements.
+ * Well... it's staying like this for the time being (until things work, then i might rip it out)
  */
-ortus::attribute_unordered_map OrtUtil::getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings){
-    ortus::attribute_unordered_map newMap;
+template <class T>
+ortus::enum_string_unordered_map<T> OrtUtil::getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings, bool isElement){
+    ortus::enum_string_unordered_map<T> newMap;
     newMap.reserve(attributeMapStrings.size());
     int i = 0;
+    /* begin screwy code:
+     * need to pick between two array lengths, and two string arrays
+     */
+    int theRightNumberOfAttributesToCheck;
+    const std::string* twoPossibleStringArrays[2] = {ELEMENT_ATTRIBUTE_STRINGS, RELATION_ATTRIBUTE_STRINGS};
+    int theCorrectIndex = -1;
+    if (isElement){
+        theRightNumberOfAttributesToCheck = ortus::NUM_ELEMENT_ATTRIBUTES;
+        theCorrectIndex = 0;
+    }
+    else {
+        theRightNumberOfAttributesToCheck = ortus::NUM_RELATION_ATTRIBUTES;
+        theCorrectIndex = 1;
+    }
+    const std::string* theRightAttributesToCheck = twoPossibleStringArrays[theCorrectIndex];
+    /* end screwy code */
     for (auto entry : attributeMapStrings){
-        for (i = 0; i <  ortus::NUM_ATTRIBUTES; ++i){
-            if (entry.first == ATTRIBUTE_STRINGS[i]){
-                newMap[static_cast<Attribute>(i)] = entry.second;
+        for (i = 0; i <  theRightNumberOfAttributesToCheck; ++i){
+            // NOTE: it is vital that the enums and the loop starts at 0.
+            // it is also vital that the string arrays we check against,
+            // have the same ordering as the enums.
+            // **The assumtion, as you can see below, is that we can set 'i',
+            // the loop var, to be the enumereated value when we find its name in the 'right' string array.
+            if (entry.first == theRightAttributesToCheck[i]){
+                newMap[static_cast<T>(i)] = entry.second;
             }
         }
     }
     return newMap;
 }
+
+template ortus::enum_string_unordered_map<RelationAttribute> OrtUtil::getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings, bool isElement);
 
 /**
  * to parse lines of the form "[+-]<name>: { <key0>=<value0>, ..., <keyN>=<valueN> }"

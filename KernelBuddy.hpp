@@ -18,13 +18,14 @@
 #endif
 
 #include <Blade.hpp>
-#include "Attribute.hpp"
 #include <unordered_map>
 #include <string>
 #include <unordered_map>
-#include "OrtusNamespace.hpp"
 #include "CLBuffer.hpp"
 #include "KernelArg.hpp"
+
+
+/** DEPRECATED */
 
 class KernelBuddy {
     public:
@@ -46,7 +47,7 @@ class KernelBuddy {
         std::unordered_map< U, Blade<T>* >* addKernelArgAndBlades(cl_uint kernelArgNum, std::vector<U>& keyVec, int dimensions, size_t numElements, size_t maxElements, cl_mem_flags memFlags){
             KernelArg<T, U>* kArg = new KernelArg<T, U>(clHelper, kernelp, kernelArgNum);
             kArg->setKeys(keyVec);
-            return kArg->createBufferAndBlades(dimensions, numElements, maxElements, memFlags);
+            return kArg->createBufferAndBlades(numElements, maxElements, memFlags);
         }
     
         /**
@@ -56,10 +57,14 @@ class KernelBuddy {
          * (rather than an unordered_map* of Blade*s)
          */
         template <class T>
-        Blade<T>* addKernelArgAndBlade(cl_uint kernelArgNum, int dimensions, size_t numElements, size_t maxElements, cl_mem_flags memFlags){
-            KernelArg<T, U>* kArg = new KernelArg<T, U>(clHelper, kernelp, kernelArgNum);
-            kArg->setKeys(keyVec);
-            return kArg->createBufferAndBlades(dimensions, numElements, maxElements, memFlags);
+        Blade<T>* addKernelArgAndBlade(cl_uint kernelArgNum, size_t numElements, size_t maxElements, cl_mem_flags memFlags){
+            // we'll set 'int' as KernelArg's second template parameter,
+            // just so that KernelArg can stay a template class...
+            // in reality, the int does nothing (other than allow the code to compile/run).
+            KernelArg<T,int>* kArg = new KernelArg<T,int>(clHelper, kernelp, kernelArgNum);
+            // don't set any keys, because we only create a single Blade,
+            // and assign it to a single CLBuffer
+            return kArg->createBufferAndBlade(numElements, maxElements, memFlags);
         }
     
 };

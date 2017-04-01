@@ -59,10 +59,11 @@ void Connectome::buildAdditionalDataStructures(){
  */
 void Connectome::addRelationAttributesFromOrt(std::unordered_map<std::string,std::string>& preAttributeMapStrings, std::unordered_map<std::string,std::string>& postAttributeMapStrings, ElementRelation* elrel){
     std::string tempAttrib = "";
+    bool isElement = false;
     
-    ortus::attribute_unordered_map preAttributeMap = ortUtil.getAttributeEnumsFromStrings(preAttributeMapStrings);
+    ortus::enum_string_unordered_map<RelationAttribute> preAttributeMap = ortUtil.getAttributeEnumsFromStrings<RelationAttribute>(preAttributeMapStrings, isElement);
     
-    ortus::attribute_unordered_map postAttributeMap = ortUtil.getAttributeEnumsFromStrings(postAttributeMapStrings);
+    ortus::enum_string_unordered_map<RelationAttribute> postAttributeMap = ortUtil.getAttributeEnumsFromStrings<RelationAttribute>(postAttributeMapStrings, isElement);
     
     for (auto attrib : preAttributeMap){
         elrel->setAttribute(attrib.first,std::stof(attrib.second));

@@ -16,8 +16,7 @@
 #include "SensoryStimulationSteward.hpp"
 #include "DiagnosticSteward.hpp"
 #include "KernelBuddy.hpp"
-#include "OrtusNamespace.hpp"
-#include "Attribute.hpp"
+#include "OrtusStd.hpp"
 #include "Incubator.hpp"
 
 class Steward {

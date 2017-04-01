@@ -14,6 +14,7 @@
 #include "CLBuffer.hpp"
 #include <unordered_map>
 #include <vector>
+#include "OrtusStd.hpp"
 
 template<class T, class U>
 class KernelArg {
@@ -31,6 +32,16 @@ public:
     // should have a kernelarg pointer that it uses to set its kernel arg id and list of offsets
     // so, there will be one kernel arg for offsets.. or maybe a subclass?
 public:
+    
+    /** Use this constructor for multiple blades using the same CLBuffer */
+    KernelArg(CLHelper* clhelper, cl_kernel* kernelp, cl_uint kernelArgIndex, std::vector<U> keyVec){
+        clHelper = clhelper;
+        this->kernelp = kernelp;
+        this->kernelArgIndex = kernelArgIndex;
+        setKeys(keyVec);
+    }
+    
+    /** Use this constructor for a single Blade using a single CLBuffer */
     KernelArg(CLHelper* clhelper, cl_kernel* kernelp, cl_uint kernelArgIndex){
         clHelper = clhelper;
         this->kernelp = kernelp;
@@ -69,26 +80,26 @@ public:
     /* multiple Blades */
     
     /** 2D matrix **/
-    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, cl_mem_flags memFlags){
-        return createBufferAndBlades(initialRowsPerKey, initialColsPerKey, 1, maxRowsPerKey, maxColsPerKey, 1, memFlags, false);
+    std::unordered_map<U,Blade<T>*>* addKernelArgWithBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, cl_mem_flags memFlags){
+        return addKernelArgWithBufferAndBlades(initialRowsPerKey, initialColsPerKey, 1, maxRowsPerKey, maxColsPerKey, 1, memFlags, false);
     }
     
     /** vector */
-    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(size_t initialColsPerKey, size_t maxColsPerKey, cl_mem_flags memFlags){
-        return createBufferAndBlades(1, initialColsPerKey, 1, 1, maxColsPerKey, 1, memFlags, false);
+    std::unordered_map<U,Blade<T>*>* addKernelArgWithBufferAndBlades(size_t initialColsPerKey, size_t maxColsPerKey, cl_mem_flags memFlags){
+        return addKernelArgWithBufferAndBlades(1, initialColsPerKey, 1, 1, maxColsPerKey, 1, memFlags, false);
     }
     
     /** scalar */
-    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(cl_mem_flags memFlags){
-        return createBufferAndBlades(1, 1, 1, 1, 1, 1, memFlags, false);
+    std::unordered_map<U,Blade<T>*>* addKernelArgWithBufferAndBlades(cl_mem_flags memFlags){
+        return addKernelArgWithBufferAndBlades(1, 1, 1, 1, 1, 1, memFlags, false);
     }
     
     /** creates the opencl buffer, and the map of Blade* that access it. use the non--plural form for a single blade.
      * 
      * simplified versions of this can be called, as seen above. */
-    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, cl_mem_flags memFlags, bool isDeviceScratchpad = false){
+    std::unordered_map<U,Blade<T>*>* addKernelArgWithBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, cl_mem_flags memFlags, bool isDeviceScratchpad = false){
         // create the buffer
-        size_t byteOffsetMultiplier = createBuffer(maxRowsPerKey, maxColsPerKey, maxPagesPerKey);
+        size_t byteOffsetMultiplier = createBuffer(maxRowsPerKey, maxColsPerKey, maxPagesPerKey, memFlags);
         // create the blades, and add the offset and buffer info to each one
         bladeMap.reserve(keyCount);
         byteOffsets.reserve(keyCount);
@@ -104,61 +115,61 @@ public:
     }
     
     /** device scratch pad -- multiple (map of Blade* vs Blade*) */
-    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, bool isDeviceScratchpad){
+    std::unordered_map<U,Blade<T>*>* addKernelArgWithBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, bool isDeviceScratchpad){
         // just as with the CLBuffer, when creating a device scratch pad, it is much easier to simply set the cl_mem_flag arg,
         // than to eliminate that need. It will be ignored by this class.
         if (!isDeviceScratchpad){
             printf("(KernelArg) Error: You may only create a KernelArg without specifying the 'cl_mem_flags memFlags' argument, if you are creating the KernelArg to be used as a device scratchpad.\n");
             exit(25);
         }
-        return createBufferAndBlades(initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRowsPerKey, maxColsPerKey, maxPagesPerKey, CL_MEM_READ_WRITE, isDeviceScratchpad);
+        return addKernelArgWithBufferAndBlades(initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRowsPerKey, maxColsPerKey, maxPagesPerKey, CL_MEM_READ_WRITE, isDeviceScratchpad);
     }
     
     /* single Blades */
     
     
-    Blade<T>* createBufferAndBlade(size_t initialRows, size_t initialCols, size_t maxRows, size_t maxCols, cl_mem_flags memFlags){
-        return  createBufferAndBlades(initialRows, initialCols, 1, maxRows, maxCols, 1, memFlags, false);
+    Blade<T>* addKernelArgWithBufferAndBlade(size_t initialRows, size_t initialCols, size_t maxRows, size_t maxCols, cl_mem_flags memFlags){
+        return  addKernelArgWithBufferAndBlade(initialRows, initialCols, 1, maxRows, maxCols, 1, memFlags, false);
     }
     
-    Blade<T>* createBufferAndBlade(size_t initialCols, size_t maxCols, cl_mem_flags memFlags){
-        return  createBufferAndBlades(1, initialCols, 1, 1, maxCols, 1, memFlags, false);
+    Blade<T>* addKernelArgWithBufferAndBlade(size_t initialCols, size_t maxCols, cl_mem_flags memFlags){
+        return  addKernelArgWithBufferAndBlade(1, initialCols, 1, 1, maxCols, 1, memFlags, false);
     }
     
-    Blade<T>* createBufferAndBlade(cl_mem_flags memFlags){
-        return  createBufferAndBlades(1, 1, 1, 1, 1, 1, memFlags, false);
+    Blade<T>* addKernelArgWithBufferAndBlade(cl_mem_flags memFlags){
+        return  addKernelArgWithBufferAndBlade(1, 1, 1, 1, 1, 1, memFlags, false);
     }
     
     
     /**
-     * Does the same thing as 'createBufferAndBlades', but only creates one buffer --
+     * Does the same thing as 'addKernelArgWithBufferAndBlades', but only creates one buffer --
      * that means keys aren't necessary, and instead of returning 
      * an unordered_map*, it returns a Blade*.
      */
-    Blade<T>* createBufferAndBlade(size_t initialRows, size_t initialCols, size_t initialPages, size_t maxRows, size_t maxCols, size_t maxPages, cl_mem_flags memFlags, bool isDeviceScratchpad){
-        size_t byteOffsetMultiplier = createBuffer(maxRows, maxCols, maxPages);
+    Blade<T>* addKernelArgWithBufferAndBlade(size_t initialRows, size_t initialCols, size_t initialPages, size_t maxRows, size_t maxCols, size_t maxPages, cl_mem_flags memFlags, bool isDeviceScratchpad){
+        size_t byteOffsetMultiplier = createBuffer(maxRows, maxCols, maxPages, memFlags);
         // create the blades, and add the offset and buffer info to each one
-        Blade<T> theBlade = new Blade<T>(clHelper, initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRows, maxCols, maxPages, memFlags);
+        Blade<T>* theBlade = new Blade<T>(clHelper, initialRows, initialCols, initialPages, maxRows, maxCols, maxPages, memFlags);
         int offsetSize = 0;
         theBlade->setCLBufferAndOffset(clBufferp, offsetSize);
-        return &theBlade;
+        return theBlade;
     }
     
     /** device scratch pad -- single */
-    Blade<T>* createBufferAndBlade(size_t initialRows, size_t initialCols, size_t initialPages, size_t maxRows, size_t maxCols, size_t maxPages, bool isDeviceScratchpad){
+    Blade<T>* addKernelArgWithBufferAndBlade(size_t initialRows, size_t initialCols, size_t initialPages, size_t maxRows, size_t maxCols, size_t maxPages, bool isDeviceScratchpad){
         // just as with the CLBuffer, when creating a device scratch pad, it is much easier to simply set the cl_mem_flag arg,
         // than to eliminate that need. It will be ignored by this class.
         if (!isDeviceScratchpad){
             printf("(KernelArg) Error: You may only create a KernelArg without specifying the 'cl_mem_flags memFlags' argument, if you are creating the KernelArg to be used as a device scratchpad.\n");
             exit(25);
         }
-        return createBufferAndBlade(initialRows, initialCols, initialPages, maxRows, maxCols, maxPages, CL_MEM_READ_WRITE, isDeviceScratchpad);
+        return addKernelArgWithBufferAndBlade(initialRows, initialCols, initialPages, maxRows, maxCols, maxPages, CL_MEM_READ_WRITE, isDeviceScratchpad);
     }
     
 private:
     /** creates the CLBuffer, size = maxRows * maxCols * maxPages  -- ensures size > 0,
      * returns buffer size */
-    size_t createBuffer(size_t maxRows, size_t maxCols, size_t maxPages){
+    size_t createBuffer(size_t maxRows, size_t maxCols, size_t maxPages, cl_mem_flags memFlags){
         size_t byteOffsetMultiplier = maxRows * maxCols * maxPages;
         if (byteOffsetMultiplier  < 1){
             printf("(KernelArg) Error: CLBuffer and Blade must both be at least 1 element in size.\n");

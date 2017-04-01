@@ -8,6 +8,8 @@
 
 #include "KernelBuddy.hpp"
 
+/** DEPRECATED */
+
 KernelBuddy::KernelBuddy(CLHelper* clhelper, cl_kernel* kernelp){
     clHelper = clhelper;
     this->kernelp = kernelp;

@@ -39,10 +39,9 @@
 //unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
 
 
-std::vector<WeightAttribute> DataSteward::WEIGHT_KEYS = { WeightAttribute::CSWeight, WeightAttribute::GJWeight };
-std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect, ElementAttribute::Activation };
-std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Polarity, RelationAttribute::Thresh };
-
+const std::vector<WeightAttribute> DataSteward::WEIGHT_KEYS = { WeightAttribute::CSWeight, WeightAttribute::GJWeight };
+const std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect, ElementAttribute::Activation };
+const std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Polarity, RelationAttribute::Thresh };
 const std::vector<GlobalAttribute> DataSteward::SCALAR_KEYS = { GlobalAttribute::ChemNormalizer, GlobalAttribute::GapNormalizer };
 const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::NumSlopeComputations } ;
 const std::vector<Scratchpad> DataSteward::SCRATCHPAD_KEYS = { Scratchpad::XCorr, Scratchpad::Slope};
@@ -170,7 +169,7 @@ void DataSteward::executePreRunOperations(){
 }
 
 void DataSteward::pushOpenCLBuffers(){
-    for (auto blade : attributeBladeMap){
+    for (auto blade : elementAttributeBladeMap){
         blade.second->pushDataToDevice();
     }
 
@@ -186,17 +185,17 @@ void DataSteward::pushOpenCLBuffers(){
     gapContrib->pushCLBuffer();
     metadata->pushCLBuffer();
      */
-    //et.stop_timer();
+   //et.stop_timer();
 }
 
 
 
-void DataSteward::addKernelArgInfo(int kernelArgNum, int numBlades, int numEntries, int maxEntries, int dimensions)
+//void DataSteward::addKernelArgInfo(int kernelArgNum, int numBlades, int numEntries, int maxEntries, int dimensions)
 
 
 /** creates KernelArgs, CLBuffers, and Blades
  **/
-void DataSteward::initializeKernelArgsAndBlades(){
+void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp){
     
      /* these are the kernel args we want */
     /* NOTE: 'static' prefix suggests set items should rarely change,
@@ -224,33 +223,39 @@ void DataSteward::initializeKernelArgsAndBlades(){
     // [1] => number of Blades / different 'types' (e.g., age, polarity, etc.) of data in that buffer / at that kernel argument locaiton
     // [2] => offset from start of one, to start of another (so, the size):
     //      -> if each blade is 100, 1st starts at 0, 2nd at 100, 3rd at 200, and so on.
-    // [3] => dimensions (0, 1, or 2)
-    //      -> this is important for determining how to access the data within one 'type'
+    // [3] => rows per Blade
+    // [4] => cols per Blade
+    // [5] => pages per Blade
+    int numMetadataCols = 6;
     
     std::vector<std::vector<int>> kernelOffsetInfo;
-    int NUM_KERNEL_ARGS = 7;
+    cl_uint NUM_KERNEL_ARGS = 7;
     kernelOffsetInfo.reserve(NUM_KERNEL_ARGS);
     std::vector<int> temp;
-    int currentKernelArgNum = 0;
+    cl_uint currentKernelArgNum = 0;
     
     // this will be the last kernel arg
-    kernelArgInfo = kernelBuddyp->addKernelArgAndBlade<cl_int>(NUM_KERNEL_ARGS-1, 2, NUM_KERNEL_ARGS, NUM_KERNEL_ARGS, CL_MEM_READ_ONLY);
+    KernelArg<cl_float, DummyType> kaLast(clHelper, kernelp, NUM_KERNEL_ARGS -1);
+    // might be able to simplify this constructor so if only one set (rows, cols, pages)
+    // is specified, it knows to duplicate them so current == max.
+    kaLast.addKernelArgWithBufferAndBlade(NUM_KERNEL_ARGS, numMetadataCols, NUM_KERNEL_ARGS, numMetadataCols, CL_MEM_READ_ONLY);
     
-    temp.push_back(currentKernelArgNum);
-    temp.push_back(elementAttributeBladeMap.size());
+    
+    KernelArg<cl_float, ElementAttribute> ka0(clHelper, kernelp, currentKernelArgNum, ELEMENT_KEYS);
+    elementAttributeBladeMap = *(ka0.addKernelArgWithBufferAndBlades(ortus::NUM_ELEMENTS, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE));
+    currentKernelArgNum++;
+    
+    KernelArg<cl_float, RelationAttribute> ka1(clHelper, kernelp, currentKernelArgNum, RELATION_KEYS);
+    relationAttributeBladeMap = *(ka1.addKernelArgWithBufferAndBlades(ortus::NUM_ELEMENTS, ortus::NUM_ELEMENTS, ortus::MAX_ELEMENTS, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE));
+    
+    /** stopping point:
+     - need to make all of the kernal args
+     - need to redo kernel
+     */
+    
+   
     
     
-    
-    std::unordered_map<Attribute, Blade<cl_float>*>* tempAttribToFloatBladeMap;
-    tempAttribToFloatBladeMap = kernelBuddyp->addKernelArgAndBlades<cl_float,Attribute>(0, elementThings, 1, ortus::NUM_ELEMENTS, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE);
-    for (auto entry : *tempAttribToFloatBladeMap){
-        attributeBladeMap[entry.first] = entry.second;
-    }
-    
-    tempAttribToFloatBladeMap = kernelBuddyp->addKernelArgAndBlades<cl_float,Attribute>(1, relationThings, 2, ortus::NUM_ELEMENTS, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE);
-    for (auto entry : *tempAttribToFloatBladeMap){
-        attributeBladeMap[entry.first] = entry.second;
-    }
     /*
     // need a gj and cs contrib (one of each) -- these are NxN
     chemContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);

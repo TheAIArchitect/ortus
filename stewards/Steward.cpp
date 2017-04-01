@@ -40,9 +40,7 @@ void Steward::initialize(){
     dataStewardp = new DataSteward();
     computeStewardp->dStewiep = dataStewardp;
     
-    kernelBuddyp = new KernelBuddy(&computeStewardp->clHelper, &computeStewardp->kernel);
-    dataStewardp->kernelBuddyp = kernelBuddyp;
-    dataStewardp->initializeKernelArgsAndBlades();
+    dataStewardp->initializeKernelArgsAndBlades(&computeStewardp->clHelper, &computeStewardp->kernel);
     
     //dataStewardp->init(computeStewardp->workGroupSize);
     //sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
@@ -51,6 +49,7 @@ void Steward::initialize(){
     
 }
 
+/*
 void fillBlade(DataSteward* dsp, bool _2D, int size, Attribute attrib, float value){
     if (_2D){
         int i,j;
@@ -67,17 +66,21 @@ void fillBlade(DataSteward* dsp, bool _2D, int size, Attribute attrib, float val
         }
     }
 }
-
+*/
+ 
 // NOTE: these two are just for reference purposes... not going to stay here...
-/** element_id would be automatically input by the ElementInfoModule */
+/** element_id would be automatically input by the ElementInfoModule 
 float* getThing(DataSteward* dsp, Attribute attribute, int element_id){
     return dsp->attributeBladeMap[attribute]->getp(element_id);
 }
+ */
 
-/** element_id would be automatically input by the ElementRelation */
+/** element_id would be automatically input by the ElementRelation 
 float* getThing(DataSteward* dsp, Attribute attribute, int pre_id, int post_id){
     return dsp->attributeBladeMap[attribute]->getp(pre_id,post_id);
 }
+*/
+ 
 // END reference functions
 
 void Steward::run(){
@@ -91,12 +94,14 @@ void Steward::run(){
      */
     
     
+    /*
         fillBlade(dataStewardp, false, ortus::NUM_ELEMENTS, Attribute::EType, 2.0);
         fillBlade(dataStewardp, false, ortus::NUM_ELEMENTS, Attribute::Affect, 4.0);
         fillBlade(dataStewardp, false, ortus::NUM_ELEMENTS, Attribute::Activation, 6.0);
         fillBlade(dataStewardp, true, ortus::NUM_ELEMENTS, Attribute::Weight, 3.0);
         fillBlade(dataStewardp, true, ortus::NUM_ELEMENTS, Attribute::Polarity, 5.0);
         fillBlade(dataStewardp, true, ortus::NUM_ELEMENTS, Attribute::RThresh, 7.0);
+     */
     
     //kernelBuddyp->pushToOpenCL();
     
