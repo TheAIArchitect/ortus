@@ -15,7 +15,7 @@
 #include <CL/cl.h>
 #endif
 
-#include "OrtusNamespace.hpp"
+#include "OrtusStd.hpp"
 #include <stdio.h>
 #include <vector>
 #include <string>
@@ -41,7 +41,7 @@ public:
     ElementInfoModule();
     ~ElementInfoModule();
     
-    void setAttributeDataPointers(DataSteward* dsp);
+    void setAttributeDataPointers(std::unordered_map<ElementAttribute, Blade<cl_float>*>& elementAttributeBladeMap);
     void setActivationDataPointer(DataSteward* dsp);
     //glm::vec3 getCenterPoint(); // allows us to use muscles and neurons for creating graphical connections
     

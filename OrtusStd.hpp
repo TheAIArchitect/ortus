@@ -1,28 +1,60 @@
 //
-//  OrtusNamespace.hpp
+//  OrtusStd.hpp
 //  ortus
 //
 //  Created by andrew on 1/26/17.
 //  Copyright © 2017 Andrew W.E. McDonald. All rights reserved.
 //
 
-#ifndef OrtusNamespace_h
-#define OrtusNamespace_h
+#ifndef OrtusStd_h
+#define OrtusStd_h
 
 #include <unordered_map>
 #include <vector>
 #include "vtkFloatArray.h"
-#include "Attribute.hpp"
 #include "Blade.hpp"
+
+#include <string>
+
+/** NOTE: if attributes are updated:
+    # UPDATE 'Attribute_MAX' to the new last element
+    # UPDATE "ATTRIBUTE_STRINGS" below... order *must* be parallel.
+ */
+// NOTE: shared names between different attributes have nothing to do with each other!!!
+
+enum class WeightAttribute { CSWeight, GJWeight};
+
+enum class ElementAttribute { Type, Affect, Activation, Thresh, NUM_ELEMENT_ATTRIBUTES};
+
+enum class RelationAttribute { Type, Polarity, Direction, Age, Thresh, Decay, Mutability, NUM_RELATION_ATTRIBUTES};
+
+enum class GlobalAttribute { GapNormalizer, ChemNormalizer};
+
+// these are all scalars
+enum class MetadataAttribute { NumElements, KernelIterationNum, ActivationHistorySize, NumXCorrComputations, NumSlopeComputations};
+
+// scratch pats for cross correlation (XCorr), and rate of change of activation (Slope)
+enum class Scratchpad { XCorr, Slope};
+
+
+// these are all lowercase in the .ort file, which is what they match against
+// NOTE: 'rtype' is really just a placeholder. relation types are denoted via newlines and whitespace in .ort files.
+const static std::string ELEMENT_ATTRIBUTE_STRINGS[static_cast<int>(ElementAttribute::NUM_ELEMENT_ATTRIBUTES)] = {"type", "affect", "activation", "thresh" };
+
+const static std::string RELATION_ATTRIBUTE_STRINGS[static_cast<int>(RelationAttribute::NUM_RELATION_ATTRIBUTES)] = {"type", "polarity", "direction", "age", "thresh", "decay", "mutability"};
+
 
 class ElementRelation;
 class ElementInfoModule;
+
 
 namespace ortus {
     
     static int NUM_ELEMENTS = 10;
     static int MAX_ELEMENTS = 100;
-    static const int NUM_ATTRIBUTES = static_cast<int>(Attribute::NUM_ATTRIBUTES);
+    // CS and GJ weights are *NOT* 'RelationAttribute's
+    static const int NUM_ELEMENT_ATTRIBUTES = static_cast<int>(ElementAttribute::NUM_ELEMENT_ATTRIBUTES);
+    static const int NUM_RELATION_ATTRIBUTES = static_cast<int>(RelationAttribute::NUM_RELATION_ATTRIBUTES);
     
     using element_map = std::unordered_map<std::string, ElementInfoModule*>;
     using name_map = std::unordered_map<std::string, int>;
@@ -75,4 +107,17 @@ namespace ortus {
     
 }
 
-#endif /* OrtusNamespace_h */
+
+/* so that Attribute can be used as an unordered_map key with c++11... thanks Sean  for the encouragment */
+struct AttributeHash
+{
+    std::size_t operator()(const Attribute& a) const
+    {
+        return static_cast<std::size_t>(a);
+    }
+};
+
+
+
+
+#endif /* OrtusStd_h */

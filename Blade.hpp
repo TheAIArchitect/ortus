@@ -20,12 +20,11 @@
 #include <vector>
 #include "CLBuffer.hpp"
 
+
 template<class T>
 class Blade {
     
 public:
-    bool scalar;
-    bool vector;
     bool readOnly;
     bool deviceScratchPad;
     bool clMemAllocated;
@@ -33,9 +32,13 @@ public:
     bool dataPushed;
     bool dataRead;
     int currentRows;
-    int maxRows;
     int currentCols;
+    int currentPages;
+    int maxRows;
     int maxCols;
+    int maxPages;
+    int pageSize; // currentRows * currentCols  -- this is multiplied by 'page' when accessing a 3D index in a Blade, to get the right offset for the page being requested.
+    int dimensions;
     cl_mem_flags memFlags;
     size_t currentSize;
     size_t maxSize;
@@ -52,66 +55,85 @@ public:
     
     /* Allows creation of a 1D array that allows accessing like a 2D array, and allows quick 'growth'.
      */
-    Blade(CLHelper* clhelper, cl_mem_flags flags, int currentRows, int currentCols, int maxRows, int maxCols){
-        scalar = false;
-        vector = false;
+    Blade(CLHelper* clhelper, int currentRows, int currentCols, int currentPages, int maxRows, int maxCols, int maxPages, cl_mem_flags flags, bool isDeviceScratchPad = false){
+        if ((currentRows < 1 ) || (maxRows < 1 ) || (currentCols < 1 ) || (maxCols < 1 ) || (currentPages < 1 ) || (maxPages < 1 )){
+            printf("Error: Cannot create a blade with less than 1 current or max parameter.\n");
+            exit(24);
+        }
+        else if ((currentRows < maxRows) || (currentCols < maxCols) || (currentPages < maxPages)){
+            printf("Error: Cannot create a blade with current rows, columns, or pages greater than their respective max parameters.\n");
+            exit(25);
+        }
         dataPushed = false;
         dataRead = false;
         deviceScratchPad = false;
         clMemAllocated = false;
         deleteDataBuffers = false;
-        if ((maxRows == maxCols) && (maxRows == 1)){ // it's a scalar
-            scalar = true;
+        dimensions = -1; // if 
+        if ((maxCols == maxRows) && (maxPages == maxRows) && (maxRows == 1)){ // it's a scalar
+            dimensions = 0; // we'll say a scalar has 0 dimensions... like a point.
         }
-        else if ((currentRows == maxRows) && (maxRows == 1)) { // it's a vector, not a 2D matrix
-            vector = true;
+        else if ((currentRows == maxRows) && (maxPages == maxRows) && (maxRows == 1) && ) { // it's a vector
+            dimensions = 1;
+        }
+        else if ((currentPages == maxPages) && (maxPages == 1)){ // it's a 2D matrix
+            dimensions = 2;
+        }
+        else { // it's a 3D matrix
+            dimensions = 3;
         }
         this->currentRows = currentRows;
         this->currentCols = currentCols;
-        updateCurrentSize();
-        maxSize = maxRows * maxCols;
+        this->currentPages = currentPages;
         this->maxRows = maxRows;
         this->maxCols = maxCols;
+        this->maxPages = maxPages;
+        pageSize = currentRows * currentCols;
+        updateCurrentSize(); // also updates pageSize
+        maxSize = maxRows * maxCols * maxPages;
         data = new T[maxSize](); // init zeroed with '()'
         zeros = new T[maxSize]();
         deleteDataBuffers = true;
         this->clhelper = clhelper;
         memFlags = flags;
         // OpenCL buffer creation
-        if ((memFlags & CL_MEM_READ_ONLY) && scalar){ // then we don't need to create a buffer
+        if ((memFlags & CL_MEM_READ_ONLY) && (dimensions == 0)){ // then we don't need to create a buffer
             readOnly = true;
-        }/* else {
-            createCLBuffer();
-            clMemAllocated = true;
-        }*/
+        }
+        else if (memFlags == NULL){ // then it's a device scratch pad, and we don't create a buffer, nor do we push one.
+            deviceScratchPad = true;
+        }
     }
     
+    /* 'normal' constructor  -- don't have to specify isDeviceScratchPad as false */
+    Blade(CLHelper* clhelper, int currentRows, int currentCols, int currentPages, int maxRows, int maxCols, int maxPages, cl_mem_flags flags) : Blade(clhelper, currentRows, currentCols, 1, maxRows, maxCols, 1, flags, false) {};
+    
+    
+    /* Simplified constructor for a 2D matrix */
+    Blade(CLHelper* clhelper, int currentRows, int currentCols, int maxRows, int maxCols, cl_mem_flags flags) : Blade(clhelper, currentRows, currentCols, 1, maxRows, maxCols, 1, flags, false) {};
+    
     /* Simplified constructor for a vector (1D) */
-    Blade(CLHelper* clhelper, cl_mem_flags flags, int currentCols, int maxCols) : Blade(clhelper, flags, 1, currentCols, 1, maxCols) {};
+    Blade(CLHelper* clhelper, int currentCols, int maxCols, cl_mem_flags flags) : Blade(clhelper, 1, currentCols, 1, 1, maxCols, 1, flags, false) {};
     
     /* Simplified constructor for a scalar */
-    Blade(CLHelper* clhelper, cl_mem_flags flags) : Blade(clhelper, flags, 1, 1, 1, 1) {};
+    Blade(CLHelper* clhelper, cl_mem_flags flags) : Blade(clhelper, 1, 1, 1, 1, flags, false) {};
     
     /* Create a Blade this way if you only want to use it as a device scratch pad. No buffer gets created, nothing gets pushed. You just need to set the kernel arg.
+     * just as with the CLBuffer, when creating a device scratch pad, it is much easier to simply set the cl_mem_flag arg,
+     * than to eliminate that need. It will be ignored by this class.
+     *
+     * this function basically just makes it easier to create a device scratch pad, by lessening the confusion regarding the cl_mem_flags argument,
+     * and minimizing the confusion (e.g., can't accidentally create a device scratch pad). Perhaps in the future a more streamlined approach will be taken.
      *
      * IMORTANT NOTE: The kernel parameter MUST be declared with the __local qualifier  (in the kernel definition) for this to work.  If it isn't, things might not work as you wish...
      */
-    Blade(CLHelper* clhelper, int currentRows, int currentCols, int maxRows, int maxCols){
-        this->clhelper = clhelper;
-        scalar = false;
-        vector = false;
-        dataPushed = false;
-        dataRead = false;
-        deviceScratchPad = true;// TRUE!!!
-        clMemAllocated = false; // we don't create a buffer
-        deleteDataBuffers = false; // nor do we new anything
-        this->currentRows = currentRows;
-        this->currentCols = currentCols;
-        updateCurrentSize();
-        maxSize = maxRows * maxCols;
-        this->maxRows = maxRows;
-        this->maxCols = maxCols;
+    Blade(CLHelper* clhelper, int currentRows, int currentCols, int currentPages, int maxRows, int maxCols, int maxPages, bool isDeviceScratchpad) : Blade(clhelper, currentRows, currentCols, currentPages, maxRows, maxCols, maxPages, CL_MEM_READ_WRITE, isDeviceScratchpad) {
+           if (!isDeviceScratchpad){
+            printf("(Blade) Error: You may only create a Blade without specifying the 'cl_mem_flags memFlags' argument, if you are creating the Blade to be used as a device scratchpad.\n");
+            exit(25);
+        }
     }
+    
     
     ~Blade(){
         if (deleteDataBuffers){
@@ -125,9 +147,18 @@ public:
         }*/
     }
     
-    /* returns a pointer to the data at row, col. NULL if out of range. */
+    
+    /* only valid for 3D matricies. returns a pointer to the data at row, col. NULL if out of range. */
+    T* getp(int row, int col, int page){
+        if (row < maxRows && col < maxCols && page < maxPages){
+            return &data[(page*(pageSize))+(currentCols*row)+col];
+        }
+        return NULL;
+    }
+    
+    /* only valid for 2D matricies. returns a pointer to the data at row, col. NULL if out of range. */
     T* getp(int row, int col){
-        if (row < maxRows && col < maxCols){
+        if (row < maxRows && col < maxCols && dimensions == 2){
             return &data[(currentCols*row)+col];
         }
         return NULL;
@@ -135,7 +166,7 @@ public:
     
     /* only valid for vectors. returns a pointer to the data at col. NULL if out of range */
     T* getp(int col){
-        if (maxRows == 1 && col < currentCols){
+        if (dimensions == 1 && col < currentCols){
             return &data[col];
         }
         return NULL;
@@ -143,15 +174,23 @@ public:
     
     /* only valid for scalars. returns a pointer to the data*/
     T* getp(){
-        if (scalar){
+        if (dimensions == 0){
             return data;
         }
         return NULL;
     }
     
-    /* returns the data at row, col. NULL if out of range. */
+    /* only valid for 3D matricies. returns the data at row, col. NULL if out of range. */
+    T getv(int row, int col, int page){
+        if (row < maxRows && col < maxCols && page < maxPages){
+            return data[(page*(pageSize))+(currentCols*row)+col];
+        }
+        return NULL;
+    }
+    
+    /* only valid for 2D matricies. returns the data at row, col. NULL if out of range. */
     T getv(int row, int col){
-        if (row < maxRows && col < maxCols){
+        if (row < maxRows && col < maxCols && dimensions == 2){
             return data[(currentCols*row)+col];
         }
         return NULL;
@@ -167,15 +206,25 @@ public:
     
     /* only valid for scalars. returns the data*/
     T getv(){
-        if (scalar){
+        if (dimensions == 0){
             return *data;
         }
         return NULL;
     }
     
     
+    /* only valid for 2D matricies. updates the value of data at row, col. This function won't stop you from trying to access a negative index.
+     * Note that row access starts from 0 -- the first row, is row 0 (same for columns).*/
+    bool set(int row, int col, int page, T value){
+        if (row < currentRows && col < currentCols && page < currentPages){
+            data[(page*(pageSize))+(currentCols*row)+col] = value;
+            return true;
+        }
+        return false;
+    }
     
-    /* updates the value of data at row, col. This function won't stop you from trying to access a negative index.
+    
+    /* only valid for 2D matricies. updates the value of data at row, col. This function won't stop you from trying to access a negative index.
      * Note that row access starts from 0 -- the first row, is row 0 (same for columns).*/
     bool set(int row, int col, T value){
         if (row < currentRows && col < currentCols){
@@ -197,7 +246,7 @@ public:
     
     /* only valid for a scalar */
     bool set(T value){
-        if (scalar){
+        if (dimensions == 0){
             data[0] = value;
             return true;
         }
@@ -206,7 +255,7 @@ public:
     
     /* only valid for a vector. adds 'value' to the data contained at location 'col'. will return false if not a 1D vector */
     bool add(int col, T value){
-        if (maxRows == 1 && col < currentCols){
+        if (dimensions == 1 && col < currentCols){
             data[col] += value;
             return true;
         }
@@ -231,6 +280,17 @@ public:
         return currentCols;
     }
     
+    /* adds a page, if currentPages < maxPages, and returns new page count (will be unchanged if check fails) */
+    int addPage(){
+        if(currentPages < maxPages){
+            currentPages++;
+        }
+        updateCurrentSize();
+        return currentPages;
+    }
+    
+    
+    
     /* adds a row and col if possible. if either fail, nothing changes. */
     void addRowAndCol(int& newRowCount, int& newColCount){
         int oldRowCount = currentRows;
@@ -247,6 +307,7 @@ public:
     }
     
     
+    
     /* copys the data array from otherBlade to this blade's data, overwriting the contents.
      *
      * NOTE: This doesn't do any error checking, other than total length. Make sure the two data arrays are of equal dimensions.
@@ -261,11 +322,12 @@ public:
     }
     
     
+    /** check to see if this is necessary! (see: CLBuffer, KernelArg) */
     /* sets the openCL kernel argument index, to be used when calling clSetKernelArg
      * NOTE: NOT FOR THE 'normal'  USE CASE WHERE WE NEED TO PUSH DATA -- IN THAT CASE, USE 'CLBuffer' to push the buffer*/
     void setCLReadOnlyScalarArgIndex(cl_uint readOnlyScalarArgIndex, cl_kernel* kernel){
         clReadOnlyScalarArgIndex = readOnlyScalarArgIndex;
-        if (scalar && readOnly){ // then we don't need a buffer, and just send the data over (which is already a pointer... don't send a reference to it.
+        if ((dimensions == 0) && readOnly){ // then we don't need a buffer, and just send the data over (which is already a pointer... don't send a reference to it.
             this->clHelper->err = clSetKernelArg(*kernel, clReadOnlyScalarArgIndex, sizeof(T), data);
         }
         else{
@@ -283,17 +345,12 @@ public:
         this->clHelper->check_and_print_cl_err(this->clHelper->err);
     }
     
-    
     /*
      * NOTE: we need to use the buffer wrapper so we can use one buffer for multiple blades if we like*/
     void setCLBufferAndOffset(CLBuffer<T>* clBuffer, size_t bufferOffset){
         clDatap = &clBuffer->clData;
         clBufferOffset = bufferOffset;
-        //clData = clCreateBuffer(this->clhelper->context, memFlags, sizeof(T) * maxSize, NULL,&this->clhelper->err);
-        //this->clhelper->check_and_print_cl_err(this->clhelper->err);
     }
-    
-    /** NOTE: add a 'createCLBuffer()' funciton, BUT, specify that it is only to be used if the blade will have a dedicated buffer (not shared with multiple Blades) */
     
     /* moves data into the buffer pointed to by 'clDatap', ready for use by the kernel starting at 'clBufferOffset' bytes (set when buffer is set with 'setCLBuffer()') */
     void pushDataToDevice(){
@@ -323,16 +380,21 @@ public:
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
     }
     
-    std::vector<std::vector<float>> convertDataTo2DVector(){
-        if (scalar){
-            printf("Blade Warning: Placing scalar into vector of vector of floats. Are you sure you want to do this?\n");
+    
+    /* FIXME FOR 3D */
+    std::vector<std::vector<T>> convertDataTo2DVector(){
+        if (dimensions == 0){
+            printf("Blade Warning: Placing scalar into vector of vector. Are you sure you want to do this?\n");
         }
-        if (vector){
-            printf("Blade Warning: Placing vector into vector of vector of floats. Are you sure you want to do this?\n");
+        else if (dimensions == 1){
+            printf("Blade Warning: Placing vector into vector of vector. Are you sure you want to do this?\n");
         }
-        std::vector<std::vector<float>> output;
+        else if (dimensions > 2){
+            printf("Blade Warning: Placing 3D matrix into vector of vector. Are you sure you want to do this?\n");
+        }
+        std::vector<std::vector<T>> output;
         for (int i = 0; i < currentRows; ++i){
-            std::vector<float> tempRow;
+            std::vector<T> tempRow;
             for (int j = 0; j < currentCols; ++j){
                 tempRow.push_back(getv(i, j));
             }
@@ -341,14 +403,15 @@ public:
         return output;
     }
     
-    std::vector<float> convertDataToVector(){
-        if (scalar){
-            printf("Blade Warning: Placing scalar into vector of floats. Are you sure you want to do this?\n");
+    /* FIXME FOR 3D */
+    std::vector<T> convertDataToVector(){
+        if (dimensions == 0){
+            printf("Blade Warning: Placing scalar into vector. Are you sure you want to do this?\n");
         }
-        if (!vector && !scalar){
-            printf("Blade Error: Attempting to place 2D Data into vector of floats.\n");
+        if (dimensions == 2){
+            printf("Blade Error: Attempting to place 2D Data into vector.\n");
         }
-        std::vector<float> output;
+        std::vector<T> output;
         for (int i = 0; i < currentCols; ++i){
             output.push_back(getv(i));
         }
@@ -360,7 +423,8 @@ public:
 private:
     
     void updateCurrentSize(){
-        currentSize = currentRows * currentCols;
+        currentSize = currentRows * currentCols * currentPages;
+        pageSize = currentRows * currentCols;
     }
     
 };

@@ -33,7 +33,6 @@ class KernelBuddy {
         CLHelper* clHelper;
         cl_kernel* kernelp;
     
-
         /** This creates a 'new' KernelArg object,
          * creates the OpenCL buffer associated with it,
          * and returns a mapping between the input keyVec's elements (keys),
@@ -49,6 +48,20 @@ class KernelBuddy {
             kArg->setKeys(keyVec);
             return kArg->createBufferAndBlades(dimensions, numElements, maxElements, memFlags);
         }
+    
+        /**
+         * This is the same as addKernelArgAndBlades(),
+         * but creates a CLBuffer big enough for a single Blade,
+         * and returns a pointer to that Blade
+         * (rather than an unordered_map* of Blade*s)
+         */
+        template <class T>
+        Blade<T>* addKernelArgAndBlade(cl_uint kernelArgNum, int dimensions, size_t numElements, size_t maxElements, cl_mem_flags memFlags){
+            KernelArg<T, U>* kArg = new KernelArg<T, U>(clHelper, kernelp, kernelArgNum);
+            kArg->setKeys(keyVec);
+            return kArg->createBufferAndBlades(dimensions, numElements, maxElements, memFlags);
+        }
+    
 };
 
 #endif /* KernelBuddy_hpp */

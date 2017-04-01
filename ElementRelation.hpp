@@ -16,9 +16,11 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include "ElementInfoModule.hpp"
-#include "OrtusNamespace.hpp"
-#include "Attribute.hpp"
+#include "OrtusStd.hpp"
 #include "KernelBuddy.hpp"
+#include <unordered_map>
+#include <Blade.hpp>
+
 
 //enum ElementRelationType {GAP, CHEM};
 // idea is: pre <ElementRelationType> post, e.g., pre CAUSES post
@@ -34,15 +36,18 @@ public:
     ElementRelation();
     ~ElementRelation();
     static float ZEROF;
+    static void corruptionCheck();
     
     
     // this is actually a vector!
-    ortus::attribute_map attributeMap;
-    void setDataPointers(DataSteward* dsp);
+    ortus::attribute_map relationAttributeMap;
+    // NOTE: CS, GJ Weights are **NOT** 'RelationAttributes'
+    float* csWeight;
+    float* gjWeight;
+    void setDataPointers(std::unordered_map<RelationAttribute, Blade<cl_float>*> relationAttributeBladeMap);
     
-    
-    float getAttribute(Attribute attribute);
-    void setAttribute(Attribute attribute, float value);
+    float getAttribute(RelationAttribute rAttribute);
+    void setAttribute(RelationAttribute rAttribute, float value);
     
     
     ElementInfoModule* pre;

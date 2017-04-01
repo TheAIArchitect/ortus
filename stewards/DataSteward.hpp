@@ -30,7 +30,7 @@
 #include "Blade.hpp"
 #include "Probe.hpp"
 #include "CLHelper.hpp"
-#include "OrtusNamespace.hpp"
+#include "OrtusStd.hpp"
 #include "KernelBuddy.hpp"
 #include "Connectome.hpp"
 
@@ -54,20 +54,33 @@ public: /** NEW */
     
     // Blade maps -- this is where the data is *actually* held...
     // Everything else just points here.
-    std::unordered_map<Attribute, Blade<cl_float>*> attributeBladeMap;
+    
+    // 1d -- r/w
+    std::unordered_map<ElementAttribute, Blade<cl_float>*> elementAttributeBladeMap;
+    // 2d -- r/w
+    std::unordered_map<WeightAttribute, Blade<cl_float>*> relationWeightBladeMap;
+    std::unordered_map<RelationAttribute, Blade<cl_float>*> relationAttributeBladeMap;
+    // scalar -- r/w
+    std::unordered_map<ScalarAttribute, Blade<cl_float>*> scalarAttributeBladeMap;
+    std::unordered_map<MetadataAttribute, Blade<cl_float>*> metadataAttributeBladeMap;
+    
+    
+    // 3D in a weird way... not yet though.
     Blade<cl_float>* activationBlade;
+    
+    // last kernelArg
+    Blade<cl_int>* kernelArgInfo;
+    
     
     KernelBuddy* kernelBuddyp;
     
-    // static??
-    std::vector<Attribute> elementThings;
-    std::vector<Attribute> relationThings;
     
-    
-protected: // private?
-    // are these needed??
-    //cl_kernel* kernelp;
-    //CLHelper* clHelperp;
+    const static std::vector<WeightAttribute> WEIGHT_KEYS;
+    const static std::vector<ElementAttribute> ELEMENT_KEYS;
+    const static std::vector<RelationAttribute> RELATION_KEYS;
+    const static std::vector<GlobalAttribute> SCALAR_KEYS;
+    const static std::vector<MetadataAttribute> METADATA_KEYS;
+    const static std::vector<Scratchpad> SCRATCHPAD_KEYS;
     
     /** OLD */
 public: // super important variables

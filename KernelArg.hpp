@@ -57,58 +57,118 @@ public:
         //else{
         //    theKeys.push_back(potentialKey);
         //}
+        keyCount = theKeys.size();
     }
     
     void setKeys(std::vector<U> uVec){
         for (auto u : uVec){
             setKey(u);
         }
-        keyCount = theKeys.size();
     }
     
-    /**
-     * dimensions:
-     *  # 0 - scalar
-     *  # 1 - vector
-     *  # 2 - "2D" array
-     */
-    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(int dimensions, size_t currentEntriesPerKey, size_t maxEntriesPerKey, cl_mem_flags memFlags){
-        if (dimensions < 0 || dimensions > 2){
-            printf("Error: Blade dimensions may only be 0, 1, or 2.\n");
-            exit(39);
-        }
-        // assume it's a scalar or vector (current and max entries per key will be 1 if scalar, and if they aren't, it's at least a vector, and the current and max entries passed to the function will always go to columns)
-        int currentRows, currentCols, maxRows, maxCols;
-        currentRows = 1;
-        currentCols = currentEntriesPerKey;
-        maxRows = 1;
-        maxCols = maxEntriesPerKey;
-        size_t byteOffsetMultiplier = 1; // 1 if scalar, maxEntriesPerKey if vector, and maxEntriesPerKey^2 if 2d array
-        // we don't need to check dimensions for Blade creation, because we can make all types of Blades using the most 'verbose' Blade constructor
-        if (dimensions == 1){ // vector
-            byteOffsetMultiplier = maxEntriesPerKey;
-        }
-        else if (dimensions == 2){ // 2d array
-            byteOffsetMultiplier = maxEntriesPerKey * maxEntriesPerKey;
-            currentRows = currentEntriesPerKey;
-            maxRows = maxEntriesPerKey;
-        }
+    /* multiple Blades */
+    
+    /** 2D matrix **/
+    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, cl_mem_flags memFlags){
+        return createBufferAndBlades(initialRowsPerKey, initialColsPerKey, 1, maxRowsPerKey, maxColsPerKey, 1, memFlags, false);
+    }
+    
+    /** vector */
+    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(size_t initialColsPerKey, size_t maxColsPerKey, cl_mem_flags memFlags){
+        return createBufferAndBlades(1, initialColsPerKey, 1, 1, maxColsPerKey, 1, memFlags, false);
+    }
+    
+    /** scalar */
+    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(cl_mem_flags memFlags){
+        return createBufferAndBlades(1, 1, 1, 1, 1, 1, memFlags, false);
+    }
+    
+    /** creates the opencl buffer, and the map of Blade* that access it. use the non--plural form for a single blade.
+     * 
+     * simplified versions of this can be called, as seen above. */
+    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, cl_mem_flags memFlags, bool isDeviceScratchpad = false){
         // create the buffer
-        clBufferp = new CLBuffer<T>(clHelper, byteOffsetMultiplier*theKeys.size(), memFlags);
-        clBufferp->createBuffer();
-        clBufferp->setCLArgIndex(kernelArgIndex, kernelp);
+        size_t byteOffsetMultiplier = createBuffer(maxRowsPerKey, maxColsPerKey, maxPagesPerKey);
         // create the blades, and add the offset and buffer info to each one
         bladeMap.reserve(keyCount);
         byteOffsets.reserve(keyCount);
         byteOffsets[0] = 0; // no offset for first one
         for (int i = 0; i < keyCount; ++i){
-            bladeMap[theKeys[i]] = new Blade<T>(clHelper, memFlags, currentRows, currentCols, maxRows, maxCols);
+            bladeMap[theKeys[i]] = new Blade<T>(clHelper, initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRowsPerKey, maxColsPerKey, maxPagesPerKey, memFlags);
             if (i > 0){ // only add offset after first
                 byteOffsets[i] = byteOffsets[i-1] + (byteOffsetMultiplier * sizeof(T));
             }
             bladeMap[theKeys[i]]->setCLBufferAndOffset(clBufferp, byteOffsets[i]);
         }
         return &bladeMap;
+    }
+    
+    /** device scratch pad -- multiple (map of Blade* vs Blade*) */
+    std::unordered_map<U,Blade<T>*>* createBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, bool isDeviceScratchpad){
+        // just as with the CLBuffer, when creating a device scratch pad, it is much easier to simply set the cl_mem_flag arg,
+        // than to eliminate that need. It will be ignored by this class.
+        if (!isDeviceScratchpad){
+            printf("(KernelArg) Error: You may only create a KernelArg without specifying the 'cl_mem_flags memFlags' argument, if you are creating the KernelArg to be used as a device scratchpad.\n");
+            exit(25);
+        }
+        return createBufferAndBlades(initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRowsPerKey, maxColsPerKey, maxPagesPerKey, CL_MEM_READ_WRITE, isDeviceScratchpad);
+    }
+    
+    /* single Blades */
+    
+    
+    Blade<T>* createBufferAndBlade(size_t initialRows, size_t initialCols, size_t maxRows, size_t maxCols, cl_mem_flags memFlags){
+        return  createBufferAndBlades(initialRows, initialCols, 1, maxRows, maxCols, 1, memFlags, false);
+    }
+    
+    Blade<T>* createBufferAndBlade(size_t initialCols, size_t maxCols, cl_mem_flags memFlags){
+        return  createBufferAndBlades(1, initialCols, 1, 1, maxCols, 1, memFlags, false);
+    }
+    
+    Blade<T>* createBufferAndBlade(cl_mem_flags memFlags){
+        return  createBufferAndBlades(1, 1, 1, 1, 1, 1, memFlags, false);
+    }
+    
+    
+    /**
+     * Does the same thing as 'createBufferAndBlades', but only creates one buffer --
+     * that means keys aren't necessary, and instead of returning 
+     * an unordered_map*, it returns a Blade*.
+     */
+    Blade<T>* createBufferAndBlade(size_t initialRows, size_t initialCols, size_t initialPages, size_t maxRows, size_t maxCols, size_t maxPages, cl_mem_flags memFlags, bool isDeviceScratchpad){
+        size_t byteOffsetMultiplier = createBuffer(maxRows, maxCols, maxPages);
+        // create the blades, and add the offset and buffer info to each one
+        Blade<T> theBlade = new Blade<T>(clHelper, initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRows, maxCols, maxPages, memFlags);
+        int offsetSize = 0;
+        theBlade->setCLBufferAndOffset(clBufferp, offsetSize);
+        return &theBlade;
+    }
+    
+    /** device scratch pad -- single */
+    Blade<T>* createBufferAndBlade(size_t initialRows, size_t initialCols, size_t initialPages, size_t maxRows, size_t maxCols, size_t maxPages, bool isDeviceScratchpad){
+        // just as with the CLBuffer, when creating a device scratch pad, it is much easier to simply set the cl_mem_flag arg,
+        // than to eliminate that need. It will be ignored by this class.
+        if (!isDeviceScratchpad){
+            printf("(KernelArg) Error: You may only create a KernelArg without specifying the 'cl_mem_flags memFlags' argument, if you are creating the KernelArg to be used as a device scratchpad.\n");
+            exit(25);
+        }
+        return createBufferAndBlade(initialRows, initialCols, initialPages, maxRows, maxCols, maxPages, CL_MEM_READ_WRITE, isDeviceScratchpad);
+    }
+    
+private:
+    /** creates the CLBuffer, size = maxRows * maxCols * maxPages  -- ensures size > 0,
+     * returns buffer size */
+    size_t createBuffer(size_t maxRows, size_t maxCols, size_t maxPages){
+        size_t byteOffsetMultiplier = maxRows * maxCols * maxPages;
+        if (byteOffsetMultiplier  < 1){
+            printf("(KernelArg) Error: CLBuffer and Blade must both be at least 1 element in size.\n");
+            exit(39);
+        }
+        // create the buffer
+        clBufferp = new CLBuffer<T>(clHelper, byteOffsetMultiplier*theKeys.size(), memFlags);
+        clBufferp->createBuffer();
+        clBufferp->setCLArgIndex(kernelArgIndex, kernelp);
+        return byteOffsetMultiplier;
     }
     
 

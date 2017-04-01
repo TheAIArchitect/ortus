@@ -39,6 +39,14 @@
 //unsigned int DataSteward::NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = 0;
 
 
+std::vector<WeightAttribute> DataSteward::WEIGHT_KEYS = { WeightAttribute::CSWeight, WeightAttribute::GJWeight };
+std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect, ElementAttribute::Activation };
+std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Polarity, RelationAttribute::Thresh };
+
+const std::vector<GlobalAttribute> DataSteward::SCALAR_KEYS = { GlobalAttribute::ChemNormalizer, GlobalAttribute::GapNormalizer };
+const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::NumSlopeComputations } ;
+const std::vector<Scratchpad> DataSteward::SCRATCHPAD_KEYS = { Scratchpad::XCorr, Scratchpad::Slope};
+
 DataSteward::DataSteward(){
     connectomeNewed = false;
 }
@@ -183,6 +191,8 @@ void DataSteward::pushOpenCLBuffers(){
 
 
 
+void DataSteward::addKernelArgInfo(int kernelArgNum, int numBlades, int numEntries, int maxEntries, int dimensions)
+
 
 /** creates KernelArgs, CLBuffers, and Blades
  **/
@@ -209,10 +219,26 @@ void DataSteward::initializeKernelArgsAndBlades(){
             // it will be up to the implementor to ensure that the proper order of attributes/etc. are being accessed.
     
 
+    // row is kernel arg,  have 4 indices:
+    // [0] => kernel arg number (sanity check)
+    // [1] => number of Blades / different 'types' (e.g., age, polarity, etc.) of data in that buffer / at that kernel argument locaiton
+    // [2] => offset from start of one, to start of another (so, the size):
+    //      -> if each blade is 100, 1st starts at 0, 2nd at 100, 3rd at 200, and so on.
+    // [3] => dimensions (0, 1, or 2)
+    //      -> this is important for determining how to access the data within one 'type'
     
-    // MOVE THESE!!!
-    elementThings = { Attribute::EType, Attribute::Affect, Attribute::Activation };
-    relationThings = { Attribute::Weight, Attribute::Polarity, Attribute::RThresh };
+    std::vector<std::vector<int>> kernelOffsetInfo;
+    int NUM_KERNEL_ARGS = 7;
+    kernelOffsetInfo.reserve(NUM_KERNEL_ARGS);
+    std::vector<int> temp;
+    int currentKernelArgNum = 0;
+    
+    // this will be the last kernel arg
+    kernelArgInfo = kernelBuddyp->addKernelArgAndBlade<cl_int>(NUM_KERNEL_ARGS-1, 2, NUM_KERNEL_ARGS, NUM_KERNEL_ARGS, CL_MEM_READ_ONLY);
+    
+    temp.push_back(currentKernelArgNum);
+    temp.push_back(elementAttributeBladeMap.size());
+    
     
     
     std::unordered_map<Attribute, Blade<cl_float>*>* tempAttribToFloatBladeMap;

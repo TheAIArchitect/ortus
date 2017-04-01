@@ -21,6 +21,7 @@ template <class T>
 class CLBuffer {
 public:
     CLBuffer(CLHelper* clhelper, size_t bufferSize, cl_mem_flags flags, bool isDeviceScratchPad);
+    CLBuffer(CLHelper* clhelper, size_t bufferSize, bool isDeviceScratchpad);
     CLBuffer(CLHelper* clhelper, size_t bufferSize, cl_mem_flags flags);
     ~CLBuffer();
     CLHelper* clHelper;

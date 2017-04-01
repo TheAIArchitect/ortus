@@ -16,10 +16,10 @@ ElementInfoModule::~ElementInfoModule(){};
 
 
 
-void ElementInfoModule::setAttributeDataPointers(DataSteward* dsp){
-    typep = dsp->attributeBladeMap[Attribute::RType]->getp(id); // types correspond to ElementType enum class
+void ElementInfoModule::setAttributeDataPointers(std::unordered_map<ElementAttribute, Blade<cl_float>*>& elementAttributeBladeMap){
+    typep = elementAttributeBladeMap[ElementAttribute::Type]->getp(id); // types correspond to ElementType enum class
     *typep = -1.f; // easy way to tell if a type has been set
-    affectp = dsp->attributeBladeMap[Attribute::Affect]->getp(id); // types correspond to ElementAffect enum class
+    affectp = elementAttributeBladeMap[ElementAttribute::Affect]->getp(id); // types correspond to ElementAffect enum class
     *affectp = (float) ElementAffect::NEUTRAL; // 0, at least, when this was written it was...
 }
 
