@@ -40,7 +40,13 @@ void Steward::initialize(){
     dataStewardp = new DataSteward();
     computeStewardp->dStewiep = dataStewardp;
     
-    dataStewardp->initializeKernelArgsAndBlades(&computeStewardp->clHelper, &computeStewardp->kernel);
+    dataStewardp->initializeKernelArgsAndBlades(&computeStewardp->clHelper, &computeStewardp->kernel, computeStewardp->workGroupSize);
+    
+    printf("cool\n");
+    // once initializeKernelArgsAndBlades returns, we can create the connectome, which will use the Blades
+    dataStewardp->loadConnectome("ort/simple.ort");
+    
+    exit(3);
     
     //dataStewardp->init(computeStewardp->workGroupSize);
     //sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);

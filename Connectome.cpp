@@ -13,7 +13,26 @@ Connectome::Connectome(std::string ortFileName){
     
     // parse the .ort file, and create the elements and element relations specified
     std::vector<std::string> theLines;
+    // read from file into vector of strings
     ortUtil.getLines(ortFileName, theLines);
+    // parse the vector of strings
+    setElements(theLines);
+    
+    /** issue with connectome:
+        -> before reading it in, we don't know how many elements or element relations we have.
+        -> however, we need to know which elements and/or element relations we have in order to create the elements and relations
+            -> at least, we need to know how many to create (the Blades need this information)
+        -> But, while reading this information in, we parse it, and store it (in the elements and relations we create)
+     
+        -> options are:
+            1) create some number of elements guaranteed to be sufficient, and square that number for relations (or something)
+            2) require the .ort file to list the element count and relation count at the top of the file. 
+                -> read those 2 lines in, create the elements, and then parse the file (or read all lines, and then after parsing those two, parse the rest)
+            3) read the lines in (via getLines), and then run the lines through a function that counts the number of elements, and element relations,
+                then, create the elements and then call setElements
+            4) put the data that's read in into temporary variables that then move their contents over to the blades (within the Element or Relation object) after the Blade has been set. 
+        3 is the best, i think.
+     */
     
     
     buildAdditionalDataStructures();
@@ -182,13 +201,15 @@ void Connectome::addElement(std::unordered_map<std::string, std::string> attribu
     }
     ElementInfoModule* eim = elementMap[name];
     
-    // these are spe
     if (attributeMap.find("type") != attributeMap.end()){
         
         eim->setType(attributeMap["type"]);
     }
     if (attributeMap.find("affect") != attributeMap.end()){
         eim->setAffect(attributeMap["affect"]);
+    }
+    if (attributeMap.find("activation") != attributeMap.end()){
+        eim->setActivation(stof(attributeMap["activation"]));
     }
 }
 

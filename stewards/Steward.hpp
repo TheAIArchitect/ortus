@@ -15,7 +15,6 @@
 #include "DataVisualizer.hpp"
 #include "SensoryStimulationSteward.hpp"
 #include "DiagnosticSteward.hpp"
-#include "KernelBuddy.hpp"
 #include "OrtusStd.hpp"
 #include "Incubator.hpp"
 
@@ -29,7 +28,6 @@ public:
     
     DataSteward* dataStewardp;
     Incubator* incubatorp;
-    KernelBuddy* kernelBuddyp;
     ComputeSteward* computeStewardp;
     SensoryStimulationSteward* sensoryStimulationStewardp;
     DiagnosticSteward* diagnosticStewardp;

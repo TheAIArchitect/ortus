@@ -22,9 +22,11 @@
  */
 // NOTE: shared names between different attributes have nothing to do with each other!!!
 
+// NOTE: 'Activation', while supremely important, is not an 'attribute', and gets its own Blade.
+
 enum class WeightAttribute { CSWeight, GJWeight};
 
-enum class ElementAttribute { Type, Affect, Activation, Thresh, NUM_ELEMENT_ATTRIBUTES};
+enum class ElementAttribute { Type, Affect, Thresh, NUM_ELEMENT_ATTRIBUTES};
 
 enum class RelationAttribute { Type, Polarity, Direction, Age, Thresh, Decay, Mutability, NUM_RELATION_ATTRIBUTES};
 
@@ -39,7 +41,7 @@ enum class Scratchpad { XCorr, Slope};
 
 // these are all lowercase in the .ort file, which is what they match against
 // NOTE: 'rtype' is really just a placeholder. relation types are denoted via newlines and whitespace in .ort files.
-const static std::string ELEMENT_ATTRIBUTE_STRINGS[static_cast<int>(ElementAttribute::NUM_ELEMENT_ATTRIBUTES)] = {"type", "affect", "activation", "thresh" };
+const static std::string ELEMENT_ATTRIBUTE_STRINGS[static_cast<int>(ElementAttribute::NUM_ELEMENT_ATTRIBUTES)] = {"type", "affect", "thresh" };
 
 const static std::string RELATION_ATTRIBUTE_STRINGS[static_cast<int>(RelationAttribute::NUM_RELATION_ATTRIBUTES)] = {"type", "polarity", "direction", "age", "thresh", "decay", "mutability"};
 
@@ -62,6 +64,7 @@ class ElementInfoModule;
 
 namespace ortus {
     
+    // these need to be set
     static int NUM_ELEMENTS = 10;
     static int MAX_ELEMENTS = 100;
     // CS and GJ weights are *NOT* 'RelationAttribute's

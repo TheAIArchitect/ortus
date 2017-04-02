@@ -60,7 +60,7 @@ public:
             printf("Error: Cannot create a blade with less than 1 current or max parameter.\n");
             exit(24);
         }
-        else if ((currentRows < maxRows) || (currentCols < maxCols) || (currentPages < maxPages)){
+        else if ((currentRows > maxRows) || (currentCols > maxCols) || (currentPages > maxPages)){
             printf("Error: Cannot create a blade with current rows, columns, or pages greater than their respective max parameters.\n");
             exit(25);
         }
@@ -103,11 +103,12 @@ public:
         else if (memFlags == NULL){ // then it's a device scratch pad, and we don't create a buffer, nor do we push one.
             deviceScratchPad = true;
         }
+        
     }
     
     /* 'normal' constructor  -- don't have to specify isDeviceScratchPad as false */
-    Blade(CLHelper* clhelper, int currentRows, int currentCols, int currentPages, int maxRows, int maxCols, int maxPages, cl_mem_flags flags) : Blade(clhelper, currentRows, currentCols, 1, maxRows, maxCols, 1, flags, false) {};
-    
+    Blade(CLHelper* clhelper, int currentRows, int currentCols, int currentPages, int maxRows, int maxCols, int maxPages, cl_mem_flags flags) : Blade(clhelper, currentRows, currentCols, currentPages, maxRows, maxCols, maxPages, flags, false) {};
+   
     
     /* Simplified constructor for a 2D matrix */
     Blade(CLHelper* clhelper, int currentRows, int currentCols, int maxRows, int maxCols, cl_mem_flags flags) : Blade(clhelper, currentRows, currentCols, 1, maxRows, maxCols, 1, flags, false) {};
@@ -354,10 +355,15 @@ public:
     
     /* moves data into the buffer pointed to by 'clDatap', ready for use by the kernel starting at 'clBufferOffset' bytes (set when buffer is set with 'setCLBuffer()') */
     void pushDataToDevice(){
-        this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * currentSize, data, 0, NULL, NULL);
-        this->clhelper->check_and_print_cl_err(this->clhelper->err);
-        dataPushed = true;
-        dataRead = false; // we know current data is invalid
+        if (!deviceScratchPad){
+            this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * currentSize, data, 0, NULL, NULL);
+            this->clhelper->check_and_print_cl_err(this->clhelper->err);
+            dataPushed = true;
+            dataRead = false; // we know current data is invalid
+        }
+        else {
+            printf("(Blade) Warning: While there is a safeguard for this, one really shouldn't attempt to push a device scratch pad to the device (a number of Blade parameters are undefined).\n");
+        }
     }
     
     /* reads data from the OpenCL buffer into data, starting at 'bufferOffset' bytes (set when buffer is set with 'setCLBuffer()'). This will overwrite anything in data.

@@ -150,7 +150,6 @@
 		F7CAA1451E8AD40B00DE81E4 /* ComputeSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA1431E8AD40B00DE81E4 /* ComputeSteward.cpp */; };
 		F7CAA1471E8AD5E100DE81E4 /* NewOrtusTestKernel.cl in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA1461E8AD5E100DE81E4 /* NewOrtusTestKernel.cl */; };
 		F7CAA14A1E8B3A1200DE81E4 /* CLBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA1481E8B3A1200DE81E4 /* CLBuffer.cpp */; };
-		F7CAA14D1E8C6BC800DE81E4 /* KernelBuddy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CAA14B1E8C6BC800DE81E4 /* KernelBuddy.cpp */; };
 		F7CAA14E1E8CB51900DE81E4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444DE4451D8A717400247E36 /* main.cpp */; };
 		F7DA053F1E1FCB96009FA734 /* FileAssistant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */; };
 		F7E7A0A01E2204B20068BD3E /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A09E1E2204B20068BD3E /* Signal.cpp */; };
@@ -378,8 +377,6 @@
 		F7CAA1461E8AD5E100DE81E4 /* NewOrtusTestKernel.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; name = NewOrtusTestKernel.cl; path = kernels/NewOrtusTestKernel.cl; sourceTree = "<group>"; };
 		F7CAA1481E8B3A1200DE81E4 /* CLBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CLBuffer.cpp; sourceTree = "<group>"; };
 		F7CAA1491E8B3A1200DE81E4 /* CLBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CLBuffer.hpp; sourceTree = "<group>"; };
-		F7CAA14B1E8C6BC800DE81E4 /* KernelBuddy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KernelBuddy.cpp; sourceTree = "<group>"; };
-		F7CAA14C1E8C6BC800DE81E4 /* KernelBuddy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KernelBuddy.hpp; sourceTree = "<group>"; };
 		F7CAA1501E8CD6A900DE81E4 /* KernelArg.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KernelArg.hpp; sourceTree = "<group>"; };
 		F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileAssistant.cpp; sourceTree = "<group>"; };
 		F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAssistant.hpp; sourceTree = "<group>"; };
@@ -764,8 +761,6 @@
 				F71514931E7F9E68008F6292 /* Incubator.cpp */,
 				F71514941E7F9E68008F6292 /* Incubator.hpp */,
 				F7CAA1501E8CD6A900DE81E4 /* KernelArg.hpp */,
-				F7CAA14B1E8C6BC800DE81E4 /* KernelBuddy.cpp */,
-				F7CAA14C1E8C6BC800DE81E4 /* KernelBuddy.hpp */,
 				444DE4441D8A717400247E36 /* log.txt */,
 				444DE44A1D8A717400247E36 /* myDebug.cpp */,
 				444DE44B1D8A717400247E36 /* myDebug.hpp */,
@@ -942,7 +937,6 @@
 				44FDA2EC1DCC7995005897DB /* DataVisualizer.cpp in Sources */,
 				444DE46E1D8A717500247E36 /* makefile in Sources */,
 				F7E7A0B41E2260350068BD3E /* PrimitiveStimulus.cpp in Sources */,
-				F7CAA14D1E8C6BC800DE81E4 /* KernelBuddy.cpp in Sources */,
 				F74880411E2448A00083763E /* DataSteward.cpp in Sources */,
 				44AF538D1DA46F89009546BC /* OptionForewoman.cpp in Sources */,
 				F78093CE1E52E8D300749BE3 /* OrtusXCorrVisualizer.cpp in Sources */,

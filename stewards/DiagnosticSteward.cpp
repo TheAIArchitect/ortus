@@ -143,7 +143,7 @@ std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVo
     printf("END THE VOLTAGE HISTORY VECTOR PRINTOUT\n");
     */
     
-    int startIndex =(dStewiep->VOLTAGE_HISTORY_SIZE-1)-dStewiep->XCORR_COMPUTATIONS; // xcorr_computation is assumed to be the same as the size of the array used for a single xcorr computation
+    int startIndex =(dStewiep->ACTIVATION_HISTORY_SIZE-1)-dStewiep->XCORR_COMPUTATIONS; // xcorr_computation is assumed to be the same as the size of the array used for a single xcorr computation
     
    
     // This is going to be slow, and it would probably be best to either rad the resutls back from blade, or thread this computation...

@@ -17,7 +17,6 @@
 #include <vector>
 #include "ElementInfoModule.hpp"
 #include "OrtusStd.hpp"
-#include "KernelBuddy.hpp"
 #include <unordered_map>
 #include <Blade.hpp>
 

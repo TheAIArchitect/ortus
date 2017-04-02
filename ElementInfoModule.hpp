@@ -42,7 +42,7 @@ public:
     ~ElementInfoModule();
     
     void setAttributeDataPointers(std::unordered_map<ElementAttribute, Blade<cl_float>*>& elementAttributeBladeMap);
-    void setActivationDataPointer(DataSteward* dsp);
+    void setActivationDataPointer(Blade<cl_float>* activationBladep);
     //glm::vec3 getCenterPoint(); // allows us to use muscles and neurons for creating graphical connections
     
     //std::string* namep;
@@ -60,6 +60,7 @@ public:
     cl_float* typep;
     
     
+    void setActivation(float fActivation);
     
     
     std::string getName();

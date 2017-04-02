@@ -23,9 +23,19 @@ void ElementInfoModule::setAttributeDataPointers(std::unordered_map<ElementAttri
     *affectp = (float) ElementAffect::NEUTRAL; // 0, at least, when this was written it was...
 }
 
-void ElementInfoModule::setActivationDataPointer(DataSteward* dsp){
-    activationp = dsp->activationBlade->getp(id);
+void ElementInfoModule::setActivationDataPointer(Blade<cl_float>* activationBladep){
+    activationp = activationBladep->getp(0, id); // activation blade holds the current activation at row 0, historic activations in rows 1+
     *activationp = 0; // default to 0
+}
+
+/** don't ever, for any reason, do anything, to this function, for any reason, ever,
+ * no matter what, no matter where, or who, or who you are with or where you are going,
+ * before you have called 'setActivationDataPointer' (or, setAttributeDataPointers, for that matter)
+ *
+ * this function sets the activation level of this element (in the Blade).
+ */
+void ElementInfoModule::setActivation(float fActivation){
+    *activationp = fActivation;
 }
 
 ElementType ElementInfoModule::getEType(){

@@ -49,10 +49,10 @@ public:
     }
     
     ~KernelArg(){
-        for (auto blade : bladeMap){
-            delete blade.second;
-        }
-        delete clBufferp;
+        //for (auto blade : bladeMap){
+        //    delete blade.second;
+        //}
+        //delete clBufferp;
     }
     
     
@@ -97,15 +97,15 @@ public:
     /** creates the opencl buffer, and the map of Blade* that access it. use the non--plural form for a single blade.
      * 
      * simplified versions of this can be called, as seen above. */
-    std::unordered_map<U,Blade<T>*>* addKernelArgWithBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, cl_mem_flags memFlags, bool isDeviceScratchpad = false){
+    std::unordered_map<U,Blade<T>*>* addKernelArgWithBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, cl_mem_flags memFlags, bool isDeviceScratchpad){
         // create the buffer
-        size_t byteOffsetMultiplier = createBuffer(maxRowsPerKey, maxColsPerKey, maxPagesPerKey, memFlags);
+        size_t byteOffsetMultiplier = createBuffer(maxRowsPerKey, maxColsPerKey, maxPagesPerKey, memFlags, isDeviceScratchpad);
         // create the blades, and add the offset and buffer info to each one
         bladeMap.reserve(keyCount);
         byteOffsets.reserve(keyCount);
         byteOffsets[0] = 0; // no offset for first one
         for (int i = 0; i < keyCount; ++i){
-            bladeMap[theKeys[i]] = new Blade<T>(clHelper, initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRowsPerKey, maxColsPerKey, maxPagesPerKey, memFlags);
+            bladeMap[theKeys[i]] = new Blade<T>(clHelper, initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRowsPerKey, maxColsPerKey, maxPagesPerKey, memFlags, isDeviceScratchpad);
             if (i > 0){ // only add offset after first
                 byteOffsets[i] = byteOffsets[i-1] + (byteOffsetMultiplier * sizeof(T));
             }
@@ -114,7 +114,10 @@ public:
         return &bladeMap;
     }
     
-    /** device scratch pad -- multiple (map of Blade* vs Blade*) */
+    /**  NOTE (FIXME): THIS WILL CATCH A 3D MATRIX BEING MADE IF YOU DON'T EXPLICITY ADD 'true'...
+     * THE cl_mem_flags THAT THIS OMITS WILL REGISTER AS 'true', MATCHING THE bool AT THE END OF THIS FUNCTION!!!
+     *
+     * device scratch pad -- multiple (map of Blade* vs Blade*) */
     std::unordered_map<U,Blade<T>*>* addKernelArgWithBufferAndBlades(size_t initialRowsPerKey, size_t initialColsPerKey, size_t initialPagesPerKey, size_t maxRowsPerKey, size_t maxColsPerKey, size_t maxPagesPerKey, bool isDeviceScratchpad){
         // just as with the CLBuffer, when creating a device scratch pad, it is much easier to simply set the cl_mem_flag arg,
         // than to eliminate that need. It will be ignored by this class.
@@ -128,14 +131,17 @@ public:
     /* single Blades */
     
     
+    /** 2D matrix */
     Blade<T>* addKernelArgWithBufferAndBlade(size_t initialRows, size_t initialCols, size_t maxRows, size_t maxCols, cl_mem_flags memFlags){
         return  addKernelArgWithBufferAndBlade(initialRows, initialCols, 1, maxRows, maxCols, 1, memFlags, false);
     }
     
+    /** vector */
     Blade<T>* addKernelArgWithBufferAndBlade(size_t initialCols, size_t maxCols, cl_mem_flags memFlags){
         return  addKernelArgWithBufferAndBlade(1, initialCols, 1, 1, maxCols, 1, memFlags, false);
     }
     
+    /** scalar */
     Blade<T>* addKernelArgWithBufferAndBlade(cl_mem_flags memFlags){
         return  addKernelArgWithBufferAndBlade(1, 1, 1, 1, 1, 1, memFlags, false);
     }
@@ -147,9 +153,9 @@ public:
      * an unordered_map*, it returns a Blade*.
      */
     Blade<T>* addKernelArgWithBufferAndBlade(size_t initialRows, size_t initialCols, size_t initialPages, size_t maxRows, size_t maxCols, size_t maxPages, cl_mem_flags memFlags, bool isDeviceScratchpad){
-        size_t byteOffsetMultiplier = createBuffer(maxRows, maxCols, maxPages, memFlags);
+        size_t byteOffsetMultiplier = createBuffer(maxRows, maxCols, maxPages, memFlags, isDeviceScratchpad);
         // create the blades, and add the offset and buffer info to each one
-        Blade<T>* theBlade = new Blade<T>(clHelper, initialRows, initialCols, initialPages, maxRows, maxCols, maxPages, memFlags);
+        Blade<T>* theBlade = new Blade<T>(clHelper, initialRows, initialCols, initialPages, maxRows, maxCols, maxPages, memFlags, isDeviceScratchpad);
         int offsetSize = 0;
         theBlade->setCLBufferAndOffset(clBufferp, offsetSize);
         return theBlade;
@@ -168,15 +174,25 @@ public:
     
 private:
     /** creates the CLBuffer, size = maxRows * maxCols * maxPages  -- ensures size > 0,
-     * returns buffer size */
-    size_t createBuffer(size_t maxRows, size_t maxCols, size_t maxPages, cl_mem_flags memFlags){
+     * sets the buffer's kernel arg index,
+     * returns buffer size
+     *
+     * NOTE: memFlags is irrelevant if isDeviceScratchpad == true, but must be there anyway.
+     * (there is a constructor in CLBuffer that allows emitting 'cl_mem_flags', but using that would require two functions in this file,
+     * which seems silly. */
+    size_t createBuffer(size_t maxRows, size_t maxCols, size_t maxPages, cl_mem_flags memFlags, bool isDeviceScratchpad){
         size_t byteOffsetMultiplier = maxRows * maxCols * maxPages;
         if (byteOffsetMultiplier  < 1){
             printf("(KernelArg) Error: CLBuffer and Blade must both be at least 1 element in size.\n");
             exit(39);
         }
         // create the buffer
-        clBufferp = new CLBuffer<T>(clHelper, byteOffsetMultiplier*theKeys.size(), memFlags);
+        if (theKeys.size() > 0){ // it's a multiple Blades -> single CLBuffer situation
+            clBufferp = new CLBuffer<T>(clHelper, byteOffsetMultiplier*theKeys.size(), memFlags, isDeviceScratchpad);
+        }
+        else {
+            clBufferp = new CLBuffer<T>(clHelper, byteOffsetMultiplier, memFlags, isDeviceScratchpad);
+        }
         clBufferp->createBuffer();
         clBufferp->setCLArgIndex(kernelArgIndex, kernelp);
         return byteOffsetMultiplier;

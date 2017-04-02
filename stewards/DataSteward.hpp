@@ -53,9 +53,10 @@ public: /** NEW */
     
     
     void loadConnectome(std::string connectomeFile);
-    void initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp);
+    void initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp, size_t openCLWorkGroupSize);
     void executePreRunOperations();
     void pushOpenCLBuffers();
+    void setKernelArgInfo(std::vector<std::vector<int>>& tempKernelArgInfo);
     
     // Blade maps -- this is where the data is *actually* held...
     // Everything else just points here.
@@ -69,22 +70,35 @@ public: /** NEW */
     std::unordered_map<RelationAttribute, Blade<cl_float>*> relationAttributeBladeMap;
     // scalar -- r/w
     std::unordered_map<GlobalAttribute, Blade<cl_float>*> globalAttributeBladeMap;
-    std::unordered_map<MetadataAttribute, Blade<cl_float>*> metadataAttributeBladeMap;
+    std::unordered_map<MetadataAttribute, Blade<cl_float>*> metadataBladeMap;
     
     // 3D
-    std::unordered_map<WeightAttribute, Blade<cl_float>*> relationWeightBladeMap;
+    std::unordered_map<WeightAttribute, Blade<cl_float>*> weightBladeMap;
     Blade<cl_float>* activationBlade;
     
     // last kernelArg
-    Blade<cl_int>* kernelArgInfo;
+    Blade<cl_int>* kernelArgInfoBlade;
     
     
     const static std::vector<WeightAttribute> WEIGHT_KEYS;
     const static std::vector<ElementAttribute> ELEMENT_KEYS;
     const static std::vector<RelationAttribute> RELATION_KEYS;
-    const static std::vector<GlobalAttribute> SCALAR_KEYS;
+    const static std::vector<GlobalAttribute> GLOBAL_KEYS;
     const static std::vector<MetadataAttribute> METADATA_KEYS;
     const static std::vector<Scratchpad> SCRATCHPAD_KEYS;
+    
+    
+    const static int METADATA_COUNT = 5; // see 'metadata' definition for metadata metadata. haha.
+    const static int ACTIVATION_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
+    
+    // this is the number of computations that can be stored per 'core',
+    // e.g., that number of XCorr computations, or Slope comptuations,
+    // w.r.t. historical values.
+    const static int SCRATCHPAD_COMPUTATION_SLOTS = 4;
+    static int XCORR_COMPUTATIONS;
+    static int SLOPE_COMPUTATIONS;
+    
+    const static int WEIGHT_HISTORY_SIZE = 3; // not based on anything, really -- seems better than 2, and not sure if 4 is needed.
     
     /** OLD */
 public: // super important variables
@@ -129,7 +143,7 @@ public:
     
     
    
-    void init(size_t openCLWorkGroupSize);
+    void init();
     //void createElements();
     //void createConnections();
     void initializeData();
@@ -162,7 +176,6 @@ public:
     //std::vector<std::vector<std::string>> csvDat;
     float maxGapWeight;
     float maxChemWeight;
-    size_t openCLWorkGroupSize;
     Probe* probe;
     AblationStation ablator;
     std::vector<std::vector<float>> kernelVoltages; // might need to move
@@ -185,10 +198,7 @@ public:
     //static int CONNECTOME_COLS;
     
     
-    const static int MAX_ELEMENTS = 200;
-    const static int VOLTAGE_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
-    const static int METADATA_COUNT = 5; // see 'metadata' definition for metadata metadata. haha.
-    const static int XCORR_COMPUTATIONS = 4; // see notes/correlationNotes.txt, but note that insead of 3, it's now 4 (for testing purposes -- may or may not stay that way.)
+   
     //static unsigned int NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8;
     
     

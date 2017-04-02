@@ -22,7 +22,7 @@ CLBuffer<T>::CLBuffer(CLHelper* clhelper, size_t bufferSize, cl_mem_flags flags,
     }
 }
 
-/**
+/** NOTE: THIS IS CURRENTLY NOT USED, BECAUSE KernelArg WOULD NEED AN EXTRA FUNCITON for it to make sense. This can probably be deleted...
  * This constructor creates a CLBuffer that will be used as a device scratch pad.
  *
  * That means, the kernel arg must be given the 'local' specifier in the .cl file,
@@ -31,6 +31,7 @@ CLBuffer<T>::CLBuffer(CLHelper* clhelper, size_t bufferSize, cl_mem_flags flags,
  * Further, while flags (cl_mem_flags) is set to CL_MEM_READ_WRITE,
  * it is irrelevant, because it is ignored.
  */
+/*
 template <class T>
 CLBuffer<T>::CLBuffer(CLHelper* clhelper, size_t bufferSize, bool isDeviceScratchpad) : CLBuffer(clhelper, bufferSize, CL_MEM_READ_WRITE, isDeviceScratchpad) {
     if (!isDeviceScratchpad){
@@ -38,10 +39,16 @@ CLBuffer<T>::CLBuffer(CLHelper* clhelper, size_t bufferSize, bool isDeviceScratc
         exit(25);
     }
 }
+*/
 
+/** this is unused, because it would require more work on KernelArg's part to use it, 
+ * than to ignore it... this can probably be deleted.
+ */
+/*
 template <class T>
 CLBuffer<T>::CLBuffer(CLHelper* clhelper, size_t bufferSize, cl_mem_flags flags) : CLBuffer(clhelper, bufferSize, flags, false) {}
-    
+*/    
+ 
 
 
 template <class T>
@@ -66,6 +73,7 @@ template <class T>
 void CLBuffer<T>::setCLArgIndex(cl_uint argIndex, cl_kernel* kernelp){
     clArgIndex = argIndex;
     if (deviceScratchPad){
+        //printf("Device scratchpad kernel arg found.\n");
         clHelper->err = clSetKernelArg(*kernelp, clArgIndex, clBufferSize*sizeof(T), NULL);// note, we don't set an address for the arg, BUT, we tell the kernel how big the __local buffer needs to be!
     }
     else {
@@ -84,4 +92,5 @@ void CLBuffer<T>::clearBuffer(){
  }
 
 template class CLBuffer<cl_float>;
+template class CLBuffer<cl_int>;
 /** add cl_int??? */

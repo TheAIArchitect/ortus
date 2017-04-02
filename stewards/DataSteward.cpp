@@ -40,11 +40,15 @@
 
 
 const std::vector<WeightAttribute> DataSteward::WEIGHT_KEYS = { WeightAttribute::CSWeight, WeightAttribute::GJWeight };
-const std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect, ElementAttribute::Activation };
+const std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect};
 const std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Polarity, RelationAttribute::Thresh };
-const std::vector<GlobalAttribute> DataSteward::SCALAR_KEYS = { GlobalAttribute::ChemNormalizer, GlobalAttribute::GapNormalizer };
+const std::vector<GlobalAttribute> DataSteward::GLOBAL_KEYS = { GlobalAttribute::ChemNormalizer, GlobalAttribute::GapNormalizer };
 const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::NumSlopeComputations } ;
 const std::vector<Scratchpad> DataSteward::SCRATCHPAD_KEYS = { Scratchpad::XCorr, Scratchpad::Slope};
+
+int DataSteward::XCORR_COMPUTATIONS = SCRATCHPAD_COMPUTATION_SLOTS;
+int DataSteward::SLOPE_COMPUTATIONS = SCRATCHPAD_COMPUTATION_SLOTS;
+
 
 DataSteward::DataSteward(){
     connectomeNewed = false;
@@ -71,14 +75,20 @@ DataSteward::~DataSteward(){
     
 }
 
-void DataSteward::init(size_t openCLWorkGroupSize){
-    this->openCLWorkGroupSize = openCLWorkGroupSize;
+void DataSteward::init(){
     initializeData();
 }
 
 void DataSteward::loadConnectome(std::string connectomeFile){
     connectomep = new Connectome(connectomeFile);
     connectomeNewed = true;
+    
+    /** STOPPING POINT:
+        -> ensure all data is being loaded properly
+        -> ensure all data is being put into blades properly
+        -> rewrite kernel!
+        -> implement structural rules / growth rules
+     */
 }
 
 void DataSteward::initializeData(){
@@ -169,10 +179,34 @@ void DataSteward::executePreRunOperations(){
 }
 
 void DataSteward::pushOpenCLBuffers(){
-    for (auto blade : elementAttributeBladeMap){
-        blade.second->pushDataToDevice();
+    
+    printf("pushing element attributes...\n");
+    for (auto entry : elementAttributeBladeMap){
+        entry.second->pushDataToDevice();
     }
-
+    
+    printf("pushing relation attributes...\n");
+    for (auto entry : relationAttributeBladeMap){
+        entry.second->pushDataToDevice();
+    }
+    
+    printf("pushing weights...\n");
+    for (auto entry : weightBladeMap){
+        entry.second->pushDataToDevice();
+    }
+    
+    printf("pushing activations...\n");
+    activationBlade->pushDataToDevice();
+    
+    printf("pushing metadata...\n");
+    for (auto entry : metadataBladeMap){
+        entry.second->pushDataToDevice();
+    }
+    
+    printf("pushing kernel arg info...\n");
+    kernelArgInfoBlade->pushDataToDevice();
+    
+    printf("all Blades pushed.\n");
 
     //Timer et;
     //et.start_timer();
@@ -190,97 +224,180 @@ void DataSteward::pushOpenCLBuffers(){
 
 
 
-//void DataSteward::addKernelArgInfo(int kernelArgNum, int numBlades, int numEntries, int maxEntries, int dimensions)
-
 
 /** creates KernelArgs, CLBuffers, and Blades
  **/
-void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp){
+void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp, size_t openCLWorkGroupSize){
     
-     /* these are the kernel args we want */
-    /* NOTE: 'static' prefix suggests set items should rarely change,
-     * while 'dynamic' suggests items in the set may change value every iteration */
-    // staticElement = {Attribute::ElementType, Attribute::Affect};//, Attribute::EThresh}
-    // dynamicElement = {Attribute::Activation}; // this one needs to have the history
-    // staticRelation = {Attribute::RType, Attribute::Polarity, Attribute::Direction, Attribute::RThresh};
-    // dynamicRelation = {Attribute::a
-    /*
-     In addition to the above, we need:
-        # metadata (see metadata from old DataSteward)
-        # scalars -- separate from metadata scalars
-        # offset info
-        # scratchpads
-     */
-    // way to approach offset info:
-        // 1) each kernel arg *must* only have data that is seperable by the same offset (so, either scalar, 1D, or 2D, but not a combination)
-        // 2) there will be 1 '2d' kernel arg formatted like so (kai <=> kernel arg index):
-            // [kai][0] => number of 'keys', [kai][1] => offset size between keys,
-            // it will be up to the implementor to ensure that the proper order of attributes/etc. are being accessed.
+    // THE LAST KERNEL ARGUMENT will be the kernelArgInfo (kernel arg metadata),
+    // no relation to the 'metadata' blade, which is 'ortus' metadata.
+    //
+    // The kernelArgInfo will be formatted like so:
+    // 'row' is kernel arg, and there are 6 'col's for each kernel arg:
+    //      [0] => kernel arg number (sanity check)
+    //      [1] => number of Blades / different 'types' (e.g., age, polarity, etc.) of data in that buffer / at that kernel argument locaiton
+    //      [2] => offset from start of one, to start of another (so, the size):
+    //              -> if each blade is 100, 1st starts at 0, 2nd at 100, 3rd at 200, and so on.
+    //      [3] => rows per Blade
+    //      [4] => cols per Blade
+    //      [5] => pages per Blade
+    //
+    // NOTE: THERE IS NO kernelArgInfo FOR THE kernelArgInfo arg!!!
+    //      => it will only have 'NUM_KERNEL_ARGS-1' entries
+    //      => The kernel *must* know (have hard--coded):
+    //          * the number of kernel args
+    //          * the number of metadata entries for each kernel arg (e.g., 6)
+    //          * the significance/meaning of each of the metadata entries
     
-
-    // row is kernel arg,  have 4 indices:
-    // [0] => kernel arg number (sanity check)
-    // [1] => number of Blades / different 'types' (e.g., age, polarity, etc.) of data in that buffer / at that kernel argument locaiton
-    // [2] => offset from start of one, to start of another (so, the size):
-    //      -> if each blade is 100, 1st starts at 0, 2nd at 100, 3rd at 200, and so on.
-    // [3] => rows per Blade
-    // [4] => cols per Blade
-    // [5] => pages per Blade
-    int numMetadataCols = 6;
-    
-    std::vector<std::vector<int>> kernelOffsetInfo;
     cl_uint NUM_KERNEL_ARGS = 7;
-    kernelOffsetInfo.reserve(NUM_KERNEL_ARGS);
-    std::vector<int> temp;
+    int maxKernelIndex = NUM_KERNEL_ARGS - 1;
+    int numKernelArgMetadataCols = 6;
+    int numBlades;
+    int maxSize;// the offset from the start of one blade to the next (so, maxSize)
+    // note: these 3 measures are what is currently in there, **not** the max.
+    int rowsPerBlade;
+    int colsPerBlade;
+    int pagesPerBlade;
+    std::vector<std::vector<int>> tempKernelArgInfo;
     cl_uint currentKernelArgNum = 0;
-    
-    // this will be the last kernel arg
-    KernelArg<cl_float, DummyType> kaLast(clHelper, kernelp, NUM_KERNEL_ARGS -1);
-    // might be able to simplify this constructor so if only one set (rows, cols, pages)
-    // is specified, it knows to duplicate them so current == max.
-    kaLast.addKernelArgWithBufferAndBlade(NUM_KERNEL_ARGS, numMetadataCols, NUM_KERNEL_ARGS, numMetadataCols, CL_MEM_READ_ONLY);
+    // END variable initialization.
     
     
+    // KERNEL ARG #0!!! Element (neuron, muscle) attributes
+    printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     KernelArg<cl_float, ElementAttribute> ka0(clHelper, kernelp, currentKernelArgNum, ELEMENT_KEYS);
     elementAttributeBladeMap = *(ka0.addKernelArgWithBufferAndBlades(ortus::NUM_ELEMENTS, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE));
+    // now collect metadata info for our 'kernelArgInfo' (Blade) arg that we'll add at the end:
+    numBlades = (int) elementAttributeBladeMap.size();
+    maxSize = (int) elementAttributeBladeMap[ELEMENT_KEYS[0]]->maxSize;
+    rowsPerBlade = 1;
+    colsPerBlade = ortus::NUM_ELEMENTS;
+    pagesPerBlade = 1;
+    // add the data to our temporary vector (we can't set a kernel arg out of order, and we want it at the end)
+    // it also makes it easier to collect the data, in a way. 
+    tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
+    // finally, increment the kernel arg number
     currentKernelArgNum++;
+    // END KERNEL ARG #0
     
+    // KERNEL ARG #1!!! Relation (connection) attributes
+    printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     KernelArg<cl_float, RelationAttribute> ka1(clHelper, kernelp, currentKernelArgNum, RELATION_KEYS);
     relationAttributeBladeMap = *(ka1.addKernelArgWithBufferAndBlades(ortus::NUM_ELEMENTS, ortus::NUM_ELEMENTS, ortus::MAX_ELEMENTS, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE));
+    // collect metadata
+    numBlades = (int) relationAttributeBladeMap.size();
+    maxSize = (int) relationAttributeBladeMap[RELATION_KEYS[0]]->maxSize;
+    rowsPerBlade = ortus::NUM_ELEMENTS;
+    colsPerBlade = ortus::NUM_ELEMENTS;
+    pagesPerBlade = 1;
+    // add the data to temp vector
+    tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
+    // increment kernel arg number
+    currentKernelArgNum++;
+    // END KERNEL ARG #1
     
-    /** stopping point:
-     - need to make all of the kernal args
-     - need to redo kernel
-     */
     
-   
+    // KERNEL ARG #2!!! Weights (CS and GJ) -- this is 2 3D blades.
+    printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
+    // NOTE: specifying 'false' at the end is important (for now), because if that doesn't happen,
+    // the cl_mem_flags enum will register 'true' for the funciton simplification that creates a device scratch pad...
+    KernelArg<cl_float, WeightAttribute> ka2(clHelper, kernelp, currentKernelArgNum, WEIGHT_KEYS);
+    weightBladeMap = *(ka2.addKernelArgWithBufferAndBlades(ortus::NUM_ELEMENTS, ortus::NUM_ELEMENTS, WEIGHT_HISTORY_SIZE, ortus::MAX_ELEMENTS, ortus::MAX_ELEMENTS, WEIGHT_HISTORY_SIZE, CL_MEM_READ_WRITE, false));
+    // collect metadata
+    numBlades = (int) weightBladeMap.size();
+    maxSize = (int) weightBladeMap[WEIGHT_KEYS[0]]->maxSize;
+    rowsPerBlade = ortus::NUM_ELEMENTS;
+    colsPerBlade = ortus::NUM_ELEMENTS;
+    pagesPerBlade = WEIGHT_HISTORY_SIZE;
+    // add the data to temp vector
+    tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
+    // increment kernel arg number
+    currentKernelArgNum++;
+    // END KERNEL ARG #2
+    
+    // KERNEL_ARG #3!!! Current and historic activations -- row 0 holds the current activations, rows 1+ hold the historic activations
+    printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
+    KernelArg<cl_float, DummyType> ka3(clHelper, kernelp, currentKernelArgNum);
+    activationBlade = ka3.addKernelArgWithBufferAndBlade(ACTIVATION_HISTORY_SIZE, ortus::NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE);
+    // collect metadata
+    numBlades = 1;// just one blade here, no map
+    maxSize = (int) activationBlade->maxSize;
+    rowsPerBlade = ACTIVATION_HISTORY_SIZE;
+    colsPerBlade = ortus::NUM_ELEMENTS;
+    pagesPerBlade = 1;
+    // add the data to temp vector
+    tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
+    // increment kernel arg number
+    currentKernelArgNum++;
+    // END KERNEL ARG #3
     
     
-    /*
-    // need a gj and cs contrib (one of each) -- these are NxN
-    chemContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
-    gapContrib = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, CONNECTOME_COLS, MAX_ELEMENTS, MAX_ELEMENTS);
-    // now we initialize the voltage Blade (one row)
-    voltages = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_COLS, MAX_ELEMENTS);
-    // then the output voltage history Blade -- THIS IS ORGANIZED SUCH THAT EACH ROW CONTAINS A NEURON'S VOLTAGES
-    outputVoltageHistory = new Blade<float>(clHelperp, CL_MEM_READ_WRITE, CONNECTOME_ROWS, VOLTAGE_HISTORY_SIZE, MAX_ELEMENTS, VOLTAGE_HISTORY_SIZE);// can't grow column-wise
-    //fillInputVoltageBlade(); // will probably be used at some point
-    //rowCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY);
-    //rowCount->set(NUM_ELEMS); // cl_uint, for current row count
-    //colCount = new Blade<cl_uint>(clHelperp, CL_MEM_READ_ONLY);
-    //colCount->set(NUM_ELEMS); // cl_uint, for current col count
-    gapNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_WRITE);
-    gapNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-    chemNormalizer = new Blade<cl_float>(clHelperp, CL_MEM_READ_WRITE);
-    chemNormalizer->set(1.f); // NOTE: THIS DOESN'T WORK YET... OR GET SET TO ANYTHING OTHER THAN 1!!!!
-    metadata = new Blade<cl_int>(clHelperp, CL_MEM_READ_ONLY, METADATA_COUNT, METADATA_COUNT);
-    // this doesn't create a buffer -- just a spot in local memory for the kernel to use as a scratch pad.
-    deviceScratchPadXCorr = new Blade<cl_float>(clHelperp, openCLWorkGroupSize*CONNECTOME_ROWS,XCORR_COMPUTATIONS, MAX_ELEMENTS, XCORR_COMPUTATIONS);
-    deviceScratchPadVoltageROC = new Blade<cl_float>(clHelperp, openCLWorkGroupSize*CONNECTOME_ROWS,XCORR_COMPUTATIONS, MAX_ELEMENTS, XCORR_COMPUTATIONS);
-     */
+    // ignoring global_keys for now...
+    
+    
+    // KERNEL ARG #4!!! Metadata
+    printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
+    KernelArg<cl_float, MetadataAttribute> ka4(clHelper, kernelp, currentKernelArgNum, METADATA_KEYS);
+    metadataBladeMap = *(ka4.addKernelArgWithBufferAndBlades(METADATA_COUNT, METADATA_COUNT, CL_MEM_READ_WRITE));
+    // collect metadata (again, this metadata has nothing to do with the metadataBladeMap that we are collecting metadata from)
+    numBlades = (int) metadataBladeMap.size();
+    maxSize = (int) metadataBladeMap[METADATA_KEYS[0]]->maxSize;
+    rowsPerBlade = 1;
+    colsPerBlade = METADATA_COUNT;
+    pagesPerBlade = 1;
+    // add the data to temp vector
+    tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
+    // increment kernel arg number
+    currentKernelArgNum++;
+    // END KERNEL ARG #4
+    
+    
+    // KERNEL ARG #5!!!  Scratchpads (temporary storage of info in kernel)
+    printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
+    // CHECK THIS!!!
+    size_t scratchpad_rows = SCRATCHPAD_COMPUTATION_SLOTS * openCLWorkGroupSize; // CHECK THIS
+    KernelArg<cl_float, Scratchpad>  ka5(clHelper, kernelp, currentKernelArgNum, SCRATCHPAD_KEYS);
+    scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpad_rows, ortus::NUM_ELEMENTS, 1, scratchpad_rows, ortus::NUM_ELEMENTS, 1, true));
+    // collect metadata 
+    numBlades = (int) scratchpadBladeMap.size();
+    maxSize = (int) scratchpadBladeMap[SCRATCHPAD_KEYS[0]]->maxSize;
+    rowsPerBlade = (int) scratchpad_rows;
+    colsPerBlade = ortus::NUM_ELEMENTS;
+    pagesPerBlade = 1;
+    // add the data to temp vector
+    tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
+    // increment kernel arg number
+    currentKernelArgNum++;
+    // END KERNEL ARG #5
+    
+    
+    printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
+    // kernel arg info - this will be the last kernel arg
+    KernelArg<cl_int, DummyType> kaLast(clHelper, kernelp, currentKernelArgNum);
+    // might be able to simplify this constructor so if only one set (rows, cols, pages)
+    // is specified, it knows to duplicate them so current == max.
+    // NOTE: again, using NUM_KERNEL_ARGS - 1 because the kernelArgInfo arg doesn't have kernelArgInfo
+    kernelArgInfoBlade = kaLast.addKernelArgWithBufferAndBlade(NUM_KERNEL_ARGS-1, numKernelArgMetadataCols, NUM_KERNEL_ARGS-1, numKernelArgMetadataCols, CL_MEM_READ_ONLY);
+    
+    // now we transfer our kernelArgInfo from the temp vector into the Blade.
+    setKernelArgInfo(tempKernelArgInfo);
+    
+    printf("All KernelArgs created.\n");
 }
      
 
+/** Transfers the temporary kernel arg info from the holding vector into the Blade for "permanent" storage */
+void DataSteward::setKernelArgInfo(std::vector<std::vector<int>>& tempKernelArgInfo){
+    int i, j;
+    int numArgsWithInfo = (int) tempKernelArgInfo.size();
+    int numInnerIndices;
+    for (i = 0; i < numArgsWithInfo; ++i){
+        numInnerIndices = (int) tempKernelArgInfo[i].size();
+        for (j = 0; j < numInnerIndices; ++j){
+            kernelArgInfoBlade->set(i, j, tempKernelArgInfo[i][j]);
+        }
+    }
+}
 
 
 // the probe.
