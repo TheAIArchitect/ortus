@@ -24,12 +24,38 @@ float computeVoltageRateOfChange(__global float* outputVoltageHistory, int numEl
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // this is the number of kernel args -1
-int NUM_KERNEL_ARGS_WITH_INFO =
+constant int NUM_KERNEL_ARGS_WITH_INFO = 6;
+constant int NUM_COLS_PER_KERNEL_ARG_INFO = 6;
+
+int getIndex(int row, int col, int page, int maxRows, int maxCols, int maxPages){
+    int pageSize = maxRows * maxCols;
+    return (page * pageSize) +  (row * maxCols) + col;
+}
 
 
-/* 
-void getKernelArgInfo(int* kernelArgInfo, int kernelArgNum, int* bladeNumRelativeToKernelArg, int* kernelArgStride, int* kernelArgRows, int* kernelArgCols, int* kernelArgPages){
-    *poop = 4;
+/* BEGIN kernelArgInfo info: (see DataSteward::initializeKernelArgsAndBlades for more info)*/
+// for each 'row':
+// [0] => kernel arg # (sanity check)
+// [1] => number of Blades
+// [2] => stride (from start to one Blade, to start to next -- essentially the max size)
+// [3] => rows per Blade
+// [4] => cols per Blade
+// [5] => pages per Blade
+// Note: there is no entry for kernelArgInfo, so there are only "number of kernel args"-1 rows in kernelArgInfo.
+/* END kernelArgInfo info */
+void getKernelArgInfo(global int* kernelArgInfo, int kernelArgNum, int* bladeNumRelativeToKernelArg, int* kernelArgStride, int* kernelArgRows, int* kernelArgCols, int* kernelArgPages){
+    // to get row, just set col to 0.
+    int kArgRow = getIndex(kernelArgNum, 0, 0, NUM_KERNEL_ARGS_WITH_INFO, NUM_COLS_PER_KERNEL_ARG_INFO, 0);
+    if (kernelArgInfo[kArgRow] != kernelArgNum){
+        printf("Oh no! KernelArgInfo seems to be incorrectly formatted!\n");
+    }
+    // now we add 1, 2, 3, etc. to kArgRow to fill our variables.
+    *bladeNumRelativeToKernelArg = kernelArgInfo[kArgRow + 1];
+    *kernelArgStride = kernelArgInfo[kArgRow + 2];
+    *kernelArgRows = kernelArgInfo[kArgRow + 3];
+    *kernelArgCols = kernelArgInfo[kArgRow + 4];
+    *kernelArgPages = kernelArgInfo[kArgRow + 5];
+    
 }
 
 
@@ -40,18 +66,11 @@ kernel void OrtusKernel(global float* elementAttributes,
                         global float* metadata,
                         local float* scratchpad,
                         global int* kernelArgInfo){
-    
-    /* BEGIN kernelArgInfo info: (see DataSteward::initializeKernelArgsAndBlades for more info)*/
-    // for each 'row':
-    // [0] => kernel arg # (sanity check)
-    // [1] => number of Blades
-    // [2] => stride (from start to one Blade, to start to next -- essentially the max size)
-    // [3] => rows per Blade
-    // [4] => cols per Blade
-    // [5] => pages per Blade
-    // Note: there is no entry for kernelArgInfo, so there are only "number of kernel args"-1 rows in kernelArgInfo.
-    /* END kernelArgInfo info */
-    
+    local unsigned int dimidx;
+    dimidx = 0;
+    int gId = get_global_id(dimidx); // gives id of current work-item
+    int lId = get_local_id(dimidx);
+
     // BEGIN vars for extracting necessary data from kernel args
     int kernelArgNum;
     int bladeNumRelativeToKernelArg; // first blade per kernel arg is 0, and it goes up from there.
@@ -60,7 +79,11 @@ kernel void OrtusKernel(global float* elementAttributes,
     int kernelArgCols;
     int kernelArgPages;
     
-    stupidThing(&kernelArgNum);
+    kernelArgNum = 0;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &bladeNumRelativeToKernelArg, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
+    if (gId == 1){
+        printf("kernel arg #%d {blades: %d, stride: %d, rows: %d, cols: %d, pages: %d}\n", kernelArgNum, bladeNumRelativeToKernelArg, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    }
     
     
     // get all indices we'll need:
@@ -75,21 +98,16 @@ kernel void OrtusKernel(global float* elementAttributes,
     // how to deal with transposed??? 
     
     
-    local unsigned int dimidx;
-    dimidx = 0;
+    
     // PRIVATE VARS
-    int gid = get_global_id(dimidx); // gives id of current work-item
-    int lid = get_local_id(dimidx);
+    
     int offset = 0;
     int len = 100;
     int bigLen = 100*100;
-    
+
     //printf("gid, lid: %d, %d\n",gid, lid);
-    if (gid == 1){
+    if (gId == 1){
         printf("nice.\n");
-        printf("poop: %d.\n", kernelArgNum);
-     
-        
     }
     
 }
