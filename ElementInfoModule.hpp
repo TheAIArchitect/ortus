@@ -55,7 +55,7 @@ public:
     bool marked = false; // used for stack
     bool ablated = false; // if true, we treat the element as non-existent
     
-    cl_float* activationp;
+    cl_float** activationp;
     cl_float* affectp;
     cl_float* typep;
     
@@ -64,7 +64,7 @@ public:
     
     
     std::string getName();
-    float vCurr(); //// NOTE: change this to 'getActivation()' -- held of because of potential errors it would generate
+    float vCurr(int fromTimestepsAgo); //// NOTE: change this to 'getActivation()' -- held of because of potential errors it would generate
     int getId();
     
     

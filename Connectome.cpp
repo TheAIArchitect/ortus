@@ -8,35 +8,40 @@
 
 #include "Connectome.hpp"
 
+#include "DataSteward.hpp"
 
-Connectome::Connectome(std::string ortFileName){
-    
+Connectome::Connectome(DataSteward* dataStewardp){
+    this->dataStewardp = dataStewardp;
+}
+
+
+/**
+ * This reads the .ort file,
+ * and does some initial parsing:
+ *      * gets metadata from file, strips it from the 'theLines'
+ *      * sets important static variables that must be set in order to create Blades
+ *
+ * The Blades must be created before creating the Elements and ElementRelations
+ */
+void Connectome::initialize(std::string ortFileName){
     // parse the .ort file, and create the elements and element relations specified
-    std::vector<std::string> theLines;
     // read from file into vector of strings
-    ortUtil.getLines(ortFileName, theLines);
-    // parse the vector of strings
-    setElements(theLines);
+    theLines = ortUtil.getLines(ortFileName);
+    // get metadata from top of file (some number of the first lines), and then delete them
+    ortUtil.readAndStripOrtFileMetadata(theLines);
+    // count and set ortus::NUM_ELEMENTS
+    ortUtil.countAndSetNumElements(theLines);
     
-    /** issue with connectome:
-        -> before reading it in, we don't know how many elements or element relations we have.
-        -> however, we need to know which elements and/or element relations we have in order to create the elements and relations
-            -> at least, we need to know how many to create (the Blades need this information)
-        -> But, while reading this information in, we parse it, and store it (in the elements and relations we create)
-     
-        -> options are:
-            1) create some number of elements guaranteed to be sufficient, and square that number for relations (or something)
-            2) require the .ort file to list the element count and relation count at the top of the file. 
-                -> read those 2 lines in, create the elements, and then parse the file (or read all lines, and then after parsing those two, parse the rest)
-            3) read the lines in (via getLines), and then run the lines through a function that counts the number of elements, and element relations,
-                then, create the elements and then call setElements
-            4) put the data that's read in into temporary variables that then move their contents over to the blades (within the Element or Relation object) after the Blade has been set. 
-        3 is the best, i think.
-     */
-    
-    
+}
+
+
+void Connectome::createElementsAndElementRelations(){
+    // parse the vector of strings, and create Elements and ElementRelations
+    setElements();
+    // pretty self explanatory...
     buildAdditionalDataStructures();
 }
+
 
 /**
  * Once the .ort file has been parsed,
@@ -52,13 +57,13 @@ Connectome::Connectome(std::string ortFileName){
  *
  */
 void Connectome::buildAdditionalDataStructures(){
-    printf(">> Element Modules (%d)\n",elementModules.size());
+    printf(">> Element Modules (%d)\n",(int)elementModules.size());
     for (auto element : elementModules){
         nameMap[element->name] = element->id;
         indexMap[element->id] = element->name;
         printf("%s\n",element->toString().c_str());
     }
-    printf(">> Element Relations (%d)\n", elementRelations.size());
+    printf(">> Element Relations (%d)\n", (int)elementRelations.size());
     for (auto relation : elementRelations){
         
         
@@ -69,7 +74,6 @@ void Connectome::buildAdditionalDataStructures(){
     return;
     
 }
-
 
 
 /**
@@ -84,12 +88,21 @@ void Connectome::addRelationAttributesFromOrt(std::unordered_map<std::string,std
     
     ortus::enum_string_unordered_map<RelationAttribute> postAttributeMap = ortUtil.getAttributeEnumsFromStrings<RelationAttribute>(postAttributeMapStrings, isElement);
     
+    
     for (auto attrib : preAttributeMap){
-        elrel->setAttribute(attrib.first,std::stof(attrib.second));
+        float floatToSet = 0.f;
+        if (isdigit(attrib.second[0])){
+            floatToSet = std::stof(attrib.second);
+        }
+        elrel->setAttribute(attrib.first, floatToSet);
     }
     
     for (auto attrib : postAttributeMap){
-        elrel->setAttribute(attrib.first,std::stof(attrib.second));
+        float floatToSet = 0.f;
+        if (isdigit(attrib.second[0])){
+            floatToSet = std::stof(attrib.second);
+        }
+        elrel->setAttribute(attrib.first, floatToSet);
     }
 }
 
@@ -101,6 +114,9 @@ ElementRelation* Connectome::addRelation(ElementInfoModule* ePre, ElementInfoMod
         elrel->post = ePost;
         elrel->postName = ePost->name;
         elrel->postId = ePost->id;
+        // preId and postId must be set before setting addresses 
+        elrel->setAttributeDataPointers(dataStewardp->relationAttributeBladeMap);
+        elrel->setWeightDataPointers(dataStewardp->weightBladeMap[WeightAttribute::CSWeight], dataStewardp->weightBladeMap[WeightAttribute::CSWeight]);
         // NOTE: as this grows, it might make more sense to have a function take an array of attributes to check for for each case.
         switch(ert){ 
             case CORRELATED:
@@ -201,6 +217,9 @@ void Connectome::addElement(std::unordered_map<std::string, std::string> attribu
     }
     ElementInfoModule* eim = elementMap[name];
     
+    eim->setAttributeDataPointers(dataStewardp->elementAttributeBladeMap);
+    eim->setActivationDataPointer(dataStewardp->activationBlade);
+    
     if (attributeMap.find("type") != attributeMap.end()){
         
         eim->setType(attributeMap["type"]);
@@ -214,7 +233,7 @@ void Connectome::addElement(std::unordered_map<std::string, std::string> attribu
 }
 
 
-void Connectome::setElements(std::vector<std::string>& theLines){
+void Connectome::setElements(){
     //    fixedLine = StrUtils::trim(fixedLine); // remove any remaining whitespace
     /*
      definitionLevel = 0: elements => neurons/areas/muscles, with attributes (type, +affect, etc.)
@@ -264,3 +283,7 @@ void Connectome::setElements(std::vector<std::string>& theLines){
         lineNum++;
     }
 }
+
+
+
+

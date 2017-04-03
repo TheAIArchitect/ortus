@@ -41,7 +41,7 @@ void DiagnosticSteward::tempVTKPlot(){
     ortus::vtkFullxcorr* theXCorr = morphToVTK();
     
     // fix this 300... should be a var
-    OrtusXCorrVisualizer xcorrVizzer(300, ortus::NUM_ELEMENTS,dStewiep->XCORR_COMPUTATIONS);
+    OrtusXCorrVisualizer xcorrVizzer(300, ortus::NUM_ELEMENTS,ortus::XCORR_COMPUTATIONS);
     
     
     xcorrVizzer.theXCorr = theXCorr;
@@ -143,7 +143,7 @@ std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVo
     printf("END THE VOLTAGE HISTORY VECTOR PRINTOUT\n");
     */
     
-    int startIndex =(dStewiep->ACTIVATION_HISTORY_SIZE-1)-dStewiep->XCORR_COMPUTATIONS; // xcorr_computation is assumed to be the same as the size of the array used for a single xcorr computation
+    int startIndex =(ortus::ACTIVATION_HISTORY_SIZE-1)- ortus::XCORR_COMPUTATIONS; // xcorr_computation is assumed to be the same as the size of the array used for a single xcorr computation
     
    
     // This is going to be slow, and it would probably be best to either rad the resutls back from blade, or thread this computation...
@@ -151,7 +151,7 @@ std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVo
         ortus::vectrix tempXCorrRes(numElements);
         for (int j = 0; j < numElements; ++j){ // and compute the xcorr between it, and everything else (including itself)
             
-            tempXCorrRes[j] = statistician.xcorrLimited(voltageHistoryVector[indicesToUse[i]], voltageHistoryVector[j], startIndex, dStewiep->XCORR_COMPUTATIONS);
+            tempXCorrRes[j] = statistician.xcorrLimited(voltageHistoryVector[indicesToUse[i]], voltageHistoryVector[j], startIndex, ortus::XCORR_COMPUTATIONS);
         }
         totalPartialXCorr[indicesToUse[i]] = tempXCorrRes;
     }

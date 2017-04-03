@@ -35,16 +35,17 @@ public:
     ElementRelation();
     ~ElementRelation();
     static float ZEROF;
-    static void corruptionCheck();
+    static void corruptionCheck(std::string location);
     
     
-    // this is actually a vector!
-    ortus::attribute_map relationAttributeMap;
-    // NOTE: CS, GJ Weights are **NOT** 'RelationAttributes'
-    float* csWeight;
-    float* gjWeight;
-    void setDataPointers(std::unordered_map<RelationAttribute, Blade<cl_float>*> relationAttributeBladeMap);
     
+    
+    bool freeWeights;
+    void setAttributeDataPointers(std::unordered_map<RelationAttribute, Blade<cl_float>*>& relationAttributeBladeMap);
+    void setWeightDataPointers(Blade<cl_float>* csWeightBlade, Blade<cl_float>* gjWeightBlade);
+    
+    float getCSWeight(int fromTimestepsAgo);
+    float getGJWeight(int fromTimestepsAgo);
     float getAttribute(RelationAttribute rAttribute);
     void setAttribute(RelationAttribute rAttribute, float value);
     
@@ -68,6 +69,11 @@ public:
     glm::vec3 midpoint; // used to for the label's location
     
 private:
+    // this is actually a vector!
+    ortus::attribute_map relationAttributeMap;
+    // NOTE: CS, GJ Weights are **NOT** 'RelationAttributes'
+    cl_float** csWeight;
+    cl_float** gjWeight;
     
     // probably acts like a bitvector!
     std::vector<bool> attributeTracker; // keeps track of floats that have been 'newed'

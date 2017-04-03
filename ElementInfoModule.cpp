@@ -23,19 +23,30 @@ void ElementInfoModule::setAttributeDataPointers(std::unordered_map<ElementAttri
     *affectp = (float) ElementAffect::NEUTRAL; // 0, at least, when this was written it was...
 }
 
+/**
+ * sets the pointers for the activation history (index 0 is the current activation,
+ * and indices 1+ are previous activations, such that [1] is current time - 1,
+ * [2] is current time - 2, and so on).
+ */
 void ElementInfoModule::setActivationDataPointer(Blade<cl_float>* activationBladep){
-    activationp = activationBladep->getp(0, id); // activation blade holds the current activation at row 0, historic activations in rows 1+
-    *activationp = 0; // default to 0
+    activationp = new cl_float*[ortus::ACTIVATION_HISTORY_SIZE];
+    int i = 0;
+    for (i = 0; i < ortus::ACTIVATION_HISTORY_SIZE; ++i){
+        activationp[i] = activationBladep->getp(i, id); // activation blade holds the current activation at row 0, historic activations in rows 1+
+        *activationp = 0; // default to 0
+    }
 }
 
 /** don't ever, for any reason, do anything, to this function, for any reason, ever,
  * no matter what, no matter where, or who, or who you are with or where you are going,
  * before you have called 'setActivationDataPointer' (or, setAttributeDataPointers, for that matter)
  *
- * this function sets the activation level of this element (in the Blade).
+ * this function sets the activation level of this element (in the Blade) 
+ *
+ * NOTE: this sets the activation for the 'current' window (so, index 0);
  */
 void ElementInfoModule::setActivation(float fActivation){
-    *activationp = fActivation;
+    *activationp[0] = fActivation;
 }
 
 ElementType ElementInfoModule::getEType(){
@@ -63,9 +74,13 @@ int ElementInfoModule::getId(){
 // this needs to change to call it from the blade.
 // should also have another function that allows calling for a specific time window,
 // that would come from the voltage history... wherever that's being kept.
-float ElementInfoModule::vCurr(){
+float ElementInfoModule::vCurr(int fromTimestepsAgo){
  //   return *activation;
-    return *activationp;
+    if (ortus::ACTIVATION_HISTORY_SIZE <= fromTimestepsAgo){
+        printf("(ElementInfoModule) Error: trying to access activation from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, ortus::ACTIVATION_HISTORY_SIZE-1);
+        exit(18);
+    }
+    return *activationp[fromTimestepsAgo];
 }
 
 /**

@@ -93,4 +93,3 @@ void CLBuffer<T>::clearBuffer(){
 
 template class CLBuffer<cl_float>;
 template class CLBuffer<cl_int>;
-/** add cl_int??? */

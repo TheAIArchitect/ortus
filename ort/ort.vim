@@ -18,7 +18,13 @@ endif
 " lit => less important than
 " mit => more important than
 "
-syn keyword attributeKeys lit mit bad good type thresh elements affect
+syn keyword attributeKeys lit mit bad good type thresh elements affect 
+syn keyword attributeKeys MAX_ELEMENTS
+syn keyword attributeKeys XCORR_COMPUTATIONS 
+syn keyword attributeKeys SLOPE_COMPUTATIONS 
+syn keyword attributeKeys ACTIVATION_HISTORY_SIZE
+syn keyword attributeKeys WEIGHT_HISTORY_SIZE
+
 "syn match attributeKeys \"-affect"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -56,6 +62,10 @@ hi neuronNeg guifg=#af0000 guibg=NONE guisp=NONE gui=NONE ctermfg=124 ctermbg=NO
 hi neuronNeutral guifg=#af00af guibg=NONE guisp=NONE gui=NONE ctermfg=127 ctermbg=NONE cterm=NONE
 hi neuronPos guifg=#00af00 guibg=NONE guisp=NONE gui=NONE ctermfg=34 ctermbg=NONE cterm=NONE
 
+syn match odrNumber '\s\d\+\s'
+syn match odrNumber '=\d\+\s'
+
+
 
 " want something for it to fall back on, i think... don't know if this is the
 " way to do it or not.
@@ -78,6 +88,7 @@ hi link ruleNum Statement
 hi link odrOper Operator 
 hi link attributeKeys Type
 hi link attributeBlock String
+hi link odrNumber Number
 
 let b:current_syntax = "ort"
 

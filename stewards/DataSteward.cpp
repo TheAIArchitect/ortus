@@ -40,14 +40,11 @@
 
 
 const std::vector<WeightAttribute> DataSteward::WEIGHT_KEYS = { WeightAttribute::CSWeight, WeightAttribute::GJWeight };
-const std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect};
-const std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Polarity, RelationAttribute::Thresh };
+const std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect, ElementAttribute::Thresh};
+const std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Type, RelationAttribute::Polarity, RelationAttribute::Direction, RelationAttribute::Age, RelationAttribute::Thresh, RelationAttribute::Decay, RelationAttribute::Mutability};
 const std::vector<GlobalAttribute> DataSteward::GLOBAL_KEYS = { GlobalAttribute::ChemNormalizer, GlobalAttribute::GapNormalizer };
 const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::NumSlopeComputations } ;
 const std::vector<Scratchpad> DataSteward::SCRATCHPAD_KEYS = { Scratchpad::XCorr, Scratchpad::Slope};
-
-int DataSteward::XCORR_COMPUTATIONS = SCRATCHPAD_COMPUTATION_SLOTS;
-int DataSteward::SLOPE_COMPUTATIONS = SCRATCHPAD_COMPUTATION_SLOTS;
 
 
 DataSteward::DataSteward(){
@@ -79,16 +76,17 @@ void DataSteward::init(){
     initializeData();
 }
 
-void DataSteward::loadConnectome(std::string connectomeFile){
-    connectomep = new Connectome(connectomeFile);
+void DataSteward::initializeConnectome(std::string ortFile){
+    // Connectome holds the elements, and DataSteward holds the Connectome, but it also holds the Blades, which the Connectome has to link to the Elements, because it's processing the data as creates the Elements and ElementRelations as it sets the data (in the Blades).
+    connectomep = new Connectome(this);
     connectomeNewed = true;
+    connectomep->initialize(ortFile);
+   
+}
+
+void DataSteward::createElementsAndElementRelations(){
+    connectomep->createElementsAndElementRelations();
     
-    /** STOPPING POINT:
-        -> ensure all data is being loaded properly
-        -> ensure all data is being put into blades properly
-        -> rewrite kernel!
-        -> implement structural rules / growth rules
-     */
 }
 
 void DataSteward::initializeData(){
@@ -154,25 +152,6 @@ void DataSteward::updateMetadataBlade(int kernelIterationNum){
     metadata->set(4, XCORR_COMPUTATIONS);
      */
 }
-
-//void DataSteward::setOpenCLKernelArgs(){
-    /*
-    voltages->setCLArgIndex(0, kernelp);
-    outputVoltageHistory->setCLArgIndex(1, kernelp);
-    gaps->setCLArgIndex(2, kernelp);
-    chems->setCLArgIndex(3, kernelp);
-    gapContrib->setCLArgIndex(4, kernelp);
-    chemContrib->setCLArgIndex(5, kernelp);
-    clHelperp->err = clSetKernelArg(*kernelp, 6, sizeof(cl_int), &Probe::shouldProbe);
-    clHelperp->check_and_print_cl_err(clHelperp->err);
-    gapNormalizer->setCLArgIndex(7, kernelp);
-    chemNormalizer->setCLArgIndex(8, kernelp);
-    metadata->setCLArgIndex(9, kernelp);
-    deviceScratchPadXCorr->setCLArgIndex(10,kernelp);
-    deviceScratchPadVoltageROC->setCLArgIndex(11,kernelp);
-     */
-    
-//}
 
 void DataSteward::executePreRunOperations(){
     pushOpenCLBuffers();
@@ -302,13 +281,13 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // NOTE: specifying 'false' at the end is important (for now), because if that doesn't happen,
     // the cl_mem_flags enum will register 'true' for the funciton simplification that creates a device scratch pad...
     KernelArg<cl_float, WeightAttribute> ka2(clHelper, kernelp, currentKernelArgNum, WEIGHT_KEYS);
-    weightBladeMap = *(ka2.addKernelArgWithBufferAndBlades(ortus::NUM_ELEMENTS, ortus::NUM_ELEMENTS, WEIGHT_HISTORY_SIZE, ortus::MAX_ELEMENTS, ortus::MAX_ELEMENTS, WEIGHT_HISTORY_SIZE, CL_MEM_READ_WRITE, false));
+    weightBladeMap = *(ka2.addKernelArgWithBufferAndBlades(ortus::NUM_ELEMENTS, ortus::NUM_ELEMENTS, ortus::WEIGHT_HISTORY_SIZE, ortus::MAX_ELEMENTS, ortus::MAX_ELEMENTS, ortus::WEIGHT_HISTORY_SIZE, CL_MEM_READ_WRITE, false));
     // collect metadata
     numBlades = (int) weightBladeMap.size();
     maxSize = (int) weightBladeMap[WEIGHT_KEYS[0]]->maxSize;
     rowsPerBlade = ortus::NUM_ELEMENTS;
     colsPerBlade = ortus::NUM_ELEMENTS;
-    pagesPerBlade = WEIGHT_HISTORY_SIZE;
+    pagesPerBlade = ortus::WEIGHT_HISTORY_SIZE;
     // add the data to temp vector
     tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
     // increment kernel arg number
@@ -318,11 +297,11 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // KERNEL_ARG #3!!! Current and historic activations -- row 0 holds the current activations, rows 1+ hold the historic activations
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     KernelArg<cl_float, DummyType> ka3(clHelper, kernelp, currentKernelArgNum);
-    activationBlade = ka3.addKernelArgWithBufferAndBlade(ACTIVATION_HISTORY_SIZE, ortus::NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE);
+    activationBlade = ka3.addKernelArgWithBufferAndBlade(ortus::ACTIVATION_HISTORY_SIZE, ortus::NUM_ELEMENTS, ortus::ACTIVATION_HISTORY_SIZE, ortus::MAX_ELEMENTS, CL_MEM_READ_WRITE);
     // collect metadata
     numBlades = 1;// just one blade here, no map
     maxSize = (int) activationBlade->maxSize;
-    rowsPerBlade = ACTIVATION_HISTORY_SIZE;
+    rowsPerBlade = ortus::ACTIVATION_HISTORY_SIZE;
     colsPerBlade = ortus::NUM_ELEMENTS;
     pagesPerBlade = 1;
     // add the data to temp vector
@@ -338,12 +317,12 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // KERNEL ARG #4!!! Metadata
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     KernelArg<cl_float, MetadataAttribute> ka4(clHelper, kernelp, currentKernelArgNum, METADATA_KEYS);
-    metadataBladeMap = *(ka4.addKernelArgWithBufferAndBlades(METADATA_COUNT, METADATA_COUNT, CL_MEM_READ_WRITE));
+    metadataBladeMap = *(ka4.addKernelArgWithBufferAndBlades(ortus::BLADE_METADATA_COUNT, ortus::BLADE_METADATA_COUNT, CL_MEM_READ_WRITE));
     // collect metadata (again, this metadata has nothing to do with the metadataBladeMap that we are collecting metadata from)
     numBlades = (int) metadataBladeMap.size();
     maxSize = (int) metadataBladeMap[METADATA_KEYS[0]]->maxSize;
     rowsPerBlade = 1;
-    colsPerBlade = METADATA_COUNT;
+    colsPerBlade = ortus::BLADE_METADATA_COUNT;
     pagesPerBlade = 1;
     // add the data to temp vector
     tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
@@ -355,7 +334,7 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // KERNEL ARG #5!!!  Scratchpads (temporary storage of info in kernel)
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     // CHECK THIS!!!
-    size_t scratchpad_rows = SCRATCHPAD_COMPUTATION_SLOTS * openCLWorkGroupSize; // CHECK THIS
+    size_t scratchpad_rows = ortus::SCRATCHPAD_COMPUTATION_SLOTS * openCLWorkGroupSize; // CHECK THIS
     KernelArg<cl_float, Scratchpad>  ka5(clHelper, kernelp, currentKernelArgNum, SCRATCHPAD_KEYS);
     scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpad_rows, ortus::NUM_ELEMENTS, 1, scratchpad_rows, ortus::NUM_ELEMENTS, 1, true));
     // collect metadata 

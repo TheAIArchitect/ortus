@@ -25,7 +25,7 @@ private:
     public:
         OrtUtil();
     
-        void getLines(std::string ortFile, std::vector<std::string>& theLines);
+        std::vector<std::string> getLines(std::string ortFile);
     
         void setElements(std::vector<std::string>& theLines, std::vector<ElementInfoModule*>& elementModules, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap);
     
@@ -51,7 +51,7 @@ private:
     
         void addRelation(std::vector<std::unordered_map<std::string, std::string>>& vecOfAttributeMaps, std::vector<ElementRelation*>& elementRelations, ortus::element_map& elementMap, ElementRelationType ert);
     
-    
+        void countAndSetNumElements(std::vector<std::string>& theLines);
     
     
 public:
@@ -62,6 +62,7 @@ public:
         static std::string INDENTATION_STRING;
         static int INDENTATION_STRING_LENGTH;
     
+    void readAndStripOrtFileMetadata(std::vector<std::string>& theLines);
     
 private:
         std::string removeCommented(std::string line, bool& startBlockComment);

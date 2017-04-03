@@ -16,14 +16,22 @@
 #include "OrtUtil.hpp"
 #include <vector>
 #include <string>
+#include "StrUtils.hpp"
 
-
+class DataSteward;
 
 class Connectome {
+
+public:
+    DataSteward* dataStewardp;
     
 public:
-    Connectome(std::string ortFileName);
+    Connectome(DataSteward* dataStewardp);
+    void initialize(std::string ortFileName);
+    void createElementsAndElementRelations();
+    
     void buildAdditionalDataStructures();
+    
     ElementRelation* addRelation(ElementInfoModule* ePre, ElementInfoModule* ePost, ElementRelationType ert);
     
     void addRelationAttributesFromOrt(std::unordered_map<std::string,std::string>& preAttributeMapStrings, std::unordered_map<std::string,std::string>& postAttributeMapStrings, ElementRelation* elrel);
@@ -34,7 +42,9 @@ public:
     
     friend void addToRelationMap(ortus::relation_map& remap, int preIndex, ElementRelation* elrel, ElementRelationType ert);
     
-    void setElements(std::vector<std::string>& theLines);
+    void setElements();
+    
+    std::vector<std::string> theLines;
     
      // primary element pointer holder -- the index in this vector is the element's 'id'
     std::vector<ElementInfoModule*> elementModules;
@@ -58,6 +68,7 @@ public:
     
     std::vector<std::string> odrVec;
     OrtUtil ortUtil;
+    
 };
 
 #endif /* Connectome_hpp */

@@ -102,7 +102,7 @@ public:
         size_t byteOffsetMultiplier = createBuffer(maxRowsPerKey, maxColsPerKey, maxPagesPerKey, memFlags, isDeviceScratchpad);
         // create the blades, and add the offset and buffer info to each one
         bladeMap.reserve(keyCount);
-        byteOffsets.reserve(keyCount);
+        byteOffsets.resize(keyCount);
         byteOffsets[0] = 0; // no offset for first one
         for (int i = 0; i < keyCount; ++i){
             bladeMap[theKeys[i]] = new Blade<T>(clHelper, initialRowsPerKey, initialColsPerKey, initialPagesPerKey, maxRowsPerKey, maxColsPerKey, maxPagesPerKey, memFlags, isDeviceScratchpad);

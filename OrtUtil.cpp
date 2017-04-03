@@ -1,8 +1,11 @@
 #include "OrtUtil.hpp"
 
-int OrtUtil::NUM_ELEMENTS = 0;
 std::string OrtUtil::ORT_FILE = "";
+// NOTE: the strings in this array must be in the same order that they are found in the .ort file
+// (which is defined in the .ort specification)
 std::vector<std::string> OrtUtil::ORT_DEFINITION_LEVELS = {"elements", "opposes", "causes", "dominates"};
+
+
 /*
  the first intented line read determines the indentation style.
  the set of space characters at the beginning of that line are stored in INDENTATION_STRING,
@@ -201,11 +204,11 @@ std::unordered_map<std::string, std::string> OrtUtil::createAttributeMapStrings(
     // deal with the element's name, and the sign prepended (e.g., +CO2)
     if (line[0] == '+'){
         attributeMapStrings["name"] = line.substr(1,colonPos-1); // -1 to account for sign
-        attributeMapStrings["direction"] = "pos";
+        attributeMapStrings["direction"] = "1";
     }
     else if (line[0] == '-'){
         attributeMapStrings["name"] = line.substr(1,colonPos-1); // -1 to account for sign
-        attributeMapStrings["direction"] = "neg";
+        attributeMapStrings["direction"] = "-1";
     }
     else { // no sign
         attributeMapStrings["name"] = line.substr(0,colonPos); // no sign, no -1
@@ -336,10 +339,9 @@ std::vector<std::unordered_map<std::string, std::string>> OrtUtil::createVecOfAt
 
 
 /**
- * Reads fname as an .ort file -- essentially, as of now, 
- * only strips comments and whitespace from the start and end of lines,
- * after removing comments that start with "//",
- * from the start location to the end of the line.
+ * Reads fname as an .ort file
+ * strips comments  (block and line), and blank lines
+ * (including lines that end up blank after stripping any comments in them)
  */
 std::vector<std::string> OrtUtil::getOdrLines(std::string fname){
     std::vector<std::string> odrVec;
@@ -373,8 +375,113 @@ std::vector<std::string> OrtUtil::getOdrLines(std::string fname){
     return odrVec; // note, there is still whitespace here, because we need the tabs/spaces at the beginning of lines... like python
 }
 
-void OrtUtil::getLines(std::string ortFile, std::vector<std::string>& theLines){
+
+
+std::vector<std::string> OrtUtil::getLines(std::string ortFile){
     ORT_FILE = ortFile;
-    theLines = getOdrLines(ORT_FILE);
-    //setElements(theLines, elementModules, elementRelations, elementMap);
+    return getOdrLines(ORT_FILE);
+}
+
+
+/**
+ * THIS FUNCTION SETS 'ortus::NUM_ELEMENTS'
+ *
+ * BUT, IT MUST BE CALLED AFTER 'readAndStripOrtFileMetadata'
+ *
+ * This counts the number of elements, and sets ortus::NUM_ELEMENTS
+ */
+void OrtUtil::countAndSetNumElements(std::vector<std::string>& theLines){
+    std::string trimmed = "";
+    int elementCount = 0;
+    int indentationLevel = 0;
+    int lineNo = 0;
+    int lineCount = theLines.size();
+    // now we go through the lines, and:
+    trimmed = determineIndentationAndStripWhitespace(theLines[lineNo], indentationLevel);
+    // we need to check trimmed from start to end-1 because of the ":" at the end of 'elements'
+    if (trimmed.substr(0,trimmed.size()-1) == OrtUtil::ORT_DEFINITION_LEVELS[0]){ // index 0 is "elements"
+        // once we find the 'elements' line, we enter a new loop that counts all the elements
+        lineNo++;// first, we increment lineNo though
+        determineIndentationAndStripWhitespace(theLines[lineNo], indentationLevel); // do first one outside of loop
+        while (indentationLevel == 1 && lineNo < lineCount){// we are still running over elements (each element occupies 1 line)
+            elementCount++; // we know first one exists becuase we entered the loop
+            lineNo++;
+            // we need to save the trimmed output so we can match against it once the loop exits.
+            trimmed = determineIndentationAndStripWhitespace(theLines[lineNo], indentationLevel);
+        }
+        // now that we are out of the loop, it means the *current* line has a different indentation level... don't skip it!
+    }
+    else {
+        printf("(OrtUtil) Error: .ort file format incorrect. 'elements:' must be the first line after any metadata. First line found was '%s'\n", theLines[lineNo].c_str());
+        exit(17);
+    }
+    ortus::NUM_ELEMENTS = elementCount;
+}
+
+
+
+
+/**
+ * Metadata may be placed in (and in some cases, may be required, see blelow)
+ * the .ort file, at the top, before the first definition level ('elements'),
+ * with one per line.
+ *
+ * required metadata:
+ *      * MAX_ELEMENTS
+ */
+void OrtUtil::readAndStripOrtFileMetadata(std::vector<std::string>& theLines){
+    bool maxElementsSpecified = false; // this *must* be in the .ort file.
+    int indentationLevel = -1;// won't use this.
+    std::string trimmed = determineIndentationAndStripWhitespace(theLines[0], indentationLevel);
+    // we need to check trimmed from start to end-1 because of the ":" at the end of 'elements'
+    while (trimmed.substr(0,trimmed.size()-1) != ORT_DEFINITION_LEVELS[0]) {// when 'elements' starts, we're done looking for metadata
+        std::vector<std::string> tempSplit = StrUtils::parseOnCharDelim(theLines[0],'=');
+        if (StrUtils::trim(tempSplit[0]) == "MAX_ELEMENTS"){
+            ortus::MAX_ELEMENTS = std::stoi(StrUtils::trim(tempSplit[1]));// so now, we know what our MAX_ELEMENTS will be
+            if (ortus::MAX_ELEMENTS < 1){
+                printf("MAX_ELEMENTS, as specified at the top of the .ort file, must be greater than 0.\n");
+                exit(15);
+            }
+            maxElementsSpecified = true;
+        }
+        else if (StrUtils::trim(tempSplit[0]) == "XCORR_COMPUTATIONS"){
+            ortus::XCORR_COMPUTATIONS = std::stoi(StrUtils::trim(tempSplit[1]));
+            if (ortus::XCORR_COMPUTATIONS < 3){ // less than 3 doesn't seem to make much sense for xcorr...
+                printf("XCORR_COMPUTATIONS must be at least 3.\n");
+                exit(15);
+            }
+        }
+        else if (StrUtils::trim(tempSplit[0]) == "SLOPE_COMPUTATIONS"){
+            ortus::SLOPE_COMPUTATIONS = std::stoi(StrUtils::trim(tempSplit[1]));
+            if (ortus::SLOPE_COMPUTATIONS < 3){ // xcorr and slope use the same kernel arg (as of now)
+                printf("SLOPE_COMPUTATIONS must be at least 3.\n");
+                exit(15);
+            }
+        }
+        else if (StrUtils::trim(tempSplit[0]) == "ACTIVATION_HISTORY_SIZE"){
+            ortus::ACTIVATION_HISTORY_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));;
+            if (ortus::ACTIVATION_HISTORY_SIZE < 2){ // one index is for current, need at least one for history
+                printf("ACTIVATION_HISTORY_SIZE must be at least 2. Using default.\n");
+                exit(15);
+            }
+        }
+        else if (StrUtils::trim(tempSplit[0]) == "WEIGHT_HISTORY_SIZE"){
+            ortus::WEIGHT_HISTORY_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));;
+            if (ortus::WEIGHT_HISTORY_SIZE < 2){ // one index is for current, need at least one for history
+                printf("WEIGHT_HISTORY_SIZE must be at least 2. Using default.\n");
+                exit(15);
+            }
+        }
+        //finally, delete that line, and re-read line number 0, because now the line that was 1 is in index 0.
+        theLines.erase(theLines.begin());
+        trimmed = determineIndentationAndStripWhitespace(theLines[0], indentationLevel);
+    }
+    if (ortus::XCORR_COMPUTATIONS != ortus::SLOPE_COMPUTATIONS){
+        printf("XCORR_COMPUTATIONS and SLOPE_COMPUTATIONS must be equivalent!\n");
+        exit(15);
+    }
+    if (!maxElementsSpecified){
+        printf("(Connectome) Error: .ort file missing metadata 'MAX_ELEMENTS = <int>', where <int> is an integer specifiying the maximum permissible number of elements.");
+        exit(15);
+    }
 }

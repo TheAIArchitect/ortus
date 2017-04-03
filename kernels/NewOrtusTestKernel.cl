@@ -22,6 +22,86 @@ void computeXCorr(__global float* outputVoltageHistory, int numElements, int vol
 float XCorrMultiply(__global float* outputVoltageHistories, int aOffset, int bOffset, int len);
 float computeVoltageRateOfChange(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* voltageRateOfChangeScratchPad, int startingScratchPadOffset, int numXCorrEntries);
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// this is the number of kernel args -1
+int NUM_KERNEL_ARGS_WITH_INFO =
+
+
+/* 
+void getKernelArgInfo(int* kernelArgInfo, int kernelArgNum, int* bladeNumRelativeToKernelArg, int* kernelArgStride, int* kernelArgRows, int* kernelArgCols, int* kernelArgPages){
+    *poop = 4;
+}
+
+
+kernel void OrtusKernel(global float* elementAttributes,
+                        global float* relationAttributes,
+                        global float* weights,
+                        global float* activations,
+                        global float* metadata,
+                        local float* scratchpad,
+                        global int* kernelArgInfo){
+    
+    /* BEGIN kernelArgInfo info: (see DataSteward::initializeKernelArgsAndBlades for more info)*/
+    // for each 'row':
+    // [0] => kernel arg # (sanity check)
+    // [1] => number of Blades
+    // [2] => stride (from start to one Blade, to start to next -- essentially the max size)
+    // [3] => rows per Blade
+    // [4] => cols per Blade
+    // [5] => pages per Blade
+    // Note: there is no entry for kernelArgInfo, so there are only "number of kernel args"-1 rows in kernelArgInfo.
+    /* END kernelArgInfo info */
+    
+    // BEGIN vars for extracting necessary data from kernel args
+    int kernelArgNum;
+    int bladeNumRelativeToKernelArg; // first blade per kernel arg is 0, and it goes up from there.
+    int kernelArgStride;
+    int kernelArgRows;
+    int kernelArgCols;
+    int kernelArgPages;
+    
+    stupidThing(&kernelArgNum);
+    
+    
+    // get all indices we'll need:
+    
+    // element attributes: type, affect, thresh
+    // relation attributes: type, polarity, direction, age, thresh, decay, mutability
+    // activations: just activations, with the activation history size in 'metadata' (see below)
+    // metadata: numElements, kernelIterationNum, activationHistorySize,  numXCorrComputations, numSlopeComputations
+    
+    
+    
+    // how to deal with transposed??? 
+    
+    
+    local unsigned int dimidx;
+    dimidx = 0;
+    // PRIVATE VARS
+    int gid = get_global_id(dimidx); // gives id of current work-item
+    int lid = get_local_id(dimidx);
+    int offset = 0;
+    int len = 100;
+    int bigLen = 100*100;
+    
+    //printf("gid, lid: %d, %d\n",gid, lid);
+    if (gid == 1){
+        printf("nice.\n");
+        printf("poop: %d.\n", kernelArgNum);
+     
+        
+    }
+    
+}
+
+
+/******************************************************************************
+ ******************************************************************************
+ ***********************************  OLD *************************************
+ ***********************************  \/  *************************************
+ *****************************************************************************/
+ 
+
 
 float computeDecay(float v_curr, float v_decay, float v_init){
     float decay = v_curr*v_decay;// this works because v_init is 0.
@@ -76,32 +156,6 @@ int getScratchPadIndex(int startingScratchPadOffset, int elementId, int XCorrEnt
     return startingScratchPadOffset+get2DIndexAs1D(elementId, XCorrEntry, numXCorrEntries);
 }
 
-__kernel void OrtusKernel(__global float* elementAttributes,
-                          __global float* relationAttributes,
-                        __global float* weights,
-                        __global float* activations,
-                        __global float* metadata,
-                        __local float* scratchpad,
-                        __global int* kernelArgInfo){
-    
-    
-    
-    __local unsigned int dimidx;
-    dimidx = 0;
-    // PRIVATE VARS
-    int gid = get_global_id(dimidx); // gives id of current work-item
-    int lid = get_local_id(dimidx);
-    int offset = 0;
-    int len = 100;
-    int bigLen = 100*100;
-    
-    //printf("gid, lid: %d, %d\n",gid, lid);
-    //if (gid == 1){
-    
-        
-    //}
-    
-}
 
 __kernel void refOrtusKernel( __global float *voltages, // read and write
                          __global float *outputVoltageHistory, // read and write

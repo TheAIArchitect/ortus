@@ -32,7 +32,7 @@ enum class RelationAttribute { Type, Polarity, Direction, Age, Thresh, Decay, Mu
 
 enum class GlobalAttribute { GapNormalizer, ChemNormalizer};
 
-// these are all scalars
+// these are all scalars -- NOTE: perhaps add MAX_ELEMENTS??
 enum class MetadataAttribute { NumElements, KernelIterationNum, ActivationHistorySize, NumXCorrComputations, NumSlopeComputations};
 
 // scratch pats for cross correlation (XCorr), and rate of change of activation (Slope)
@@ -64,9 +64,27 @@ class ElementInfoModule;
 
 namespace ortus {
     
-    // these need to be set
+    
+    
+    const static int BLADE_METADATA_COUNT = 5;// note this is the number of metadata elements the kernel will get, not the number of elements in the .ort file
+    
+    
+    // START DEFAULT VALUES
+    // These get set in OrtUtil, if values are specified in the .ort file
     static int NUM_ELEMENTS = 10;
     static int MAX_ELEMENTS = 100;
+    static int ACTIVATION_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
+    
+    // this is the number of computations that can be stored per 'core',
+    // e.g., that number of XCorr computations, or Slope comptuations,
+    // w.r.t. historical values.
+    static int SCRATCHPAD_COMPUTATION_SLOTS = 4;
+    static int XCORR_COMPUTATIONS = SCRATCHPAD_COMPUTATION_SLOTS;
+    static int SLOPE_COMPUTATIONS = SCRATCHPAD_COMPUTATION_SLOTS;
+    static int WEIGHT_HISTORY_SIZE = 3; // not based on anything, really -- seems better than 2, and not sure if 4 is needed.
+    // END DEFAULT VALUES 
+    
+    
     // CS and GJ weights are *NOT* 'RelationAttribute's
     static const int NUM_ELEMENT_ATTRIBUTES = static_cast<int>(ElementAttribute::NUM_ELEMENT_ATTRIBUTES);
     static const int NUM_RELATION_ATTRIBUTES = static_cast<int>(RelationAttribute::NUM_RELATION_ATTRIBUTES);
@@ -77,7 +95,9 @@ namespace ortus {
     
     using relation_map = std::unordered_map<int, std::vector<ElementRelation*>>;
     
-    using attribute_map = std::vector<float*>;
+    //template <class T>
+    //using attribute_map = std::vector<T*>;
+    using attribute_map = std::vector<cl_float*>;
     
     //using attribute_blade_map = std::vector<Blade<cl_float>*>;
     

@@ -13,11 +13,12 @@
 float ElementRelation::ZEROF = 0.0f;
 
 ElementRelation::ElementRelation(){
-    relationAttributeMap.reserve(ortus::NUM_ELEMENT_ATTRIBUTES);
-    attributeTracker.reserve(ortus::NUM_ELEMENT_ATTRIBUTES);
+    relationAttributeMap.resize(ortus::NUM_RELATION_ATTRIBUTES);
+    attributeTracker.resize(ortus::NUM_RELATION_ATTRIBUTES);
     // should be a fast way to ensure all float* point to something valid
     // from SO, seems like gcc unrolls the loop a bit
     std::fill(relationAttributeMap.begin(), relationAttributeMap.end(),&ZEROF);
+    std::fill(attributeTracker.begin(), attributeTracker.end(), false);
 };
 
 ElementRelation::~ElementRelation(){
@@ -26,6 +27,10 @@ ElementRelation::~ElementRelation(){
             //delete relationAttributeMap[i];
         //}
     //}
+    if (freeWeights){
+        delete csWeight;
+        delete gjWeight;
+    }
 }
 
 
@@ -33,12 +38,31 @@ float ElementRelation::getAttribute(RelationAttribute rAttribute){
     return *relationAttributeMap[static_cast<int>(rAttribute)];
 }
 
+float ElementRelation::getCSWeight(int fromTimestepsAgo){
+    if (ortus::WEIGHT_HISTORY_SIZE <= fromTimestepsAgo){
+        printf("(ElementRelation) Error: trying to access CS Weight from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, ortus::WEIGHT_HISTORY_SIZE-1);
+        exit(18);
+    }
+    return *csWeight[fromTimestepsAgo];
+}
+
+float ElementRelation::getGJWeight(int fromTimestepsAgo){
+    if (ortus::WEIGHT_HISTORY_SIZE <= fromTimestepsAgo){
+        printf("(ElementRelation) Error: trying to access GJ Weight from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, ortus::WEIGHT_HISTORY_SIZE-1);
+        exit(18);
+    }
+    return *gjWeight[fromTimestepsAgo];
+}
+
 /** NOTE: this must only be called *afteR* calling 'setDataPointers()' */
 
 void ElementRelation::setAttribute(RelationAttribute rAttribute, float value){
+    corruptionCheck("Pre set");
     *relationAttributeMap[static_cast<int>(rAttribute)] = value;
-    // below might be totally unnecessary.
-    attributeTracker[static_cast<int>(rAttribute)] = true;
+    // below (attributeTracker) might be totally unnecessary.
+    //attributeTracker[static_cast<int>(rAttribute)] = true;
+    printf("(set attribute) %s->%s -- attribute #%d: %f\n",preName.c_str(),postName.c_str(),static_cast<int>(rAttribute),*relationAttributeMap[static_cast<int>(rAttribute)]);
+    corruptionCheck("Post set");
 }
 
 /** Note: for this to work, preId and postId must be set...
@@ -52,10 +76,26 @@ void ElementRelation::setAttribute(RelationAttribute rAttribute, float value){
  *      in each attribute's relative Blade, which is where the data actually resides.
  *   # if there is no Blade (that would be quite odd...), then the address remains
  */
-void ElementRelation::setDataPointers(std::unordered_map<RelationAttribute, Blade<cl_float>*> relationAttributeBladeMap){
+void ElementRelation::setAttributeDataPointers(std::unordered_map<RelationAttribute, Blade<cl_float>*>& relationAttributeBladeMap){
     for (auto entry : relationAttributeBladeMap){
         // entry.second is a Blade*
         relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(preId, postId);
+        //attributeTracker[static_cast<int>(entry.first)] = true;
+        printf("(set data pointer) %s->%s -- attribute #%d: %f\n",preName.c_str(),postName.c_str(),static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
+    }
+}
+
+/**
+ * Sets the pointers for cs and gj weight blades -- not only the current weights, but previous ones as well (as many as the blades have)
+ */
+void ElementRelation::setWeightDataPointers(Blade<cl_float>* csWeightBlade, Blade<cl_float>* gjWeightBlade){
+    csWeight = new cl_float*[ortus::WEIGHT_HISTORY_SIZE];
+    gjWeight = new cl_float*[ortus::WEIGHT_HISTORY_SIZE];
+    freeWeights = true;
+    int i = 0;
+    for (i = 0; i < ortus::WEIGHT_HISTORY_SIZE; ++i){
+        csWeight[i] = csWeightBlade->getp(preId, postId, i); // 0 is the current weight, 1 is current-1 weight, 2 is current-2 weight, etc..
+        gjWeight[i] = gjWeightBlade->getp(preId, postId, i); // same for gj
     }
 }
 
@@ -70,10 +110,14 @@ void ElementRelation::setDataPointers(std::unordered_map<RelationAttribute, Blad
  * this function will exit if that has happened, 
  * because that means that the state of the program is totally unknown.
  */
-void ElementRelation::corruptionCheck(){
+void ElementRelation::corruptionCheck(std::string location = "ElementRelation"){
+    //printf("(%s) -- corruption check ", location.c_str());
     if (ZEROF != 0.f){
+        printf("(ElementRelation) Error: Corruption check failed!\n");
+        //printf("failed.\n");
         exit(6);
     }
+    //printf("OK.\n");
 }
 
 std::string ElementRelation::toString(){
@@ -81,15 +125,16 @@ std::string ElementRelation::toString(){
     char buffer[max];
     switch (rtype) {
         case CORRELATED:
-            snprintf(buffer, max,"<CORRELATED> (%s->%s,  weight (cs, gj): (%.3f, %.3f), age: %f)",preName.c_str(),postName.c_str(), *csWeight, *gjWeight,
+            snprintf(buffer, max,"<CORRELATED> (%s->%s,  weight (cs, gj): (%.3f, %.3f), age: %f)",preName.c_str(),postName.c_str(), *csWeight[0], *gjWeight[0],
                      getAttribute(RelationAttribute::Age));
             break;
-        case CAUSES:
-            snprintf(buffer, max,"<CAUSES> (%s->%s, weight (cs, gj): (%.3f, %.3f), polarity: %.2f, age: %f, thresh: %f)",preName.c_str(),postName.c_str(), *csWeight, *gjWeight,
+        case CAUSES: {
+            snprintf(buffer, max,"<CAUSES> (%s->%s, weight (cs, gj): (%f, %f), polarity: %.2f, age: %f, thresh: %f)",preName.c_str(),postName.c_str(), *csWeight[0], *gjWeight[0],
                      getAttribute(RelationAttribute::Polarity),
                     getAttribute(RelationAttribute::Age),
                      getAttribute(RelationAttribute::Thresh));
             break;
+        }
         case DOMINATES:
             snprintf(buffer, max,"<DOMINATES> (%s->%s)",preName.c_str(),postName.c_str());
             break;

@@ -40,13 +40,14 @@ void Steward::initialize(){
     dataStewardp = new DataSteward();
     computeStewardp->dStewiep = dataStewardp;
     
+    // we need to do some initial processing on the .ort file (e.g., set some metadata variables) in order to initialize the KernelArgs and Blades
+    dataStewardp->initializeConnectome("ort/simple.ort");
     dataStewardp->initializeKernelArgsAndBlades(&computeStewardp->clHelper, &computeStewardp->kernel, computeStewardp->workGroupSize);
+    // once initializeKernelArgsAndBlades returns, we can create the Elements and ElementRelations,
+    // which will use the Blades to store (some) of their data.
+    dataStewardp->createElementsAndElementRelations();
     
-    printf("cool\n");
-    // once initializeKernelArgsAndBlades returns, we can create the connectome, which will use the Blades
-    dataStewardp->loadConnectome("ort/simple.ort");
     
-    exit(3);
     
     //dataStewardp->init(computeStewardp->workGroupSize);
     //sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
@@ -55,61 +56,8 @@ void Steward::initialize(){
     
 }
 
-/*
-void fillBlade(DataSteward* dsp, bool _2D, int size, Attribute attrib, float value){
-    if (_2D){
-        int i,j;
-        for (i = 0; i < size; ++i){
-            for (j = 0; j < size; ++j){
-                dsp->attributeBladeMap[attrib]->set(i,j, value);
-            }
-        }
-    }
-    else {
-        int i;
-        for (i = 0; i < size; ++i){
-            dsp->attributeBladeMap[attrib]->set(i, value);
-        }
-    }
-}
-*/
- 
-// NOTE: these two are just for reference purposes... not going to stay here...
-/** element_id would be automatically input by the ElementInfoModule 
-float* getThing(DataSteward* dsp, Attribute attribute, int element_id){
-    return dsp->attributeBladeMap[attribute]->getp(element_id);
-}
- */
-
-/** element_id would be automatically input by the ElementRelation 
-float* getThing(DataSteward* dsp, Attribute attribute, int pre_id, int post_id){
-    return dsp->attributeBladeMap[attribute]->getp(pre_id,post_id);
-}
-*/
- 
-// END reference functions
-
 void Steward::run(){
     
-    /** NEXT:
-     * trace execution such that it's clear where to start making sure that the data from the .ort file is coming in and ready to be used, and where we can create KernelBuddy. KernelBuddy must be assigned to the Elements and ElementRelations prior to reading the data into the elements.
-     
-     * the above means that the further above list of attributes must be implemented before assigning KernelBuddy to the Elements/Relations, and assigning data.
-     
-     * the kernel must be redone, but only once there is enough data being passed to it to be able to test things.
-     */
-    
-    
-    /*
-        fillBlade(dataStewardp, false, ortus::NUM_ELEMENTS, Attribute::EType, 2.0);
-        fillBlade(dataStewardp, false, ortus::NUM_ELEMENTS, Attribute::Affect, 4.0);
-        fillBlade(dataStewardp, false, ortus::NUM_ELEMENTS, Attribute::Activation, 6.0);
-        fillBlade(dataStewardp, true, ortus::NUM_ELEMENTS, Attribute::Weight, 3.0);
-        fillBlade(dataStewardp, true, ortus::NUM_ELEMENTS, Attribute::Polarity, 5.0);
-        fillBlade(dataStewardp, true, ortus::NUM_ELEMENTS, Attribute::RThresh, 7.0);
-     */
-    
-    //kernelBuddyp->pushToOpenCL();
     
     /** maybe some function to give all classes all pointers -- e.g:
      -> it sets all instances of dataStewardp necessary, etc.
@@ -117,10 +65,11 @@ void Steward::run(){
     
     numIterations = 1;//300;// SHOULD BE ~600!!!
     for (int i = 0; i < numIterations; ++i){
+        
         computeStewardp->executePreRunOperations();
         
-        
         computeStewardp->run();
+        
         computeStewardp->executePostRunOperations();
         
         // Stimulate the sensors 
