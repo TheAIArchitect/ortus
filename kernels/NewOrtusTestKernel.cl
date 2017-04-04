@@ -43,19 +43,22 @@ int getIndex(int row, int col, int page, int maxRows, int maxCols, int maxPages)
 // [5] => pages per Blade
 // Note: there is no entry for kernelArgInfo, so there are only "number of kernel args"-1 rows in kernelArgInfo.
 /* END kernelArgInfo info */
-void getKernelArgInfo(global int* kernelArgInfo, int kernelArgNum, int* bladeNumRelativeToKernelArg, int* kernelArgStride, int* kernelArgRows, int* kernelArgCols, int* kernelArgPages){
+void getKernelArgInfo(global int* kernelArgInfo, int kernelArgNum, int* kernelArgBladeCount, int* kernelArgStride, int* kernelArgRows, int* kernelArgCols, int* kernelArgPages){
     // to get row, just set col to 0.
     int kArgRow = getIndex(kernelArgNum, 0, 0, NUM_KERNEL_ARGS_WITH_INFO, NUM_COLS_PER_KERNEL_ARG_INFO, 0);
     if (kernelArgInfo[kArgRow] != kernelArgNum){
         printf("Oh no! KernelArgInfo seems to be incorrectly formatted!\n");
     }
     // now we add 1, 2, 3, etc. to kArgRow to fill our variables.
-    *bladeNumRelativeToKernelArg = kernelArgInfo[kArgRow + 1];
+    *kernelArgBladeCount = kernelArgInfo[kArgRow + 1];
     *kernelArgStride = kernelArgInfo[kArgRow + 2];
     *kernelArgRows = kernelArgInfo[kArgRow + 3];
     *kernelArgCols = kernelArgInfo[kArgRow + 4];
     *kernelArgPages = kernelArgInfo[kArgRow + 5];
-    
+}
+
+void printKernelArgInfo(int kernelArgNum, int kernelArgBladeCount, int kernelArgStride, int kernelArgRows, int kernelArgCols, int kernelArgPages){
+    printf("kernel arg #%d {blades: %d, stride: %d, rows: %d, cols: %d, pages: %d}\n", kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
 }
 
 
@@ -73,18 +76,30 @@ kernel void OrtusKernel(global float* elementAttributes,
 
     // BEGIN vars for extracting necessary data from kernel args
     int kernelArgNum;
-    int bladeNumRelativeToKernelArg; // first blade per kernel arg is 0, and it goes up from there.
+    int kernelArgBladeCount;
     int kernelArgStride;
     int kernelArgRows;
     int kernelArgCols;
     int kernelArgPages;
-    
+    // END vars for extracting necessary data from kernel args
+    // (kernel arg 0): elementAttributes
     kernelArgNum = 0;
-    getKernelArgInfo(kernelArgInfo, kernelArgNum, &bladeNumRelativeToKernelArg, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
-    if (gId == 1){
-        printf("kernel arg #%d {blades: %d, stride: %d, rows: %d, cols: %d, pages: %d}\n", kernelArgNum, bladeNumRelativeToKernelArg, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
+    // print
+    if (gId == 1) {
+     printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);   
     }
+    // (kernel arg 1): relationAttributes
+    // uncomment 94-99 to make opencl crash on mac, i think 
+    //kernelArgNum = 1;
+    //getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
+    //if (gId == 1){
+    //    printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    //}
     
+    
+    
+    /* stopping point: continue this (see note above)... finish redoing kernel. then do structure. boom. done. haha. */
     
     // get all indices we'll need:
     
