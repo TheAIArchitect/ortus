@@ -29,7 +29,7 @@ void Connectome::initialize(std::string ortFileName){
     theLines = ortUtil.getLines(ortFileName);
     // get metadata from top of file (some number of the first lines), and then delete them
     ortUtil.readAndStripOrtFileMetadata(theLines);
-    // count and set ortus::NUM_ELEMENTS
+    // count and set Ort::NUM_ELEMENTS
     ortUtil.countAndSetNumElements(theLines);
     
 }

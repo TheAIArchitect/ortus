@@ -39,6 +39,7 @@ public:
     int maxPages;
     int pageSize; // currentRows * currentCols  -- this is multiplied by 'page' when accessing a 3D index in a Blade, to get the right offset for the page being requested.
     int dimensions;
+    // perhaps this stuff should be private? maybe all/most vars should be private?
     cl_mem_flags memFlags;
     size_t currentSize;
     size_t maxSize;

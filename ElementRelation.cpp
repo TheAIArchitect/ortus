@@ -13,8 +13,8 @@
 float ElementRelation::ZEROF = 0.0f;
 
 ElementRelation::ElementRelation(){
-    relationAttributeMap.resize(ortus::NUM_RELATION_ATTRIBUTES);
-    attributeTracker.resize(ortus::NUM_RELATION_ATTRIBUTES);
+    relationAttributeMap.resize(Ort::NUM_RELATION_ATTRIBUTES);
+    attributeTracker.resize(Ort::NUM_RELATION_ATTRIBUTES);
     // should be a fast way to ensure all float* point to something valid
     // from SO, seems like gcc unrolls the loop a bit
     std::fill(relationAttributeMap.begin(), relationAttributeMap.end(),&ZEROF);
@@ -22,7 +22,7 @@ ElementRelation::ElementRelation(){
 };
 
 ElementRelation::~ElementRelation(){
-    //for (int i = 0; i < ortus::NUM_ATTRIBUTES; ++i){
+    //for (int i = 0; i < Ort::NUM_ATTRIBUTES; ++i){
         //if (attributeTracker[i]){
             //delete relationAttributeMap[i];
         //}
@@ -39,16 +39,16 @@ float ElementRelation::getAttribute(RelationAttribute rAttribute){
 }
 
 float ElementRelation::getCSWeight(int fromTimestepsAgo){
-    if (ortus::WEIGHT_HISTORY_SIZE <= fromTimestepsAgo){
-        printf("(ElementRelation) Error: trying to access CS Weight from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, ortus::WEIGHT_HISTORY_SIZE-1);
+    if (Ort::WEIGHT_HISTORY_SIZE <= fromTimestepsAgo){
+        printf("(ElementRelation) Error: trying to access CS Weight from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, Ort::WEIGHT_HISTORY_SIZE-1);
         exit(18);
     }
     return *csWeight[fromTimestepsAgo];
 }
 
 float ElementRelation::getGJWeight(int fromTimestepsAgo){
-    if (ortus::WEIGHT_HISTORY_SIZE <= fromTimestepsAgo){
-        printf("(ElementRelation) Error: trying to access GJ Weight from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, ortus::WEIGHT_HISTORY_SIZE-1);
+    if (Ort::WEIGHT_HISTORY_SIZE <= fromTimestepsAgo){
+        printf("(ElementRelation) Error: trying to access GJ Weight from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, Ort::WEIGHT_HISTORY_SIZE-1);
         exit(18);
     }
     return *gjWeight[fromTimestepsAgo];
@@ -79,9 +79,15 @@ void ElementRelation::setAttribute(RelationAttribute rAttribute, float value){
 void ElementRelation::setAttributeDataPointers(std::unordered_map<RelationAttribute, Blade<cl_float>*>& relationAttributeBladeMap){
     for (auto entry : relationAttributeBladeMap){
         // entry.second is a Blade*
-        relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(preId, postId);
+        if (Ort::STORE_RELATIONS_TRANSPOSED){ // SWAPS preId and PostId
+            relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(postId, preId);
+            printf("(set data pointer -- transposed) %s->%s -- attribute #%d: %f\n",preName.c_str(),postName.c_str(),static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
+        }
+        else {
+            relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(preId, postId);
         //attributeTracker[static_cast<int>(entry.first)] = true;
         printf("(set data pointer) %s->%s -- attribute #%d: %f\n",preName.c_str(),postName.c_str(),static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
+        }
     }
 }
 
@@ -89,13 +95,19 @@ void ElementRelation::setAttributeDataPointers(std::unordered_map<RelationAttrib
  * Sets the pointers for cs and gj weight blades -- not only the current weights, but previous ones as well (as many as the blades have)
  */
 void ElementRelation::setWeightDataPointers(Blade<cl_float>* csWeightBlade, Blade<cl_float>* gjWeightBlade){
-    csWeight = new cl_float*[ortus::WEIGHT_HISTORY_SIZE];
-    gjWeight = new cl_float*[ortus::WEIGHT_HISTORY_SIZE];
+    csWeight = new cl_float*[Ort::WEIGHT_HISTORY_SIZE];
+    gjWeight = new cl_float*[Ort::WEIGHT_HISTORY_SIZE];
     freeWeights = true;
     int i = 0;
-    for (i = 0; i < ortus::WEIGHT_HISTORY_SIZE; ++i){
-        csWeight[i] = csWeightBlade->getp(preId, postId, i); // 0 is the current weight, 1 is current-1 weight, 2 is current-2 weight, etc..
-        gjWeight[i] = gjWeightBlade->getp(preId, postId, i); // same for gj
+    for (i = 0; i < Ort::WEIGHT_HISTORY_SIZE; ++i){
+        if (Ort::STORE_RELATIONS_TRANSPOSED){
+            csWeight[i] = csWeightBlade->getp(postId, preId, i); // 0 is the current weight, 1 is current-1 weight, 2 is current-2 weight, etc..
+            gjWeight[i] = gjWeightBlade->getp(postId, preId, i); // same for gj
+        }
+        else {
+            csWeight[i] = csWeightBlade->getp(preId, postId, i); // 0 is the current weight, 1 is current-1 weight, 2 is current-2 weight, etc..
+            gjWeight[i] = gjWeightBlade->getp(preId, postId, i); // same for gj
+        }
     }
 }
 

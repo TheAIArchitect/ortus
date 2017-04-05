@@ -31,7 +31,7 @@ public:
         \brief default c'tor, setup for use with MBP on macOS
         \details Will default to 3 possible devices, selecting the discrete GPU by default
     */
-    CLHelper() : CLHelper(3, 2) {}
+    CLHelper() : CLHelper(3, 1) {}
     
     /**
         \brief c'tor to select which compute device to attempt to use

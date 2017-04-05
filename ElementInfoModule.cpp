@@ -29,9 +29,9 @@ void ElementInfoModule::setAttributeDataPointers(std::unordered_map<ElementAttri
  * [2] is current time - 2, and so on).
  */
 void ElementInfoModule::setActivationDataPointer(Blade<cl_float>* activationBladep){
-    activationp = new cl_float*[ortus::ACTIVATION_HISTORY_SIZE];
+    activationp = new cl_float*[Ort::ACTIVATION_HISTORY_SIZE];
     int i = 0;
-    for (i = 0; i < ortus::ACTIVATION_HISTORY_SIZE; ++i){
+    for (i = 0; i < Ort::ACTIVATION_HISTORY_SIZE; ++i){
         activationp[i] = activationBladep->getp(i, id); // activation blade holds the current activation at row 0, historic activations in rows 1+
         *activationp = 0; // default to 0
     }
@@ -76,8 +76,8 @@ int ElementInfoModule::getId(){
 // that would come from the voltage history... wherever that's being kept.
 float ElementInfoModule::vCurr(int fromTimestepsAgo){
  //   return *activation;
-    if (ortus::ACTIVATION_HISTORY_SIZE <= fromTimestepsAgo){
-        printf("(ElementInfoModule) Error: trying to access activation from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, ortus::ACTIVATION_HISTORY_SIZE-1);
+    if (Ort::ACTIVATION_HISTORY_SIZE <= fromTimestepsAgo){
+        printf("(ElementInfoModule) Error: trying to access activation from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, Ort::ACTIVATION_HISTORY_SIZE-1);
         exit(18);
     }
     return *activationp[fromTimestepsAgo];

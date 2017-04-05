@@ -40,6 +40,7 @@ enum class DummyType { Dummy };
 
 class ElementInfoModule;
 class ElementRelation;
+class ComputeSteward;
 
 
 class DataSteward{
@@ -48,13 +49,15 @@ public: /** NEW */
     DataSteward();
     ~DataSteward();
     
+    int* kernelIterationNumberp;
     Connectome* connectomep;
     bool connectomeNewed;
     
-    
+    void setComputeStewardPointers(ComputeSteward* computeStewardp);
     void initializeConnectome(std::string ortFile);
     void createElementsAndElementRelations();
     void initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp, size_t openCLWorkGroupSize);
+    void updateMetadataBlades();
     void executePreRunOperations();
     void pushOpenCLBuffers();
     void setKernelArgInfo(std::vector<std::vector<int>>& tempKernelArgInfo);
@@ -149,7 +152,6 @@ public:
     
     
     void initializeBlades();
-    void updateMetadataBlade(int knernelIterationNum);
     //void fillInputVoltageBlade();
     // these two might be irrelevant now, if we carry these ops out in KernelBuddy
     // void readOpenCLBuffers();

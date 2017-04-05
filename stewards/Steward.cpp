@@ -39,6 +39,7 @@ void Steward::initialize(){
     
     dataStewardp = new DataSteward();
     computeStewardp->dStewiep = dataStewardp;
+    dataStewardp->setComputeStewardPointers(computeStewardp);
     
     // we need to do some initial processing on the .ort file (e.g., set some metadata variables) in order to initialize the KernelArgs and Blades
     dataStewardp->initializeConnectome("ort/simple.ort");

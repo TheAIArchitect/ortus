@@ -27,9 +27,13 @@ float computeVoltageRateOfChange(__global float* outputVoltageHistory, int numEl
 constant int NUM_KERNEL_ARGS_WITH_INFO = 6;
 constant int NUM_COLS_PER_KERNEL_ARG_INFO = 6;
 
-int getIndex(int row, int col, int page, int maxRows, int maxCols, int maxPages){
+/* everything, including blade, is zero indexed */
+int getIndex(int row, int col, int page, int blade, int maxRows, int maxCols, int maxPages, int bladeSize){
     int pageSize = maxRows * maxCols;
-    return (page * pageSize) +  (row * maxCols) + col;
+    int toSkip_pages = page * pageSize;
+    int toSkip_blades = blade * bladeSize;
+    int toSkip_rows = row * maxCols;
+    return toSkip_blades + toSkip_pages +  toSkip_rows + col;
 }
 
 
@@ -45,7 +49,7 @@ int getIndex(int row, int col, int page, int maxRows, int maxCols, int maxPages)
 /* END kernelArgInfo info */
 void getKernelArgInfo(global int* kernelArgInfo, int kernelArgNum, int* kernelArgBladeCount, int* kernelArgStride, int* kernelArgRows, int* kernelArgCols, int* kernelArgPages){
     // to get row, just set col to 0.
-    int kArgRow = getIndex(kernelArgNum, 0, 0, NUM_KERNEL_ARGS_WITH_INFO, NUM_COLS_PER_KERNEL_ARG_INFO, 0);
+    int kArgRow = getIndex(kernelArgNum, 0, 0, 0, NUM_KERNEL_ARGS_WITH_INFO, NUM_COLS_PER_KERNEL_ARG_INFO, 0, 0);
     if (kernelArgInfo[kArgRow] != kernelArgNum){
         printf("Oh no! KernelArgInfo seems to be incorrectly formatted!\n");
     }
@@ -73,29 +77,120 @@ kernel void OrtusKernel(global float* elementAttributes,
     dimidx = 0;
     int gId = get_global_id(dimidx); // gives id of current work-item
     int lId = get_local_id(dimidx);
-
+    // BEGIN METADATA COLLECTION (kernel arg 4)
+    // very first thing we want to do is collect metadata.
+    local int NUM_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, NUM_SLOPE_COMPUTATIONS;
+    int metadataBladeNum = 0;
+    NUM_ELEMENTS = (int) metadata[metadataBladeNum];
+    // stop if global is out of range:
+    if (gId >= metadata[0]) return; // no reason to do anything more if global id is >= # elements
+    metadataBladeNum = 1;
+    KERNEL_ITERATION_NUM = (int) metadata[metadataBladeNum];
+    metadataBladeNum = 2;
+    ACTIVATION_HISTORY_SIZE = (int) metadata[metadataBladeNum];
+    metadataBladeNum = 3;
+    NUM_XCORR_COMPUTATIONS = (int) metadata[metadataBladeNum];
+    metadataBladeNum = 4;
+    NUM_SLOPE_COMPUTATIONS = (int) metadata[metadataBladeNum];
+    if (gId == 1) printf("Starting kernel iteration #%d (num elements: %d)\n", KERNEL_ITERATION_NUM, NUM_ELEMENTS);
+    
     // BEGIN vars for extracting necessary data from kernel args
+    // declare local vars for blade counts, and then assign values
+    local int ka0_blades, ka1_blades, ka2_blades, ka3_blades, ka4_blades, ka5_blades;
+    ka0_blades = 3; ka1_blades = 7; ka2_blades = 2; ka3_blades = 1; ka4_blades = 5; ka5_blades = 2;
+    //if (gId == 1) printf("ka0_blades: %d\n", ka0_blades);
     int kernelArgNum;
     int kernelArgBladeCount;
     int kernelArgStride;
     int kernelArgRows;
     int kernelArgCols;
     int kernelArgPages;
+    int bladeIndexRelativeToKernelArg;
     // END vars for extracting necessary data from kernel args
-    // (kernel arg 0): elementAttributes
+    
+    // (kernel arg 0): elementAttributes -- 1D Blades (use row == 0 for getIndex)
     kernelArgNum = 0;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
-    // print
-    if (gId == 1) {
-     printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);   
+    if (gId ==1 && ka0_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka0_blades, kernelArgBladeCount);
+    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    // assign vars
+    int elementTypeIndex, elementAffectIndex, elementThreshIndex;
+    float elementType, elementAffect, elementThresh;
+    // element type
+    bladeIndexRelativeToKernelArg = 0;
+    elementTypeIndex = getIndex(0, gId, 0, bladeIndexRelativeToKernelArg, kernelArgRows, kernelArgCols, kernelArgPages, kernelArgStride);
+    elementType = elementAttributes[elementTypeIndex];
+    // element affect
+    bladeIndexRelativeToKernelArg = 1;
+    elementAffectIndex = getIndex(0, gId, 0, bladeIndexRelativeToKernelArg, kernelArgRows, kernelArgCols, kernelArgPages, kernelArgStride);
+    elementAffect = elementAttributes[elementAffectIndex];
+    // element thresh
+    bladeIndexRelativeToKernelArg = 2;
+    elementThreshIndex = getIndex(0, gId, 0, bladeIndexRelativeToKernelArg, kernelArgRows, kernelArgCols, kernelArgPages, kernelArgStride);
+    elementThresh = elementAttributes[elementThreshIndex];
+    printf("\telement '%d' {type: %f, affect: %f, thresh: %f}\n", gId, elementType, elementAffect, elementThresh);
+    
+    // relationAttribute, weights, and activations all need to be done in a loop, because pre and post elements are involved
+    // the 'post' will stay constant -- that is the gId, while the 'pre' will loop through all elements.
+    
+    // THE ASSUMPTION IS THAT THE ROW IS THE 'post' AND THE COL IS THE 'pre'
+    // (that is, the relation and weight matricies are filled in a transposed manner)
+    
+    // relationAttributes
+    int relationTypeIndex, relationPolarityIndex, relationDirectionIndex, relationAgeIndex, relationThreshIndex, relationDecayIndex, relationMutabilityIndex;
+    float relationType, relationPolarity, relationDireciton, relationAge, relationThresh, relationDecay, relationMutability;
+    // weights -- indices are for current weight. add 1 for previous weight, 2 for weight 2 timesteps ago.
+    int csWeightBaseIndex, gjWeightBaseIndex;
+    float csWeight, gjWeight, csHistoric1, gjHistoric1, csHistoric2, gjHistoric2;
+    // activations -- remember, post is the current 'gId' -- historic activations work the same as for the weights
+    // (though number of historical values available are probably not the same -- or, they certainly aren't guaranteed to be)
+    int preActivationBaseIndex, postActivationBaseIndex;
+    float preActivation, postActivation;
+    
+    
+    
+    
+    
+    postActivationBaseIndex = gId;
+    
+    
+    
+    // pause point: add the loops, finish getting the connection data, and finish writing the kernel!
+    // apart from the bladeNumber, the pre and post weight indices will be the same for all relations
+    
+    
+    
+    // (kernel arg 1): relationAttributes -- 2D Blades
+    kernelArgNum = 1;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
+    if (gId ==1 && ka1_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka1_blades, kernelArgBladeCount);
+    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    // assign vars
+    bladeIndexRelativeToKernelArg = 0;
+    // (kernel arg 2): weights -- 3D Blades
+    kernelArgNum = 2;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
+    
+    if (gId ==1 && ka2_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka2_blades, kernelArgBladeCount);
+    if (gId == 1){
+        printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
     }
-    // (kernel arg 1): relationAttributes
-    // uncomment 94-99 to make opencl crash on mac, i think 
-    //kernelArgNum = 1;
-    //getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
-    //if (gId == 1){
-    //    printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
-    //}
+    // (kernel arg 3): activations -- 1D Blades
+    kernelArgNum = 3;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
+    
+    if (gId ==1 && ka3_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka3_blades, kernelArgBladeCount);
+    if (gId == 1){
+        printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    }
+    
+    // (kernel arg 5): scratchpads -- 2D Blades
+    kernelArgNum = 5;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
+    if (gId ==1 && ka5_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka5_blades, kernelArgBladeCount);
+    if (gId == 1){
+        printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    }
     
     
     
@@ -116,14 +211,14 @@ kernel void OrtusKernel(global float* elementAttributes,
     
     // PRIVATE VARS
     
-    int offset = 0;
-    int len = 100;
-    int bigLen = 100*100;
+    //int offset = 0;
+    //int len = 100;
+    //int bigLen = 100*100;
 
     //printf("gid, lid: %d, %d\n",gid, lid);
-    if (gId == 1){
-        printf("nice.\n");
-    }
+    //if (gId == 1){
+    //    printf("nice.\n");
+    //}
     
 }
 

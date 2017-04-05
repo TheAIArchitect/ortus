@@ -41,7 +41,7 @@ void DiagnosticSteward::tempVTKPlot(){
     ortus::vtkFullxcorr* theXCorr = morphToVTK();
     
     // fix this 300... should be a var
-    OrtusXCorrVisualizer xcorrVizzer(300, ortus::NUM_ELEMENTS,ortus::XCORR_COMPUTATIONS);
+    OrtusXCorrVisualizer xcorrVizzer(300, Ort::NUM_ELEMENTS,Ort::XCORR_COMPUTATIONS);
     
     
     xcorrVizzer.theXCorr = theXCorr;
@@ -110,14 +110,14 @@ void DiagnosticSteward::plotXCorr(){
 std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVoltages(const std::string* computeList, int numToCompute){
     
     // this allows us to have the 'key' in the map be the same as the index the actual element has, so we can access what amounts to a sparse 3D matrix as if it were just that.
-    ortus::vector indicesToUse(ortus::NUM_ELEMENTS);
+    ortus::vector indicesToUse(Ort::NUM_ELEMENTS);
     int numIndices = 0;
     if (numToCompute < 0){ // then we do all
         // doing this just so that if numToCompute is not empty, we can use the same code
-        for (int i = 0; i < ortus::NUM_ELEMENTS; ++i){
+        for (int i = 0; i < Ort::NUM_ELEMENTS; ++i){
             indicesToUse[i] = i;
         }
-        numIndices = ortus::NUM_ELEMENTS;
+        numIndices = Ort::NUM_ELEMENTS;
     }
     else {
         for (int i = 0; i < numToCompute; ++i){
@@ -143,7 +143,7 @@ std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVo
     printf("END THE VOLTAGE HISTORY VECTOR PRINTOUT\n");
     */
     
-    int startIndex =(ortus::ACTIVATION_HISTORY_SIZE-1)- ortus::XCORR_COMPUTATIONS; // xcorr_computation is assumed to be the same as the size of the array used for a single xcorr computation
+    int startIndex =(Ort::ACTIVATION_HISTORY_SIZE-1)- Ort::XCORR_COMPUTATIONS; // xcorr_computation is assumed to be the same as the size of the array used for a single xcorr computation
     
    
     // This is going to be slow, and it would probably be best to either rad the resutls back from blade, or thread this computation...
@@ -151,7 +151,7 @@ std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVo
         ortus::vectrix tempXCorrRes(numElements);
         for (int j = 0; j < numElements; ++j){ // and compute the xcorr between it, and everything else (including itself)
             
-            tempXCorrRes[j] = statistician.xcorrLimited(voltageHistoryVector[indicesToUse[i]], voltageHistoryVector[j], startIndex, ortus::XCORR_COMPUTATIONS);
+            tempXCorrRes[j] = statistician.xcorrLimited(voltageHistoryVector[indicesToUse[i]], voltageHistoryVector[j], startIndex, Ort::XCORR_COMPUTATIONS);
         }
         totalPartialXCorr[indicesToUse[i]] = tempXCorrRes;
     }

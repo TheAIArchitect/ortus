@@ -155,11 +155,11 @@ ortus::enum_string_unordered_map<T> OrtUtil::getAttributeEnumsFromStrings(std::u
     const std::string* twoPossibleStringArrays[2] = {ELEMENT_ATTRIBUTE_STRINGS, RELATION_ATTRIBUTE_STRINGS};
     int theCorrectIndex = -1;
     if (isElement){
-        theRightNumberOfAttributesToCheck = ortus::NUM_ELEMENT_ATTRIBUTES;
+        theRightNumberOfAttributesToCheck = Ort::NUM_ELEMENT_ATTRIBUTES;
         theCorrectIndex = 0;
     }
     else {
-        theRightNumberOfAttributesToCheck = ortus::NUM_RELATION_ATTRIBUTES;
+        theRightNumberOfAttributesToCheck = Ort::NUM_RELATION_ATTRIBUTES;
         theCorrectIndex = 1;
     }
     const std::string* theRightAttributesToCheck = twoPossibleStringArrays[theCorrectIndex];
@@ -384,11 +384,11 @@ std::vector<std::string> OrtUtil::getLines(std::string ortFile){
 
 
 /**
- * THIS FUNCTION SETS 'ortus::NUM_ELEMENTS'
+ * THIS FUNCTION SETS 'Ort::NUM_ELEMENTS'
  *
  * BUT, IT MUST BE CALLED AFTER 'readAndStripOrtFileMetadata'
  *
- * This counts the number of elements, and sets ortus::NUM_ELEMENTS
+ * This counts the number of elements, and sets Ort::NUM_ELEMENTS
  */
 void OrtUtil::countAndSetNumElements(std::vector<std::string>& theLines){
     std::string trimmed = "";
@@ -415,7 +415,7 @@ void OrtUtil::countAndSetNumElements(std::vector<std::string>& theLines){
         printf("(OrtUtil) Error: .ort file format incorrect. 'elements:' must be the first line after any metadata. First line found was '%s'\n", theLines[lineNo].c_str());
         exit(17);
     }
-    ortus::NUM_ELEMENTS = elementCount;
+    Ort::NUM_ELEMENTS = elementCount;
 }
 
 
@@ -437,37 +437,37 @@ void OrtUtil::readAndStripOrtFileMetadata(std::vector<std::string>& theLines){
     while (trimmed.substr(0,trimmed.size()-1) != ORT_DEFINITION_LEVELS[0]) {// when 'elements' starts, we're done looking for metadata
         std::vector<std::string> tempSplit = StrUtils::parseOnCharDelim(theLines[0],'=');
         if (StrUtils::trim(tempSplit[0]) == "MAX_ELEMENTS"){
-            ortus::MAX_ELEMENTS = std::stoi(StrUtils::trim(tempSplit[1]));// so now, we know what our MAX_ELEMENTS will be
-            if (ortus::MAX_ELEMENTS < 1){
+            Ort::MAX_ELEMENTS = std::stoi(StrUtils::trim(tempSplit[1]));// so now, we know what our MAX_ELEMENTS will be
+            if (Ort::MAX_ELEMENTS < 1){
                 printf("MAX_ELEMENTS, as specified at the top of the .ort file, must be greater than 0.\n");
                 exit(15);
             }
             maxElementsSpecified = true;
         }
         else if (StrUtils::trim(tempSplit[0]) == "XCORR_COMPUTATIONS"){
-            ortus::XCORR_COMPUTATIONS = std::stoi(StrUtils::trim(tempSplit[1]));
-            if (ortus::XCORR_COMPUTATIONS < 3){ // less than 3 doesn't seem to make much sense for xcorr...
+            Ort::XCORR_COMPUTATIONS = std::stoi(StrUtils::trim(tempSplit[1]));
+            if (Ort::XCORR_COMPUTATIONS < 3){ // less than 3 doesn't seem to make much sense for xcorr...
                 printf("XCORR_COMPUTATIONS must be at least 3.\n");
                 exit(15);
             }
         }
         else if (StrUtils::trim(tempSplit[0]) == "SLOPE_COMPUTATIONS"){
-            ortus::SLOPE_COMPUTATIONS = std::stoi(StrUtils::trim(tempSplit[1]));
-            if (ortus::SLOPE_COMPUTATIONS < 3){ // xcorr and slope use the same kernel arg (as of now)
+            Ort::SLOPE_COMPUTATIONS = std::stoi(StrUtils::trim(tempSplit[1]));
+            if (Ort::SLOPE_COMPUTATIONS < 3){ // xcorr and slope use the same kernel arg (as of now)
                 printf("SLOPE_COMPUTATIONS must be at least 3.\n");
                 exit(15);
             }
         }
         else if (StrUtils::trim(tempSplit[0]) == "ACTIVATION_HISTORY_SIZE"){
-            ortus::ACTIVATION_HISTORY_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));;
-            if (ortus::ACTIVATION_HISTORY_SIZE < 2){ // one index is for current, need at least one for history
+            Ort::ACTIVATION_HISTORY_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));;
+            if (Ort::ACTIVATION_HISTORY_SIZE < 2){ // one index is for current, need at least one for history
                 printf("ACTIVATION_HISTORY_SIZE must be at least 2. Using default.\n");
                 exit(15);
             }
         }
         else if (StrUtils::trim(tempSplit[0]) == "WEIGHT_HISTORY_SIZE"){
-            ortus::WEIGHT_HISTORY_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));;
-            if (ortus::WEIGHT_HISTORY_SIZE < 2){ // one index is for current, need at least one for history
+            Ort::WEIGHT_HISTORY_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));;
+            if (Ort::WEIGHT_HISTORY_SIZE < 2){ // one index is for current, need at least one for history
                 printf("WEIGHT_HISTORY_SIZE must be at least 2. Using default.\n");
                 exit(15);
             }
@@ -476,7 +476,7 @@ void OrtUtil::readAndStripOrtFileMetadata(std::vector<std::string>& theLines){
         theLines.erase(theLines.begin());
         trimmed = determineIndentationAndStripWhitespace(theLines[0], indentationLevel);
     }
-    if (ortus::XCORR_COMPUTATIONS != ortus::SLOPE_COMPUTATIONS){
+    if (Ort::XCORR_COMPUTATIONS != Ort::SLOPE_COMPUTATIONS){
         printf("XCORR_COMPUTATIONS and SLOPE_COMPUTATIONS must be equivalent!\n");
         exit(15);
     }
