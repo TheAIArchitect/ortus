@@ -99,13 +99,13 @@ kernel void OrtusKernel(global float* elementAttributes,
     local int ka0_blades, ka1_blades, ka2_blades, ka3_blades, ka4_blades, ka5_blades;
     ka0_blades = 3; ka1_blades = 7; ka2_blades = 2; ka3_blades = 1; ka4_blades = 5; ka5_blades = 2;
     //if (gId == 1) printf("ka0_blades: %d\n", ka0_blades);
-    int kernelArgNum;
-    int kernelArgBladeCount;
-    int kernelArgStride;
-    int kernelArgRows;
-    int kernelArgCols;
-    int kernelArgPages;
-    int bladeIndexRelativeToKernelArg;
+    // for the kernelArgs we only access once, like kernel arg 0, we don't need to worry about saving the parameters, and we can use general ones
+    int kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages, bladeIndexRelativeToKernelArg;
+    // for the kernel args that we'll have to access in the loop, we want to save certain parameters, so we'll name them by kernel arg number
+    // don't need bladeCount because we need to have variables coded in for each blade... the bladeCount var above is for sanity checking (see below)
+    int kernelArg1Stride, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages;
+    int kernelArg2Stride, kernelArg2Rows, kernelArg2Cols, kernelArg2Pages;
+    int kernelArg3Stride, kernelArg3Rows, kernelArg3Cols, kernelArg3Pages;
     // END vars for extracting necessary data from kernel args
     
     // (kernel arg 0): elementAttributes -- 1D Blades (use row == 0 for getIndex)
@@ -132,6 +132,22 @@ kernel void OrtusKernel(global float* elementAttributes,
     
     // relationAttribute, weights, and activations all need to be done in a loop, because pre and post elements are involved
     // the 'post' will stay constant -- that is the gId, while the 'pre' will loop through all elements.
+    // therefore, these kernel args get accessed in the main loop, so we want to get the info, and put it in more 'permanent' (named, w.r.t. kernel arg number) variables.
+    // (kernel arg 1): relationAttributes -- 2D Blades
+    kernelArgNum = 1;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg1Stride, &kernelArg1Rows, &kernelArg1Cols, &kernelArg3Pages);
+    if (gId ==1 && ka1_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka1_blades, kernelArgBladeCount);
+    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg1Stride, kernelArg1Rows, kernelArg1Cols, kernelArg3Pages);
+    // (kernel arg 2): weights -- 3D Blades
+    kernelArgNum = 2;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg2Stride, &kernelArg2Rows, &kernelArg2Cols, &kernelArg3Pages);
+    if (gId ==1 && ka2_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka2_blades, kernelArgBladeCount);
+    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg2Stride, kernelArg2Rows, kernelArg2Cols, kernelArg3Pages);
+    // (kernel arg 3): activations -- 1D Blades
+    kernelArgNum = 3;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg3Stride, &kernelArg3Rows, &kernelArg3Cols, &kernelArg3Pages);
+    if (gId ==1 && ka3_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka3_blades, kernelArgBladeCount);
+    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg3Stride, kernelArg3Rows, kernelArg3Cols, kernelArg3Pages);
     
     // THE ASSUMPTION IS THAT THE ROW IS THE 'post' AND THE COL IS THE 'pre'
     // (that is, the relation and weight matricies are filled in a transposed manner)
@@ -139,7 +155,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     // relationAttributes
     int relationTypeIndex, relationPolarityIndex, relationDirectionIndex, relationAgeIndex, relationThreshIndex, relationDecayIndex, relationMutabilityIndex;
     float relationType, relationPolarity, relationDireciton, relationAge, relationThresh, relationDecay, relationMutability;
-    // weights -- indices are for current weight. add 1 for previous weight, 2 for weight 2 timesteps ago.
+    // weights -- indices are for current weight. add 1 *page* for previous weight, 2 *pages* for weight 2 timesteps ago.
     int csWeightBaseIndex, gjWeightBaseIndex;
     float csWeight, gjWeight, csHistoric1, gjHistoric1, csHistoric2, gjHistoric2;
     // activations -- remember, post is the current 'gId' -- historic activations work the same as for the weights
@@ -147,11 +163,19 @@ kernel void OrtusKernel(global float* elementAttributes,
     int preActivationBaseIndex, postActivationBaseIndex;
     float preActivation, postActivation;
     
-    
-    
-    
-    
     postActivationBaseIndex = gId;
+    int postElementBaseIndex;
+    for (postElementBaseIndex = 0; postElementBaseIndex < NUM_ELEMENTS; ++postElementBaseIndex){
+        
+        // now that we have the pre and post element indices, set the relation attributes, weights, and activations
+        // kernel arg 1 (relationAttributes) -- 2D Blades
+        bladeIndexRelativeToKernelArg = 0;
+        relationTypeIndex = getIndex(postActivationBaseIndex, preActivationBaseIndex, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        relationType =
+        
+        
+        
+    }
     
     
     
@@ -160,30 +184,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     
     
     
-    // (kernel arg 1): relationAttributes -- 2D Blades
-    kernelArgNum = 1;
-    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
-    if (gId ==1 && ka1_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka1_blades, kernelArgBladeCount);
-    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
-    // assign vars
-    bladeIndexRelativeToKernelArg = 0;
-    // (kernel arg 2): weights -- 3D Blades
-    kernelArgNum = 2;
-    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
-    
-    if (gId ==1 && ka2_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka2_blades, kernelArgBladeCount);
-    if (gId == 1){
-        printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
-    }
-    // (kernel arg 3): activations -- 1D Blades
-    kernelArgNum = 3;
-    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
-    
-    if (gId ==1 && ka3_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka3_blades, kernelArgBladeCount);
-    if (gId == 1){
-        printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
-    }
-    
+
     // (kernel arg 5): scratchpads -- 2D Blades
     kernelArgNum = 5;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
@@ -204,8 +205,187 @@ kernel void OrtusKernel(global float* elementAttributes,
     // metadata: numElements, kernelIterationNum, activationHistorySize,  numXCorrComputations, numSlopeComputations
     
     
+    /*
     
-    // how to deal with transposed??? 
+    // We are going to run across the full row of the cs/gj matrix and play with the v_curr value
+    int loop_iter; // NOTE: RENAME THIS VARIABLE
+    for(loop_iter = 0; loop_iter < numElements; ++loop_iter){
+        if (loop_iter == gid){ // don't want to try to connect with ourselves.
+            continue;
+        }
+        //voltage_idx = getIndex(0, loop_iter, numElements); // ROW MAJOR
+        voltage_idx = getVoltageIndex(loop_iter);
+        weight_idx = getConnectomeIndex(gid, loop_iter, numElements); // ROW MAJOR
+        //weight_idx = getIndex(gid, loop_iter, numElements); // ROW MAJOR
+        // Try to save ourselves from pointless memory access / operations
+        if(chemWeights[weight_idx] == 0.0 && gapWeights[weight_idx] == 0.0)
+            continue;
+        // Get v_current for the incoming spurt / shocker
+        float their_v_curr = voltages[voltage_idx];
+        if (fabs(their_v_curr) < thresh){ // nothing happens if it's less than thresh.
+            continue;
+        }
+        
+        // Make sure we actually have a connection
+        // use log(weight + 1)/log(max weight) -- this gives a logarithmic gain, a weight of 1 is .176, and a max weight is 1.
+        // input equation here to see: https://www.desmos.com/calculator
+        //float cs_weight = log(chemWeights[weight_idx] + 1)/log(max_cs_weight);// normalize to max CS weight (this was based off of a cursory glance)
+        float cs_weight = chemWeights[weight_idx]/max_cs_weight;// normalize to max CS weight (this was based off of a cursory glance)
+        float added_v = 0;
+        float conductance = 0;
+        if(cs_weight != 0.0){
+            
+            // - starting conductance is .5 -- similar to wicks' work, just simplified.
+            // -> according to sigmoidal function it increases or decreases with neuron's potential
+            //    -> as it nears max, conductance tends to 0, and as it nears min, conductance tends to 1
+            
+            // if their_v_curr == 0, conductance will be .5.... also, the -5 comes from wicks' paper... almost.
+            //no conductance at the moment...
+            //added_v = cs_weight * conductance * their_v_curr;
+            //added_v = cs_weight * their_v_curr;
+            if(cs_weight < 0){ // if inhibit
+                cs_weight *= -1; // make positive, for below computation
+                float preToEq = fabs(their_v_curr - inhibitRevPot);
+                float vDiff = inhibitRevPot - my_v_current;
+                conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/vRange))))) - .0134;
+                added_v = cs_weight * conductance * vDiff;
+            }
+            else { // excite
+                float preToEq = fabs(their_v_curr - exciteRevPot);
+                float vDiff = exciteRevPot - my_v_current;
+                conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/vRange))))) - .0134;
+                added_v = cs_weight * conductance * vDiff;
+            }
+            if (shouldProbe == 1){
+                chemContrib[weight_idx] = added_v;
+            }
+            cs_incoming += added_v;
+        }
+        //float gj_weight = log(gapWeights[weight_idx] + 1)/log(max_gj_weight);// normalize to max GJ weight (again, cursory glance)
+        added_v = 0; // reset this, because we use the same variable for cs and gj incoming...
+        float gj_weight = gapWeights[weight_idx]/max_gj_weight;// normalize to max GJ weight (again, cursory glance)
+        if(gj_weight != 0.0){ // response is always the same as the source -- depolariziation of one, causes same in other, and vice versa.
+            added_v = gj_weight * gj_amount_passed_on * (their_v_curr - my_v_current);
+            if (shouldProbe == 1){
+                gapContrib[weight_idx] = added_v;
+            }
+            gj_incoming += added_v;
+        }
+    }
+    total_incoming_voltage = gj_incoming + cs_incoming;
+    // is this the right way to do this, to compute based upon current activation, and then at the end decay it?
+    // maybe we should decay it earlier on, prior to computing...
+    float v_curr_finished = (my_v_current - v_decay) + total_incoming_voltage;
+    
+    if(v_curr_finished < v_min)
+        v_curr_finished = v_min;
+    
+    if(v_curr_finished > v_max)
+        v_curr_finished = v_max;
+    
+    
+    // Reset the value in the voltage vec
+    // Write the value back to the voltages, but 1 row ahead
+    //size_t w_idx = getIndex(iteration_number_for_row_access + 1, gid, numElements);
+    //voltages[w_idx] = v_curr_finished;
+    
+    //size_t fin_idx = getIndex(0, gid, numElements); // ROW MAJOR
+    size_t fin_idx = getVoltageIndex(gid);
+    
+    //voltages[fin_idx] = v_curr_finished;
+    voltages[fin_idx] = v_curr_finished;
+    
+    // update the outputVoltageHistory
+    int i;
+    int ovhSizeMinusOne = voltageHistorySize - 1;
+    size_t currentOVHIndex =  getOutputVoltageHistoryIndex(gid, 0, voltageHistorySize);// the first (oldest) entry for this element. for next entry, just add one.
+    // push all the existing output voltages down one (losing the oldest)
+    for(i = 0; i < ovhSizeMinusOne; ++i){
+        outputVoltageHistory[currentOVHIndex] = outputVoltageHistory[currentOVHIndex + 1];
+        currentOVHIndex++;
+    }
+    // then set the most recent one in the 'staging' area (which is currentOVHIndex, because it was just incremented)
+    outputVoltageHistory[currentOVHIndex] = v_curr_finished;
+    
+    
+    if (kernelIterationNum >= ovhSizeMinusOne){ // then we know we have a full outputVoltageHistory
+        // do XCorr
+        // do gap nd chem work
+        //if (gid == 0){
+        //   printf("ovhs: %d, v_curr_finished: %.2f\n", voltageHistorySize, v_curr_finished);
+        //printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",outputVoltageHistory[0],outputVoltageHistory[1],outputVoltageHistory[2],outputVoltageHistory[3],outputVoltageHistory[4],outputVoltageHistory[5]);
+        //}
+        int startingScratchPadOffset = getLocalScratchPadStartingOffset(lid, numElements,numXCorrEntries);
+        computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
+        computeVoltageRateOfChange(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, voltageRateOfChangeScratchPad, startingScratchPadOffset, numXCorrEntries);
+        if (gid == 2){ // H20
+            int otherElement = 7; // IFEAR
+            int spiOne = getScratchPadIndex(startingScratchPadOffset, otherElement, 0, numXCorrEntries);
+            int spiTwo = getScratchPadIndex(startingScratchPadOffset, otherElement, 1, numXCorrEntries);
+            int spiThree = getScratchPadIndex(startingScratchPadOffset, otherElement, 2, numXCorrEntries);
+            int spiFour = getScratchPadIndex(startingScratchPadOffset, otherElement, 3, numXCorrEntries);
+            float xcorrOne = XCorrScratchPad[spiOne];
+            float xcorrTwo = XCorrScratchPad[spiTwo];
+            float xcorrThree = XCorrScratchPad[spiThree];
+            float xcorrFour = XCorrScratchPad[spiFour];
+            float voltageRocOne = voltageRateOfChangeScratchPad[spiOne];
+            float voltageRocTwo = voltageRateOfChangeScratchPad[spiTwo];
+            float voltageRocThree = voltageRateOfChangeScratchPad[spiThree];
+            float voltageRocFour = voltageRateOfChangeScratchPad[spiFour];
+            //printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",kernelIterationNum, gid, otherElement, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
+        }
+        
+        // Now, this is where we adjust the connectome weights.
+        
+        // first rule we want to (try) to implement is:
+        // if xcorr indices 0, 1, and 2 are all greater than .75, AND, 0 < 1 < 2
+        // then, we increase weight by some rule
+        // possibly: += learningRate
+        // -------> learningRate will (very shortly) be different for every synapse, based upon age (maybe have learning rate slightly decrease each time its used to adjust the synaptic weight?
+        float learningRate = .1;
+        for ( i = 0; i < numElements; ++i){
+            if (i == gid){
+                continue;
+            }
+            int spiOne = getScratchPadIndex(startingScratchPadOffset, i, 0, numXCorrEntries);
+            int spiTwo = getScratchPadIndex(startingScratchPadOffset, i, 1, numXCorrEntries);
+            int spiThree = getScratchPadIndex(startingScratchPadOffset, i, 2, numXCorrEntries);
+            int spiFour = getScratchPadIndex(startingScratchPadOffset, i, 3, numXCorrEntries);
+            float xcorrOne = XCorrScratchPad[spiOne];
+            float xcorrTwo = XCorrScratchPad[spiTwo];
+            float xcorrThree = XCorrScratchPad[spiThree];
+            float xcorrFour = XCorrScratchPad[spiFour];
+            float voltageRocOne = voltageRateOfChangeScratchPad[spiOne];
+            float voltageRocTwo = voltageRateOfChangeScratchPad[spiTwo];
+            float voltageRocThree = voltageRateOfChangeScratchPad[spiThree];
+            float voltageRocFour = voltageRateOfChangeScratchPad[spiFour];
+            float vrocMin = .3;
+            //float vrocMax = 2.0;
+            float xcorrMin = .95;
+            
+            //float avgVROC = (voltageRocOne+voltageRocTwo+voltageRocThree+voltageRocFour)/4.0;
+            //                if ((voltageRocOne >= vrocMin && voltageRocTwo >= vrocMin && voltageRocThree >= voltageRocFour && voltageRocFour >= vrocMin) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+            if ((voltageRocOne >= voltageRocTwo && voltageRocTwo >= voltageRocThree && voltageRocThree >= voltageRocFour && voltageRocFour >= vrocMin) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+                //if ((avgVROC >= vrocMin && avgVROC <= vrocMax) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+                // then we increase the CHEM weight (different rule for GJ)
+                //printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",kernelIterationNum, gid, i, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
+                
+                weight_idx = getConnectomeIndex(gid, i, numElements); // ROW MAJOR
+                if (chemWeights[weight_idx] < 0){
+                    // it's inhibitory, leave it be for now (and in this section)
+                    continue;
+                }
+                chemWeights[weight_idx] = chemWeights[weight_idx] + ((max_cs_weight - chemWeights[weight_idx]) * learningRate);
+            }
+        }
+       */
+    
+    
+    
+    
+    
+    
+    // how to deal with transposed???
     
     
     
