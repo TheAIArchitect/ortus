@@ -72,13 +72,14 @@ public: /** NEW */
     // 2d -- r/w
     std::unordered_map<Scratchpad, Blade<cl_float>*> scratchpadBladeMap;
     std::unordered_map<RelationAttribute, Blade<cl_float>*> relationAttributeBladeMap;
+    Blade<cl_float>* activationBlade;
+    
     // scalar -- r/w
     std::unordered_map<GlobalAttribute, Blade<cl_float>*> globalAttributeBladeMap;
     std::unordered_map<MetadataAttribute, Blade<cl_float>*> metadataBladeMap;
     
     // 3D
     std::unordered_map<WeightAttribute, Blade<cl_float>*> weightBladeMap;
-    Blade<cl_float>* activationBlade;
     
     // last kernelArg
     Blade<cl_int>* kernelArgInfoBlade;

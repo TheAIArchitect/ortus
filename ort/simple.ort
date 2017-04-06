@@ -1,10 +1,14 @@
 MAX_ELEMENTS = 100 // need to know this for Blade creation
 // currently, the two below 'COMPUTATIONS' variables must be the same.
 // if they are different, ortus will use its default.
-XCORR_COMPUTATIONS = 4 // number of values used to compute xcorr as well
-SLOPE_COMPUTATIONS = 4 // number of values used to compute slope as well
-ACTIVATION_HISTORY_SIZE = 8 // 0th index will be for current activation, so history is this number -1
-WEIGHT_HISTORY_SIZE = 3 // 0th index will be for current weight, so history is this number -1
+XCORR_COMPUTATIONS = 4  // number of xcorr computations
+XCORR_SIZE = 4 // number of values used to compute xcorr
+SLOPE_COMPUTATIONS = 4 // number of slope computations
+SLOPE_SIZE = 4 // number of values used to compute slope
+// need at least XCORR_SIZE + (XCORR_SIZE-1) activation history size, 
+// same idea for slope.
+ACTIVATION_HISTORY_SIZE = 7 // nth index will be for current activation, so history is this number -1 
+WEIGHT_HISTORY_SIZE = 3 // nth index will be for current weight, so history is this number -1 
 
 elements:
     O2: {type=sense, affect=pos} 

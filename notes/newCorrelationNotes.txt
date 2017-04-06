@@ -1,0 +1,70 @@
+MERGE WITH INITIAL CORRELATION NOTES
+
+
+// this doesn't create a buffer -- just a spot in local memory for the kernel to use as a scratch pad.
+deviceScratchPadXCorr = new Blade<cl_float>(clHelperp, openCLWorkGroupSize*CONNECTOME_ROWS,XCORR_COMPUTATIONS, MAX_ELEMENTS, XCORR_COMPUTATIONS);
+deviceScratchPadVoltageROC = new Blade<cl_float>(clHelperp, openCLWorkGroupSize*CONNECTOME_ROWS,XCORR_COMPUTATIONS, MAX_ELEMENTS, XCORR_COMPUTATIONS);
+
+Blade(CLHelper* clhelper, int currentRows, int currentCols, int maxRows, int maxCols)
+
+row = work group size * num elements
+col = xcorr computations
+
+------------------ (note, setting max rows to MAX_ELEMENTS above, was wrong...) -----------------
+
+
+C0 == stacked, 4 timesteps ago (3 timesteps ago if we shorten it...)
+C1 == post +1, 5 timesteps ago
+C2 == post +2, 6 timesteps ago
+C3 == post +3, 7 timesteps ago
+
+Need a history of "XCORR_SIZE + (XCORR_SIZE - 1)" (so the activations needs to be 1 greater than this, for the current one),
+in order to have enough data to compute xcorrs of length XCORR_SIZE from for each element of the initial input:
+[0,1,2,3,4,5,6] <= if XCORR_SIZE is 3, we use [0, 1, 2], then for the 'other' values comparing those,
+we would want indices [0-2], [1-3], and [2-4].
+
+
+NOTE: play with 3 vs 4 xcorr size... 5 probably too much. probably don't want the potential for that much 'smoothing'
+
+general example, and visualization for scratchpad access patterns:
+
+
+-----------------------------
+>>>>>> MAIN TAKEAWAY <<<<<<<<
+-----------------------------
+=> each instance's base index = local_id * (num_elements * xcorr_computations)
+    -> equal to: lId * (NUM_ELEMENTS * kernelArgCols)
+=> access an element's xcorr row with current opencl gId (post element) = base_index + (gId*kernelArgCols)
+=> then just add xcorr computation number to elements xcorr row to get specific index
+*** AS LONG AS THE SIZE OF THE SLOPE AND XCORR SCRATCHPADS REMAIN THE SAME ***
+*** THE SLOPE SCRATCHPAD CAN BE ACCESSED IN EXACTLY THE SAME WAY!!! ***
+((((see below for details))))
+
+num_workgroups = 4  = k+1
+
+L# => local id (there are num_workgroups of these)
+C# => computation number
+e#-# => between element post# and pre#.
+
+[L0_C0e0-0, L0_C1e0-0, L0_C2e0-0, L0_C3e0-0]
+[L0_C0e0-1, L0_C1e0-1, L0_C2e0-1, L0_C3e0-1]
+...
+[L0_C0e0-n, L0_C1e0-n, L0_C2e0-n, L0_C3e0-n]
+[L1_C0e1-0, L1_C1e1-0, L1_C2e1-0, L1_C3e1-0]
+[L1_C1e0-1, L1_C1e1-1, L1_C2e1-1, L1_C3e1-1]
+...
+[L1_C1e0-n, L1_C1e1-n, L1_C2e1-n, L1_C3e1-n]
+[Lk_C0ek-0, Lk_C1ek-0, Lk_C2ek-0, Lk_C3ek-0]
+[Lk_C1ek-1, Lk_C1ek-1, Lk_C2ek-1, Lk_C3ek-1]
+...
+[Lk_C1ek-n, Lk_C1ek-n, Lk_C2ek-n, Lk_C3ek-n]
+
+
+But, each set of workgroups gets this setup, so in the general case,
+the local id will have nothing to do with the elements,
+rather, it's just a way for that instance to know where to place its data.
+
+
+
+
+

@@ -18,14 +18,22 @@
 
 
 /* declarations */
-void computeXCorr(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries);
-float XCorrMultiply(__global float* outputVoltageHistories, int aOffset, int bOffset, int len);
-float computeVoltageRateOfChange(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* voltageRateOfChangeScratchPad, int startingScratchPadOffset, int numXCorrEntries);
+void computeXCorr(global float* activations, int NUM_ELEMENTS, int ACTIVATION_HISTORY_SIZE, int postActivationBaseIndex, int lId, local float* XCorrScratchpad, int xcorrScratchpadBaseIndex, int NUM_XCORR_COMPUTATIONS, int XCORR_SIZE);
+float XCorrMultiply(global float* activations, int postOffset, int preOffset, int XCORR_SIZE);
+void computeSlope(global float* activations, int NUM_ELEMENTS, int ACTIVATION_HISTORY_SIZE, int postActivationBaseIndex, int lId, local float* SlopeScratchpad, int slopeScratchpadBaseIndex, int NUM_SLOPE_COMPUTATIONS, int SLOPE_SIZE);
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // this is the number of kernel args -1
 constant int NUM_KERNEL_ARGS_WITH_INFO = 6;
 constant int NUM_COLS_PER_KERNEL_ARG_INFO = 6;
+constant float EPSILON = FLT_MIN*2; // for float equivalency check
+
+/* returns true if two floats are effectively equal */
+bool fCompare(float a, float b){
+    return (fabs(a-b) < EPSILON);
+}
+
 
 /* everything, including blade, is zero indexed */
 int getIndex(int row, int col, int page, int blade, int maxRows, int maxCols, int maxPages, int bladeSize){
@@ -79,11 +87,11 @@ kernel void OrtusKernel(global float* elementAttributes,
     int lId = get_local_id(dimidx);
     // BEGIN METADATA COLLECTION (kernel arg 4)
     // very first thing we want to do is collect metadata.
-    local int NUM_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, NUM_SLOPE_COMPUTATIONS;
+    local int NUM_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, XCORR_SIZE, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE;
     int metadataBladeNum = 0;
     NUM_ELEMENTS = (int) metadata[metadataBladeNum];
     // stop if global is out of range:
-    if (gId >= metadata[0]) return; // no reason to do anything more if global id is >= # elements
+    if (gId >= NUM_ELEMENTS) return; // no reason to do anything more if global id is >= # elements
     metadataBladeNum = 1;
     KERNEL_ITERATION_NUM = (int) metadata[metadataBladeNum];
     metadataBladeNum = 2;
@@ -91,7 +99,12 @@ kernel void OrtusKernel(global float* elementAttributes,
     metadataBladeNum = 3;
     NUM_XCORR_COMPUTATIONS = (int) metadata[metadataBladeNum];
     metadataBladeNum = 4;
+    XCORR_SIZE = (int) metadata[metadataBladeNum];
+    metadataBladeNum = 5;
     NUM_SLOPE_COMPUTATIONS = (int) metadata[metadataBladeNum];
+    metadataBladeNum = 6;
+    SLOPE_SIZE = (int) metadata[metadataBladeNum];
+    
     if (gId == 1) printf("Starting kernel iteration #%d (num elements: %d)\n", KERNEL_ITERATION_NUM, NUM_ELEMENTS);
     
     // BEGIN vars for extracting necessary data from kernel args
@@ -115,7 +128,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
     // assign vars
     int elementTypeIndex, elementAffectIndex, elementThreshIndex;
-    float elementType, elementAffect, elementThresh;
+    float elementType, elementAffect, elementThresh; // NOTE: change first two to int, or compare with epsilon compare function
     // element type
     bladeIndexRelativeToKernelArg = 0;
     elementTypeIndex = getIndex(0, gId, 0, bladeIndexRelativeToKernelArg, kernelArgRows, kernelArgCols, kernelArgPages, kernelArgStride);
@@ -129,6 +142,28 @@ kernel void OrtusKernel(global float* elementAttributes,
     elementThreshIndex = getIndex(0, gId, 0, bladeIndexRelativeToKernelArg, kernelArgRows, kernelArgCols, kernelArgPages, kernelArgStride);
     elementThresh = elementAttributes[elementThreshIndex];
     printf("\telement '%d' {type: %f, affect: %f, thresh: %f}\n", gId, elementType, elementAffect, elementThresh);
+    
+    // (kernel arg 5): scratchpads -- 2D Blades
+    // => each instance's base index = local_id * (num_elements * xcorr_computations)
+    // -> equal to: lId * (NUM_ELEMENTS * kernelArgCols)
+    // => access an element's xcorr row with current opencl gId (post element) = base_index + (gId*kernelArgCols)
+    // => then just add xcorr computation number to elements xcorr row to get specific index
+    // *** AS LONG AS THE SIZE OF THE SLOPE AND XCORR SCRATCHPADS REMAIN THE SAME ***
+    // *** THE SLOPE SCRATCHPAD CAN BE ACCESSED IN EXACTLY THE SAME WAY!!! ***
+    kernelArgNum = 5;
+    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
+    if (gId ==1 && ka5_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka5_blades, kernelArgBladeCount);
+    if (gId == 1){
+        printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    }
+    int xcorrScratchpadBaseIndex, slopeScratchpadBaseIndex;
+    // we can pretend that each lId is a page, and the page size is NUM_ELEMENTS * kernelArgCols
+    int scratchpadEffectivePageSize = NUM_ELEMENTS * kernelArgCols; // kernelArgCols should be the same as NUM_XCORR_COMPUTATIONS
+    bladeIndexRelativeToKernelArg = 0;
+    xcorrScratchpadBaseIndex = getIndex(0, 0, lId, bladeIndexRelativeToKernelArg, kernelArgRows, kernelArgCols, scratchpadEffectivePageSize, kernelArgStride);
+    bladeIndexRelativeToKernelArg = 1;
+    slopeScratchpadBaseIndex = getIndex(0, 0, lId, bladeIndexRelativeToKernelArg, kernelArgRows, kernelArgCols, scratchpadEffectivePageSize, kernelArgStride);
+    int scratchpadBladeStride = kernelArgStride;
     
     // relationAttribute, weights, and activations all need to be done in a loop, because pre and post elements are involved
     // the 'post' will stay constant -- that is the gId, while the 'pre' will loop through all elements.
@@ -149,53 +184,192 @@ kernel void OrtusKernel(global float* elementAttributes,
     if (gId ==1 && ka3_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka3_blades, kernelArgBladeCount);
     if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg3Stride, kernelArg3Rows, kernelArg3Cols, kernelArg3Pages);
     
+    
     // THE ASSUMPTION IS THAT THE ROW IS THE 'post' AND THE COL IS THE 'pre'
     // (that is, the relation and weight matricies are filled in a transposed manner)
     
     // relationAttributes
     int relationTypeIndex, relationPolarityIndex, relationDirectionIndex, relationAgeIndex, relationThreshIndex, relationDecayIndex, relationMutabilityIndex;
-    float relationType, relationPolarity, relationDireciton, relationAge, relationThresh, relationDecay, relationMutability;
+    float relationType, relationPolarity, relationDirection, relationAge, relationThresh, relationDecay, relationMutability;
     // weights -- indices are for current weight. add 1 *page* for previous weight, 2 *pages* for weight 2 timesteps ago.
     int csWeightBaseIndex, gjWeightBaseIndex;
     float csWeight, gjWeight, csHistoric1, gjHistoric1, csHistoric2, gjHistoric2;
-    // activations -- remember, post is the current 'gId' -- historic activations work the same as for the weights
+    // (kernel arg 3) activations -- remember, post is the current 'gId' -- historic activations work the same as for the weights
     // (though number of historical values available are probably not the same -- or, they certainly aren't guaranteed to be)
     int preActivationBaseIndex, postActivationBaseIndex;
+    int postElement, preElement;
     float preActivation, postActivation;
+    postElement = gId;
+    postActivationBaseIndex = postElement * kernelArg3Cols;
+    //  NOTE: the LAST index of activations for each element is the slot for the updated activation at the end of the kernel iteration
+    // everything from a relative 0 (so, postElementBaseIndex) to (ACTIVATION_HISTORY_SIZE - 1) (so, USABLE_ACTIVATION_HISTORY),
+    // may be used for computations, and MUST NOT BE ALTERED IN THIS KERNEL, because it will change what other instances of the kernel see!
+    // NO kernel instances should be looking at any relative 'ACTIVATION_HISTORY_SIZE-1' slot, other than their own.
+    int USABLE_ACTIVATION_HISTORY = ACTIVATION_HISTORY_SIZE - 2;
+    int UPDATED_ACTIVATION_SLOT = postActivationBaseIndex + (ACTIVATION_HISTORY_SIZE - 1);
     
-    postActivationBaseIndex = gId;
-    int postElementBaseIndex;
-    for (postElementBaseIndex = 0; postElementBaseIndex < NUM_ELEMENTS; ++postElementBaseIndex){
+    // do XCorr and Slope computations
+    computeXCorr(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, postActivationBaseIndex, lId, scratchpad, xcorrScratchpadBaseIndex, NUM_XCORR_COMPUTATIONS, XCORR_SIZE);
+    computeSlope(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, postActivationBaseIndex, lId, (scratchpad + (sizeof(float)*scratchpadBladeStride)), slopeScratchpadBaseIndex, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
+    
+    
+    // START main loop
+    local float activationDecayConstant, minActivation, maxActivation, inhibitRevPot, exciteRevPot, inhibitExciteRange;
+    
+    activationDecayConstant = .2; // loses % of its charge (multiply by 100 for %)
+    inhibitRevPot = -10.0f;
+    exciteRevPot = 30.0f;
+    inhibitExciteRange = exciteRevPot - inhibitRevPot;
+    minActivation = -100.f;
+    maxActivation = 100.f;
+    int weightPageSize = kernelArg2Cols * kernelArg2Rows;
+    float csIncoming = 0.f;
+    float gjIncoming = 0.f;
+    float totalIncomingActivation = 0.f;
+    for (preElement = 0; preElement < NUM_ELEMENTS; ++preElement){
+        
+        preActivationBaseIndex = preElement * kernelArg3Cols;
         
         // now that we have the pre and post element indices, set the relation attributes, weights, and activations
         // kernel arg 1 (relationAttributes) -- 2D Blades
+        //// NOTE NOTE NOTE: instead of all this shit, just add 1 'blade size' (so, Stride) to each index, to get the next one!!! (try this to verify...)
+        // relationType
         bladeIndexRelativeToKernelArg = 0;
-        relationTypeIndex = getIndex(postActivationBaseIndex, preActivationBaseIndex, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
-        relationType =
+        relationTypeIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        relationType = relationAttributes[relationTypeIndex];
+        // relationType
+        bladeIndexRelativeToKernelArg = 1;
+        relationPolarityIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        relationPolarity = relationAttributes[relationPolarityIndex];
+        // relationDirection
+        bladeIndexRelativeToKernelArg = 2;
+        relationDirectionIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        relationDirection = relationAttributes[relationDirectionIndex];
+        // relationAge
+        bladeIndexRelativeToKernelArg = 3;
+        relationAgeIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        relationAge = relationAttributes[relationAgeIndex];
+        // relationThresh
+        bladeIndexRelativeToKernelArg = 4;
+        relationThreshIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        relationThresh = relationAttributes[relationThreshIndex];
+        // relationDecay
+        bladeIndexRelativeToKernelArg = 5;
+        relationDecayIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        relationDecay = relationAttributes[relationDecayIndex];
+        // relationMutability
+        bladeIndexRelativeToKernelArg = 6;
+        relationMutabilityIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        relationMutability = relationAttributes[relationMutabilityIndex];
+        // kernel arg 2 (weights) -- 3D Blades
+        // CS (chemical synapse) weights
+        bladeIndexRelativeToKernelArg = 0;
+        csWeightBaseIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg2Rows, kernelArg2Cols, kernelArg2Pages, kernelArg2Stride);
+        csWeight = weights[csWeightBaseIndex];
+        csHistoric1 = weights[csWeightBaseIndex + weightPageSize]; // 2D weight histories are stacked, so, hopefully this works...
+        //int csHistoric1Index = getIndex(postElement, preElement, 1, bladeIndexRelativeToKernelArg, kernelArg2Rows, kernelArg2Cols, kernelArg2Pages, kernelArg2Stride);// this is what the historic index would be without the 'shortcut' (that may or may not work...)
+        csHistoric2 = weights[csWeightBaseIndex + 2*weightPageSize];
+        // GJ (gap junction) weights
+        bladeIndexRelativeToKernelArg = 1;
+        gjWeightBaseIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg2Rows, kernelArg2Cols, kernelArg2Pages, kernelArg2Stride);
+        gjWeight = weights[gjWeightBaseIndex];
+        gjHistoric1 = weights[gjWeightBaseIndex + weightPageSize]; // 2D weight histories are stacked, so, hopefully this works...
+        gjHistoric2 = weights[gjWeightBaseIndex + 2*weightPageSize];
+        // kernel arg 3 (activations) -- 2D Blades
+        // we already have the base indices, and as each 'timestep's activations are a 1D vector,
+        // to go from the current activation ("index 0", to the 1st, 2nd, 3rd, etc. prior activations, just add the number of columns that many times.
+        // NOTE: index 0 is where the newly calculated activation goes, and what was in 0, goes to 1, etc. (at the end),
+        // but we use index 0 as the 'current' activation now.
+        bladeIndexRelativeToKernelArg = 0;
+        preActivation = activations[preActivationBaseIndex];
+        postActivation = activations[postActivationBaseIndex];
+    
+        if (fabs(postActivation) < relationThresh){ // nothing happens if it's less than thresh.
+            continue;
+        }
         
+        // use log(weight + 1)/log(max weight) -- this gives a logarithmic gain, a weight of 1 is .176, and a max weight is 1.
+        // input equation here to see: https://www.desmos.com/calculator
+        //float cs_weight = log(chemWeights[weight_idx] + 1)/log(max_cs_weight);// normalize to max CS weight (this was based off of a cursory glance)
         
-        
+        float addedActivation = 0;
+        float conductance = 0;
+        if(csWeight != 0.0){
+            ///// NOTE: CHECK ALL OF THIS ////////////
+            //////////////////////////////////////////
+            // - starting conductance is .5 -- similar to wicks' work, just simplified.
+            // -> according to sigmoidal function it increases or decreases with neuron's potential
+            //    -> as it nears max, conductance tends to 0, and as it nears min, conductance tends to 1
+            
+            // if their_v_curr == 0, conductance will be .5.... also, the -5 comes from wicks' paper... almost.
+            //no conductance at the moment...
+            //added_v = cs_weight * conductance * their_v_curr;
+            //added_v = cs_weight * their_v_curr;
+            if(relationPolarity < 0){ // if inhibit
+                float preToEq = fabs(preActivation - inhibitRevPot);
+                float actDiff = inhibitRevPot - postActivation;
+                conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/inhibitExciteRange))))) - .0134;
+                addedActivation = csWeight * conductance * actDiff;
+            }
+            else { // excite
+                float preToEq = fabs(preActivation - exciteRevPot);
+                float actDiff = exciteRevPot - postActivation;
+                conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/inhibitExciteRange))))) - .0134;
+                addedActivation = csWeight * conductance * actDiff;
+            }
+            // PROBE
+            //if (shouldProbe == 1){
+            //    chemContrib[weight_idx] = added_v;
+            //}
+            csIncoming += addedActivation;
+        }
+        //float gj_weight = log(gapWeights[weight_idx] + 1)/log(max_gj_weight);// normalize to max GJ weight (again, cursory glance)
+        addedActivation = 0; // reset this, because we use the same variable for cs and gj incoming...
+        //float gj_weight = gapWeights[weight_idx]/max_gj_weight;// normalize to max GJ weight (again, cursory glance)
+        if(gjWeight != 0.0){ // response is always the same as the source -- depolariziation of one, causes same in other, and vice versa.
+            addedActivation = gjWeight * (preActivation - postActivation);
+            // PROBE
+            //if (shouldProbe == 1){
+            //    gapContrib[weight_idx] = added_v;
+            //}
+            gjIncoming += addedActivation;
+        }
     }
     
+    totalIncomingActivation = gjIncoming + csIncoming;
+    // is this the right way to do this, to compute based upon current activation, and then at the end decay it?
+    // maybe we should decay it earlier on, prior to computing...
+    float activationDecay = activationDecayConstant * postActivation;
+    float updatedActivation = (postActivation - activationDecay) + totalIncomingActivation;
+    
+    // keep our activation within range... (not necessarily biologially unrealistic)
+    if(updatedActivation < minActivation) updatedActivation = minActivation;
+    if(updatedActivation > maxActivation) updatedActivation = maxActivation;
+   
+    
+   
+   
+    
+    // now that we're finished, set the updated activation
+    // by putting the new value at the end, we can use 0-ACTIVATION_HISTORY_SIZE-2 for computations
+    activations[UPDATED_ACTIVATION_SLOT] = updatedActivation;
     
     
-    // pause point: add the loops, finish getting the connection data, and finish writing the kernel!
-    // apart from the bladeNumber, the pre and post weight indices will be the same for all relations
+    /*
+   int startingScratchPadOffset = getLocalScratchPadStartingOffset(lid, numElements,numXCorrEntries);
+    computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
+        computeVoltageRateOfChange(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, voltageRateOfChangeScratchPad, startingScratchPadOffset, numXCorrEntries); 
+     */
+     
+        
+        
+        
+        
+        
+  
     
     
     
-
-    // (kernel arg 5): scratchpads -- 2D Blades
-    kernelArgNum = 5;
-    getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
-    if (gId ==1 && ka5_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka5_blades, kernelArgBladeCount);
-    if (gId == 1){
-        printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
-    }
-    
-    
-    
-    /* stopping point: continue this (see note above)... finish redoing kernel. then do structure. boom. done. haha. */
     
     // get all indices we'll need:
     
@@ -385,7 +559,6 @@ kernel void OrtusKernel(global float* elementAttributes,
     
     
     
-    // how to deal with transposed???
     
     
     
@@ -664,8 +837,8 @@ __kernel void refOrtusKernel( __global float *voltages, // read and write
             //printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",outputVoltageHistory[0],outputVoltageHistory[1],outputVoltageHistory[2],outputVoltageHistory[3],outputVoltageHistory[4],outputVoltageHistory[5]);
             //}
             int startingScratchPadOffset = getLocalScratchPadStartingOffset(lid, numElements,numXCorrEntries);
-            computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
-            computeVoltageRateOfChange(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, voltageRateOfChangeScratchPad, startingScratchPadOffset, numXCorrEntries);
+            //computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
+            //computeVoltageRateOfChange(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, voltageRateOfChangeScratchPad, startingScratchPadOffset, numXCorrEntries);
             if (gid == 2){ // H20
                 int otherElement = 7; // IFEAR
                 int spiOne = getScratchPadIndex(startingScratchPadOffset, otherElement, 0, numXCorrEntries);
@@ -750,97 +923,101 @@ __kernel void refOrtusKernel( __global float *voltages, // read and write
 /*
  *
  */
-void computeXCorr(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* XCorrScratchPad, int startingScratchPadOffset, int numXCorrEntries){
+void computeXCorr(global float* activations, int NUM_ELEMENTS, int ACTIVATION_HISTORY_SIZE, int postActivationBaseIndex, int lId, local float* XCorrScratchpad, int xcorrScratchpadBaseIndex, int NUM_XCORR_COMPUTATIONS, int XCORR_SIZE){
     //printf("gid, lid: %d, %d\n", gId, lid);
-    // 'a' refers to the array, 'A' in XCorrMulitply. That is, we do a xcorr between 'A', and 'B'.
-    // 'a' is the voltage history for 'gid', and 'b' starts at '0', and goes to numElements-1.
-    // at some point, 'a' will be the same as 'b'. That's fine, we will know that xcorr,
+    // We do a xcorr between 'Post', and 'Pre'.
+    // 'post' refers to the voltage history for 'gid', and 'pre' starts at '0', and goes to NUM_ELEMENTS-1.
+    // at some point, 'post' will be the same as 'pre'. That's fine, we will know that xcorr,
     // because when it is in the scratch pad, it will have index equal to 'gid'
-    // (in the scratch pad, 'a' with element 0 will be at 0, 'a' with element 1 will be at 1, and so on.
+    // in the scratch pad, 'post' with element 0 will be at 0, 'post' with element 1 will be at 1, and so on.
     //
-    // XCorrScratchPad will have a row for each set of xcorr computations between 'a' and a given 'b'
+    // XCorrScratchPad will have a row for each set of xcorr computations between 'post' and a given 'pre'
     // (of course, offset by the 'startingScratchPadOffset' to account for the specific thread's 'lid' (local id)),
     // This means that:
-    //      - index 0 of that row will hold xcorr(a, b), stacked.
-    //      - index 1 of that row will hold xcorr(a, b), with 'b' advanced by 1
-    //      - index 2 of that row will hold xcorr(a, b), with 'b' advanced by 2
+    //      - index 0 of that row will hold xcorr(post, pre), stacked.
+    //      - index 1 of that row will hold xcorr(post, pre), with 'post' advanced by 1
+    //      - index 2 of that row will hold xcorr(post, pre), with 'post' advanced by 2
     //
-    // 'a' will always have an offset of 0, and we will always use indices 0, 1, and 2.
-    // 'b' will 'slide', and will start off with an offset of 0, so that it is stacked directly on-top of 'a'.
-    // then, on the next 'xcorrIteration', 'b' will be offset by 1, so we use, 1, 2, and 3.
-    // finally, on the 3rd iteration, (when xcorrIteration = 2), 'b' will be offset by 2, and we will use 2, 3, and 4.
-    // That, is why outputVoltageHistory (currently, as of this writing), has a size of 6 (5 indices that we use, and 1 for the 'current' [staging] ouput voltage)
+    // 'post' will always have an offset of 0, and we will always use indices 0, 1, 2, etc.. to XCORR_SIZE-1
+    // 'pre' will 'slide', and will start off with an offset of 0, so that it is stacked directly on-top of 'post'.
+    // then, on the next 'xcorrIteration', 'pre' will be offset by 1, so we use, 1, 2, etc.. to XCORR_SIZE-1
     //
-    // we do two auto xcorrs, one for 'a', and one for 'b' (each b), with them stacked on top of themselves,
-    int i;
-    int j;
-    int xcorrLength = numXCorrEntries; // This means that we use an array of this length (3, as of this writing) to compute the xcorr (e.g., indices 0, 1, and 2 of 'a')
-    int aOffset = (voltageHistorySize-1) - xcorrLength; // we want to start at the 'end' (farthest back possible), to look at A's most recent 'window'
-    int aIndex = getOutputVoltageHistoryIndex(gid, aOffset, voltageHistorySize);
-    int bIndex = 0;
-    int windowNum = 0; // because of
+    // the effect is: the first computation gives correlation as of XCORR_SIZE timesteps before the current timestep,
+    // the second gives the correlation of post w.r.t. pre, looking at post XCORR_SIZE timesteps before, and pre XCORR_SIZE+1 timesteps before,
+    // the third is the same as the second, but with pre XCORR_SIZE+2 timesteps before, and so on.
+    //
+    // => this means that we see correlation 4, 5, 6, etc. timesteps before, *and* potential causation 5, 6, etc. timesteps away
+    // e.g: 8. ** if pre was just going down, and post starts going up, and pre goes up:
+    //      1. Post could be a pre to pre, but pre is probably not a pre to post.
+    //      2. If causal: pre and post should be correlated at 0, and then at 1 and 2 back (pushing pre back), there should still be correlation. This shows pre started, and then post started.
+    //
+    //
+    int i, j;
+    int postOffset = 0;
+    int postIndex = postActivationBaseIndex;
+    int preIndex = 0;
+    int windowNum = 0;
     int xcorrIteration = 0; // we'll use this to offset 'b' by 0, 1, and 2
-    int bOffset = aOffset; // start off with A and B lined up in time, and then decrement bOffset on each loop.
-    // seems to make the most sense to use the full length of each signal for the autocorr. note, we are subtracting 1 from the voltageHistorySize due to the 1 'staging' index.
-    //int autoCorrSize = voltageHistorySize - 1;
-    float autoCorrA = XCorrMultiply(outputVoltageHistory,aIndex,aIndex, xcorrLength);
-    float autoCorrB = 0;
+    int preOffset = postOffset; // start off with A and B lined up in time, and then decrement bOffset on each loop.
+    // seems to make the most sense to use the full length of each signal for the autocorr.
+    float autoCorrPost = XCorrMultiply(activations,postIndex, postIndex, XCORR_SIZE);
+    float autoCorrPre = 0;
     float divisor = 0; // this will be the sqrt(autocorrA + autoCorrB), which will divide (so, normalize) each xcorr
     float xcorrResult = 0; 
-    int scratchPadIndex = 0;
-    for (i = 0; i < numElements; ++i){ // loop through outputVoltageHistory,
+    int scratchpadIndex = 0;
+    for (i = 0; i < NUM_ELEMENTS; ++i){ // loop through activations
         xcorrIteration = 0;
-        bIndex = getOutputVoltageHistoryIndex(i, bOffset,voltageHistorySize); // the beginning of element 'i's voltage history
-        for (xcorrIteration = 0; xcorrIteration < xcorrLength; ++xcorrIteration){
-            autoCorrB = XCorrMultiply(outputVoltageHistory, bIndex, bIndex, xcorrLength); // last arg used to be 'autoCorrSize', but now it's the same as xcorrLength
-            divisor = sqrt(autoCorrA * autoCorrB);
-            scratchPadIndex = getScratchPadIndex(startingScratchPadOffset, i, xcorrIteration, xcorrLength);
+        // each col is one iteration back, and each row is an element's activation...
+        preIndex = getIndex(i, preOffset, 0, 0, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, 0, 0);//last two irrelevant at the moment
+        for (xcorrIteration = 0; xcorrIteration < XCORR_SIZE; ++xcorrIteration){
+            autoCorrPre = XCorrMultiply(activations, preIndex, preIndex, XCORR_SIZE);
+            divisor = sqrt(autoCorrPost * autoCorrPre);
+            scratchpadIndex = xcorrScratchpadBaseIndex + (i * NUM_XCORR_COMPUTATIONS) + xcorrIteration;
             if (divisor == 0){ // then correlation between two signals is zero
-                XCorrScratchPad[scratchPadIndex] = 0.f;
+                XCorrScratchpad[scratchpadIndex] = 0.f;
             }
             else{
-                xcorrResult = XCorrMultiply(outputVoltageHistory, aIndex, bIndex, xcorrLength);
-                XCorrScratchPad[scratchPadIndex] = xcorrResult/divisor;
+                xcorrResult = XCorrMultiply(activations, postIndex, preIndex, XCORR_SIZE);
+                XCorrScratchpad[scratchpadIndex] = xcorrResult/divisor;
             }
             /*
             if (scratchPadIndex == 117 || scratchPadIndex == 118 || scratchPadIndex == 119)
                 printf("xcorr: %2.f, divisor: %.2f, total: %.2f (idx: %d)\n",xcorrResult, divisor,XCorrScratchPad[scratchPadIndex], scratchPadIndex);
              */
-            bIndex--;
+            preIndex++;
         }
         
     }
     
 }
 
-float XCorrMultiply(__global float* outputVoltageHistories, int aOffset, int bOffset, int len){
+float XCorrMultiply(global float* activations, int postOffset, int preOffset, int XCORR_SIZE){
     float result = 0;
-    for (int i = 0; i < len; ++i){
-        result += outputVoltageHistories[aOffset+i] * outputVoltageHistories[bOffset+i];
+    for (int i = 0; i < XCORR_SIZE; ++i){
+        result += activations[postOffset+i] * activations[preOffset+i];
     }
     return result;
 }
 
 
-float computeVoltageRateOfChange(__global float* outputVoltageHistory, int numElements, int voltageHistorySize, int gid, int lid, __local float* voltageRateOfChangeScratchPad, int startingScratchPadOffset, int numXCorrEntries){
-    int i;
-    int j;
-    int xcorrLength = numXCorrEntries;
-    float timeSteps = xcorrLength;
+
+/** NOTE: can make this much faster by computing 1 set of slopes for each local group, giving them each a block to take care of or something...
+ ... as it is now, the same thing gets computed by every instance... some things get recomputed, too, i believe. */
+void computeSlope(global float* activations, int NUM_ELEMENTS, int ACTIVATION_HISTORY_SIZE, int postActivationBaseIndex, int lId, local float* SlopeScratchpad, int slopeScratchpadBaseIndex, int NUM_SLOPE_COMPUTATIONS, int SLOPE_SIZE){
+    int i, j;
+    float timeSteps = SLOPE_SIZE;
     int elementBaseIndex = -1;
     int elementLastIndex = -1;
     float rateOfChange = -1.f;
-    int scratchPadIndex = -1;
-    int voltageHistoryIndexBase = 0;
-    for (i = 0; i < numElements; ++i){
-        voltageHistoryIndexBase = (voltageHistorySize-1) - xcorrLength;
-        for (j = 0; j < numXCorrEntries; ++j){
-            elementBaseIndex = getOutputVoltageHistoryIndex(i, voltageHistoryIndexBase, voltageHistorySize);
-            elementLastIndex = elementBaseIndex + xcorrLength;
-            rateOfChange = (outputVoltageHistory[elementLastIndex] - outputVoltageHistory[elementBaseIndex])/timeSteps;
-            scratchPadIndex = getScratchPadIndex(startingScratchPadOffset, i, j, xcorrLength);
-            voltageRateOfChangeScratchPad[scratchPadIndex] = rateOfChange;
-            voltageHistoryIndexBase--;
+    int scratchpadIndex = -1;
+    for (i = 0; i < NUM_ELEMENTS; ++i){
+        for (j = 0; j < NUM_SLOPE_COMPUTATIONS; ++j){
+            // use j for col because on each iteration, it will move forward by 1
+            elementBaseIndex = getIndex(i, j, 0, 0, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, 0, 0); // like XCorr computation, last two don't matter
+            elementLastIndex = elementBaseIndex + timeSteps;
+            rateOfChange = (activations[elementLastIndex] - activations[elementBaseIndex])/timeSteps;
+            scratchpadIndex = slopeScratchpadBaseIndex + (i * NUM_SLOPE_COMPUTATIONS) + j;
+            SlopeScratchpad[scratchpadIndex] = rateOfChange;
         }
     }
 }

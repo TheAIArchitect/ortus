@@ -451,6 +451,13 @@ void OrtUtil::readAndStripOrtFileMetadata(std::vector<std::string>& theLines){
                 exit(15);
             }
         }
+        else if (StrUtils::trim(tempSplit[0]) == "XCORR_SIZE"){
+            Ort::XCORR_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));
+            if (Ort::XCORR_SIZE < 3){ // less than 3 doesn't seem to make much sense for xcorr...
+                printf("XCORR_SIZE must be at least 3.\n");
+                exit(15);
+            }
+        }
         else if (StrUtils::trim(tempSplit[0]) == "SLOPE_COMPUTATIONS"){
             Ort::SLOPE_COMPUTATIONS = std::stoi(StrUtils::trim(tempSplit[1]));
             if (Ort::SLOPE_COMPUTATIONS < 3){ // xcorr and slope use the same kernel arg (as of now)
@@ -458,6 +465,14 @@ void OrtUtil::readAndStripOrtFileMetadata(std::vector<std::string>& theLines){
                 exit(15);
             }
         }
+        else if (StrUtils::trim(tempSplit[0]) == "SLOPE_SIZE"){
+            Ort::SLOPE_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));
+            if (Ort::SLOPE_SIZE < 2){ // no slope with less than 2 data points (per axis) 
+                printf("SLOPE_SIZE must be at least 2.\n");
+                exit(15);
+            }
+        }
+        
         else if (StrUtils::trim(tempSplit[0]) == "ACTIVATION_HISTORY_SIZE"){
             Ort::ACTIVATION_HISTORY_SIZE = std::stoi(StrUtils::trim(tempSplit[1]));;
             if (Ort::ACTIVATION_HISTORY_SIZE < 2){ // one index is for current, need at least one for history

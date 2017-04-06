@@ -45,7 +45,7 @@ const std::vector<WeightAttribute> DataSteward::WEIGHT_KEYS = { WeightAttribute:
 const std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect, ElementAttribute::Thresh};
 const std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Type, RelationAttribute::Polarity, RelationAttribute::Direction, RelationAttribute::Age, RelationAttribute::Thresh, RelationAttribute::Decay, RelationAttribute::Mutability};
 const std::vector<GlobalAttribute> DataSteward::GLOBAL_KEYS = { GlobalAttribute::ChemNormalizer, GlobalAttribute::GapNormalizer };
-const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::NumSlopeComputations } ;
+const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::XCorrSize, MetadataAttribute::NumSlopeComputations, MetadataAttribute::SlopeSize} ;
 const std::vector<Scratchpad> DataSteward::SCRATCHPAD_KEYS = { Scratchpad::XCorr, Scratchpad::Slope};
 
 
@@ -113,6 +113,17 @@ void DataSteward::initializeData(){
 void DataSteward::executePostRunMemoryTransfers(){
     //readOpenCLBuffers();
     updateOutputVoltageVector();
+   
+    /**
+     NEED TO PUSH VOLTAGES DOWN IN BLADE -- LATER ON,
+     TEST TO SEE IF A NEW KERNEL WOULD BE FASTER
+     */
+    // note: the last activation index is the 'new' activation,
+    // which goes to index 0 (for each element),
+    // and everything else gets pushed back 1.
+    // (the one that was second to last, goes away (but all should be stored in the c++ history vector)
+    
+    
     // copy the ouput data into the input data
     // NOTE: FIX THIS SO THAT WE USE ONE BUFFER!!!
     //inputVoltages->copyData(outputVoltages);
@@ -156,7 +167,9 @@ void DataSteward::updateMetadataBlades(){
     metadataBladeMap[MetadataAttribute::KernelIterationNum]->set(1,*kernelIterationNumberp);
     metadataBladeMap[MetadataAttribute::ActivationHistorySize]->set(2, Ort::ACTIVATION_HISTORY_SIZE);
     metadataBladeMap[MetadataAttribute::NumXCorrComputations]->set(3, Ort::XCORR_COMPUTATIONS);
-    metadataBladeMap[MetadataAttribute::NumSlopeComputations]->set(4, Ort::SLOPE_COMPUTATIONS);
+    metadataBladeMap[MetadataAttribute::XCorrSize]->set(4, Ort::XCORR_SIZE);
+    metadataBladeMap[MetadataAttribute::NumSlopeComputations]->set(5, Ort::SLOPE_COMPUTATIONS);
+    metadataBladeMap[MetadataAttribute::SlopeSize]->set(6, Ort::SLOPE_SIZE);
 }
 
 void DataSteward::executePreRunOperations(){
@@ -301,15 +314,15 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     currentKernelArgNum++;
     // END KERNEL ARG #2
     
-    // KERNEL_ARG #3!!! Current and historic activations -- row 0 holds the current activations, rows 1+ hold the historic activations
+    // KERNEL_ARG #3!!! Current and historic activations -- col 0 holds the current activations, cols 1+ hold the historic activations
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     KernelArg<cl_float, DummyType> ka3(clHelper, kernelp, currentKernelArgNum);
-    activationBlade = ka3.addKernelArgWithBufferAndBlade(Ort::ACTIVATION_HISTORY_SIZE, Ort::NUM_ELEMENTS, Ort::ACTIVATION_HISTORY_SIZE, Ort::MAX_ELEMENTS, CL_MEM_READ_WRITE);
+    activationBlade = ka3.addKernelArgWithBufferAndBlade(Ort::NUM_ELEMENTS, Ort::ACTIVATION_HISTORY_SIZE, Ort::ACTIVATION_HISTORY_SIZE, Ort::MAX_ELEMENTS, CL_MEM_READ_WRITE);
     // collect metadata
     numBlades = 1;// just one blade here, no map
     maxSize = (int) activationBlade->maxSize;
-    rowsPerBlade = Ort::ACTIVATION_HISTORY_SIZE;
-    colsPerBlade = Ort::NUM_ELEMENTS;
+    rowsPerBlade = Ort::NUM_ELEMENTS;
+    colsPerBlade = Ort::ACTIVATION_HISTORY_SIZE;
     pagesPerBlade = 1;
     // add the data to temp vector
     tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
@@ -341,14 +354,14 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // KERNEL ARG #5!!!  Scratchpads (temporary storage of info in kernel)
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     // CHECK THIS!!!
-    size_t scratchpad_rows = Ort::SCRATCHPAD_COMPUTATION_SLOTS * openCLWorkGroupSize; // CHECK THIS
+    size_t scratchpad_rows = Ort::NUM_ELEMENTS * openCLWorkGroupSize;
     KernelArg<cl_float, Scratchpad>  ka5(clHelper, kernelp, currentKernelArgNum, SCRATCHPAD_KEYS);
-    scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpad_rows, Ort::NUM_ELEMENTS, 1, scratchpad_rows, Ort::NUM_ELEMENTS, 1, true));
+    scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpad_rows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, scratchpad_rows, Ort::NUM_ELEMENTS, 1, true));
     // collect metadata 
     numBlades = (int) scratchpadBladeMap.size();
     maxSize = (int) scratchpadBladeMap[SCRATCHPAD_KEYS[0]]->maxSize;
     rowsPerBlade = (int) scratchpad_rows;
-    colsPerBlade = Ort::NUM_ELEMENTS;
+    colsPerBlade = Ort::SCRATCHPAD_COMPUTATION_SLOTS;
     pagesPerBlade = 1;
     // add the data to temp vector
     tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});

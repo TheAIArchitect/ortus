@@ -27,7 +27,9 @@ int Ort::ACTIVATION_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' 
 // w.r.t. historical values.
 int Ort::SCRATCHPAD_COMPUTATION_SLOTS = 4;
 int Ort::XCORR_COMPUTATIONS = Ort::SCRATCHPAD_COMPUTATION_SLOTS;
+int Ort::XCORR_SIZE = 3;
 int Ort::SLOPE_COMPUTATIONS = Ort::SCRATCHPAD_COMPUTATION_SLOTS;
+int Ort::SLOPE_SIZE = 2;
 int Ort::WEIGHT_HISTORY_SIZE = 3; // not based on anything, really -- seems better than 2, and not sure if 4 is needed.
 // END DEFAULT VALUES
 
