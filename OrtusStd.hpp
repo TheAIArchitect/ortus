@@ -38,7 +38,7 @@ enum class RelationAttribute { Type, Polarity, Direction, Age, Thresh, Decay, Mu
 enum class GlobalAttribute { GapNormalizer, ChemNormalizer};
 
 // these are all scalars -- NOTE: perhaps add MAX_ELEMENTS??
-enum class MetadataAttribute { NumElements, KernelIterationNum, ActivationHistorySize, NumXCorrComputations, XCorrSize, NumSlopeComputations, SlopeSize};
+enum class MetadataAttribute { NumElements, MaxElements, KernelIterationNum, ActivationHistorySize, NumXCorrComputations, XCorrSize, NumSlopeComputations, SlopeSize};
 
 // scratch pats for cross correlation (XCorr), and rate of change of activation (Slope)
 enum class Scratchpad { XCorr, Slope};
@@ -68,7 +68,7 @@ class ElementInfoModule;
 
 class Ort {
 public:
-    const static int BLADE_METADATA_COUNT = 7;// note this is the number of metadata elements the kernel will get, not the number of elements in the .ort file
+    const static int BLADE_METADATA_COUNT = 8;// note this is the number of metadata elements the kernel will get, not the number of elements in the .ort file
     
     
     // START DEFAULT VALUES 

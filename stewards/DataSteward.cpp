@@ -45,7 +45,7 @@ const std::vector<WeightAttribute> DataSteward::WEIGHT_KEYS = { WeightAttribute:
 const std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect, ElementAttribute::Thresh};
 const std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Type, RelationAttribute::Polarity, RelationAttribute::Direction, RelationAttribute::Age, RelationAttribute::Thresh, RelationAttribute::Decay, RelationAttribute::Mutability};
 const std::vector<GlobalAttribute> DataSteward::GLOBAL_KEYS = { GlobalAttribute::ChemNormalizer, GlobalAttribute::GapNormalizer };
-const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::XCorrSize, MetadataAttribute::NumSlopeComputations, MetadataAttribute::SlopeSize} ;
+const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::MaxElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::XCorrSize, MetadataAttribute::NumSlopeComputations, MetadataAttribute::SlopeSize} ;
 const std::vector<Scratchpad> DataSteward::SCRATCHPAD_KEYS = { Scratchpad::XCorr, Scratchpad::Slope};
 
 
@@ -162,14 +162,15 @@ void DataSteward::updateOutputVoltageVector(){
 void DataSteward::updateMetadataBlades(){
     // really only need to run this for the kernel iteration pointer,
     // but for now, who cares.
-    metadataBladeMap[MetadataAttribute::NumElements]->set(0, Ort::NUM_ELEMENTS);
+    metadataBladeMap[MetadataAttribute::NumElements]->set(Ort::NUM_ELEMENTS);
     printf("NUM ELEMENTS: %d\n",Ort::NUM_ELEMENTS);
-    metadataBladeMap[MetadataAttribute::KernelIterationNum]->set(1,*kernelIterationNumberp);
-    metadataBladeMap[MetadataAttribute::ActivationHistorySize]->set(2, Ort::ACTIVATION_HISTORY_SIZE);
-    metadataBladeMap[MetadataAttribute::NumXCorrComputations]->set(3, Ort::XCORR_COMPUTATIONS);
-    metadataBladeMap[MetadataAttribute::XCorrSize]->set(4, Ort::XCORR_SIZE);
-    metadataBladeMap[MetadataAttribute::NumSlopeComputations]->set(5, Ort::SLOPE_COMPUTATIONS);
-    metadataBladeMap[MetadataAttribute::SlopeSize]->set(6, Ort::SLOPE_SIZE);
+    metadataBladeMap[MetadataAttribute::MaxElements]->set(Ort::MAX_ELEMENTS);
+    metadataBladeMap[MetadataAttribute::KernelIterationNum]->set(*kernelIterationNumberp);
+    metadataBladeMap[MetadataAttribute::ActivationHistorySize]->set(Ort::ACTIVATION_HISTORY_SIZE);
+    metadataBladeMap[MetadataAttribute::NumXCorrComputations]->set(Ort::XCORR_COMPUTATIONS);
+    metadataBladeMap[MetadataAttribute::XCorrSize]->set(Ort::XCORR_SIZE);
+    metadataBladeMap[MetadataAttribute::NumSlopeComputations]->set(Ort::SLOPE_COMPUTATIONS);
+    metadataBladeMap[MetadataAttribute::SlopeSize]->set(Ort::SLOPE_SIZE);
 }
 
 void DataSteward::executePreRunOperations(){
@@ -199,6 +200,8 @@ void DataSteward::pushOpenCLBuffers(){
     
     printf("pushing metadata...\n");
     for (auto entry : metadataBladeMap){
+        printf("\t%d... ",static_cast<int>(entry.first));
+        printf("with offset %d\n", entry.second->clBufferOffset);
         entry.second->pushDataToDevice();
     }
     
@@ -337,7 +340,7 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // KERNEL ARG #4!!! Metadata
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     KernelArg<cl_float, MetadataAttribute> ka4(clHelper, kernelp, currentKernelArgNum, METADATA_KEYS);
-    metadataBladeMap = *(ka4.addKernelArgWithBufferAndBlades(Ort::BLADE_METADATA_COUNT, Ort::BLADE_METADATA_COUNT, CL_MEM_READ_WRITE));
+    metadataBladeMap = *(ka4.addKernelArgWithBufferAndBlades(CL_MEM_READ_WRITE));
     // collect metadata (again, this metadata has nothing to do with the metadataBladeMap that we are collecting metadata from)
     numBlades = (int) metadataBladeMap.size();
     maxSize = (int) metadataBladeMap[METADATA_KEYS[0]]->maxSize;
@@ -355,8 +358,9 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     // CHECK THIS!!!
     size_t scratchpad_rows = Ort::NUM_ELEMENTS * openCLWorkGroupSize;
+    size_t scratchpad_max_rows = Ort::MAX_ELEMENTS * openCLWorkGroupSize;
     KernelArg<cl_float, Scratchpad>  ka5(clHelper, kernelp, currentKernelArgNum, SCRATCHPAD_KEYS);
-    scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpad_rows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, scratchpad_rows, Ort::NUM_ELEMENTS, 1, true));
+    scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpad_rows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, scratchpad_max_rows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, true));
     // collect metadata 
     numBlades = (int) scratchpadBladeMap.size();
     maxSize = (int) scratchpadBladeMap[SCRATCHPAD_KEYS[0]]->maxSize;
