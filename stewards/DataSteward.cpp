@@ -225,6 +225,43 @@ void DataSteward::pushOpenCLBuffers(){
 }
 
 
+/** NOTE: THIS CAN ONLY BE USED FOR INTERNEURONS!
+ * you can't use this to add a new sensor,
+ * motorneuron, or muscle. Those must be added in the .ort file.
+ *
+ * Further, only Architect should call this.
+ *
+ * returns NULL if operation failed (e.g. already at Ort::MAX_ELEMENTS)
+ */
+ElementInfoModule* DataSteward::addElement(std::unordered_map<ElementAttribute,cl_float> newElemenattributes, std::string name){
+    // add to element blade
+
+    // update all blades' sizes'
+    
+    // create new ElementInfoModule
+    
+    // set data pointers
+    
+    // add new element (and its info) to the connectome data structures
+    
+    return NULL;
+}
+
+/** only call this from Architect.
+ *
+ * the main reason this is here, is because 'addElement' is here,
+ * and it made sense to keep the two together.
+ *
+ * returns NULL if operation failed.
+ */
+ElementRelation* DataSteward::addRelation(std::unordered_map<RelationAttribute, cl_float> newRelationAttributes, ElementInfoModule* ePre, ElementInfoModule* ePost, ElementRelationType ert){
+    ElementRelation* newElrel = connectomep->addRelation(ePre, ePost, ert);
+    
+    // set data pointers
+    
+    // then set attributes
+    return NULL;
+}
 
 
 /** creates KernelArgs, CLBuffers, and Blades

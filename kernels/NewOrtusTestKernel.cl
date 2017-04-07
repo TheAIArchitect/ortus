@@ -221,13 +221,11 @@ kernel void OrtusKernel(global float* elementAttributes,
     int UPDATED_ACTIVATION_SLOT = postActivationBaseIndex + (ACTIVATION_HISTORY_SIZE - 1);
     
     
-    //if (KERNEL_ITERATION_NUM >= USABLE_ACTIVATION_HISTORY){ // can't compute anything with historic values until we have historic values.
+    if (KERNEL_ITERATION_NUM >= USABLE_ACTIVATION_HISTORY){ // can't compute anything with historic values until we have historic values.
         // do XCorr and Slope computations
         computeXCorr(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, gId, lId, scratchpad, xcorrScratchpadBaseIndex, NUM_XCORR_COMPUTATIONS, XCORR_SIZE);
         computeSlope(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, gId, lId, (scratchpad + (sizeof(float)*scratchpadBladeStride)), slopeScratchpadBaseIndex, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
-    //}
-    
-    
+    }
     
     // START main loop
     local float activationDecayConstant, minActivation, maxActivation, inhibitRevPot, exciteRevPot, inhibitExciteRange;
@@ -299,6 +297,9 @@ kernel void OrtusKernel(global float* elementAttributes,
         bladeIndexRelativeToKernelArg = 0;
         preActivation = activations[preActivationBaseIndex];
         postActivation = activations[postActivationBaseIndex];
+        
+        // print info to make sure we're reading everything properly / data is where we think it is
+        if (gId == 1) printf("(gId: %d) pre: %d, post: %d - csWeight: %.2f, gjWeight: %.2f => relation {type: %.1f, polarity: %.1f, age: %.2f, tresh: %.2f, decay: %.2f, mutability: %.2f}\n", gId, preElement, postElement, csWeight, gjWeight, relationType, relationPolarity, relationAge, relationThresh, relationDecay, relationMutability);
     
         if (fabs(postActivation) < relationThresh){ // nothing happens if it's less than thresh.
             continue;
@@ -464,10 +465,6 @@ void computeXCorr(global float* activations, int NUM_ELEMENTS, int ACTIVATION_HI
                 xcorrResult = XCorrMultiply(activations, postIndex, preIndex, XCORR_SIZE);
                 XCorrScratchpad[scratchpadIndex] = xcorrResult/divisor;
             }
-            /*
-            if (scratchPadIndex == 117 || scratchPadIndex == 118 || scratchPadIndex == 119)
-                printf("xcorr: %2.f, divisor: %.2f, total: %.2f (idx: %d)\n",xcorrResult, divisor,XCorrScratchPad[scratchPadIndex], scratchPadIndex);
-             */
             preIndex++;
         }
         

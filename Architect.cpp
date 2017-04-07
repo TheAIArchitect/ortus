@@ -1,20 +1,76 @@
 //
-//  Incubator.cpp
+//  Architect.cpp
 //  ortus
 //
-//  Created by andrew on 3/20/17.
+//  Created by andrew on 4/7/17.
 //  Copyright © 2017 Andrew W.E. McDonald. All rights reserved.
 //
 
-#include "Incubator.hpp"
+#include "Architect.hpp"
 
-Incubator::Incubator(Connectome* ctomep){
-    this->ctomep = ctomep;
+/** This is TheArchitect. */
+
+
+
+
+Architect::Architect(){};
+
+
+void Architect::setConnectome(Connectome* cp){
+    connectomep = cp;
 }
 
-Incubator::~Incubator(){
+void Architect::setDataSetward(DataSteward* ds){
+    dataStewardp = ds;
+}
+
+void Architect::designConnectome(){
     
+    /*
+     so, we have a vector of
+     - elements
+     - element relations
+     
+     => correlated means GJ (electrical, bidirectional)
+     => causes means CS (chemical, unidirectional)
+     => if A dominates B, inhibitory CS  from A to B
+     => if A opposes B:
+        -> create two new interneurons (Ai, Bi), one each for A and B, with the same affect as their 'parent'
+            -> A excites Ai
+            -> B excites Bi
+        -> Ai inhibits whatever Bi excites
+        -> Bi inhibits whatever Ai excites
+        -> if A also dominates B, Bi must inhibit whatever Ai excites with a weight less than the weight between Ai and what Bi excites.
+     => every sensory element should have at least 1 interneuron
+     => if two stimuli (A and E) happen together, build association by creating a new interneuron,
+     that gets input from Ai and Ei
+     
+     (later)
+    => vision system: 
+     
+    => plain/pleasure:
+     
+     */
+     
+     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -22,7 +78,7 @@ Incubator::~Incubator(){
 
 
 /**
- * 
+ *
  * 1) S == sense, E == emotion, M == motor
  * 2) for each sense S:
  *      create 2 interneurons, one positive (P<sense>), and one negative (N<sense>)
@@ -46,43 +102,43 @@ Incubator::~Incubator(){
  
  maybe -- pass in two, three, etc.. historic voltage arrays, and compute the xcorr in the kernel,
  and then alter the weight based upon that:
-    -> if postiviely correlated at 0 offset (signals are on top of eachother):
-        -> if positive change in correlation (so, more positive):
-            -> increase strength of excititory synapse
-        -> if negative change in correlation (so, less positive):
-            -> decrease strength of excitatory synapse
-    -> if inversely correlated at 0 offset (signals are on top of eachother)::
-        -> if positive change in correlation (so, more negative):
-            -> increase strength of inhibitory synapse
-        -> if negative change in correlation (so, less negative):
-            -> decrease strength of inhibitory synapse
-    -> if postiviely correlated at offset > 0, where presynaptic neuron's signal is offset:
-        -> if positive change in correlation (so, more positive):
-            -> increase strength of excititory synapse
-        -> if negative change in correlation (so, less positive):
-            -> decrease strength of excitatory synapse
-    -> if inversely correlated at offset > 0, where presynaptic neuron's signal is offset:
-        -> if positive change in correlation (so, more negative):
-            -> increase strength of inhibitory synapse
-        -> if negative change in correlation (so, less negative):
-            -> decrease strength of inhibitory synapse
+ -> if postiviely correlated at 0 offset (signals are on top of eachother):
+ -> if positive change in correlation (so, more positive):
+ -> increase strength of excititory synapse
+ -> if negative change in correlation (so, less positive):
+ -> decrease strength of excitatory synapse
+ -> if inversely correlated at 0 offset (signals are on top of eachother)::
+ -> if positive change in correlation (so, more negative):
+ -> increase strength of inhibitory synapse
+ -> if negative change in correlation (so, less negative):
+ -> decrease strength of inhibitory synapse
+ -> if postiviely correlated at offset > 0, where presynaptic neuron's signal is offset:
+ -> if positive change in correlation (so, more positive):
+ -> increase strength of excititory synapse
+ -> if negative change in correlation (so, less positive):
+ -> decrease strength of excitatory synapse
+ -> if inversely correlated at offset > 0, where presynaptic neuron's signal is offset:
+ -> if positive change in correlation (so, more negative):
+ -> increase strength of inhibitory synapse
+ -> if negative change in correlation (so, less negative):
+ -> decrease strength of inhibitory synapse
  
  
-    => note: 'change' refers to xcorr value from previous time-step (iteration)
+ => note: 'change' refers to xcorr value from previous time-step (iteration)
  
-    So, how do gap junctions factor into this? 
-        -> 
-            * if neuron A, at time n (A[n]) has an activation, x, and
-            * if neuron B, at time n (B[n]) has an activation, y, and
-            * if A[n+1] has an activation x+dX, then:
-                * if B[n+1] has an activation y+dY
-                => we have a correlation
-                * if B[n+1] has an activation,  y, and if B[n+2] has an activation y+dY
-                => we have a causal relationship
-    
-    
-            
-    
+ So, how do gap junctions factor into this?
+ ->
+ * if neuron A, at time n (A[n]) has an activation, x, and
+ * if neuron B, at time n (B[n]) has an activation, y, and
+ * if A[n+1] has an activation x+dX, then:
+ * if B[n+1] has an activation y+dY
+ => we have a correlation
+ * if B[n+1] has an activation,  y, and if B[n+2] has an activation y+dY
+ => we have a causal relationship
+ 
+ 
+ 
+ 
  */
 /** END NOTES from old DataSteward */
 
@@ -157,9 +213,9 @@ Incubator::~Incubator(){
  printf("%s\n",c.toString().c_str());
  elements[pre_id]->out_conns.push_back(c);
  }
-}
-//printf("i = %d\n",i);
-++start_at;
-}
-}
-*/
+ }
+ //printf("i = %d\n",i);
+ ++start_at;
+ }
+ }
+ */

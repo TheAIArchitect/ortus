@@ -65,15 +65,12 @@ void Connectome::buildAdditionalDataStructures(){
     }
     printf(">> Element Relations (%d)\n", (int)elementRelations.size());
     for (auto relation : elementRelations){
-        
-        
         printf("%s\n",relation->toString().c_str());
     }
-    
-    
     return;
-    
 }
+
+
 
 
 /**
@@ -89,6 +86,7 @@ void Connectome::addRelationAttributesFromOrt(std::unordered_map<std::string,std
     ortus::enum_string_unordered_map<RelationAttribute> postAttributeMap = ortUtil.getAttributeEnumsFromStrings<RelationAttribute>(postAttributeMapStrings, isElement);
     
     
+    /* note: at the moment, this is stupid, because anything set, gets overwritten by the post attribute map below...*/
     for (auto attrib : preAttributeMap){
         float floatToSet = 0.f;
         if (isdigit(attrib.second[0])){

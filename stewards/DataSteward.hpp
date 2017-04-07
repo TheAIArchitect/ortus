@@ -56,6 +56,11 @@ public: /** NEW */
     void setComputeStewardPointers(ComputeSteward* computeStewardp);
     void initializeConnectome(std::string ortFile);
     void createElementsAndElementRelations();
+    
+    
+    ElementInfoModule* addElement(std::unordered_map<ElementAttribute,cl_float> newElemenattributes, std::string name);
+    ElementRelation* addRelation(std::unordered_map<RelationAttribute, cl_float> newRelationAttributes, ElementInfoModule* ePre, ElementInfoModule* ePost, ElementRelationType ert);
+    
     void initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp, size_t openCLWorkGroupSize);
     void updateMetadataBlades();
     void executePreRunOperations();

@@ -25,7 +25,6 @@
 		49C754C11E125CF8000D0A00 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663A75BE1D0B1A6F00F6B561 /* OpenGL.framework */; };
 		49C754C61E125D15000D0A00 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C754C51E125D15000D0A00 /* Cocoa.framework */; };
 		F71514921E7F991C008F6292 /* OrtUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F71514901E7F991C008F6292 /* OrtUtil.cpp */; };
-		F71514951E7F9E68008F6292 /* Incubator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F71514931E7F9E68008F6292 /* Incubator.cpp */; };
 		F74880411E2448A00083763E /* DataSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803C1E2448A00083763E /* DataSteward.cpp */; };
 		F74880421E2448A00083763E /* Steward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F748803E1E2448A00083763E /* Steward.cpp */; };
 		F74880451E245C930083763E /* SensoryStimulationSteward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F74880431E245C930083763E /* SensoryStimulationSteward.cpp */; };
@@ -157,6 +156,7 @@
 		F7E7A0B31E2260350068BD3E /* ComplexStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AB1E2260350068BD3E /* ComplexStimulus.cpp */; };
 		F7E7A0B41E2260350068BD3E /* PrimitiveStimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0AD1E2260350068BD3E /* PrimitiveStimulus.cpp */; };
 		F7E7A0B61E2260350068BD3E /* Stimulus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7E7A0B11E2260350068BD3E /* Stimulus.cpp */; };
+		F7FFF59E1E975AD4004D1BDC /* Architect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7FFF59C1E975AD4004D1BDC /* Architect.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -227,8 +227,6 @@
 		F715148F1E7F98E4008F6292 /* ort */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ort; sourceTree = "<group>"; };
 		F71514901E7F991C008F6292 /* OrtUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OrtUtil.cpp; sourceTree = "<group>"; };
 		F71514911E7F991C008F6292 /* OrtUtil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OrtUtil.hpp; sourceTree = "<group>"; };
-		F71514931E7F9E68008F6292 /* Incubator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Incubator.cpp; sourceTree = "<group>"; };
-		F71514941E7F9E68008F6292 /* Incubator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Incubator.hpp; sourceTree = "<group>"; };
 		F748803C1E2448A00083763E /* DataSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataSteward.cpp; path = stewards/DataSteward.cpp; sourceTree = "<group>"; };
 		F748803D1E2448A00083763E /* DataSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DataSteward.hpp; path = stewards/DataSteward.hpp; sourceTree = "<group>"; };
 		F748803E1E2448A00083763E /* Steward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Steward.cpp; path = stewards/Steward.cpp; sourceTree = "<group>"; };
@@ -391,6 +389,8 @@
 		F7E7A0AE1E2260350068BD3E /* PrimitiveStimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = PrimitiveStimulus.hpp; path = stimuli/PrimitiveStimulus.hpp; sourceTree = "<group>"; };
 		F7E7A0B11E2260350068BD3E /* Stimulus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Stimulus.cpp; path = stimuli/Stimulus.cpp; sourceTree = "<group>"; };
 		F7E7A0B21E2260350068BD3E /* Stimulus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Stimulus.hpp; path = stimuli/Stimulus.hpp; sourceTree = "<group>"; };
+		F7FFF59C1E975AD4004D1BDC /* Architect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Architect.cpp; sourceTree = "<group>"; };
+		F7FFF59D1E975AD4004D1BDC /* Architect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Architect.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -745,6 +745,8 @@
 				F7E7A0B71E2260620068BD3E /* stimuli */,
 				443247B21DB60187001D153B /* AblationStation.cpp */,
 				443247B31DB60187001D153B /* AblationStation.hpp */,
+				F7FFF59C1E975AD4004D1BDC /* Architect.cpp */,
+				F7FFF59D1E975AD4004D1BDC /* Architect.hpp */,
 				49EB41ED1E1D28FB00E98215 /* Blade.hpp */,
 				F78DC1201E837A7C0030C688 /* Connectome.cpp */,
 				F78DC1211E837A7C0030C688 /* Connectome.hpp */,
@@ -758,8 +760,6 @@
 				444DE3E61D8A5D7F00247E36 /* ElementInfoModule.hpp */,
 				F7DA053D1E1FCB96009FA734 /* FileAssistant.cpp */,
 				F7DA053E1E1FCB96009FA734 /* FileAssistant.hpp */,
-				F71514931E7F9E68008F6292 /* Incubator.cpp */,
-				F71514941E7F9E68008F6292 /* Incubator.hpp */,
 				F7CAA1501E8CD6A900DE81E4 /* KernelArg.hpp */,
 				444DE4441D8A717400247E36 /* log.txt */,
 				444DE44A1D8A717400247E36 /* myDebug.cpp */,
@@ -941,9 +941,9 @@
 				44AF538D1DA46F89009546BC /* OptionForewoman.cpp in Sources */,
 				F78093CE1E52E8D300749BE3 /* OrtusXCorrVisualizer.cpp in Sources */,
 				F74880501E25FB1E0083763E /* OrtusKernelOne.cl in Sources */,
-				F71514951E7F9E68008F6292 /* Incubator.cpp in Sources */,
 				443247B11DB059CE001D153B /* ElementRelation.cpp in Sources */,
 				443247B41DB60187001D153B /* AblationStation.cpp in Sources */,
+				F7FFF59E1E975AD4004D1BDC /* Architect.cpp in Sources */,
 				F7CAA14A1E8B3A1200DE81E4 /* CLBuffer.cpp in Sources */,
 				F748804C1E25B7020083763E /* DevelopmentSteward.cpp in Sources */,
 				F7E7A0A71E2205BF0068BD3E /* ConstantSignal.cpp in Sources */,
