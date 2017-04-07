@@ -10,6 +10,11 @@
 
 /** This is TheArchitect. */
 
+/* this will also be called to update the connectome,
+ * e.g., upon the introduction of a new combination of stimuli.
+ *
+ * at least, i think so...
+ */
 
 
 
@@ -20,11 +25,31 @@ void Architect::setConnectome(Connectome* cp){
     connectomep = cp;
 }
 
-void Architect::setDataSetward(DataSteward* ds){
+void Architect::setDataSteward(DataSteward* ds){
     dataStewardp = ds;
 }
 
 void Architect::designConnectome(){
+    
+    /*maybe need to add a 'dominated by':
+        - question is: how to deal with a relation weight between two elements, if the *pre* element is dominated by some other element?
+    
+     */
+     
+   /* mappings:
+    # relation type -> use enum values
+    # element type -> use enum values
+    # "causes":
+        - if direction -1 (check to make sure that's how it's getting set... -1 or 1):
+            > set polarity to -1, csWeight to 1
+    
+    
+    
+    
+    */
+    
+    
+    
     
     /*
      so, we have a vector of
@@ -46,9 +71,15 @@ void Architect::designConnectome(){
      that gets input from Ai and Ei
      
      (later)
-    => vision system: 
+    => vision system:
      
-    => plain/pleasure:
+    => plain/pleasure: a 'central' pain/pleasure center, that innervates all sensory neurons (in some way)
+     
+     
+     
+     
+    => not relevant for architect, but "LIFE", so, every timestep, should 'use' O2, and 'produce' CO2.
+     
      
      */
      
@@ -81,7 +112,7 @@ void Architect::designConnectome(){
  *
  * 1) S == sense, E == emotion, M == motor
  * 2) for each sense S:
- *      create 2 interneurons, one positive (P<sense>), and one negative (N<sense>)
+ *      create 2 interneurons???, one positive (P<sense>), and one negative (N<sense>)
  *      if S is desirable (good):
  *          S excites P<sense> and inhibits N<sense>
  *      if S is undesirable (bad):

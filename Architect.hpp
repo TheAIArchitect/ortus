@@ -26,7 +26,7 @@ public:
     DataSteward* dataStewardp;
     
     void setConnectome(Connectome* cp);
-    void setDataSetward(DataSteward* ds);
+    void setDataSteward(DataSteward* ds);
     void designConnectome();
 };
 

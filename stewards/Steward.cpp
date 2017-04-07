@@ -48,6 +48,14 @@ void Steward::initialize(){
     // which will use the Blades to store (some) of their data.
     dataStewardp->createElementsAndElementRelations();
     
+    architectp = new Architect();
+    architectp->setDataSteward(dataStewardp);
+    architectp->setConnectome(dataStewardp->connectomep);
+    
+    // this takes the elements and satisfies the constraints described.
+    // rather, a better description, would be,
+    // it satisfies any constraints not yet satisfied.
+    architectp->designConnectome();
     
     
     //dataStewardp->init(computeStewardp->workGroupSize);

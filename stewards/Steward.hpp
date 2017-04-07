@@ -13,10 +13,10 @@
 #include "DataSteward.hpp"
 #include "ComputeSteward.hpp"
 #include "DataVisualizer.hpp"
+#include "Architect.hpp"
 #include "SensoryStimulationSteward.hpp"
 #include "DiagnosticSteward.hpp"
 #include "OrtusStd.hpp"
-#include "Incubator.hpp"
 
 class Steward {
 public:
@@ -26,8 +26,9 @@ public:
     
     void run();
     
+    
+    Architect* architectp;
     DataSteward* dataStewardp;
-    Incubator* incubatorp;
     ComputeSteward* computeStewardp;
     SensoryStimulationSteward* sensoryStimulationStewardp;
     DiagnosticSteward* diagnosticStewardp;
