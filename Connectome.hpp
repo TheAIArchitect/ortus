@@ -44,6 +44,8 @@ public:
     
     void setElements();
     
+    void cat();
+    
     std::vector<std::string> theLines;
     
      // primary element pointer holder -- the index in this vector is the element's 'id'

@@ -44,7 +44,7 @@ void Architect::setDataSteward(DataSteward* ds){
  */
 void Architect::designConnectome(){
     
-    int i,j, bRow, bCol;
+    int i,j;
     int numCausal = connectomep->causesRelations.size();
     std::vector<ElementRelation*> elRelVec;
     int elRelVecSize;
@@ -56,7 +56,7 @@ void Architect::designConnectome(){
         for (j = 0; j < elRelVecSize; ++j){
             elRelp = elRelVec[j];
             if (elRelp->preId != i){
-                printf("PreId != i -> %d != %d\n",elRelp, i);
+                printf("PreId != i -> %d != %d\n",elRelp->preId, i);
             }
             // so, now we need to create a causal relationship between the pre and post elements.
            
@@ -73,7 +73,7 @@ void Architect::designConnectome(){
                 ElementRelationType ert = ElementRelationType::CAUSES;
                 newRelAttribs[RelationAttribute::Type] = static_cast<float>(ert);
                 // age, mutability, thresh, decay??
-                ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, elRelp->pre, elRelp->post, ert);
+                ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, elRelp->pre, theNewInterp, ert);
                 newRelp->setCSWeight(1.f);
                 // now we connect the inter to the 'post' specified by elRelp
                 // for the time being, we can re-use the attribute map
@@ -87,8 +87,15 @@ void Architect::designConnectome(){
                     int numOpposes = tempRelVec.size();
                     for (int k  = 0; k < numOpposes; ++k){
                         // create an inhibitory 'causes' (CS) from the new interneuron, to any 'post' of the element our current 'pre' opposes.
-                        newRelAttribs[RelationAttribute::Polarity] = -1.f;
-                        newRelp = dataStewardp->addRelation(newRelAttribs, theNewInterp, tempRelVec[k]->post, ert);
+                        std::vector<ElementRelation*> stupidVec = connectomep->causesRelations[tempRelVec[k]->postId];
+                        int stupidLen = stupidVec.size();
+                        for ( int z = 0; z < stupidLen; ++z){
+                            newRelAttribs[RelationAttribute::Polarity] = -1.f;
+                            newRelp = dataStewardp->addRelation(newRelAttribs, theNewInterp, stupidVec[z]->post, ert);
+                            newRelp->setCSWeight(1.f);    
+                        }
+                        
+                    }
                 }
                 //// Must now delete old relation, or mark for deletion, or something...
                     //// ALSO probably want to do something about the 'opposes'
@@ -104,15 +111,28 @@ void Architect::designConnectome(){
             
         }
         
-        
     }
     
-        
+    printf("format: (cs weight/polarity)\n");
+    for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
+        printf("\t\t\t\t|%s",connectomep->indexMap[i].c_str());
+    }
+    printf("\n");
+    for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
+        printf("%s\t\t|",connectomep->indexMap[i].c_str());
+        for (j = 0; j < Ort::NUM_ELEMENTS; ++j){
+            // need to flip incides if accessing blades directly, because 2D+ stuff is stored transposed
+            float polarity = dataStewardp->relationAttributeBladeMap[RelationAttribute::Polarity]->getv(j,i);
+            float weight = dataStewardp->weightBladeMap[WeightAttribute::CSWeight]->getv(j,i,0);
+            printf("\t\t(%.2f, %.2f)",weight, polarity);
+        }
+        printf("\n");
+    }
+    printf("--------------------------\n");
+    connectomep->cat();
+    exit(2);
     
     
-    
-    
-    // create connections betw
     
     ///////////////////////
     /*maybe need to add a 'dominated by':

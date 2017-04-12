@@ -273,10 +273,28 @@ public:
         return currentRows;
     }
     
+    /* adds numRowsToAdd, if currentRows + numRowsToAdd <= maxRows, and returns new row count (will be unchanged if check fails) */
+    int addRows(int numRowsToAdd){
+        if((currentRows+numRowsToAdd) <= maxRows){
+            currentRows += numRowsToAdd;
+        }
+        updateCurrentSize();
+        return currentRows;
+    }
+    
     /* adds a col, if currentCols < maxCols, and returns new col count (will be unchanged if check fails) */
     int addCol(){
         if(currentCols < maxCols){
             currentCols++;
+        }
+        updateCurrentSize();
+        return currentCols;
+    }
+    
+    /* adds numColsToAdd, if currentCols + numColsToAdd <= maxCols, and returns new col count (will be unchanged if check fails) */
+    int addCols(int numColsToAdd){
+        if((currentCols+numColsToAdd) <= maxCols){
+            currentCols += numColsToAdd;
         }
         updateCurrentSize();
         return currentCols;

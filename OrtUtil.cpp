@@ -194,7 +194,7 @@ template ortus::enum_string_unordered_map<RelationAttribute> OrtUtil::getAttribu
  * NOTE: this doesn't convert the 'keys' to their enumerated values yet,
  * that happens later, (among other reasons, the name is in this map at the moment)
  */
-std::unordered_map<std::string, std::string> OrtUtil::createAttributeMapStrings(std::string line, bool isPre = false){
+std::unordered_map<std::string, std::string> OrtUtil::createAttributeMapStrings(std::string line, bool isPre){
     std::unordered_map<std::string, std::string> attributeMapStrings;
     unsigned long colonPos = line.find(":");
     if (colonPos == std::string::npos){

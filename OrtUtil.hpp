@@ -41,7 +41,7 @@ private:
         ortus::enum_string_unordered_map<T> getAttributeEnumsFromStrings(std::unordered_map<std::string, std::string> attributeMapStrings, bool isElement);
     
     
-        std::unordered_map<std::string, std::string> createAttributeMapStrings(std::string line, bool isPre);
+        std::unordered_map<std::string, std::string> createAttributeMapStrings(std::string line, bool isPre = false);
     
         void addElement(std::unordered_map<std::string, std::string> attributeMap, std::vector<ElementInfoModule*>& elementModules, ortus::element_map& elementMap);
     

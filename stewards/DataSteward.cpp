@@ -303,8 +303,9 @@ ElementInfoModule* DataSteward::addElement(std::string name){
     connectomep->elementMap[name] = newElement;
     connectomep->elementModules.push_back(newElement);
     Ort::NUM_ELEMENTS += 1;
-    int newColCount = Ort::NUM_ELEMENTS; // should be this
-    int newRowCount = Ort::NUM_ELEMENTS; // should be this (for 2D or 3D Blades)
+    int newColCountTest = Ort::NUM_ELEMENTS; // should be this
+    int newRowCountTest = Ort::NUM_ELEMENTS; // should be this (for 2D or 3D Blades)
+    int updateResult = -1;
     
     // increase the relevant Blades' sizes,
     // set data pointers (where applicable), and
@@ -312,8 +313,8 @@ ElementInfoModule* DataSteward::addElement(std::string name){
     //
     // element attributes
     for (auto entry : elementAttributeBladeMap){
-        if (newColCount != entry.second->addCol()){
-            printf("(DataSteward) Error: new col count in attribute blade %d not equal to %d.\n",entry.first, newColCount);
+        if (newColCountTest != (updateResult = entry.second->addCol())){
+            printf("(DataSteward) Error: new col count in attribute blade %d not equal to %d (%d returned).\n",entry.first, newColCountTest, updateResult);
             return NULL;
         }
     }
@@ -323,12 +324,12 @@ ElementInfoModule* DataSteward::addElement(std::string name){
     //
     // relation attributes
     for (auto entry : relationAttributeBladeMap){
-        if (newColCount != entry.second->addCol()){
-            printf("(DataSteward) Error: new col count in relation blade %d not equal to %d.\n",entry.first, newColCount);
+        if (newColCountTest != (updateResult = entry.second->addCol())){
+            printf("(DataSteward) Error: new col count in relation blade %d not equal to %d (%d returned).\n",entry.first, newColCountTest, updateResult);
             return NULL;
         }
-        if (newRowCount != entry.second->addRow()){
-            printf("(DataSteward) Error: new row count in relation blade %d not equal to %d.\n",entry.first, newRowCount);
+        if (newRowCountTest != (updateResult = entry.second->addRow())){
+            printf("(DataSteward) Error: new row count in relation blade %d not equal to %d (%d returned).\n",entry.first, newRowCountTest, updateResult);
             return NULL;
         }
     }
@@ -338,12 +339,12 @@ ElementInfoModule* DataSteward::addElement(std::string name){
     //
     // weights
     for (auto entry : weightBladeMap){
-        if (newColCount != entry.second->addCol()){
-            printf("(DataSteward) Error: new col count in weight blade %d not equal to %d.\n",entry.first, newColCount);
+       if (newColCountTest != (updateResult = entry.second->addCol())){
+            printf("(DataSteward) Error: new col count in weight blade %d not equal to %d (%d returned).\n",entry.first, newColCountTest, updateResult);
             return NULL;
         }
-        if (newRowCount != entry.second->addRow()){
-            printf("(DataSteward) Error: new row count in weight blade %d not equal to %d.\n",entry.first, newRowCount);
+        if (newRowCountTest != (updateResult = entry.second->addRow())){
+            printf("(DataSteward) Error: new row count in weight blade %d not equal to %d (%d returned).\n",entry.first, newRowCountTest, updateResult);
             return NULL;
         }
     }
@@ -352,8 +353,8 @@ ElementInfoModule* DataSteward::addElement(std::string name){
     kernelArgInfoBlade->set(2, 4, Ort::NUM_ELEMENTS);
     //
     // activations
-    if (newRowCount != activationBlade->addRow()){
-        printf("(DataSteward) Error: new row count in activation blade not equal to %d.\n",newRowCount);
+    if (newRowCountTest != (updateResult = activationBlade->addRow())){
+        printf("(DataSteward) Error: new row count in activation blade not equal to %d (%d returned).\n",  newRowCountTest, updateResult);
         return NULL;
     }
     newElement->setActivationDataPointer(activationBlade);
@@ -361,10 +362,10 @@ ElementInfoModule* DataSteward::addElement(std::string name){
     kernelArgInfoBlade->set(3, 4, Ort::NUM_ELEMENTS);
     //
     // scratchpads
+    int newScratchpadRowCountTest = Ort::NUM_ELEMENTS * (*openCLWorkGroupSize);
     for (auto entry : scratchpadBladeMap){
-        if (newRowCount != entry.second->addRow()){
-            printf("(DataSteward) Error: new row count in scratchpad blade %d not equal to %d.\n",entry.first, newRowCount);
-            return NULL;
+        if (newScratchpadRowCountTest != (updateResult = entry.second->addRows(*openCLWorkGroupSize))){
+            printf("(DataSteward) Error: new row count in scratchpad blade %d not equal to %d (%d returned).\n",entry.first, newScratchpadRowCountTest, updateResult);
         }
     }
     // ka5 -- scratchpads => rows per blade (index 3)
@@ -492,7 +493,7 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // KERNEL_ARG #3!!! Current and historic activations -- col 0 holds the current activations, cols 1+ hold the historic activations
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     KernelArg<cl_float, DummyType> ka3(clHelper, kernelp, currentKernelArgNum);
-    activationBlade = ka3.addKernelArgWithBufferAndBlade(Ort::NUM_ELEMENTS, Ort::ACTIVATION_HISTORY_SIZE, Ort::ACTIVATION_HISTORY_SIZE, Ort::MAX_ELEMENTS, CL_MEM_READ_WRITE);
+    activationBlade = ka3.addKernelArgWithBufferAndBlade(Ort::NUM_ELEMENTS, Ort::ACTIVATION_HISTORY_SIZE, Ort::MAX_ELEMENTS, Ort::ACTIVATION_HISTORY_SIZE, CL_MEM_READ_WRITE);
     // collect metadata
     numBlades = 1;// just one blade here, no map
     maxSize = (int) activationBlade->maxSize;

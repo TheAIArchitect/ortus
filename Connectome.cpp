@@ -71,7 +71,17 @@ void Connectome::buildAdditionalDataStructures(){
 }
 
 
-
+void Connectome::cat(){
+    printf(">> Element Modules (%d)\n",(int)elementModules.size());
+    for (auto element : elementModules){
+        printf("%s\n",element->toString().c_str());
+    }
+    printf(">> Element Relations (%d)\n", (int)elementRelations.size());
+    for (auto relation : elementRelations){
+        printf("%s\n",relation->toString().c_str());
+    }
+    return;
+}
 
 /**
  * This is only used for when parsing the .ort file. 
@@ -94,6 +104,10 @@ void Connectome::addRelationAttributesFromOrt(std::unordered_map<std::string,std
         float floatToSet = 0.f;
         if (isdigit(attrib.second[0])){
             floatToSet = std::stof(attrib.second);
+        }
+        else if (attrib.second[0] == '-' && attrib.second.size() >= 2 && isdigit(attrib.second[1])){
+            std::string temp = attrib.second.substr(1);
+            floatToSet = -1 * std::stof(temp);
         }
         elrel->setAttribute(attrib.first, floatToSet);
     }
