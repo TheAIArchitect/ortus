@@ -128,7 +128,9 @@ kernel void OrtusKernel(global float* elementAttributes,
     metadataBladeNum = 7;
     SLOPE_SIZE = (int) metadata[metadataBladeNum];
     if (gId == 1) printf("Ortus Metadata:\nNUM_ELEMENTS: %d\nMAX_ELEMENTS: %d\nKERNEL_ITERATION_NUM: %d\nACTIVATION_HISTORY_SIZE: %d\nNUM_XCORR_COMPUTATIONS: %d\nXCORR_SIZE: %d\nNUM_SLOPE_COMPUTATIONS: %d\nSLOPE_SIZE: %d\n", NUM_ELEMENTS, MAX_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, XCORR_SIZE, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
-    
+   
+    int WEIGHT_HISTORY_SIZE = 4; // 3 is for the updated values, 0, 1, and 2 are current, historic1, and historic2.
+    int LAST_WEIGHT_HISTORY_INDEX = WEIGHT_HISTORY_SIZE - 1;
     
     
     // (kernel arg 0): elementAttributes -- 1D Blades (use row == 0 for getIndex)
@@ -354,6 +356,11 @@ kernel void OrtusKernel(global float* elementAttributes,
             //}
             gjIncoming += addedActivation;
         }
+        
+        
+        
+        // NOTE: UPDATE WEIGHTS HERE
+        // but, use weights[<type>WeightBaseIndex + (LAST_WEIGHT_HISTORY_INDEX * weightPageSize)]
     }
     
     totalIncomingActivation = gjIncoming + csIncoming;

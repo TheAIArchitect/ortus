@@ -65,6 +65,7 @@ public: /** NEW */
     void updateMetadataBlades();
     void executePreRunOperations();
     void pushOpenCLBuffers();
+    void readOpenCLBuffers();
     void setKernelArgInfo(std::vector<std::vector<int>>& tempKernelArgInfo);
     
     // Blade maps -- this is where the data is *actually* held...
@@ -88,6 +89,10 @@ public: /** NEW */
     
     // last kernelArg
     Blade<cl_int>* kernelArgInfoBlade;
+    
+    
+    std::vector<float> outputActivationVector;
+    std::vector<std::vector<float>> fullActivationHistory;
     
     
     const static std::vector<WeightAttribute> WEIGHT_KEYS;
@@ -160,24 +165,23 @@ public:
     void initializeBlades();
     //void fillInputVoltageBlade();
     // these two might be irrelevant now, if we carry these ops out in KernelBuddy
-    // void readOpenCLBuffers();
     // void setOpenCLKernelArgs();
 
     void feedProbe();
     void run(size_t global, size_t local, int numIterations = 1);
-    void updateOutputVoltageVector();
-    std::vector<float> getOutputVoltageVector();
+    //void updateOutputVoltageVector();
+    //std::vector<float> getOutputVoltageVector();
     
     
 public:
-    std::vector<float> outputVoltageVector;
+    //std::vector<float> outputVoltageVector;
     std::vector<ElementInfoModule*> elements;
     //std::vector<std::vector<std::string>> csvDat;
     float maxGapWeight;
     float maxChemWeight;
     Probe* probe;
     AblationStation ablator;
-    std::vector<std::vector<float>> kernelVoltages; // might need to move
+    //std::vector<std::vector<float>> kernelVoltages; // might need to move
     //MuscleInfoModule** mim;
     //NeuronInfoModule** nim;
     
@@ -188,7 +192,7 @@ public:
     // static and/or constant vars
     //static double constexpr CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000;
 #warning -- NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 in Core.hpp uses NUM_ELEMS... NUM_ELEMS either must remain a multiple of 8, or we need to change how we set NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8
-    static unsigned int NUM_ELEMENTS;
+    //static unsigned int NUM_ELEMENTS;
     //static unsigned int NUM_ROWS;
     //const static int CSV_OFFSET = 2;// first two rows and columns in both csv files are column/row information
     //static int CSV_ROWS;

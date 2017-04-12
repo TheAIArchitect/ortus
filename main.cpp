@@ -19,7 +19,7 @@
 // These get set in OrtUtil, if values are specified in the .ort file
 int Ort::NUM_ELEMENTS = 10;
 int Ort::MAX_ELEMENTS = 100;
-int Ort::ACTIVATION_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs)
+int Ort::ACTIVATION_HISTORY_SIZE = 8; // 7 usable, and the 8th is the 'staging' area -- filled by the current one (but can't be read from because there's no [good] way to ensure other threads have updated theirs). in the future it might be good to create 2 kernel args -- history read only, and r/w for the staging area.
 
 // this is the number of computations that can be stored per 'core',
 // e.g., that number of XCorr computations, or Slope comptuations,
@@ -29,7 +29,7 @@ int Ort::XCORR_COMPUTATIONS = Ort::SCRATCHPAD_COMPUTATION_SLOTS;
 int Ort::XCORR_SIZE = 3;
 int Ort::SLOPE_COMPUTATIONS = Ort::SCRATCHPAD_COMPUTATION_SLOTS;
 int Ort::SLOPE_SIZE = 2;
-int Ort::WEIGHT_HISTORY_SIZE = 3; // not based on anything, really -- seems better than 2, and not sure if 4 is needed.
+int Ort::WEIGHT_HISTORY_SIZE = 4; // not based on anything, really -- seems better than 2, and not sure if 4 is needed (last index is staging area (it might be faster to have the history be read only, and create a different kernel arg for writing the new values in the future).
 // END DEFAULT VALUES
 
 

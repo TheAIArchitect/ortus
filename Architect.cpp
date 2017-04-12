@@ -31,6 +31,8 @@ void Architect::setDataSteward(DataSteward* ds){
 
 void Architect::designConnectome(){
     
+    
+    
     /*maybe need to add a 'dominated by':
         - question is: how to deal with a relation weight between two elements, if the *pre* element is dominated by some other element?
     

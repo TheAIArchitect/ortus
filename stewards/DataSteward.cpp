@@ -111,13 +111,61 @@ void DataSteward::initializeData(){
 }
 
 void DataSteward::executePostRunMemoryTransfers(){
-    //readOpenCLBuffers();
-    updateOutputVoltageVector();
+    readOpenCLBuffers();
+    //updateOutputVoltageVector();
    
     /**
      NEED TO PUSH VOLTAGES DOWN IN BLADE -- LATER ON,
      TEST TO SEE IF A NEW KERNEL WOULD BE FASTER
+     
+     or a thread pool?
      */
+    // look into using swap()
+    /*
+     the columns of the activation blade look like this:
+     [0][1]...[historySize-1][historySize]
+     where [0] was the most up-to-date activation prior to the last kernel call,
+     historySize-1 is the oldest activation we have in the blade,
+     and historySize is the current (new) activation, newly updated on the last kernel call.
+     
+     So, the value in historySize goes to [0] (and our full history vector), [0] goes to [1], etc., and [historySize-1] goes away.
+     */
+    int historySize = Ort::ACTIVATION_HISTORY_SIZE - 1; // the last one goes to index 0, and is then left empty, to be filled during the next iteration
+    
+    int i,j;
+    // first we want to add the newest activation to our vector that will be pushed to our full activation history
+    outputActivationVector.clear();
+    for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
+        outputActivationVector.push_back(activationBlade->getv(i,historySize));
+    }
+    for (j = historySize-1; j > 0; ++j){ // init j to historySize-1 to get last *history* *index*
+        for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
+            activationBlade->set(i, j, activationBlade->getv(i,j-1));
+        }
+    }
+    for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
+        activationBlade->set(i, 0, activationBlade->getv(i, historySize));
+    }
+    
+    fullActivationHistory.push_back(outputActivationVector);
+    // now shift the weights. no staging area, so just run straight through,
+    int k;
+    historySize = Ort::WEIGHT_HISTORY_SIZE - 1;
+    for (k = historySize-1; k > 0; ++k){
+        for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
+            for (j = 0; j < Ort::NUM_ELEMENTS; ++j){
+                weightBladeMap[WeightAttribute::CSWeight]->set(i, j, k, weightBladeMap[WeightAttribute::CSWeight]->getv(i, j, k-1));
+                weightBladeMap[WeightAttribute::GJWeight]->set(i, j, k, weightBladeMap[WeightAttribute::GJWeight]->getv(i, j, k-1));
+            }
+        }
+    }
+    for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
+        for (j = 0; j < Ort::NUM_ELEMENTS; ++j){
+            weightBladeMap[WeightAttribute::CSWeight]->set(i, j, 0, weightBladeMap[WeightAttribute::CSWeight]->getv(i, j, k));
+            weightBladeMap[WeightAttribute::GJWeight]->set(i, j, 0, weightBladeMap[WeightAttribute::GJWeight]->getv(i, j, k));
+        }
+    }
+    
     // note: the last activation index is the 'new' activation,
     // which goes to index 0 (for each element),
     // and everything else gets pushed back 1.
@@ -130,34 +178,34 @@ void DataSteward::executePostRunMemoryTransfers(){
 }
 
 
-//void DataSteward::readOpenCLBuffers(){
-    ////for (auto blade : attributeBladeMap){
-    ////    blade.second->readDataFromDevice();
-    ////}
+void DataSteward::readOpenCLBuffers(){
+    // unrolling this might be faster...
+    
+    for (auto entry : elementAttributeBladeMap){
+        entry.second->readDataFromDevice();
+    }
+    for (auto entry : relationAttributeBladeMap){
+        entry.second->readDataFromDevice();
+    }
+    activationBlade->readDataFromDevice();
+    weightBladeMap[WeightAttribute::CSWeight]->readDataFromDevice();
+    weightBladeMap[WeightAttribute::GJWeight]->readDataFromDevice();
+}
 
-    // get output voltages
-    /*
-    voltages->readCLBuffer();
-    outputVoltageHistory->readCLBuffer();
-    chems->readCLBuffer();
-    gaps->readCLBuffer();
-     */
+
+//std::vector<float> DataSteward::getOutputVoltageVector(){
+//    return outputVoltageVector;
 //}
 
-
-std::vector<float> DataSteward::getOutputVoltageVector(){
-    return outputVoltageVector;
-}
-
 /* updates outputVoltageVector with a *COPY* of the voltage data, NOT a reference to the actual data, nor its location. */
-void DataSteward::updateOutputVoltageVector(){
-    outputVoltageVector.clear();
-    for (int i = 0; i < voltages->currentSize; ++i){
-        outputVoltageVector.push_back(voltages->data[i]);
-    }
+//void DataSteward::updateOutputVoltageVector(){
+//    outputVoltageVector.clear();
+//    for (int i = 0; i < voltages->currentSize; ++i){
+//        outputVoltageVector.push_back(voltages->data[i]);
+//    }
     // push current voltage vector into vector of all output voltages
-    kernelVoltages.push_back(outputVoltageVector);
-}
+//    kernelVoltages.push_back(outputVoltageVector);
+//}
 
 void DataSteward::updateMetadataBlades(){
     // really only need to run this for the kernel iteration pointer,

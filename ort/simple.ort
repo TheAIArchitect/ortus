@@ -7,8 +7,8 @@ SLOPE_COMPUTATIONS = 4 // number of slope computations
 SLOPE_SIZE = 4 // number of values used to compute slope
 // need at least XCORR_SIZE + (XCORR_SIZE-1) activation history size, 
 // same idea for slope.
-ACTIVATION_HISTORY_SIZE = 7 // nth index will be for current activation, so history is this number -1 
-WEIGHT_HISTORY_SIZE = 3 // nth index will be for current weight, so history is this number -1 
+ACTIVATION_HISTORY_SIZE = 8 // nth index will be for current activation (staging area), so history is this number -1 
+WEIGHT_HISTORY_SIZE = 4 // nth index will be for current weight (staging area), so history is this number -1 
 
 elements:
     O2: {type=sense, affect=pos} 

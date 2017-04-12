@@ -53,7 +53,7 @@ void ComputeSteward::executePreRunOperations(){
 
 
 void ComputeSteward::executePostRunOperations(){
-    //dStewiep->executePostRunMemoryTransfers();
+    dStewiep->executePostRunMemoryTransfers();
 }
 
 
