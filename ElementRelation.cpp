@@ -38,6 +38,14 @@ float ElementRelation::getAttribute(RelationAttribute rAttribute){
     return *relationAttributeMap[static_cast<int>(rAttribute)];
 }
 
+void ElementRelation::setCSWeight(float weight){
+    *csWeight[0] = weight;
+}
+
+void ElementRelation::setGJWeight(float weight){
+    *gjWeight[0] = weight;
+}
+
 float ElementRelation::getCSWeight(int fromTimestepsAgo){
     if (Ort::WEIGHT_HISTORY_SIZE <= fromTimestepsAgo){
         printf("(ElementRelation) Error: trying to access CS Weight from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, Ort::WEIGHT_HISTORY_SIZE-1);

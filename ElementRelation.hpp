@@ -44,6 +44,9 @@ public:
     void setAttributeDataPointers(std::unordered_map<RelationAttribute, Blade<cl_float>*>& relationAttributeBladeMap);
     void setWeightDataPointers(Blade<cl_float>* csWeightBlade, Blade<cl_float>* gjWeightBlade);
     
+    
+    void setCSWeight(float weight);
+    void setGJWeight(float weight);
     float getCSWeight(int fromTimestepsAgo);
     float getGJWeight(int fromTimestepsAgo);
     float getAttribute(RelationAttribute rAttribute);

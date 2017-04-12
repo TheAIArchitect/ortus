@@ -29,12 +29,20 @@ opposes:
     //PLEASURE:
         //PAIN:
 causes:
-    +INHALE:
-        +O2:
-    +EXHALE:
-        -CO2:
+    +O2:
+        +EXHALE:
     +CO2:
-        +FEAR: { thresh= 2 } // 1 is normal, 2 is high, for now. only abnormally high levels of CO2 cause fear
+        +INHALE:
+    +EXHALE:
+        -LUNG:
+    +INHALE:
+        +LUNG:
+    +LUNG:
+        +O2:
+    -LUNG:
+        -CO2:
+    //+CO2:
+        //+FEAR: { thresh= 2 } // 1 is normal, 2 is high, for now. only abnormally high levels of CO2 cause fear
     // "attempting" to breath, and not being able to, should cause fear too.
 dominates:
     //+O2:

@@ -89,7 +89,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     // BEGIN vars for extracting necessary data from kernel args
     // declare local vars for blade counts, and then assign values
     local int ka0_blades, ka1_blades, ka2_blades, ka3_blades, ka4_blades, ka5_blades;
-    ka0_blades = 3; ka1_blades = 7; ka2_blades = 2; ka3_blades = 1; ka4_blades = 8; ka5_blades = 2;
+    ka0_blades = 3; ka1_blades = 8; ka2_blades = 2; ka3_blades = 1; ka4_blades = 8; ka5_blades = 2;
     //if (gId == 1) printf("ka0_blades: %d\n", ka0_blades);
     // for the kernelArgs we only access once, like kernel arg 0, we don't need to worry about saving the parameters, and we can use general ones
     int kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages, bladeIndexRelativeToKernelArg;
@@ -106,7 +106,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     kernelArgNum = 4;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
     if (gId ==1 && ka4_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka0_blades, kernelArgBladeCount);
-    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    //if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
     
     local int NUM_ELEMENTS, MAX_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, XCORR_SIZE, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE;
     int metadataBladeNum = 0;
@@ -127,7 +127,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     NUM_SLOPE_COMPUTATIONS = (int) metadata[metadataBladeNum];
     metadataBladeNum = 7;
     SLOPE_SIZE = (int) metadata[metadataBladeNum];
-    if (gId == 1) printf("Ortus Metadata:\nNUM_ELEMENTS: %d\nMAX_ELEMENTS: %d\nKERNEL_ITERATION_NUM: %d\nACTIVATION_HISTORY_SIZE: %d\nNUM_XCORR_COMPUTATIONS: %d\nXCORR_SIZE: %d\nNUM_SLOPE_COMPUTATIONS: %d\nSLOPE_SIZE: %d\n", NUM_ELEMENTS, MAX_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, XCORR_SIZE, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
+    //if (gId == 1) printf("Ortus Metadata:\nNUM_ELEMENTS: %d\nMAX_ELEMENTS: %d\nKERNEL_ITERATION_NUM: %d\nACTIVATION_HISTORY_SIZE: %d\nNUM_XCORR_COMPUTATIONS: %d\nXCORR_SIZE: %d\nNUM_SLOPE_COMPUTATIONS: %d\nSLOPE_SIZE: %d\n", NUM_ELEMENTS, MAX_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, XCORR_SIZE, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
    
     int WEIGHT_HISTORY_SIZE = 4; // 3 is for the updated values, 0, 1, and 2 are current, historic1, and historic2.
     int LAST_WEIGHT_HISTORY_INDEX = WEIGHT_HISTORY_SIZE - 1;
@@ -137,7 +137,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     kernelArgNum = 0;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
     if (gId ==1 && ka0_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka0_blades, kernelArgBladeCount);
-    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    //if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
     // assign vars
     int elementTypeIndex, elementAffectIndex, elementThreshIndex;
     float elementType, elementAffect, elementThresh; // NOTE: change first two to int, or compare with epsilon compare function
@@ -165,7 +165,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     kernelArgNum = 5;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArgStride, &kernelArgRows, &kernelArgCols, &kernelArgPages);
     if (gId ==1 && ka5_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka5_blades, kernelArgBladeCount);
-    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
+    //if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArgStride, kernelArgRows, kernelArgCols, kernelArgPages);
     int xcorrScratchpadBaseIndex, slopeScratchpadBaseIndex;
     // we can pretend that each lId is a page, and the page size is NUM_ELEMENTS * kernelArgCols
     int scratchpadEffectivePageSize = MAX_ELEMENTS * kernelArgCols; // kernelArgCols should be the same as NUM_XCORR_COMPUTATIONS
@@ -174,8 +174,8 @@ kernel void OrtusKernel(global float* elementAttributes,
     bladeIndexRelativeToKernelArg = 1;
     slopeScratchpadBaseIndex = (bladeIndexRelativeToKernelArg * kernelArgStride) + (lId * scratchpadEffectivePageSize);
     int scratchpadBladeStride = kernelArgStride;
-    if (gId == 1) printf("\t(lId: %d) xcorr scratchpad base index: %d, columns per row: %d, rows: %f\n", lId, xcorrScratchpadBaseIndex, kernelArgCols, ((float)kernelArgStride/numWG));
-    if (gId == 1) printf("\t(lId: %d) slope scratchpad base index: %d, columns per row: %d, rows: %f\n", lId, slopeScratchpadBaseIndex, kernelArgCols, ((float)kernelArgStride/numWG));
+    //if (gId == 1) printf("\t(lId: %d) xcorr scratchpad base index: %d, columns per row: %d, rows: %f\n", lId, xcorrScratchpadBaseIndex, kernelArgCols, ((float)kernelArgStride/numWG));
+    //if (gId == 1) printf("\t(lId: %d) slope scratchpad base index: %d, columns per row: %d, rows: %f\n", lId, slopeScratchpadBaseIndex, kernelArgCols, ((float)kernelArgStride/numWG));
                          
     
     
@@ -186,17 +186,17 @@ kernel void OrtusKernel(global float* elementAttributes,
     kernelArgNum = 1;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg1Stride, &kernelArg1Rows, &kernelArg1Cols, &kernelArg3Pages);
     if (gId ==1 && ka1_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka1_blades, kernelArgBladeCount);
-    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg1Stride, kernelArg1Rows, kernelArg1Cols, kernelArg3Pages);
+    //if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg1Stride, kernelArg1Rows, kernelArg1Cols, kernelArg3Pages);
     // (kernel arg 2): weights -- 3D Blades
     kernelArgNum = 2;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg2Stride, &kernelArg2Rows, &kernelArg2Cols, &kernelArg3Pages);
     if (gId ==1 && ka2_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka2_blades, kernelArgBladeCount);
-    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg2Stride, kernelArg2Rows, kernelArg2Cols, kernelArg3Pages);
+    //if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg2Stride, kernelArg2Rows, kernelArg2Cols, kernelArg3Pages);
     // (kernel arg 3): activations -- 1D Blades
     kernelArgNum = 3;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg3Stride, &kernelArg3Rows, &kernelArg3Cols, &kernelArg3Pages);
     if (gId ==1 && ka3_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka3_blades, kernelArgBladeCount);
-    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg3Stride, kernelArg3Rows, kernelArg3Cols, kernelArg3Pages);
+    //if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg3Stride, kernelArg3Rows, kernelArg3Cols, kernelArg3Pages);
     
     
     // THE ASSUMPTION IS THAT THE ROW IS THE 'post' AND THE COL IS THE 'pre'
@@ -253,28 +253,30 @@ kernel void OrtusKernel(global float* elementAttributes,
         bladeIndexRelativeToKernelArg = 0;
         relationTypeIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
         relationType = relationAttributes[relationTypeIndex];
-        // relationType
+        // relationPolarity
         bladeIndexRelativeToKernelArg = 1;
         relationPolarityIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
         relationPolarity = relationAttributes[relationPolarityIndex];
-        // relationDirection
-        bladeIndexRelativeToKernelArg = 2;
-        relationDirectionIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
-        relationDirection = relationAttributes[relationDirectionIndex];
+        // relationPreDirection
+        //bladeIndexRelativeToKernelArg = 2;
+        ////relationDirectionIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
+        ////relationDirection = relationAttributes[relationDirectionIndex];
+        // relationPostDirection
+        //bladeIndexRelativeToKernelArg = 3;
         // relationAge
-        bladeIndexRelativeToKernelArg = 3;
+        bladeIndexRelativeToKernelArg = 4;
         relationAgeIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
         relationAge = relationAttributes[relationAgeIndex];
         // relationThresh
-        bladeIndexRelativeToKernelArg = 4;
+        bladeIndexRelativeToKernelArg = 5;
         relationThreshIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
         relationThresh = relationAttributes[relationThreshIndex];
         // relationDecay
-        bladeIndexRelativeToKernelArg = 5;
+        bladeIndexRelativeToKernelArg = 6;
         relationDecayIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
         relationDecay = relationAttributes[relationDecayIndex];
         // relationMutability
-        bladeIndexRelativeToKernelArg = 6;
+        bladeIndexRelativeToKernelArg = 7;
         relationMutabilityIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
         relationMutability = relationAttributes[relationMutabilityIndex];
         // kernel arg 2 (weights) -- 3D Blades
@@ -387,7 +389,6 @@ kernel void OrtusKernel(global float* elementAttributes,
     computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
         computeVoltageRateOfChange(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, voltageRateOfChangeScratchPad, startingScratchPadOffset, numXCorrEntries); 
      */
-    printf("kernel ops complete.\n");
 }
 
 

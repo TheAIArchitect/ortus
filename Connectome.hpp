@@ -64,6 +64,9 @@ public:
     ortus::relation_map dominatesRelations;
     ortus::relation_map opposesRelations;
     
+    //// might want to create a map for muscles that are supposed to 'cause' sensory input
+        //// e.g., Lung... it should cause O2 to rise when excited, under normal circumstances.
+    
     
     
     std::vector<std::string> odrVec;

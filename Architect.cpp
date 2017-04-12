@@ -29,10 +29,92 @@ void Architect::setDataSteward(DataSteward* ds){
     dataStewardp = ds;
 }
 
+/**
+ * maybe need to change .ort file s.t. causes and correlated are the two primary categories,
+ * and each element has a 'precendence' -- not A "dominates" B.
+ *
+ * ALL sensory neurons have at least very weak GJs with all(?) emotional states, 
+ * with some haveing strong ones... the whole system revolves around breathing,
+ * so, breathing should be hardwired to pleasure, so that pleasure is inherently good.
+ *
+ * sensory consolidation (e.g., if 4 visual sensors, once the image being seen has been processed,
+ * maybe then that gets tied to emotion?
+ * 
+ * initially, not enough resolution for it to matter.
+ */
 void Architect::designConnectome(){
     
+    int i,j, bRow, bCol;
+    int numCausal = connectomep->causesRelations.size();
+    std::vector<ElementRelation*> elRelVec;
+    int elRelVecSize;
+    ElementRelation* elRelp;
+    for (i = 0; i < numCausal; ++i){
+        // all relations in this vector should have the same pre
+        elRelVec = connectomep->causesRelations[i];
+        elRelVecSize = elRelVec.size();
+        for (j = 0; j < elRelVecSize; ++j){
+            elRelp = elRelVec[j];
+            if (elRelp->preId != i){
+                printf("PreId != i -> %d != %d\n",elRelp, i);
+            }
+            // so, now we need to create a causal relationship between the pre and post elements.
+           
+            // make an inter for the sensory pre's, connect them with a CS,
+            // and connect the inter to the post of the current elRelp
+            // further, anything that is caused by the sense, should actually come from the inter.
+            if (elRelp->pre->getEType() == ElementType::SENSE){
+                std::string interName = "I"+elRelp->pre->name;
+                ElementInfoModule* theNewInterp = dataStewardp->addElement(interName);
+                theNewInterp->setType(ElementType::INTER);
+                theNewInterp->setAffect(elRelp->pre->getEAffect());
+                std::unordered_map<RelationAttribute, cl_float> newRelAttribs;
+                newRelAttribs[RelationAttribute::Polarity] = 1.f;
+                ElementRelationType ert = ElementRelationType::CAUSES;
+                newRelAttribs[RelationAttribute::Type] = static_cast<float>(ert);
+                // age, mutability, thresh, decay??
+                ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, elRelp->pre, elRelp->post, ert);
+                newRelp->setCSWeight(1.f);
+                // now we connect the inter to the 'post' specified by elRelp
+                // for the time being, we can re-use the attribute map
+                newRelp = dataStewardp->addRelation(newRelAttribs, theNewInterp, elRelp->post, ert);
+                newRelp->setCSWeight(1.f);
+                //
+                // since we added a neuron in the middle, let's check to see if there is an opposing relationship
+                // also, this is (probably) a bad way to do this. opposes should be stored in the relation above... searching for it separately seems silly (at the moment...)
+                if (connectomep->opposesRelations.find(elRelp->preId) != connectomep->opposesRelations.end()){
+                    std::vector<ElementRelation*> tempRelVec = connectomep->opposesRelations[elRelp->preId];
+                    int numOpposes = tempRelVec.size();
+                    for (int k  = 0; k < numOpposes; ++k){
+                        // create an inhibitory 'causes' (CS) from the new interneuron, to any 'post' of the element our current 'pre' opposes.
+                        newRelAttribs[RelationAttribute::Polarity] = -1.f;
+                        newRelp = dataStewardp->addRelation(newRelAttribs, theNewInterp, tempRelVec[k]->post, ert);
+                }
+                //// Must now delete old relation, or mark for deletion, or something...
+                    //// ALSO probably want to do something about the 'opposes'
+            }
+            else if (elRelp->pre->getEType() == ElementType::MOTOR){
+                elRelp->setCSWeight(1.f);
+                elRelp->setAttribute(RelationAttribute::Polarity, elRelp->getAttribute(RelationAttribute::PostDirection));
+            }
+            else if (elRelp->pre->getEType() == ElementType::MUSCLE){
+                elRelp->setCSWeight(1.f);
+                elRelp->setAttribute(RelationAttribute::Polarity, elRelp->getAttribute(RelationAttribute::PostDirection));
+            }
+            
+        }
+        
+        
+    }
+    
+        
     
     
+    
+    
+    // create connections betw
+    
+    ///////////////////////
     /*maybe need to add a 'dominated by':
         - question is: how to deal with a relation weight between two elements, if the *pre* element is dominated by some other element?
     

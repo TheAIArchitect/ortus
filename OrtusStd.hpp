@@ -33,7 +33,7 @@ enum class ElementAttribute { Type, Affect, Thresh, NUM_ELEMENT_ATTRIBUTES};
  *
  * though, polarity and direction might be the same thing...
  */
-enum class RelationAttribute { Type, Polarity, Direction, Age, Thresh, Decay, Mutability, NUM_RELATION_ATTRIBUTES};
+enum class RelationAttribute { Type, Polarity, PreDirection, PostDirection, Age, Thresh, Decay, Mutability, NUM_RELATION_ATTRIBUTES};
 
 enum class GlobalAttribute { GapNormalizer, ChemNormalizer};
 
@@ -48,7 +48,7 @@ enum class Scratchpad { XCorr, Slope};
 // NOTE: 'rtype' is really just a placeholder. relation types are denoted via newlines and whitespace in .ort files.
 const static std::string ELEMENT_ATTRIBUTE_STRINGS[static_cast<int>(ElementAttribute::NUM_ELEMENT_ATTRIBUTES)] = {"type", "affect", "thresh" };
 
-const static std::string RELATION_ATTRIBUTE_STRINGS[static_cast<int>(RelationAttribute::NUM_RELATION_ATTRIBUTES)] = {"type", "polarity", "direction", "age", "thresh", "decay", "mutability"};
+const static std::string RELATION_ATTRIBUTE_STRINGS[static_cast<int>(RelationAttribute::NUM_RELATION_ATTRIBUTES)] = {"type", "polarity", "pre_direction", "post_direction", "age", "thresh", "decay", "mutability"};
 
 
 /* so that an enum can be used as an unordered_map key with c++11... thanks Sean  for the encouragment */
@@ -112,6 +112,7 @@ namespace ortus {
     using name_map = std::unordered_map<std::string, int>;
     using index_map = std::unordered_map<int, std::string>;
     
+    // the key is the 'pre'
     using relation_map = std::unordered_map<int, std::vector<ElementRelation*>>;
     
     //template <class T>

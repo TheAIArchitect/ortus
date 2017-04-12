@@ -81,27 +81,23 @@ void Connectome::addRelationAttributesFromOrt(std::unordered_map<std::string,std
     std::string tempAttrib = "";
     bool isElement = false;
     
-    ortus::enum_string_unordered_map<RelationAttribute> preAttributeMap = ortUtil.getAttributeEnumsFromStrings<RelationAttribute>(preAttributeMapStrings, isElement);
+    // NOTE: WE ONLY PULL 'pre_direction' FROM PRE!!!
+    // in order to be able to specify a dictionary for the 'pre' element in a relation,
+    // processing will have to change a bit...
+    ortus::enum_string_unordered_map<RelationAttribute> finalAttributeMap = ortUtil.getAttributeEnumsFromStrings<RelationAttribute>(postAttributeMapStrings, isElement);
     
-    ortus::enum_string_unordered_map<RelationAttribute> postAttributeMap = ortUtil.getAttributeEnumsFromStrings<RelationAttribute>(postAttributeMapStrings, isElement);
+    if (preAttributeMapStrings.find("pre_direction") != preAttributeMapStrings.end()){
+        finalAttributeMap[RelationAttribute::PreDirection] = preAttributeMapStrings["pre_direction"];
+    }
     
-    
-    /* note: at the moment, this is stupid, because anything set, gets overwritten by the post attribute map below...*/
-    for (auto attrib : preAttributeMap){
+    for (auto attrib : finalAttributeMap){
         float floatToSet = 0.f;
         if (isdigit(attrib.second[0])){
             floatToSet = std::stof(attrib.second);
         }
         elrel->setAttribute(attrib.first, floatToSet);
     }
-    
-    for (auto attrib : postAttributeMap){
-        float floatToSet = 0.f;
-        if (isdigit(attrib.second[0])){
-            floatToSet = std::stof(attrib.second);
-        }
-        elrel->setAttribute(attrib.first, floatToSet);
-    }
+   
 }
 
 ElementRelation* Connectome::addRelation(ElementInfoModule* ePre, ElementInfoModule* ePost, ElementRelationType ert){

@@ -43,7 +43,7 @@
 
 const std::vector<WeightAttribute> DataSteward::WEIGHT_KEYS = { WeightAttribute::CSWeight, WeightAttribute::GJWeight };
 const std::vector<ElementAttribute> DataSteward::ELEMENT_KEYS = { ElementAttribute::Type, ElementAttribute::Affect, ElementAttribute::Thresh};
-const std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Type, RelationAttribute::Polarity, RelationAttribute::Direction, RelationAttribute::Age, RelationAttribute::Thresh, RelationAttribute::Decay, RelationAttribute::Mutability};
+const std::vector<RelationAttribute> DataSteward::RELATION_KEYS = { RelationAttribute::Type, RelationAttribute::Polarity, RelationAttribute::PreDirection, RelationAttribute::PostDirection, RelationAttribute::Age, RelationAttribute::Thresh, RelationAttribute::Decay, RelationAttribute::Mutability};
 const std::vector<GlobalAttribute> DataSteward::GLOBAL_KEYS = { GlobalAttribute::ChemNormalizer, GlobalAttribute::GapNormalizer };
 const std::vector<MetadataAttribute> DataSteward::METADATA_KEYS = { MetadataAttribute::NumElements, MetadataAttribute::MaxElements, MetadataAttribute::KernelIterationNum, MetadataAttribute::ActivationHistorySize, MetadataAttribute::NumXCorrComputations, MetadataAttribute::XCorrSize, MetadataAttribute::NumSlopeComputations, MetadataAttribute::SlopeSize} ;
 const std::vector<Scratchpad> DataSteward::SCRATCHPAD_KEYS = { Scratchpad::XCorr, Scratchpad::Slope};
@@ -226,35 +226,35 @@ void DataSteward::executePreRunOperations(){
 
 void DataSteward::pushOpenCLBuffers(){
     
-    printf("pushing element attributes...\n");
+    //printf("pushing element attributes...\n");
     for (auto entry : elementAttributeBladeMap){
         entry.second->pushDataToDevice();
     }
     
-    printf("pushing relation attributes...\n");
+    //printf("pushing relation attributes...\n");
     for (auto entry : relationAttributeBladeMap){
         entry.second->pushDataToDevice();
     }
     
-    printf("pushing weights...\n");
+    //printf("pushing weights...\n");
     for (auto entry : weightBladeMap){
         entry.second->pushDataToDevice();
     }
     
-    printf("pushing activations...\n");
+    //printf("pushing activations...\n");
     activationBlade->pushDataToDevice();
     
-    printf("pushing metadata...\n");
+    //printf("pushing metadata...\n");
     for (auto entry : metadataBladeMap){
-        printf("\t%d... ",static_cast<int>(entry.first));
-        printf("with offset %d\n", entry.second->clBufferOffset);
+        //printf("\t%d... ",static_cast<int>(entry.first));
+        //printf("with offset %d\n", entry.second->clBufferOffset);
         entry.second->pushDataToDevice();
     }
     
-    printf("pushing kernel arg info...\n");
+    //printf("pushing kernel arg info...\n");
     kernelArgInfoBlade->pushDataToDevice();
     
-    printf("all Blades pushed.\n");
+    //printf("all Blades pushed.\n");
 
     //Timer et;
     //et.start_timer();

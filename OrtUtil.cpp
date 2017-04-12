@@ -194,7 +194,7 @@ template ortus::enum_string_unordered_map<RelationAttribute> OrtUtil::getAttribu
  * NOTE: this doesn't convert the 'keys' to their enumerated values yet,
  * that happens later, (among other reasons, the name is in this map at the moment)
  */
-std::unordered_map<std::string, std::string> OrtUtil::createAttributeMapStrings(std::string line){
+std::unordered_map<std::string, std::string> OrtUtil::createAttributeMapStrings(std::string line, bool isPre = false){
     std::unordered_map<std::string, std::string> attributeMapStrings;
     unsigned long colonPos = line.find(":");
     if (colonPos == std::string::npos){
@@ -204,11 +204,22 @@ std::unordered_map<std::string, std::string> OrtUtil::createAttributeMapStrings(
     // deal with the element's name, and the sign prepended (e.g., +CO2)
     if (line[0] == '+'){
         attributeMapStrings["name"] = line.substr(1,colonPos-1); // -1 to account for sign
-        attributeMapStrings["direction"] = "1";
+        if (isPre){
+            attributeMapStrings["pre_direction"] = "1";
+        }
+        else {
+            attributeMapStrings["post_direction"] = "1";
+        }
     }
     else if (line[0] == '-'){
         attributeMapStrings["name"] = line.substr(1,colonPos-1); // -1 to account for sign
-        attributeMapStrings["direction"] = "-1";
+        if (isPre){
+            attributeMapStrings["pre_direction"] = "-1";
+        }
+        else {
+            attributeMapStrings["post_direction"] = "-1";
+        }
+        
     }
     else { // no sign
         attributeMapStrings["name"] = line.substr(0,colonPos); // no sign, no -1
@@ -325,9 +336,14 @@ std::vector<std::unordered_map<std::string, std::string>> OrtUtil::createVecOfAt
         }
     }
     // now that we have all the lines we care about, we loop through them and create 'attribute maps'
+    int numMapsToMake = relevantLines.size();
+    bool isPre = true; // first line only
     std::vector<std::unordered_map<std::string, std::string>> vecOfAttributeMaps;
-    for (auto relevantLine : relevantLines){
-        vecOfAttributeMaps.push_back(createAttributeMapStrings(relevantLine));
+    for (int i = 0; i < numMapsToMake; ++i){
+        vecOfAttributeMaps.push_back(createAttributeMapStrings(relevantLines[i], isPre));
+        if (i < 1){
+            isPre = false;
+        }
     }
     // and finally, update our curLineNum ref
     curLineNum = tempLineNum;

@@ -73,6 +73,8 @@ public:
     
     void setAffect(std::string affect);
     std::string getSAffect();
+    ElementAffect eAffect;
+    ElementAffect getEAffect();
     float getFAffect();
     
         

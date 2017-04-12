@@ -61,6 +61,10 @@ float ElementInfoModule::getFType(){
     return *typep;
 }
 
+ElementAffect ElementInfoModule::getEAffect(){
+    return eAffect;
+}
+
 std::string ElementInfoModule::getName(){
     //return *namep;
     return name;
@@ -84,6 +88,7 @@ float ElementInfoModule::vCurr(int fromTimestepsAgo){
 }
 
 
+
 /**
  * Sets the affect of the element; input may be 'pos', or 'neg'.
  * NOTE: must be set *AFTER* setting typep to point to the right address (via setDataPointers())
@@ -92,12 +97,15 @@ void ElementInfoModule::setAffect(std::string affect){
     sAffect = affect;
     if (affect == "pos"){
         *affectp = 1.f;
+        eAffect = ElementAffect::POS;
     }
     else if (affect == "neg"){
         *affectp = -1.f;
+        eAffect = ElementAffect::NEG;
     }
     else if (affect == "neutral"){
         *affectp = 0.f;
+        eAffect = ElementAffect::NEUTRAL;
     }
     else {
         printf("Error: attempting to set non-recognized affect '%s'.\n", affect.c_str());
@@ -111,6 +119,7 @@ void ElementInfoModule::setAffect(std::string affect){
  * NOTE: must be set *AFTER* setting typep to point to the right address (via setDataPointers())
  */
 void ElementInfoModule::setAffect(ElementAffect eAffect){
+    this->eAffect = eAffect;
     switch (eAffect){
         case ElementAffect::NEG:{
            sAffect = "neg";

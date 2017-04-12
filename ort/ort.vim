@@ -24,6 +24,8 @@ syn keyword attributeKeys XCORR_COMPUTATIONS
 syn keyword attributeKeys SLOPE_COMPUTATIONS 
 syn keyword attributeKeys ACTIVATION_HISTORY_SIZE
 syn keyword attributeKeys WEIGHT_HISTORY_SIZE
+syn keyword attributeKeys XCORR_SIZE
+syn keyword attributeKeys SLOPE_SIZE
 
 "syn match attributeKeys \"-affect"
 
