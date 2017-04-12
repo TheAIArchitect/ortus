@@ -58,10 +58,13 @@ public:
     cl_float** activationp;
     cl_float* affectp;
     cl_float* typep;
+    //cl_float* threshp;
     
     
     void setActivation(float fActivation);
     
+    void setAffect(ElementAffect eAffect);
+    void setType(ElementType type);
     
     std::string getName();
     float vCurr(int fromTimestepsAgo); //// NOTE: change this to 'getActivation()' -- held of because of potential errors it would generate

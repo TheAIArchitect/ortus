@@ -196,7 +196,7 @@ void Connectome::addRelationsFromOrt(std::vector<std::unordered_map<std::string,
  * NOTE: to add more attributes, add a block, similar to the blocks for currently recognized attributes,
  * and update the above list.
  */
-void Connectome::addElement(std::unordered_map<std::string, std::string> attributeMap){
+void Connectome::addElementFromOrt(std::unordered_map<std::string, std::string> attributeMap){
     
     if (attributeMap.find("name") == attributeMap.end()){
         printf("Error: missing 'name' attribute in attribute map.\n");
@@ -259,7 +259,7 @@ void Connectome::setElements(){
         }
         if ("elements" == OrtUtil::ORT_DEFINITION_LEVELS[definitionLevel]){ // just one line
             std::unordered_map<std::string, std::string> attributeMap = ortUtil.createAttributeMapStrings(trimmedLine);
-            addElement(attributeMap);
+            addElementFromOrt(attributeMap);
         }
         else {
             vecOfAttributeMaps = ortUtil.createVecOfAttributeMapsContainingRelevantLines(theLines, lineNum);

@@ -387,6 +387,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     computeXCorr(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, XCorrScratchPad, startingScratchPadOffset, numXCorrEntries);
         computeVoltageRateOfChange(outputVoltageHistory, numElements, voltageHistorySize, gid, lid, voltageRateOfChangeScratchPad, startingScratchPadOffset, numXCorrEntries); 
      */
+    printf("kernel ops complete.\n");
 }
 
 

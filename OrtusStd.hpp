@@ -87,7 +87,8 @@ public:
     static int SLOPE_COMPUTATIONS;
     static int SLOPE_SIZE;
     static int WEIGHT_HISTORY_SIZE;
-    // END DEFAULT VALUES 
+    // END DEFAULT VALUES
+    static int NUM_ITERATIONS;
     
     
     // CS and GJ weights are *NOT* 'RelationAttribute's
@@ -99,6 +100,8 @@ public:
     // it *also* is returned after getting transposed again.
     // This happens in ElementRelation.
     static const bool STORE_RELATIONS_TRANSPOSED = true;
+    
+    
 };
 
 

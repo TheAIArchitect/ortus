@@ -24,8 +24,8 @@ class DataVisualizer {
 public:
     
     DataVisualizer(DataSteward* stewie);
-    ////void plotSet(std::string* names, int numNames);
-    ////void makePlots();
+    void plotSet(std::string* names, int numNames);
+    void makePlots();
     void plotXCorr(std::vector<double>& dataX, std::vector<double>& dataY0, std::vector<double>& dataY1, std::vector<double>& dataY2, std::vector<double>& dataY3);
     void plotAll();
     

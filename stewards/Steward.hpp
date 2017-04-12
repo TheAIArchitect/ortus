@@ -33,7 +33,6 @@ public:
     SensoryStimulationSteward* sensoryStimulationStewardp;
     DiagnosticSteward* diagnosticStewardp;
     
-    int numIterations;
     
 };
 

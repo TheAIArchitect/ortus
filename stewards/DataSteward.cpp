@@ -51,6 +51,7 @@ const std::vector<Scratchpad> DataSteward::SCRATCHPAD_KEYS = { Scratchpad::XCorr
 
 DataSteward::DataSteward(){
     connectomeNewed = false;
+    init();
 }
 
 DataSteward::~DataSteward(){
@@ -75,12 +76,14 @@ DataSteward::~DataSteward(){
 }
 
 void DataSteward::init(){
-    initializeData();
+    outputActivationVector.resize(Ort::MAX_ELEMENTS); // need to do this, so we don't run into issues doing things like plotting the data -- elements that don't exist in the beginning, but exist later, should have 0 activation.
+    fullActivationHistory.reserve(Ort::NUM_ITERATIONS);
 }
 
 /* yeah, this is kind of screwy. */
 void DataSteward::setComputeStewardPointers(ComputeSteward* computeStewardp){
     kernelIterationNumberp = &computeStewardp->currentIteration;
+    openCLWorkGroupSize = &computeStewardp->workGroupSize;
 }
 
 void DataSteward::initializeConnectome(std::string ortFile){
@@ -130,28 +133,32 @@ void DataSteward::executePostRunMemoryTransfers(){
      
      So, the value in historySize goes to [0] (and our full history vector), [0] goes to [1], etc., and [historySize-1] goes away.
      */
+    
+    
     int historySize = Ort::ACTIVATION_HISTORY_SIZE - 1; // the last one goes to index 0, and is then left empty, to be filled during the next iteration
     
     int i,j;
     // first we want to add the newest activation to our vector that will be pushed to our full activation history
-    outputActivationVector.clear();
+    std::fill(outputActivationVector.begin(), outputActivationVector.end(), 0);
     for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
-        outputActivationVector.push_back(activationBlade->getv(i,historySize));
+        outputActivationVector[i] = activationBlade->getv(i,historySize);
     }
-    for (j = historySize-1; j > 0; ++j){ // init j to historySize-1 to get last *history* *index*
+    for (j = historySize-1; j > 0; --j){ // init j to historySize-1 to get last *history* *index*
         for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
             activationBlade->set(i, j, activationBlade->getv(i,j-1));
         }
     }
+    
     for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
         activationBlade->set(i, 0, activationBlade->getv(i, historySize));
     }
     
     fullActivationHistory.push_back(outputActivationVector);
-    // now shift the weights. no staging area, so just run straight through,
+    
+    // now shift the weights. same idea as activations, but this is 3D.
     int k;
     historySize = Ort::WEIGHT_HISTORY_SIZE - 1;
-    for (k = historySize-1; k > 0; ++k){
+    for (k = historySize-1; k > 0; --k){
         for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
             for (j = 0; j < Ort::NUM_ELEMENTS; ++j){
                 weightBladeMap[WeightAttribute::CSWeight]->set(i, j, k, weightBladeMap[WeightAttribute::CSWeight]->getv(i, j, k-1));
@@ -165,16 +172,7 @@ void DataSteward::executePostRunMemoryTransfers(){
             weightBladeMap[WeightAttribute::GJWeight]->set(i, j, 0, weightBladeMap[WeightAttribute::GJWeight]->getv(i, j, k));
         }
     }
-    
-    // note: the last activation index is the 'new' activation,
-    // which goes to index 0 (for each element),
-    // and everything else gets pushed back 1.
-    // (the one that was second to last, goes away (but all should be stored in the c++ history vector)
-    
-    
-    // copy the ouput data into the input data
-    // NOTE: FIX THIS SO THAT WE USE ONE BUFFER!!!
-    //inputVoltages->copyData(outputVoltages);
+   
 }
 
 
@@ -280,19 +278,105 @@ void DataSteward::pushOpenCLBuffers(){
  * Further, only Architect should call this.
  *
  * returns NULL if operation failed (e.g. already at Ort::MAX_ELEMENTS)
+ *
+ * calling function should set the element's attributes
  */
-ElementInfoModule* DataSteward::addElement(std::unordered_map<ElementAttribute,cl_float> newElemenattributes, std::string name){
-    // add to element blade
-
-    // update all blades' sizes'
+ElementInfoModule* DataSteward::addElement(std::string name){
+    if (Ort::NUM_ELEMENTS == Ort::MAX_ELEMENTS){
+        printf("(DataSteward) Error: cannot create new element, because max number of elements has been reached.\n");
+        return NULL;
+    }
+    // name can't be empty
+    if (name == ""){
+        printf("(DataSteward) Error: cannot create element without a name.\n");
+        return NULL;
+    }
+    // element can't be in the map already
+    if (connectomep->elementMap.find(name) != connectomep->elementMap.end()){
+        printf("(DataSteward) Error: element with name '%s' already in elementMap.\n", name.c_str());
+        return NULL;
+    }
     
-    // create new ElementInfoModule
+    ElementInfoModule* newElement = new ElementInfoModule();
+    newElement->name = name;
+    newElement->id = connectomep->elementModules.size();
+    connectomep->elementMap[name] = newElement;
+    connectomep->elementModules.push_back(newElement);
+    Ort::NUM_ELEMENTS += 1;
+    int newColCount = Ort::NUM_ELEMENTS; // should be this
+    int newRowCount = Ort::NUM_ELEMENTS; // should be this (for 2D or 3D Blades)
     
-    // set data pointers
+    // increase the relevant Blades' sizes,
+    // set data pointers (where applicable), and
+    // update kernel arguments
+    //
+    // element attributes
+    for (auto entry : elementAttributeBladeMap){
+        if (newColCount != entry.second->addCol()){
+            printf("(DataSteward) Error: new col count in attribute blade %d not equal to %d.\n",entry.first, newColCount);
+            return NULL;
+        }
+    }
+    newElement->setAttributeDataPointers(elementAttributeBladeMap);
+    // ka0 -- element attributes => cols per blade (index 4)
+    kernelArgInfoBlade->set(0, 4, Ort::NUM_ELEMENTS);
+    //
+    // relation attributes
+    for (auto entry : relationAttributeBladeMap){
+        if (newColCount != entry.second->addCol()){
+            printf("(DataSteward) Error: new col count in relation blade %d not equal to %d.\n",entry.first, newColCount);
+            return NULL;
+        }
+        if (newRowCount != entry.second->addRow()){
+            printf("(DataSteward) Error: new row count in relation blade %d not equal to %d.\n",entry.first, newRowCount);
+            return NULL;
+        }
+    }
+    // ka1 -- relation attributes => rows and cols per blade (indices 3, 4)
+    kernelArgInfoBlade->set(1, 3, Ort::NUM_ELEMENTS);
+    kernelArgInfoBlade->set(1, 4, Ort::NUM_ELEMENTS);
+    //
+    // weights
+    for (auto entry : weightBladeMap){
+        if (newColCount != entry.second->addCol()){
+            printf("(DataSteward) Error: new col count in weight blade %d not equal to %d.\n",entry.first, newColCount);
+            return NULL;
+        }
+        if (newRowCount != entry.second->addRow()){
+            printf("(DataSteward) Error: new row count in weight blade %d not equal to %d.\n",entry.first, newRowCount);
+            return NULL;
+        }
+    }
+    // ka2 -- weight attributes => rows and cols per blade (indices 3, 4)
+    kernelArgInfoBlade->set(2, 3, Ort::NUM_ELEMENTS);
+    kernelArgInfoBlade->set(2, 4, Ort::NUM_ELEMENTS);
+    //
+    // activations
+    if (newRowCount != activationBlade->addRow()){
+        printf("(DataSteward) Error: new row count in activation blade not equal to %d.\n",newRowCount);
+        return NULL;
+    }
+    newElement->setActivationDataPointer(activationBlade);
+    // ka3 -- activations => rows per blade (index 3)
+    kernelArgInfoBlade->set(3, 4, Ort::NUM_ELEMENTS);
+    //
+    // scratchpads
+    for (auto entry : scratchpadBladeMap){
+        if (newRowCount != entry.second->addRow()){
+            printf("(DataSteward) Error: new row count in scratchpad blade %d not equal to %d.\n",entry.first, newRowCount);
+            return NULL;
+        }
+    }
+    // ka5 -- scratchpads => rows per blade (index 3)
+    kernelArgInfoBlade->set(5, 3, calculateScratchpadRows("current"));
+    //
+    // ka4 -- metadata blades get updated just before kernel args get pushed (updateMetadataBlades)
     
     // add new element (and its info) to the connectome data structures
+    connectomep->nameMap[name] = newElement->id;
+    connectomep->indexMap[newElement->id] = name;
     
-    return NULL;
+    return newElement;
 }
 
 /** only call this from Architect.
@@ -303,18 +387,21 @@ ElementInfoModule* DataSteward::addElement(std::unordered_map<ElementAttribute,c
  * returns NULL if operation failed.
  */
 ElementRelation* DataSteward::addRelation(std::unordered_map<RelationAttribute, cl_float> newRelationAttributes, ElementInfoModule* ePre, ElementInfoModule* ePost, ElementRelationType ert){
+    
+    // create the new relation (this also sets the data pointers,
+    // and adds the relation to the connectome datastructures)
     ElementRelation* newElrel = connectomep->addRelation(ePre, ePost, ert);
-    
-    // set data pointers
-    
-    // then set attributes
-    return NULL;
+    // then add the attributes
+    for (auto attrib : newRelationAttributes){
+        newElrel->setAttribute(attrib.first, attrib.second);
+    }
+    return newElrel;
 }
 
 
 /** creates KernelArgs, CLBuffers, and Blades
  **/
-void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp, size_t openCLWorkGroupSize){
+void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp){
     
     // THE LAST KERNEL ARGUMENT will be the kernelArgInfo (kernel arg metadata),
     // no relation to the 'metadata' blade, which is 'ortus' metadata.
@@ -323,7 +410,7 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // 'row' is kernel arg, and there are 6 'col's for each kernel arg:
     //      [0] => kernel arg number (sanity check)
     //      [1] => number of Blades / different 'types' (e.g., age, polarity, etc.) of data in that buffer / at that kernel argument locaiton
-    //      [2] => offset from start of one, to start of another (so, the size):
+    //      [2] => offset from start of one, to start of another (so, the max size):
     //              -> if each blade is 100, 1st starts at 0, 2nd at 100, 3rd at 200, and so on.
     //      [3] => rows per Blade
     //      [4] => cols per Blade
@@ -442,14 +529,14 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // KERNEL ARG #5!!!  Scratchpads (temporary storage of info in kernel)
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     // CHECK THIS!!!
-    size_t scratchpad_rows = Ort::NUM_ELEMENTS * openCLWorkGroupSize;
-    size_t scratchpad_max_rows = Ort::MAX_ELEMENTS * openCLWorkGroupSize;
+    size_t scratchpadRows = calculateScratchpadRows("current");
+    size_t scratchpadMaxRows = calculateScratchpadRows("max");
     KernelArg<cl_float, Scratchpad>  ka5(clHelper, kernelp, currentKernelArgNum, SCRATCHPAD_KEYS);
-    scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpad_rows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, scratchpad_max_rows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, true));
+    scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpadRows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, scratchpadMaxRows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, true));
     // collect metadata 
     numBlades = (int) scratchpadBladeMap.size();
     maxSize = (int) scratchpadBladeMap[SCRATCHPAD_KEYS[0]]->maxSize;
-    rowsPerBlade = (int) scratchpad_rows;
+    rowsPerBlade = (int) scratchpadRows;
     colsPerBlade = Ort::SCRATCHPAD_COMPUTATION_SLOTS;
     pagesPerBlade = 1;
     // add the data to temp vector
@@ -487,6 +574,18 @@ void DataSteward::setKernelArgInfo(std::vector<std::vector<int>>& tempKernelArgI
     }
 }
 
+/**
+ * using a string here to make it clear what's being computed/return
+ */
+size_t DataSteward::calculateScratchpadRows(std::string request){
+    if (request == "current"){
+        return Ort::NUM_ELEMENTS * (*openCLWorkGroupSize);
+    }
+    else if (request == "max"){
+        return Ort::MAX_ELEMENTS * (*openCLWorkGroupSize);
+    }
+    else return -1;
+}
 
 // the probe.
 /*

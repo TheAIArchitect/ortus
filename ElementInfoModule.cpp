@@ -80,8 +80,9 @@ float ElementInfoModule::vCurr(int fromTimestepsAgo){
         printf("(ElementInfoModule) Error: trying to access activation from '%d' timesteps ago, when limit is '%d'.\n", fromTimestepsAgo, Ort::ACTIVATION_HISTORY_SIZE-1);
         exit(18);
     }
-    return *activationp[fromTimestepsAgo];
+    return *activationp[fromTimestepsAgo*Ort::MAX_ELEMENTS];// anything other than 0 might not be good... check this.
 }
+
 
 /**
  * Sets the affect of the element; input may be 'pos', or 'neg'.
@@ -95,11 +96,41 @@ void ElementInfoModule::setAffect(std::string affect){
     else if (affect == "neg"){
         *affectp = -1.f;
     }
+    else if (affect == "neutral"){
+        *affectp = 0.f;
+    }
     else {
         printf("Error: attempting to set non-recognized affect '%s'.\n", affect.c_str());
         exit(58);
     }
 }
+
+
+/**
+ * Sets the affect of the element; input may be 'pos', or 'neg'.
+ * NOTE: must be set *AFTER* setting typep to point to the right address (via setDataPointers())
+ */
+void ElementInfoModule::setAffect(ElementAffect eAffect){
+    switch (eAffect){
+        case ElementAffect::NEG:{
+           sAffect = "neg";
+           break;
+        }
+        case ElementAffect::NEUTRAL:{
+           sAffect = "neutral";
+           break;
+        }
+        case ElementAffect::POS:{
+            sAffect = "pos";
+            break;
+        }
+        default:
+            printf("Error: invalid ElementAffect enum value.\n");
+            exit(58);
+    }
+    *affectp = static_cast<cl_float>(eAffect);
+}
+
 
 /*
  * Sets the ElementType enum, the string type (stype), and the float type, (ftype), of the element
@@ -125,6 +156,36 @@ void ElementInfoModule::setType(std::string type){
     else {
         printf("Error: attempting to set non-recognized element type '%s'.\n", type.c_str());
         exit(58);
+    }
+    *typep = (float) eType;
+    return;
+}
+
+/*
+ * Sets the ElementType enum, the string type (stype), and the float type, (ftype), of the element
+ * NOTE: must be set *AFTER* setting typep to point to the right address (via setDataPointers())
+ */
+void ElementInfoModule::setType(ElementType type){
+    eType = type;
+    switch (type){
+        case ElementType::SENSE:
+            sType = "sense";
+            break;
+        case ElementType::EMOTION:
+            sType = "emotion";
+            break;
+        case ElementType::INTER:
+            sType = "inter";
+            break;
+        case ElementType::MOTOR:
+            sType = "motor";
+            break;
+        case ElementType::MUSCLE:
+            sType = "muscle";
+            break;
+        default:
+            printf("Error: invalid ElementAffect enum value.\n");
+            exit(58);
     }
     *typep = (float) eType;
     return;

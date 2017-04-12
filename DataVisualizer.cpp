@@ -38,14 +38,13 @@ void DataVisualizer::plotXCorr(std::vector<double>& dataX, std::vector<double>& 
 }
 
 
-/**
 void DataVisualizer::makePlots(){
     const int plotOneSize = 6;
     std::string plotOneSet[plotOneSize] = {"SO2","SCO2","IPO2", "INO2", "MINHALE", "MEXHALE"};
     const int plotTwoSize = 5;
     std::string plotTwoSet[plotTwoSize] = {"SO2","SCO2","INO2", "IFEAR", "SH2O"};
     
-    int max = stewie->kernelVoltages.size();
+    int max = stewie->fullActivationHistory.size();
     Plot plot(true);
     
     std::vector<double> xVals;// windows
@@ -60,11 +59,11 @@ void DataVisualizer::makePlots(){
     //Plot::kwargsMap kwArgs;
     std::unordered_map<std::string, std::string> kwArgs;
     for (int i = 0; i < plotOneSize; ++i){
-        int idx = stewie->officialNameToIndexMap[plotOneSet[i]];
+        int idx = stewie->connectomep->nameMap[plotOneSet[i]];
         kwArgs["label"] = plotOneSet[i];
         yVals.clear();
         for (int j = 0; j < max; ++j){
-            yVals.push_back(stewie->kernelVoltages[j][idx]);
+            yVals.push_back(stewie->fullActivationHistory[j][idx]);
         }
         plot.addYValues<double>(yVals);
         plot.plot(kwArgs);
@@ -74,11 +73,11 @@ void DataVisualizer::makePlots(){
     plot.subplot("212");
     kwArgs.clear();
     for (int i = 0; i < plotTwoSize; ++i){
-        int idx = stewie->officialNameToIndexMap[plotTwoSet[i]];
+        int idx = stewie->connectomep->nameMap[plotTwoSet[i]];
         kwArgs["label"] = plotTwoSet[i];
         yVals.clear();
         for (int j = 0; j < max; ++j){
-            yVals.push_back(stewie->kernelVoltages[j][idx]);
+            yVals.push_back(stewie->fullActivationHistory[j][idx]);
         }
         plot.addYValues<double>(yVals);
         plot.plot(kwArgs);
@@ -96,7 +95,8 @@ void DataVisualizer::makePlots(){
 void DataVisualizer::plotSet(std::string* names, int numNames){
 
     
-    int max = stewie->kernelVoltages.size();
+    int max = stewie->fullActivationHistory.size();
+    
     std::vector<double> xVals;// windows
     std::vector<double> yVals;// neuron voltages
     for ( int i = 0; i < max; ++i){
@@ -108,11 +108,11 @@ void DataVisualizer::plotSet(std::string* names, int numNames){
     //Plot::kwargsMap kwArgs;
     std::unordered_map<std::string, std::string> kwArgs;
     for (int i = 0; i < numNames; ++i){
-        int idx = stewie->officialNameToIndexMap[names[i]];
-        kwArgs["label"] = names[i]; 
+        int idx = stewie->connectomep->nameMap[names[i]];
+        kwArgs["label"] = names[i];
         yVals.clear();
         for (int j = 0; j < max; ++j){
-            yVals.push_back(stewie->kernelVoltages[j][idx]);
+            yVals.push_back(stewie->fullActivationHistory[j][idx]);
         }
         plotOne.addValues<double>(xVals, yVals);
         plotOne.plot(kwArgs);
@@ -123,7 +123,6 @@ void DataVisualizer::plotSet(std::string* names, int numNames){
     
     
 }
-*/
 
 /*
 void DataVisualizer::plotAll(){

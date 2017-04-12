@@ -112,4 +112,5 @@ void ComputeSteward::enqueueKernel(){
     clHelper.check_and_print_cl_err(clGetEventProfilingInfo(timing_event, CL_PROFILING_COMMAND_START, sizeof(cl_ulong), &starttime, NULL));
     clHelper.check_and_print_cl_err(clGetEventProfilingInfo(timing_event, CL_PROFILING_COMMAND_END, sizeof(cl_ulong), &endtime, NULL));
     opencl_run_time += ((endtime - starttime) / 1000000.0);
+    
 }

@@ -43,7 +43,7 @@ void Steward::initialize(){
     
     // we need to do some initial processing on the .ort file (e.g., set some metadata variables) in order to initialize the KernelArgs and Blades
     dataStewardp->initializeConnectome("ort/simple.ort");
-    dataStewardp->initializeKernelArgsAndBlades(&computeStewardp->clHelper, &computeStewardp->kernel, computeStewardp->workGroupSize);
+    dataStewardp->initializeKernelArgsAndBlades(&computeStewardp->clHelper, &computeStewardp->kernel);
     // once initializeKernelArgsAndBlades returns, we can create the Elements and ElementRelations,
     // which will use the Blades to store (some) of their data.
     dataStewardp->createElementsAndElementRelations();
@@ -61,23 +61,23 @@ void Steward::initialize(){
     //dataStewardp->init(computeStewardp->workGroupSize);
     //sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
     //sensoryStimulationStewardp->setStimuli();
-    //diagnosticStewardp = new DiagnosticSteward(dataStewardp);
+    diagnosticStewardp = new DiagnosticSteward(dataStewardp);
     
 }
 
 void Steward::run(){
-    
+
     
     /** maybe some function to give all classes all pointers -- e.g:
      -> it sets all instances of dataStewardp necessary, etc.
      */
     
-    numIterations = 1;//300;// SHOULD BE ~600!!!
-    for (int i = 0; i < numIterations; ++i){
-        
+    for (int i = 0; i < Ort::NUM_ITERATIONS; ++i){
+        printf("iteration: %d starting...\n", i);
         computeStewardp->executePreRunOperations();
         
         computeStewardp->run();
+        
         
         computeStewardp->executePostRunOperations();
         
@@ -85,7 +85,9 @@ void Steward::run(){
         //sensoryStimulationStewardp->performSensoryStimulation();
         
         //diagnosticStewardp->runAdvancedDiagnostics();
+        printf("iteration: %d complete...\n", i);
     }
+    
     //diagnosticStewardp->plotXCorr();
     
     // temporary placement...
@@ -95,18 +97,16 @@ void Steward::run(){
     //stewie.printReport(DataSteward::numKernelLoops);
     
     // temporaray print statement(s)
-    /*
-    int numKVs = dataStewardp->kernelVoltages.size();
+    int numKVs = dataStewardp->fullActivationHistory.size();
     printf("size of 'kernel_voltages': %d\n", numKVs);
     for (int i = 0; i < numKVs; ++i){
-        for (int j = 0; j < dataStewardp->kernelVoltages[i].size(); ++j){
-            printf("%.2f, ",dataStewardp->kernelVoltages[i][j]);
+        for (int j = 0; j < Ort::NUM_ELEMENTS; ++j){
+            printf("%.2f, ",dataStewardp->fullActivationHistory[i][j]);
         }
         printf("\n");
     }
-     */
     //diagnosticStewardp->plotXCorr();
-    //diagnosticStewardp->runStandardDiagnostics();
+    ////diagnosticStewardp->runStandardDiagnostics();
     
     //initGraphics(&core);
     cleanUp();

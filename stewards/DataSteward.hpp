@@ -50,23 +50,26 @@ public: /** NEW */
     ~DataSteward();
     
     int* kernelIterationNumberp;
+    size_t* openCLWorkGroupSize;
     Connectome* connectomep;
     bool connectomeNewed;
+    
     
     void setComputeStewardPointers(ComputeSteward* computeStewardp);
     void initializeConnectome(std::string ortFile);
     void createElementsAndElementRelations();
     
     
-    ElementInfoModule* addElement(std::unordered_map<ElementAttribute,cl_float> newElemenattributes, std::string name);
+    ElementInfoModule* addElement(std::string name);
     ElementRelation* addRelation(std::unordered_map<RelationAttribute, cl_float> newRelationAttributes, ElementInfoModule* ePre, ElementInfoModule* ePost, ElementRelationType ert);
     
-    void initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp, size_t openCLWorkGroupSize);
+    void initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* kernelp);
     void updateMetadataBlades();
     void executePreRunOperations();
     void pushOpenCLBuffers();
     void readOpenCLBuffers();
     void setKernelArgInfo(std::vector<std::vector<int>>& tempKernelArgInfo);
+    size_t calculateScratchpadRows(std::string request);
     
     // Blade maps -- this is where the data is *actually* held...
     // Everything else just points here.

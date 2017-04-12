@@ -23,7 +23,7 @@ DiagnosticSteward::~DiagnosticSteward(){
 // standard information that we always want (either printed to console, or graphed)
 void DiagnosticSteward::runStandardDiagnostics(){
     //vizzer.plotAll();
-    ////vizzer->makePlots();
+    vizzer->makePlots();
     //vizzer.plotSet(plotSet, plotSetSize);
     
 }
