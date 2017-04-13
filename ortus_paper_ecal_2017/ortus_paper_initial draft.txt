@@ -1,5 +1,9 @@
 DARPA has recently expressed interest in artificial intelligence (AI) that can learn throughout its life (cite?), and there are many current efforts to make AI more general. 
 
+===> relevance to artificial life, complex AI, etc... something about how this is useful, and indirectly, why it matters to this conference 
+
+=> also need to differentiate it from current AI efforts. think there might be some stuff in downloads folder.
+
 We introduce Ortus; an approach to virtual life that has the potential to approximate the intelligence of living organisms.  CPU and GPU based framework bourne from the study and analysis of C. elegans connectome and behavior
 
 One of Otus' main goals was to eliminate the need for backpropagation, which is costly, and doesn't appear to have a biological counterpart. Ortus' synaptic weights change according to Hebbian (and opposite, fix this) learning principles as part of it's operation. This means that there is no explicit training period, but rather that the system's initial behavior is based upon neural structure, and as it ages, modifies and refines the network---in much the same way as a baby.
@@ -47,6 +51,20 @@ While the implementation presented is quite simple, the initial results presente
 
 While Ortus' eventual goal is to develop complex ``neural'' functionality akin to that observed in complex systems, we 
 
+
+From an artificial intelligence standpoint, the 
+
+\item less connections
+\item ability to specify initial behavior
+\item don't need a massive traning set
+\item 3 types of interactions: inhibitory CS, excitatory CS, and GJ.
+
+Together, these afford artificial neural networks far greater flexibility and thereby power. It is possible that this will enable more nuanced behavior.
+
+From an artificial life standpoint: people are modeling networks with less complexity than this to attempt to recreate C. elegans' behavior from its connectome (cite beer.. and newer). This work pivoted from that approach, because in attempting to model the entire connectome, it became clear that there were too many unknowns. However, it also became clear that there was a certain logic to the way the neurons were wired; a notion backed up by (cite c elegans wiring works... have some in mendeley). 
+
+A simple idea is, how can C. elegans <DO SOMETHING> -- point here is to describe the requirement that certain things inhibit while others excite, in order to allow a certain behavior to happen.
+ 
 ==> Shortcomings/Issues:
 \item There is no temporal differentiation between CS and GJ transmission. On each timestep, neurons collect all incoming ``activation'' from 
 \item There is minimal presynaptic processing -- (NOTE:how true is this? )

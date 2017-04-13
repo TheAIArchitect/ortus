@@ -121,7 +121,7 @@ void Architect::designConnectome(){
     
     // below rule is probably not sustainable, but should work for now...
     // now we want to connect *every existing* inter to:
-    //      # 
+    //      #
     //      # a *new* inter for each emotion, and each of those new inters should have GJ connections with the primary neuron for each emotion (0th index in each emotion's element pointer vector)
     
     printf("format: (cs weight/polarity)\n");
