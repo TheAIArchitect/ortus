@@ -55,12 +55,21 @@ void Connectome::createElementsAndElementRelations(){
  * - dominatesRelations ==> mapping between the index of the pre element and all ElementRelations (pointers) that have post elements dominates by the pre
  * - opposesRelations ==> mapping between the index of the pre element and all ElementRelations (pointers) that have post elements opposed by the pre
  *
+ * assign base emotion elements to index_maps
  */
 void Connectome::buildAdditionalDataStructures(){
     printf(">> Element Modules (%d)\n",(int)elementModules.size());
     for (auto element : elementModules){
         nameMap[element->name] = element->id;
         indexMap[element->id] = element->name;
+        if (element->eType == ElementType::EMOTION){
+            if (element->name == "eFEAR"){
+                fearElements.push_back(element);
+            }
+            else if (element->name == "ePLEASURE"){
+                pleasureElements.push_back(element);
+            }
+        }
         printf("%s\n",element->toString().c_str());
     }
     printf(">> Element Relations (%d)\n", (int)elementRelations.size());

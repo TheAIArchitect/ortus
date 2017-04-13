@@ -2,7 +2,7 @@ DARPA has recently expressed interest in artificial intelligence (AI) that can l
 
 We introduce Ortus; an approach to virtual life that has the potential to approximate the intelligence of living organisms.  CPU and GPU based framework bourne from the study and analysis of C. elegans connectome and behavior 
 
-One of Ortus' goals was to only implement functions that either had a known analogous biological process, or which may have an analogous biological implementation that is currently unknown. Following each principle underlying Ortus' functionality is its biological justification:
+One of Ortus' goals was to only implement functions that either had a known analogous biological process, or which may have an analogous biological implementation along with a psychological argument that is currently unknown. Following each Ortus design element (ODE) underlying Ortus' functionality is its biological rationale (BR):
 
 1) 
 
@@ -23,6 +23,10 @@ Ortus bulids its connectome based upon the rules specified in a supplied ORT fil
 
 Sensory stimulation is sensed by sensory neurons that are topographically arrainged, similar to those in organic systems. A recent study suggesting that the brain is organized based upon an n = 2something... and something about permutations lends credence to this approach (cite n something 2 permutation paper).
 
+
+\textbf{ODE:} Emotional learning is achieved by strengthening synapses of interneurons that form junctions between consolidated sensory information, and interneurons that are tied to each emotional ``center'' by GJ connections. The GJ connection allows an emotion to propagate over the entire system once activated. The effect of this, is that if a certain sensory input is causing the activation of a given emotion, the introduction of another sensory input will cause the synapses at the junction of the newly introduced sensory input and elevated emotion to strengthen. (graph here)
+
+\textbf{BR:} Specifically for the Dopamine circuit in the brain, there exists a small locus of dopaminergic cells, but the axons project all througout the brain. From a psychological perspective, it is clear that when one enters an emotional state, the emotion is encompassing, not localized. It is also clear that a stimulus or activity is likley to be ``colored'' by the emotional state one was in when the stimulus occurred.
 
 <<CONCLUSION>>
 
