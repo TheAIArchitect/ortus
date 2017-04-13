@@ -1,6 +1,8 @@
 DARPA has recently expressed interest in artificial intelligence (AI) that can learn throughout its life (cite?), and there are many current efforts to make AI more general. 
 
-We introduce Ortus; an approach to virtual life that has the potential to approximate the intelligence of living organisms.  CPU and GPU based framework bourne from the study and analysis of C. elegans connectome and behavior 
+We introduce Ortus; an approach to virtual life that has the potential to approximate the intelligence of living organisms.  CPU and GPU based framework bourne from the study and analysis of C. elegans connectome and behavior
+
+One of Otus' main goals was to eliminate the need for backpropagation, which is costly, and doesn't appear to have a biological counterpart. Ortus' synaptic weights change according to Hebbian (and opposite, fix this) learning principles as part of it's operation. This means that there is no explicit training period, but rather that the system's initial behavior is based upon neural structure, and as it ages, modifies and refines the network---in much the same way as a baby.
 
 One of Ortus' goals was to only implement functions that either had a known analogous biological process, or which may have an analogous biological implementation along with a psychological argument that is currently unknown. Following each Ortus design element (ODE) underlying Ortus' functionality is its biological rationale (BR):
 
