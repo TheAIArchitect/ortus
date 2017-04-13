@@ -11,43 +11,49 @@ ACTIVATION_HISTORY_SIZE = 8 // nth index will be for current activation (staging
 WEIGHT_HISTORY_SIZE = 4 // nth index will be for current weight (staging area), so history is this number -1 
 
 elements:
-    O2: {type=sense, affect=pos} 
-    CO2: { type=sense, affect=neg }//, affect=neg } // no affect should mean no P/N interneurons are created... maybe? or, one of each??
-    H2O: {type=sense}
-    FEAR: { type=emotion, affect=neg }
+    sO2: {type=sense, affect=pos} 
+    sCO2: { type=sense, affect=neg }//, affect=neg } // no affect should mean no P/N interneurons are created... maybe? or, one of each??
+    sH2O: {type=sense}
+    eFEAR: { type=emotion, affect=neg }
     //HAPPY: { type=emotion, affect=pos }
     //HUNGRY: {type=emotion, affect=neg }
     // neither pain nor pleasure are really emotions, but maybe that label will work for now?
-    //PLEASURE: { type=emotion, affect=pos }
+    ePLEASURE: { type=emotion, affect=pos }
     //PAIN: { type=emotion, affect=neg}
-    INHALE: { type=motor }
-    EXHALE: { type=motor }
+    mINHALE: { type=motor }
+    mEXHALE: { type=motor }
     LUNG: { type=muscle }
 opposes:
-    O2:
-        CO2:
+    sO2:
+        sCO2:
+    mINHALE:
+        mEXHALE:
+    mEXHALE:
+        mINHALE:
     //PLEASURE:
         //PAIN:
 causes:
-    +O2:
-        +EXHALE:
-    +CO2:
-        +INHALE:
-    +EXHALE:
+    +sO2:
+        +mEXHALE:
+    +sCO2:
+        +mINHALE:
+    +mEXHALE:
         -LUNG:
-    +INHALE:
+    +mINHALE:
         +LUNG:
     +LUNG:
-        +O2:
+        +sO2:
     -LUNG:
-        -CO2:
-    //+CO2:
-        //+FEAR: { thresh= 2 } // 1 is normal, 2 is high, for now. only abnormally high levels of CO2 cause fear
+        -sCO2:
+    //+sCO2:
+        //+eFEAR: { thresh= 2 } // 1 is normal, 2 is high, for now. only abnormally high levels of CO2 cause fear
     // "attempting" to breath, and not being able to, should cause fear too.
 dominates:
-    //+O2:
-        //+HUNGRY:
-    //+FEAR:
-        //+HAPPY:
+    //+sO2:
+        //+sHUNGRY:
+    //+eFEAR:
+        //+ePLEASURE:
+    //+eFEAR:
+        //+eHAPPY:
     //maybe the + is irrelevant?
 

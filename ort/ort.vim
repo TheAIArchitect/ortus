@@ -32,13 +32,13 @@ syn keyword attributeKeys SLOPE_SIZE
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " if referring to a neuron's negative change, it's a '-' followed by captial
 " letters or numbers
-syn match neuronNeg '-[A-Z0-9]\+'
+syn match neuronNeg '-[sem]\?[A-Z0-9]\+'
 " if referring to a neuron, regardless of change, it's captial
 " letters or numbers
-syn match neuronNeutral '[A-Z0-9]\+'
+syn match neuronNeutral '[sem]\?[A-Z0-9]\+'
 " if referring to a neuron's postivie change, it's a '+' followed by captial
 " letters or numbers
-syn match neuronPos '+[A-Z0-9]\+'
+syn match neuronPos '+[sem]\?[A-Z0-9]\+'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " the rule ID (e.g., R1:, R2:, R100:, etc.). Simply 'R', followed by a number,

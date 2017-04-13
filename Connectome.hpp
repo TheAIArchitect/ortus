@@ -53,6 +53,13 @@ public:
     std::vector<ElementRelation*> elementRelations; // primary relation pointer holder
     ortus::element_map elementMap; // name to element pointer
     
+    // index 0 is the 'primary', so, for 'fear', FEAR_0, but the _0 isn't there.
+    // after that, just use fearElements.size() BEFORE adding the new element,
+    // to get the new element's name. e.g:
+    // name = fearElements[0]->name + "_" + std::to_string(fearElements.size());
+    ortus::index_map fearElements;
+    ortus::index_map pleasureElements;
+    
     
     ortus::name_map nameMap; // name to index
     ortus::index_map indexMap; // index to name... but it's acutally a vector. because after i named it, i realized it would be stupid for this to be a map, when a vector would do the same thing, more quickly.

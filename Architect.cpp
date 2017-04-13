@@ -115,6 +115,15 @@ void Architect::designConnectome(){
         causalIndex++;
     }
     
+    /**
+     NOTE: need a way to differentiate different sensory groups... maybe?
+     */
+    
+    // below rule is probably not sustainable, but should work for now...
+    // now we want to connect *every existing* inter to:
+    //      # 
+    //      # a *new* inter for each emotion, and each of those new inters should have GJ connections with the primary neuron for each emotion (0th index in each emotion's element pointer 'map')
+    
     printf("format: (cs weight/polarity)\n");
     for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
         printf("\t\t\t\t|%s",connectomep->indexMap[i].c_str());
