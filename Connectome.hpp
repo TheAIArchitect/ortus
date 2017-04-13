@@ -57,8 +57,8 @@ public:
     // after that, just use fearElements.size() BEFORE adding the new element,
     // to get the new element's name. e.g:
     // name = fearElements[0]->name + "_" + std::to_string(fearElements.size());
-    ortus::index_map fearElements;
-    ortus::index_map pleasureElements;
+    std::vector<ElementInfoModule*> fearElements;
+    std::vector<ElementInfoModule*> pleasureElements;
     
     
     ortus::name_map nameMap; // name to index

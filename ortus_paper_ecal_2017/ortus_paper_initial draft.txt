@@ -28,6 +28,11 @@ Sensory stimulation is sensed by sensory neurons that are topographically arrain
 
 \textbf{BR:} Specifically for the Dopamine circuit in the brain, there exists a small locus of dopaminergic cells, but the axons project all througout the brain. From a psychological perspective, it is clear that when one enters an emotional state, the emotion is encompassing, not localized. It is also clear that a stimulus or activity is likley to be ``colored'' by the emotional state one was in when the stimulus occurred.
 
+
+<<IMPLEMENTATION>>
+- C++, OpenCL
+- each neuron operates on its incoming connections, so it only does ``postsynaptic'' work, leaving its ``presynaptic'' work to neurons that it is presynaptic to (see ``shortcomings'')
+
 <<CONCLUSION>>
 
 We have presented Ortus, an initial approach to a framework that exhibits basic emotionally--based learning (fear conditioning), self--sustaining inherent behavior (cyclic breathing), and a topographical approach to sensory processing that enables intersensory associative learning, with or without an emotional component. 
@@ -39,6 +44,11 @@ While the implementation presented is quite simple, the initial results presente
 
 
 While Ortus' eventual goal is to develop complex ``neural'' functionality akin to that observed in complex systems, we 
+
+==> Shortcomings/Issues:
+\item There is no temporal differentiation between CS and GJ transmission. On each timestep, neurons collect all incoming ``activation'' from 
+\item There is minimal presynaptic processing -- (NOTE:how true is this? )
+\item No location--based axon growth, as is seen in, relative to hebbian plasticity (cite)
 
 
 
