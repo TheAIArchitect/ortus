@@ -89,7 +89,7 @@ public:
         this->maxRows = maxRows;
         this->maxCols = maxCols;
         this->maxPages = maxPages;
-        pageSize = currentRows * currentCols;
+        pageSize = maxRows * maxCols;
         updateCurrentSize(); // also updates pageSize
         maxSize = maxRows * maxCols * maxPages;
         data = new T[maxSize](); // init zeroed with '()'
@@ -153,7 +153,7 @@ public:
     /* only valid for 3D matricies. returns a pointer to the data at row, col. NULL if out of range. */
     T* getp(int row, int col, int page){
         if (row < maxRows && col < maxCols && page < maxPages){
-            return &data[(page*(pageSize))+(currentCols*row)+col];
+            return &data[(page*(pageSize))+(maxCols*row)+col];
         }
         return NULL;
     }
@@ -161,7 +161,7 @@ public:
     /* only valid for 2D matricies. returns a pointer to the data at row, col. NULL if out of range. */
     T* getp(int row, int col){
         if (row < maxRows && col < maxCols && dimensions == 2){
-            return &data[(currentCols*row)+col];
+            return &data[(maxCols*row)+col];
         }
         return NULL;
     }
@@ -185,7 +185,7 @@ public:
     /* only valid for 3D matricies. returns the data at row, col. NULL if out of range. */
     T getv(int row, int col, int page){
         if (row < maxRows && col < maxCols && page < maxPages){
-            return data[(page*(pageSize))+(currentCols*row)+col];
+            return data[(page*(pageSize))+(maxCols*row)+col];
         }
         return NULL;
     }
@@ -193,7 +193,7 @@ public:
     /* only valid for 2D matricies. returns the data at row, col. NULL if out of range. */
     T getv(int row, int col){
         if (row < maxRows && col < maxCols && dimensions == 2){
-            return data[(currentCols*row)+col];
+            return data[(maxCols*row)+col];
         }
         return NULL;
     }
@@ -219,7 +219,7 @@ public:
      * Note that row access starts from 0 -- the first row, is row 0 (same for columns).*/
     bool set(int row, int col, int page, T value){
         if (row < currentRows && col < currentCols && page < currentPages){
-            data[(page*(pageSize))+(currentCols*row)+col] = value;
+            data[(page*(pageSize))+(maxCols*row)+col] = value;
             return true;
         }
         return false;
@@ -230,7 +230,7 @@ public:
      * Note that row access starts from 0 -- the first row, is row 0 (same for columns).*/
     bool set(int row, int col, T value){
         if (row < currentRows && col < currentCols){
-            data[(currentCols*row)+col] = value;
+            data[(maxCols*row)+col] = value;
             return true;
         }
         return false;
@@ -375,7 +375,7 @@ public:
     /* moves data into the buffer pointed to by 'clDatap', ready for use by the kernel starting at 'clBufferOffset' bytes (set when buffer is set with 'setCLBuffer()') */
     void pushDataToDevice(){
         if (!deviceScratchPad){
-            this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * currentSize, data, 0, NULL, NULL);
+            this->clhelper->err = clEnqueueWriteBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * maxSize, data, 0, NULL, NULL);
             this->clhelper->check_and_print_cl_err(this->clhelper->err);
             dataPushed = true;
             dataRead = false; // we know current data is invalid
@@ -391,7 +391,7 @@ public:
         if (!((memFlags & CL_MEM_READ_WRITE) || (memFlags & CL_MEM_WRITE_ONLY))){
             return false;
         }
-        this->clhelper->err = clEnqueueReadBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * currentSize, data, 0, NULL, NULL);
+        this->clhelper->err = clEnqueueReadBuffer(this->clhelper->commands, *clDatap, CL_TRUE, clBufferOffset, sizeof(T) * maxSize, data, 0, NULL, NULL);
         this->clhelper->check_and_print_cl_err(this->clhelper->err);
         dataPushed = false;
         dataRead = true;

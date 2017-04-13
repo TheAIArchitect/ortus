@@ -89,12 +89,12 @@ void ElementRelation::setAttributeDataPointers(std::unordered_map<RelationAttrib
         // entry.second is a Blade*
         if (Ort::STORE_RELATIONS_TRANSPOSED){ // SWAPS preId and PostId
             relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(postId, preId);
-            printf("(set data pointer -- transposed) %s->%s -- attribute #%d: %f\n",preName.c_str(),postName.c_str(),static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
+            printf("(set data pointer -- transposed) %s (id: %d) ->%s (id: %d)-- attribute #%d: %f\n",preName.c_str(), preId, postName.c_str(), postId, static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
         }
         else {
             relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(preId, postId);
         //attributeTracker[static_cast<int>(entry.first)] = true;
-        printf("(set data pointer) %s->%s -- attribute #%d: %f\n",preName.c_str(),postName.c_str(),static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
+            printf("(set data pointer -- transposed) %s (id: %d) ->%s (id: %d)-- attribute #%d: %f\n",preName.c_str(), preId, postName.c_str(), postId, static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
         }
     }
 }

@@ -45,18 +45,20 @@ void Architect::setDataSteward(DataSteward* ds){
 void Architect::designConnectome(){
     
     int i,j;
+    int causalIndex = 0;
     int numCausal = connectomep->causesRelations.size();
     std::vector<ElementRelation*> elRelVec;
     int elRelVecSize;
     ElementRelation* elRelp;
-    for (i = 0; i < numCausal; ++i){
+    //for (i = 0; i < numCausal; ++i){
+    while (causalIndex < connectomep->causesRelations.size()){
         // all relations in this vector should have the same pre
-        elRelVec = connectomep->causesRelations[i];
+        elRelVec = connectomep->causesRelations[causalIndex];
         elRelVecSize = elRelVec.size();
         for (j = 0; j < elRelVecSize; ++j){
             elRelp = elRelVec[j];
             if (elRelp->preId != i){
-                printf("PreId != i -> %d != %d\n",elRelp->preId, i);
+                printf("PreId != i -> %d != %d\n",elRelp->preId, causalIndex);
             }
             // so, now we need to create a causal relationship between the pre and post elements.
            
@@ -110,7 +112,7 @@ void Architect::designConnectome(){
             }
             
         }
-        
+        causalIndex++;
     }
     
     printf("format: (cs weight/polarity)\n");
@@ -119,7 +121,7 @@ void Architect::designConnectome(){
     }
     printf("\n");
     for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
-        printf("%s\t\t|",connectomep->indexMap[i].c_str());
+        printf("%s(%d|%d)\t\t|",connectomep->indexMap[i].c_str(), i, connectomep->elementModules[i]->id);
         for (j = 0; j < Ort::NUM_ELEMENTS; ++j){
             // need to flip incides if accessing blades directly, because 2D+ stuff is stored transposed
             float polarity = dataStewardp->relationAttributeBladeMap[RelationAttribute::Polarity]->getv(j,i);

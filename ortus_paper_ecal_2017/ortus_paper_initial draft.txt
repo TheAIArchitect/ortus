@@ -1,0 +1,38 @@
+DARPA has recently expressed interest in artificial intelligence (AI) that can learn throughout its life (cite?), and there are many current efforts to make AI more general. 
+
+We introduce Ortus; an approach to virtual life that has the potential to approximate the intelligence of living organisms.  CPU and GPU based framework bourne from the study and analysis of C. elegans connectome and behavior 
+
+One of Ortus' goals was to only implement functions that either had a known analogous biological process, or which may have an analogous biological implementation that is currently unknown. 
+
+It is well known that emotions are a driving force in motivation and behavior of intelligent organisms (cite). While at the human level, the emotional ``part'' of the brain is quite complex, it is not unreasonable to assume that as organismic complexity (and thereby intelligence) decreases, the complexity of emotions decreases. If one follows this line of thought, the possibility emerges that organisms like C. elegans may, in fact, be driven by ``emotions'' as well. For example, C. elegans is capable of toxin avoidance, a tap--withdrawal response, as well as learning that it found food at a certain temperature (citations?) -- one must ask how this can be. There is nothing external that tells it what is good vs. bad, but it wants to avoid certain things, while being attracted to others. The premise behind Ortus, is that these behaviors are a result of a \textif{very} simple emotional subsystem that forms the basis for C. elegans' behavior. 
+
+While Ortus' current implemention is a vastly simplified approach to a virtual organism, there are a few underlying principles. First, its core, least mutable circuit, is its respiratory circuit, which naturally cycles between inhalation of $O_2$, and exhalation of $CO_2$ (show graph). Second, as a part of its ``life'', a constant amount of $O_2$ is decreased, while a constant amount of $CO_2$ is introduced---this causes inhalation, which increases $O_2$. Third, all sensory inputs, are, after input consolitation, tied to all emotional centers that exist. The \texttt{FEAR} center, has a causal relationship between increased $CO_2$ and increased \texttt{FEAR} activation. This enables associative learning between an input, and an emotional state. 
+
+
+
+Hebbian learning, as well as (find out the opposite to it...) are implemented. Synapses strengthen when a presynaptic neuron and postsynatptic neuron or muscle activate (relative to the synapse's mutability index), and weaken gradually according to (insert equation) both over time, and when the presynapic neuron reaches its threshold, but the postsynaptic element (neuron or muscle) does not.
+
+the ORT filetype is a specification of ``rules'', akin to very simplified ``virtual DNA'' that define elements (neurons and muscles), and relationships between them, currently: A causes B, A is correlated with B, A opposes B, and A dominates B. Each realtionship has a number of paramters, such as Age, Mutability, Threshold, and either a chemical synapse (CS) weight (unidirectional), or a gap junction (GJ) weight (bidirectional) (NOTE: equations!). Ortus' neurons are based upon C. elegans' neurons, and are non--spiking, but do not transmit any ``activation'' (footnote about why activation is used instead of voltage? or use 'potential?) below a given threshold, (see [1] below). The equations for CS and GJ synapses were derived (simplified) from Wicks' 1996 paper (cite), and appear to have been used in recent C. elegans' models (cite Beer's 2013). 
+
+
+Ortus bulids its connectome based upon the rules specified in a supplied ORT file, based upon guidelines that aim to approximate the way neural circuits form in organic brains (cite? expand upon this? e.g, how does it do that?). 
+
+
+Sensory stimulation is sensed by sensory neurons that are topographically arrainged, similar to those in organic systems. A recent study suggesting that the brain is organized based upon an n = 2something... and something about permutations lends credence to this approach (cite n something 2 permutation paper).
+
+
+<<CONCLUSION>>
+
+We have presented Ortus, an initial approach to a framework that exhibits basic emotionally--based learning (fear conditioning), self--sustaining inherent behavior (cyclic breathing), and a topographical approach to sensory processing that enables intersensory associative learning, with or without an emotional component. 
+
+Ortus also has a system to map sensory inputs such as "breathe" to the stimulation of O2 sensors.
+
+<<DISCUSSION>>
+While the implementation presented is quite simple, the initial results presented pave the way for quick advances to Ortus' capability with regard to ``behaviors'' resulting from emotional amalgamation as well as the introduction of more complex sensory input.
+
+
+While Ortus' eventual goal is to develop complex ``neural'' functionality akin to that observed in complex systems, we 
+
+
+
+[1] https://www.ncbi.nlm.nih.gov/pubmed/210264
