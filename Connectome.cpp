@@ -137,7 +137,7 @@ ElementRelation* Connectome::addRelation(ElementInfoModule* ePre, ElementInfoMod
         elrel->postId = ePost->id;
         // preId and postId must be set before setting addresses 
         elrel->setAttributeDataPointers(dataStewardp->relationAttributeBladeMap);
-        elrel->setWeightDataPointers(dataStewardp->weightBladeMap[WeightAttribute::CSWeight], dataStewardp->weightBladeMap[WeightAttribute::CSWeight]);
+        elrel->setWeightDataPointers(dataStewardp->weightBladeMap[WeightAttribute::CSWeight], dataStewardp->weightBladeMap[WeightAttribute::GJWeight]);
         // NOTE: as this grows, it might make more sense to have a function take an array of attributes to check for for each case.
         switch(ert){ 
             case CORRELATED:

@@ -77,14 +77,15 @@ void Architect::designConnectome(){
     std::vector<ElementRelation*> elRelVec;
     int elRelVecSize;
     ElementRelation* elRelp;
-    //for (i = 0; i < numCausal; ++i){
-    while (causalIndex < connectomep->causesRelations.size()){
+    // causesRelations will grow, but we don't want to create new SEIs for the SEIs...
+    // so, don't recompute size.
+    for (causalIndex = 0; causalIndex < numCausal; ++causalIndex){
         // all relations in this vector should have the same pre
         elRelVec = connectomep->causesRelations[causalIndex];
         elRelVecSize = elRelVec.size();
         for (j = 0; j < elRelVecSize; ++j){
             elRelp = elRelVec[j];
-            if (elRelp->preId != i){
+            if (elRelp->preId != causalIndex){
                 printf("PreId != i -> %d != %d\n",elRelp->preId, causalIndex);
             }
             // so, now we need to create a causal relationship between the pre and post elements.
@@ -95,9 +96,6 @@ void Architect::designConnectome(){
             if (elRelp->pre->getEType() == ElementType::SENSE){
                 std::unordered_map<RelationAttribute, cl_float> newRelAttribs;
                 ElementInfoModule* seip = createSEI(elRelp->pre, newRelAttribs);
-                newRelAttribs;
-                printf("don't forget to check newRelAttribs!!!\n");
-                exit(0);
                 // now we connect the inter to the 'post' specified by elRelp
                 // for the time being, we can re-use the attribute map
                 ElementRelationType ert = ElementRelationType::CAUSES;
@@ -134,7 +132,6 @@ void Architect::designConnectome(){
             }
             
         }
-        causalIndex++;
     }
     // this should eventually include sensors in an array, i think.
     int numPrimarySenoryElements = connectomep->primarySensoryElements.size();
@@ -142,7 +139,6 @@ void Architect::designConnectome(){
         if (!connectomep->primarySensoryElements[i]->marked){ // then we create an SEI for it.
             std::unordered_map<RelationAttribute, cl_float> newRelAttribs;
             ElementInfoModule* seip = createSEI(connectomep->primarySensoryElements[i], newRelAttribs);
-            connectomep->seiElements.push_back(seip);
         }
         connectomep->primarySensoryElements[i]->marked = false; // don't need this anymore, so 'reset' all values
     }
@@ -204,9 +200,17 @@ void Architect::designConnectome(){
         //tempModps.resize(curGroupSize);
         std::string interName = "";
         for (j = 0; j < curGroupSize; ++j){
-            interName += connectomep->seiElements[j]->name;
-            if (j != curGroupSize-1){
-                interName += "-";
+            if (curGroupSize == 1){
+                // then we have a single SEI, but we still need an SCI for it,
+                // because if we don't, the feedback from the EEI will pollute the network.
+                // (the SEI feeds into other SCIs)
+                interName += connectomep->seiElements[curGroup[j]]->name+"c";
+            }
+            else {
+                interName += connectomep->seiElements[curGroup[j]]->name;
+                if (j != curGroupSize-1){
+                    interName += "-";
+                }
             }
         }
         // sensory consolidatory interneuron
@@ -227,7 +231,7 @@ void Architect::designConnectome(){
         // now we create as many relations as we have elements in our group to link, and set the weight to be
         // <total desired weight>/<group size>
         for (j = 0; j < curGroupSize; ++j){
-            ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, connectomep->seiElements[j], scip, ert);
+            ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, connectomep->seiElements[curGroup[j]], scip, ert);
             newRelp->setCSWeight(totalDesiredCSWeight/curGroupSize);
         }
         /**
@@ -256,6 +260,7 @@ void Architect::designConnectome(){
         sci_to_eei_attribs[RelationAttribute::Type] = static_cast<float>(ert);
         ElementRelation* sciToFear = dataStewardp->addRelation(sci_to_eei_attribs, scip, eFeip, ert);
         ElementRelation* sciToPleasure = dataStewardp->addRelation(sci_to_eei_attribs, scip, ePeip, ert);
+        // use a weight of totalDesiredCSWeight/2.f... just for fun? I suppose to decrease sensitivity? might not be needed.
         sciToFear->setCSWeight(totalDesiredCSWeight/2.f);
         sciToPleasure->setCSWeight(totalDesiredCSWeight/2.f);
         //
@@ -281,7 +286,12 @@ void Architect::designConnectome(){
         eFeiToE->setGJWeight(totalDesiredGJWeight);
         ElementRelation* ePeiToE = dataStewardp->addRelation(eei_to_e_attribs, ePeip, connectomep->pleasureElements[0], ert);
         ePeiToE->setGJWeight(totalDesiredGJWeight);
-       
+        // need to do the other way, too.
+        ElementRelation* eToEfEI = dataStewardp->addRelation(eei_to_e_attribs, connectomep->fearElements[0], eFeip, ert);
+        ElementRelation* eToEpEI = dataStewardp->addRelation(eei_to_e_attribs, connectomep->fearElements[0], ePeip, ert);
+        eToEfEI->setGJWeight(totalDesiredGJWeight);
+        eToEpEI->setGJWeight(totalDesiredGJWeight);
+        
     }
     
     

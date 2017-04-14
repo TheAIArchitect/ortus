@@ -24,6 +24,7 @@ void ElementInfoModule::setAttributeDataPointers(std::unordered_map<ElementAttri
     *typep = -1.f; // easy way to tell if a type has been set
     affectp = elementAttributeBladeMap[ElementAttribute::Affect]->getp(id); // types correspond to ElementAffect enum class
     *affectp = (float) ElementAffect::NEUTRAL; // 0, at least, when this was written it was...
+    eAffect = ElementAffect::NEUTRAL;
 }
 
 /**
@@ -110,6 +111,10 @@ void ElementInfoModule::setAffect(std::string affect){
         *affectp = 0.f;
         eAffect = ElementAffect::NEUTRAL;
     }
+    else if (affect == ""){
+        *affectp = 0.f;
+        eAffect = ElementAffect::NEUTRAL;
+    }
     else {
         printf("Error: attempting to set non-recognized affect '%s'.\n", affect.c_str());
         exit(58);
@@ -137,6 +142,7 @@ void ElementInfoModule::setAffect(ElementAffect eAffect){
             break;
         }
         default:
+            
             printf("Error: invalid ElementAffect enum value.\n");
             exit(58);
     }
