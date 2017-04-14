@@ -106,7 +106,7 @@ void Steward::run(){
         printf("\n");
     }
     //diagnosticStewardp->plotXCorr();
-    ////diagnosticStewardp->runStandardDiagnostics();
+    diagnosticStewardp->runStandardDiagnostics();
     
     //initGraphics(&core);
     cleanUp();

@@ -13,6 +13,7 @@ ElementInfoModule::ElementInfoModule(){
     isSEI = false;
     isEEI = false;
     isSCI = false;
+    seip = NULL;
 };
 
 ElementInfoModule::~ElementInfoModule(){};
@@ -142,7 +143,6 @@ void ElementInfoModule::setAffect(ElementAffect eAffect){
             break;
         }
         default:
-            
             printf("Error: invalid ElementAffect enum value.\n");
             exit(58);
     }
@@ -207,6 +207,33 @@ void ElementInfoModule::setType(ElementType type){
     }
     *typep = (float) eType;
     return;
+}
+
+/**
+ * THIS IS ONLY VALID IF THIS IS A 'SENSE' (sensory) ELEMENT!!!
+ * 
+ * returns NULL if an SEI for this "S" hasn't been set.
+ * returns a pointer to this element's SEI if it has been set.
+ */
+ElementInfoModule* ElementInfoModule::getSEI(){
+    if (eType != ElementType::SENSE){
+        printf("(ElementInfoModule) Error: cannot get SEI from non-sensory element.\n");
+        exit(58);
+    }
+    return seip;
+}
+
+/**
+ * THIS IS ONLY VALID IF THIS IS A 'SENSE' (sensory) ELEMENT!!!
+ *
+ * sets a pointer to this element's Sensory Extension Interneuron
+ */
+void ElementInfoModule::setSEI(ElementInfoModule* seip){
+    if (eType != ElementType::SENSE){
+        printf("(ElementInfoModule) Error: cannot set SEI for non-sensory element.\n");
+        exit(58);
+    }
+    this->seip = seip;
 }
 
 

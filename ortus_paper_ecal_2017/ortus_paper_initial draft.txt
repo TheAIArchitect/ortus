@@ -50,6 +50,7 @@ Choices are:
 1) an array of 9 sensors, if 0,1,2 > A, 2,3,4 > B, 4,5,6 > C, 6,7,8 > D, then sum {nCr(k,n)} for n from 1 to k is 2^n - 1. It is clear that to get a fully connected network, capable of expressing all possible combinations, even from a living organism perspective, things become unfeasible.
 
 2) Rather, it is probably the case that our brains aren't quite as connected as they appear to be. (e.g., within a certain radius, two places on your skin feel like the same location. visual system either might be an exception, however it is well known that visual information gets interpolated.)
+There must be some sort of neural processing shortcuts ... approximation. e.g., if you are quickly reading, you might read "New York", when the only word there was "York"
 
 <<IMPLEMENTATION>>
 - C++, OpenCL

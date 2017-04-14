@@ -34,6 +34,7 @@ ElementInfoModule* Architect::createSEI(ElementInfoModule* pre, std::unordered_m
     std::string interName = "i"+pre->name;
     // sensory extension interneuron
     ElementInfoModule* seip = dataStewardp->addElement(interName);
+    pre->setSEI(seip);
     // put into vector that will link SEIs together.
     // this will need to be modified to keep different types separate (e.g. VISUAL, AUIDO)
     // but for now, we'll just connect them all together.
@@ -95,7 +96,11 @@ void Architect::designConnectome(){
             // further, anything that is caused by the sense, should actually come from the inter.
             if (elRelp->pre->getEType() == ElementType::SENSE){
                 std::unordered_map<RelationAttribute, cl_float> newRelAttribs;
-                ElementInfoModule* seip = createSEI(elRelp->pre, newRelAttribs);
+                ElementInfoModule* seip;
+                // set the SEI pointer, seip, if it exists. if not, create it.
+                if ((seip = elRelp->pre->getSEI()) == NULL){
+                    seip = createSEI(elRelp->pre, newRelAttribs);
+                }
                 // now we connect the inter to the 'post' specified by elRelp
                 // for the time being, we can re-use the attribute map
                 ElementRelationType ert = ElementRelationType::CAUSES;
@@ -295,28 +300,11 @@ void Architect::designConnectome(){
     }
     
     
-    printf("format: (cs weight/polarity)\n");
-    for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
-        printf("\t\t\t\t|%s",connectomep->indexMap[i].c_str());
-    }
-    printf("\n");
-    for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
-        printf("%s(%d|%d)\t\t|",connectomep->indexMap[i].c_str(), i, connectomep->elementModules[i]->id);
-        for (j = 0; j < Ort::NUM_ELEMENTS; ++j){
-            // need to flip incides if accessing blades directly, because 2D+ stuff is stored transposed
-            float polarity = dataStewardp->relationAttributeBladeMap[RelationAttribute::Polarity]->getv(j,i);
-            float weight = dataStewardp->weightBladeMap[WeightAttribute::CSWeight]->getv(j,i,0);
-            printf("\t\t(%.2f, %.2f)",weight, polarity);
-        }
-        printf("\n");
-    }
-    printf("--------------------------\n");
-    connectomep->cat();
-    exit(2);
+    //connectomep->cat();
     
     
     
-    ///////////////////////
+    ////////// OLD NOTES BELOW (but some may still be helpful) /////////////
     /*maybe need to add a 'dominated by':
         - question is: how to deal with a relation weight between two elements, if the *pre* element is dominated by some other element?
     

@@ -39,10 +39,10 @@ void DataVisualizer::plotXCorr(std::vector<double>& dataX, std::vector<double>& 
 
 
 void DataVisualizer::makePlots(){
-    const int plotOneSize = 6;
-    std::string plotOneSet[plotOneSize] = {"SO2","SCO2","IPO2", "INO2", "MINHALE", "MEXHALE"};
+    const int plotOneSize = 7;
+    std::string plotOneSet[plotOneSize] = {"sO2","sCO2","isO2", "isCO2", "mINHALE", "mEXHALE", "LUNG"};
     const int plotTwoSize = 5;
-    std::string plotTwoSet[plotTwoSize] = {"SO2","SCO2","INO2", "IFEAR", "SH2O"};
+    std::string plotTwoSet[plotTwoSize] = {"sO2","sCO2","ePLEASURE", "eFEAR", "sH2O"};
     
     int max = stewie->fullActivationHistory.size();
     Plot plot(true);

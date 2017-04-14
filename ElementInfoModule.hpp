@@ -56,6 +56,9 @@ public:
     int massPoint_id = -1; // -1 means no mass point
     
     bool isSEI; // Sensory Extension Interneuron
+    ElementInfoModule* getSEI();
+    void setSEI(ElementInfoModule* seip);
+    
     bool isSCI;
     bool isEEI; // Emotion Extension Interneuron
     
@@ -95,6 +98,8 @@ public:
     std::string sAffect;
     ElementType eType;
     std::string sType; // string type
+private:
+    ElementInfoModule* seip; // only valid if this is a sensory element
     
 };
 
