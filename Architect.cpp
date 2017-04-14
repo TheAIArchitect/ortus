@@ -123,6 +123,11 @@ void Architect::designConnectome(){
     // now we want to connect *every existing* inter to:
     //      #
     //      # a *new* inter for each emotion, and each of those new inters should have GJ connections with the primary neuron for each emotion (0th index in each emotion's element pointer vector)
+    //      # then take that new inter, and give it a causal to the sensory consolitatory inter that causes it to activate... NOTE: the weight there *must* be far smaller than the weight causing the emotion inter to activate... other wise, there will be a bad feedback loop.
+    
+    
+    
+    
     
     printf("format: (cs weight/polarity)\n");
     for (i = 0; i < Ort::NUM_ELEMENTS; ++i){

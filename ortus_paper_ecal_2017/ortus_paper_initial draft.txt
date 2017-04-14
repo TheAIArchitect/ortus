@@ -34,6 +34,11 @@ Sensory stimulation is sensed by sensory neurons that are topographically arrain
 
 \textbf{BR:} Specifically for the Dopamine circuit in the brain, there exists a small locus of dopaminergic cells, but the axons project all througout the brain. From a psychological perspective, it is clear that when one enters an emotional state, the emotion is encompassing, not localized. It is also clear that a stimulus or activity is likley to be ``colored'' by the emotional state one was in when the stimulus occurred.
 
+\textbf{ODE:} Each interneuron that acts as a ``sub--emotion'' neuron (that branches away from the primary neuron for a given emotion) is connected to its primary emotion neuron via a GJ.
+It also has a CS connection back to the sensory consolidatory interneuron that has a CS into it
+This allows various emotional states to cause Ortus to ``remember'' other things that are related to that emotional state, by \textit{slightly} activating the sensory consolidatory interneuron that would trigger the emotional response in the presence of the actual stimulus. (diagram)
+
+\textbf{BR:} only psychological...
 
 <<IMPLEMENTATION>>
 - C++, OpenCL
