@@ -56,6 +56,7 @@ void Connectome::createElementsAndElementRelations(){
  * - opposesRelations ==> mapping between the index of the pre element and all ElementRelations (pointers) that have post elements opposed by the pre
  *
  * assign base emotion elements to index_maps
+ * assign (primary) sensory elements to primarySensoryElements vector
  */
 void Connectome::buildAdditionalDataStructures(){
     printf(">> Element Modules (%d)\n",(int)elementModules.size());
@@ -69,6 +70,9 @@ void Connectome::buildAdditionalDataStructures(){
             else if (element->name == "ePLEASURE"){
                 pleasureElements.push_back(element);
             }
+        }
+        if (element->eType == ElementType::SENSE){
+            primarySensoryElements.push_back(element);
         }
         printf("%s\n",element->toString().c_str());
     }

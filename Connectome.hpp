@@ -53,12 +53,28 @@ public:
     std::vector<ElementRelation*> elementRelations; // primary relation pointer holder
     ortus::element_map elementMap; // name to element pointer
     
+    // actual sensory neurons -- to be kept separate from seiElements, which extend each sensory neuron, and are interneurons
+    std::vector<ElementInfoModule*> primarySensoryElements;
+    // and the seiElements
+    std::vector<ElementInfoModule*> seiElements;
+    
     // index 0 is the 'primary', so, for 'fear', FEAR_0, but the _0 isn't there.
     // after that, just use fearElements.size() BEFORE adding the new element,
     // to get the new element's name. e.g:
     // name = fearElements[0]->name + "_" + std::to_string(fearElements.size());
     std::vector<ElementInfoModule*> fearElements;
     std::vector<ElementInfoModule*> pleasureElements;
+    
+    
+    
+    //// NOTE: below needs more work for sensor array...
+    // Sensory Consolidatory Interneurons to link
+    // these will each have interneurons created that they synapse on to,
+    // with a causal relationship, with each input weight equal to:
+    // <total desired weight>/<number of inputs>
+    //
+    // 
+    std::vector<ElementInfoModule*> sciElementsToLink;
     
     
     ortus::name_map nameMap; // name to index

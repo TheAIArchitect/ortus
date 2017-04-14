@@ -27,7 +27,12 @@ public:
     
     void setConnectome(Connectome* cp);
     void setDataSteward(DataSteward* ds);
+    
+    ElementInfoModule* createSEI(ElementInfoModule* pre, std::unordered_map<RelationAttribute, cl_float>& attribs);
     void designConnectome();
+    
+    long nCr(int n, int r);
+    long fact(int f);
 };
 
 

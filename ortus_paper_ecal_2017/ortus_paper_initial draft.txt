@@ -40,9 +40,13 @@ This allows various emotional states to cause Ortus to ``remember'' other things
 
 \textbf{BR:} only psychological...
 
+
+Talk about the combinatorial explosion, but then discuss how that can be pruned away... similar to babies. The 2^n - 1 paper suggested reducing the resolution of inputs, so, instead of each sensor being able to connect with every other sensor, funnel 3 sensors (for example) into 1, to create a ``functional connectivity module'' (FCM). That approach might not be bad, however, it could be severely limiting. Perhaps this can be cut down by looking at relationships between sensors, and getting rid of things that don't matter?
+
 <<IMPLEMENTATION>>
 - C++, OpenCL
 - each neuron operates on its incoming connections, so it only does ``postsynaptic'' work, leaving its ``presynaptic'' work to neurons that it is presynaptic to (see ``shortcomings'')
+- sensory consolidation causes resolution loss, currently maximum resolution for any sensor array (e.g., not just O2) has a maximum resolution of 2 for intra--sensor consolidation, and 3 for inter--sensor consolidation. Single neuron sensors have no minimum for either. (NOTE: sensor array not implemented yet... take this out if it doesn't get implemented)
 
 <<CONCLUSION>>
 

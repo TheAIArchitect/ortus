@@ -10,6 +10,8 @@
 #include "DataSteward.hpp"
 
 ElementInfoModule::ElementInfoModule(){
+    isSEI = false;
+    isEEI = false;
 };
 
 ElementInfoModule::~ElementInfoModule(){};
