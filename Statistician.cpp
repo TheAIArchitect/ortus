@@ -148,6 +148,58 @@ ortus::vector Statistician::normalizedXCorr(ortus::vector A, ortus::vector B){
     return  xcorr(A, B, divisor);
 }
 
+/**
+ * function is an adaption of 'mitchnull's answer:
+ * http://stackoverflow.com/questions/9430568/generating-combinations-in-c
+ *
+ * it's harder than you might think to generate combinations...
+ * so, thank you, mitchnull.
+ *
+ * **********************
+ * This function returns a vector of vectors, where each inner vector
+ * holds the indices that should be combined into a new interneuron
+ *
+ * essentially, it performs the combinatoric logic behind sensory consolidation.
+ * 
+ * << this could also be called something like 'getCombinations'...>>
+ */
+std::vector<std::vector<int>> Statistician::getIndicesToLink(int numIndices, int resolution){
+    int n = numIndices;
+    int rMin = resolution;
+    int rMax = n;
+    std::vector<std::vector<int>> all;
+    for (int r = rMin; r <= rMax; ++r){
+        std::vector<bool> v(n);
+        std::fill(v.begin(), v.begin() + r, true);
+        do {
+            std::vector<int> tempVec;
+            for (int i = 0; i < n; ++i) {
+                if (v[i]) tempVec.push_back(i);
+            }
+            all.push_back(tempVec);
+        } while (std::prev_permutation(v.begin(), v.end()));
+    }
+    return all;
+}
+
+
+
+
+/*
+int main() {
+    
+    std::vector<std::vector<int>> all = getIndicesToLink(8,3);
+    int allSize = all.size();
+    for (int i = 0; i < allSize; ++i){
+        for (int j = 0; j < all[i].size(); ++j){
+            printf("%d, ", all[i][j]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+*/
+
 /*
 int main(int argc, char** argv){
     int len = 23;

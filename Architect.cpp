@@ -170,6 +170,7 @@ void Architect::designConnectome(){
     //      # a *new* inter for each emotion, and each of those new inters should have GJ connections with the primary neuron for each emotion (0th index in each emotion's element pointer vector)
     //      # then take that new inter, and give it a causal to the sensory consolitatory inter that causes it to activate... NOTE: the weight there *must* be far smaller than the weight causing the emotion inter to activate... other wise, there will be a bad feedback loop.
     
+    
     // goal is to link all Sensory Extension Interneurons (SEIs) together
     int numToLink = connectomep->seiElements.size();
     //int numToLink = connectomep->sciElementsToLink.size();
@@ -185,27 +186,14 @@ void Architect::designConnectome(){
     //}
     
     
+    // each inner vector is a 'link group'
     std::vector<std::vector<int>> allLinkGroups;
-    int groupSize = 2;
-    int count = 0;
-    for (i = 0; i < numToLink-groupSize; ++i){
-        std::vector<int> tempVec;
-        for (j = 0; j < numToLink; ++j){
-            if (i==j){
-                continue;
-            }
-            if (i + (groupSize-1) < numToLink){
-                continue;
-            }
-            tempVec.push_back(i);
-        groupSize++
-            
-            
-            
+    int resolution = 1; 
+    allLinkGroups = Statistician::getIndicesToLink(numToLink, resolution);
     
+    int numLinkGroups = allLinkGroups.size();
     
-    std::vector<ElementInfoModule*> stagingElements; //
-    for (i = 0; i < numToLink; ++i){
+    for (i = 0; i < numLinkGroups; ++i){
         
         std::string interName = "i"+pre->name;
         // sensory extension interneuron

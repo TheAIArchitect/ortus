@@ -15,6 +15,7 @@
 #include "ElementInfoModule.hpp"
 #include "ElementRelation.hpp"
 #include "OrtusStd.hpp"
+#include "Statistician.hpp"
 
 
 class Architect {

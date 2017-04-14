@@ -15,6 +15,9 @@
 #include "Blade.hpp"
 #include "OrtusStd.hpp"
 #include <unordered_map>
+#include <algorithm>
+
+
 
 
 class Statistician {
@@ -22,6 +25,7 @@ public:
     Statistician();
     //~Statistician();
     
+    static std::vector<std::vector<int>> getIndicesToLink(int numIndices, int resolution);
     
     float xcorrMultiply(ortus::vector A, ortus::vector B, int windowNum);
     int computeXCorrNumWindows(int len);

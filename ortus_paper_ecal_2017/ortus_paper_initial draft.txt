@@ -43,6 +43,11 @@ This allows various emotional states to cause Ortus to ``remember'' other things
 
 Talk about the combinatorial explosion, but then discuss how that can be pruned away... similar to babies. The 2^n - 1 paper suggested reducing the resolution of inputs, so, instead of each sensor being able to connect with every other sensor, funnel 3 sensors (for example) into 1, to create a ``functional connectivity module'' (FCM). That approach might not be bad, however, it could be severely limiting. Perhaps this can be cut down by looking at relationships between sensors, and getting rid of things that don't matter?
 
+Choices are:
+1) an array of 9 sensors, if 0,1,2 > A, 2,3,4 > B, 4,5,6 > C, 6,7,8 > D, then sum {nCr(k,n)} for n from 1 to k is 2^n - 1. It is clear that to get a fully connected network, capable of expressing all possible combinations, even from a living organism perspective, things become unfeasible.
+
+2) Rather, it is probably the case that our brains aren't quite as connected as they appear to be. (e.g., within a certain radius, two places on your skin feel like the same location. visual system either might be an exception, however it is well known that visual information gets interpolated.)
+
 <<IMPLEMENTATION>>
 - C++, OpenCL
 - each neuron operates on its incoming connections, so it only does ``postsynaptic'' work, leaving its ``presynaptic'' work to neurons that it is presynaptic to (see ``shortcomings'')
