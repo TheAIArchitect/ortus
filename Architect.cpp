@@ -186,9 +186,22 @@ void Architect::designConnectome(){
     
     
     std::vector<std::vector<int>> allLinkGroups;
-    for (i = 2; i < numToLink; ++i){
-        int groupSize = i;
-        for (j = 2; j < numToLink; ++j){
+    int groupSize = 2;
+    int count = 0;
+    for (i = 0; i < numToLink-groupSize; ++i){
+        std::vector<int> tempVec;
+        for (j = 0; j < numToLink; ++j){
+            if (i==j){
+                continue;
+            }
+            if (i + (groupSize-1) < numToLink){
+                continue;
+            }
+            tempVec.push_back(i);
+        groupSize++
+            
+            
+            
     
     
     std::vector<ElementInfoModule*> stagingElements; //
