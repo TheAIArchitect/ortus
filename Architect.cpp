@@ -69,6 +69,8 @@ ElementInfoModule* Architect::createSEI(ElementInfoModule* pre, std::unordered_m
  */
 void Architect::designConnectome(){
     
+    float totalDesiredCSWeight = 1.f;
+    float totalDesiredGJWeight = 1.f;
     int i,j;
     int causalIndex = 0;
     int numCausal = connectomep->causesRelations.size();
@@ -100,7 +102,7 @@ void Architect::designConnectome(){
                 // for the time being, we can re-use the attribute map
                 ElementRelationType ert = ElementRelationType::CAUSES;
                 ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, seip, elRelp->post, ert);
-                newRelp->setCSWeight(1.f);
+                newRelp->setCSWeight(totalDesiredCSWeight);
                 //
                 // since we added a neuron in the middle, let's check to see if there is an opposing relationship
                 // also, this is (probably) a bad way to do this. opposes should be stored in the relation above... searching for it separately seems silly (at the moment...)
@@ -114,7 +116,7 @@ void Architect::designConnectome(){
                         for ( int z = 0; z < stupidLen; ++z){
                             newRelAttribs[RelationAttribute::Polarity] = -1.f;
                             newRelp = dataStewardp->addRelation(newRelAttribs, seip, stupidVec[z]->post, ert);
-                            newRelp->setCSWeight(1.f);    
+                            newRelp->setCSWeight(totalDesiredCSWeight);
                         }
                         
                     }
@@ -123,11 +125,11 @@ void Architect::designConnectome(){
                     //// ALSO probably want to do something about the 'opposes'
             }
             else if (elRelp->pre->getEType() == ElementType::MOTOR){
-                elRelp->setCSWeight(1.f);
+                elRelp->setCSWeight(totalDesiredCSWeight);
                 elRelp->setAttribute(RelationAttribute::Polarity, elRelp->getAttribute(RelationAttribute::PostDirection));
             }
             else if (elRelp->pre->getEType() == ElementType::MUSCLE){
-                elRelp->setCSWeight(1.f);
+                elRelp->setCSWeight(totalDesiredCSWeight);
                 elRelp->setAttribute(RelationAttribute::Polarity, elRelp->getAttribute(RelationAttribute::PostDirection));
             }
             
@@ -202,40 +204,85 @@ void Architect::designConnectome(){
         //tempModps.resize(curGroupSize);
         std::string interName = "";
         for (j = 0; j < curGroupSize; ++j){
-            interName += connectomep->seiElements[j]->;
+            interName += connectomep->seiElements[j]->name;
+            if (j != curGroupSize-1){
+                interName += "-";
+            }
         }
-            // sensory extension interneuron
-            ElementInfoModule* seip = dataStewardp->addElement(interName);
-            // put into vector that will link SEIs together.
-            // this will need to be modified to keep different types separate (e.g. VISUAL, AUIDO)
-            // but for now, we'll just connect them all together.
-            connectomep->seiElements.push_back(seip);
-            seip->isSEI = true;
-            pre->marked = true; // mark this sensory element so we know not to create a second SEI for it, when we create SEIs for any sensory elements that don't have causal relations... this is a temporary fix.. really should do this before, and 'transfer' things like the causal relationship to the SEI. might need to rework reading the ORT file in, or storage, or something.
-            seip->setType(ElementType::INTER);
-            seip->setAffect(pre->getEAffect());
-            std::unordered_map<RelationAttribute, cl_float> newRelAttribs;
-            newRelAttribs[RelationAttribute::Polarity] = 1.f;
-            ElementRelationType ert = ElementRelationType::CAUSES;
-            newRelAttribs[RelationAttribute::Type] = static_cast<float>(ert);
-            // age, mutability, thresh, decay??
-            ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, pre, seip, ert);
-            newRelp->setCSWeight(1.f);
+        // sensory consolidatory interneuron
+        ElementInfoModule* scip = dataStewardp->addElement(interName);
+        connectomep->sciElements.push_back(scip);
+        scip->isSCI = true;
+        scip->setType(ElementType::INTER);
+        // if combining multiple sensors, setting affect doesn't make sense... at least, not at the moment.
+        //scip->setAffect(pre->getEAffect());
+        std::unordered_map<RelationAttribute, cl_float> newRelAttribs;
+        // all excitatory
+        newRelAttribs[RelationAttribute::Polarity] = 1.f;
+        // all causes
+        ElementRelationType ert = ElementRelationType::CAUSES;
+        newRelAttribs[RelationAttribute::Type] = static_cast<float>(ert);
+        // age, mutability, thresh, decay??
+        //// NEED TO SET LOW MUTABILITY!!!
+        // now we create as many relations as we have elements in our group to link, and set the weight to be
+        // <total desired weight>/<group size>
+        for (j = 0; j < curGroupSize; ++j){
+            ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, connectomep->seiElements[j], scip, ert);
+            newRelp->setCSWeight(totalDesiredCSWeight/curGroupSize);
         }
+        /**
+         could do below in a different loop...
+         */
+        // now that we have created the connetions going into the SCI,
+        // we want to create one of each emotion (right now, only using 2, so just manually write it out)
+        std::string eFInterName = connectomep->fearElements[0]->name + std::to_string(connectomep->fearElements.size());
+        std::string ePInterName = connectomep->pleasureElements[0]->name + std::to_string(connectomep->pleasureElements.size());
+        ElementInfoModule* eFeip = dataStewardp->addElement(eFInterName);
+        connectomep->fearElements.push_back(eFeip);
+        ElementInfoModule* ePeip = dataStewardp->addElement(ePInterName);
+        connectomep->pleasureElements.push_back(ePeip);
+        eFeip->isEEI = true;
+        eFeip->setType(ElementType::EMOTION);
+        eFeip->setAffect(connectomep->fearElements[0]->getEAffect());
+        ePeip->isEEI = true;
+        ePeip->setType(ElementType::EMOTION);
+        ePeip->setAffect(connectomep->pleasureElements[0]->getEAffect());
+        //
+        // now, first connect the SCI to each of our new EEIs
+        //
+        std::unordered_map<RelationAttribute, cl_float> sci_to_eei_attribs;
+        sci_to_eei_attribs[RelationAttribute::Polarity] = 1.f;
+        ert = ElementRelationType::CAUSES;
+        sci_to_eei_attribs[RelationAttribute::Type] = static_cast<float>(ert);
+        ElementRelation* sciToFear = dataStewardp->addRelation(sci_to_eei_attribs, scip, eFeip, ert);
+        ElementRelation* sciToPleasure = dataStewardp->addRelation(sci_to_eei_attribs, scip, ePeip, ert);
+        sciToFear->setCSWeight(totalDesiredCSWeight/2.f);
+        sciToPleasure->setCSWeight(totalDesiredCSWeight/2.f);
+        //
+        // next, connect the EEIs' "backlink" to the SCI,
+        // BUT IT MUST HAVE A MUCH LOWER WEIGHT!!! (not sure what it should be).. maybe totalDesiredCSWeight * .1?
+        //
+        std::unordered_map<RelationAttribute, cl_float> eei_to_sci_backlink_attribs;
+        eei_to_sci_backlink_attribs[RelationAttribute::Polarity] = 1.f;
+        ert = ElementRelationType::CAUSES;
+        eei_to_sci_backlink_attribs[RelationAttribute::Type] = static_cast<float>(ert);
+        ElementRelation* fearToSCI = dataStewardp->addRelation(eei_to_sci_backlink_attribs, eFeip, scip, ert);
+        ElementRelation* pleasureToSCI = dataStewardp->addRelation(eei_to_sci_backlink_attribs, ePeip, scip, ert);
+        fearToSCI->setCSWeight(totalDesiredCSWeight * .1);
+        pleasureToSCI->setCSWeight(totalDesiredCSWeight * .1);
+        //
+        // finally, connect each new EEI to its 'primary' emotion (index 0 in each emotions' respective element vector)
+        std::unordered_map<RelationAttribute, cl_float> eei_to_e_attribs;
+        // all GJ
+        ert = ElementRelationType::CORRELATED;
+        eei_to_e_attribs[RelationAttribute::Type] = static_cast<float>(ert);
+        // age, mutability, thresh, decay??
+        ElementRelation* eFeiToE = dataStewardp->addRelation(eei_to_e_attribs, eFeip, connectomep->fearElements[0], ert);
+        eFeiToE->setGJWeight(totalDesiredGJWeight);
+        ElementRelation* ePeiToE = dataStewardp->addRelation(eei_to_e_attribs, ePeip, connectomep->pleasureElements[0], ert);
+        ePeiToE->setGJWeight(totalDesiredGJWeight);
+       
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     printf("format: (cs weight/polarity)\n");

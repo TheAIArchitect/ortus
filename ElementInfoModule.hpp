@@ -56,6 +56,7 @@ public:
     int massPoint_id = -1; // -1 means no mass point
     
     bool isSEI; // Sensory Extension Interneuron
+    bool isSCI;
     bool isEEI; // Emotion Extension Interneuron
     
     bool marked = false; // used for stack

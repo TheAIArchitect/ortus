@@ -61,20 +61,20 @@ public:
     // index 0 is the 'primary', so, for 'fear', FEAR_0, but the _0 isn't there.
     // after that, just use fearElements.size() BEFORE adding the new element,
     // to get the new element's name. e.g:
-    // name = fearElements[0]->name + "_" + std::to_string(fearElements.size());
+    // name = fearElements[0]->name + std::to_string(fearElements.size());
     std::vector<ElementInfoModule*> fearElements;
     std::vector<ElementInfoModule*> pleasureElements;
     
     
     
     //// NOTE: below needs more work for sensor array...
-    // Sensory Consolidatory Interneurons to link
-    // these will each have interneurons created that they synapse on to,
-    // with a causal relationship, with each input weight equal to:
+    // Sensory Consolidatory Interneurons to link to emotional extension interneurons (EEIs)
+    //
+    // inputs to SCIs have causal relationships, with each input weight equal to:
     // <total desired weight>/<number of inputs>
     //
-    // 
-    std::vector<ElementInfoModule*> sciElementsToLink;
+    // HOWEVER: there will be 1 causal input from the EEI it inputs to, for "emotional feedback"
+    std::vector<ElementInfoModule*> sciElements;
     
     
     ortus::name_map nameMap; // name to index

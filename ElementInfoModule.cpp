@@ -12,6 +12,7 @@
 ElementInfoModule::ElementInfoModule(){
     isSEI = false;
     isEEI = false;
+    isSCI = false;
 };
 
 ElementInfoModule::~ElementInfoModule(){};
