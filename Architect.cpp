@@ -188,31 +188,40 @@ void Architect::designConnectome(){
     
     // each inner vector is a 'link group'
     std::vector<std::vector<int>> allLinkGroups;
-    int resolution = 1; 
+    int resolution = 1;
     allLinkGroups = Statistician::getIndicesToLink(numToLink, resolution);
     
     int numLinkGroups = allLinkGroups.size();
-    
+    int curGroupSize = 0;
+    int k;
+    //std::vector<ElementInfoModule*> tempModps;
     for (i = 0; i < numLinkGroups; ++i){
-        
-        std::string interName = "i"+pre->name;
-        // sensory extension interneuron
-        ElementInfoModule* seip = dataStewardp->addElement(interName);
-        // put into vector that will link SEIs together.
-        // this will need to be modified to keep different types separate (e.g. VISUAL, AUIDO)
-        // but for now, we'll just connect them all together.
-        connectomep->seiElements.push_back(seip);
-        seip->isSEI = true;
-        pre->marked = true; // mark this sensory element so we know not to create a second SEI for it, when we create SEIs for any sensory elements that don't have causal relations... this is a temporary fix.. really should do this before, and 'transfer' things like the causal relationship to the SEI. might need to rework reading the ORT file in, or storage, or something.
-        seip->setType(ElementType::INTER);
-        seip->setAffect(pre->getEAffect());
-        std::unordered_map<RelationAttribute, cl_float> newRelAttribs;
-        newRelAttribs[RelationAttribute::Polarity] = 1.f;
-        ElementRelationType ert = ElementRelationType::CAUSES;
-        newRelAttribs[RelationAttribute::Type] = static_cast<float>(ert);
-        // age, mutability, thresh, decay??
-        ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, pre, seip, ert);
-        newRelp->setCSWeight(1.f);
+        std::vector<int> curGroup = allLinkGroups[i];
+        curGroupSize = curGroup.size();
+        //tempModps.clear();
+        //tempModps.resize(curGroupSize);
+        std::string interName = "";
+        for (j = 0; j < curGroupSize; ++j){
+            interName += connectomep->seiElements[j]->;
+        }
+            // sensory extension interneuron
+            ElementInfoModule* seip = dataStewardp->addElement(interName);
+            // put into vector that will link SEIs together.
+            // this will need to be modified to keep different types separate (e.g. VISUAL, AUIDO)
+            // but for now, we'll just connect them all together.
+            connectomep->seiElements.push_back(seip);
+            seip->isSEI = true;
+            pre->marked = true; // mark this sensory element so we know not to create a second SEI for it, when we create SEIs for any sensory elements that don't have causal relations... this is a temporary fix.. really should do this before, and 'transfer' things like the causal relationship to the SEI. might need to rework reading the ORT file in, or storage, or something.
+            seip->setType(ElementType::INTER);
+            seip->setAffect(pre->getEAffect());
+            std::unordered_map<RelationAttribute, cl_float> newRelAttribs;
+            newRelAttribs[RelationAttribute::Polarity] = 1.f;
+            ElementRelationType ert = ElementRelationType::CAUSES;
+            newRelAttribs[RelationAttribute::Type] = static_cast<float>(ert);
+            // age, mutability, thresh, decay??
+            ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, pre, seip, ert);
+            newRelp->setCSWeight(1.f);
+        }
     }
     
     
