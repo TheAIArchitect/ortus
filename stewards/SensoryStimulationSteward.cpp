@@ -13,8 +13,8 @@
 // and how much o2 is inhaled and co2 exhaled by lung...
 // further, the kernel threshold must be taken into account -- nothing gets passed on from CSes
 // if activation level is below threshold.
-float SensoryStimulationSteward::o2Consumption = 2.f;
-float SensoryStimulationSteward::co2Generation = 2.f; // 3
+float SensoryStimulationSteward::o2Consumption = 2.5f;//2.f;
+float SensoryStimulationSteward::co2Generation = 3.5f; // 3
 
 SensoryStimulationSteward::SensoryStimulationSteward(DataSteward* dStewiep, Connectome* cp){
     this->dStewiep = dStewiep;
@@ -78,10 +78,10 @@ void SensoryStimulationSteward::createO2DeprevationAndH2OGenerator(){
 }
 
 void SensoryStimulationSteward::createH2OStimulator(){
-    ConstantSignal* h2oSignal = new ConstantSignal(2.5f, 300, 350, 50);
+    ConstantSignal* h2oSignal = new ConstantSignal(2.f, 50, 350, 50);
     PrimitiveStimulus* h2oGenerator = new PrimitiveStimulus("h2oGenerator");
     h2oGenerator->setSignal(h2oSignal);
-    addStimulus("SH2O", h2oGenerator);
+    addStimulus("sH2O", h2oGenerator);
 }
 
 
@@ -93,8 +93,12 @@ void SensoryStimulationSteward::addStimulus(std::string elementName, Stimulus* s
 
 /** NOTE: this is a poorly implemented bit of functionality -- as it is now, we push back the element to stimulate, perhaps more than once if we don't check, and if we make ComplexStimuli, we have no way to differentitate a part of the signal that should stimulate one element from another. we should have a set of elements that are getting stimulated, and when we call that element, we get the total stimulation for that element... OR, we could run through each stimulus and add to each element's stimulation total, and then run through all the totals, and then stimulate each element that we have a non-zero total for. that might make the most sense
  */
+// these are temporary variables...
+int steps = 0;
+bool inhibitO2 = false;
+bool lungOff = true;
+bool lungOn = false;
 void SensoryStimulationSteward::performSensoryStimulation(){
-    bool inhibitO2 = false;
     
     for (auto& vecIter : elementsToStimulate){
         int elementIndex = cp->nameMap[vecIter];
@@ -104,7 +108,23 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         ////if (vecIter == "SO2" && finalStimulus == -1.0){
         ////    inhibitO2 = true;
         ////}
+       
     }
+    if (steps >= 50){
+        // at 50 steps, then cycle 20 on, 30 off.
+        if (inhibitO2 && fmod(steps, 50) == 20){
+            inhibitO2 = false;
+        }
+        else if (!inhibitO2 && fmod(steps, 50) == 0){
+            inhibitO2 = true;
+        }
+        
+        if (inhibitO2){ // also using this as a "stimulate h20" trigger
+            int h2oIndex = cp->nameMap["sH2O"];
+            dStewiep->activationBlade->add(h2oIndex, 0, 5);
+        }
+    }
+    steps++;
     
     /**NOTE:
      ****
@@ -127,14 +147,18 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         lungActivation = dStewiep->activationBlade->getv(lungIndex, 0);
         float prevLungAct = dStewiep->activationBlade->getv(lungIndex, 1);
         float lungActivationSlope = lungActivation - prevLungAct;
-        if (lungActivationSlope > 0 && lungActivation > 0) { // it's getting excited, give it O2
-            int o2Index = cp->nameMap["sO2"];
-            dStewiep->activationBlade->add(o2Index, 0, 2.5*o2Consumption); // multiplier by trial and error.
-        }
-        else if (lungActivationSlope < 0 && lungActivation > 0) { // it's relaxing (if activation is less than 0, it's probably already fully "exhaled"
+        if (lungOn){
             int co2Index = cp->nameMap["sCO2"];
-            dStewiep->activationBlade->add(co2Index, 0, -2*co2Generation);// 3 //  multiplier by trial and error (need to balance threshold, co2 gen, o2 consumption)
+            dStewiep->activationBlade->add(co2Index, 0, -5*co2Generation);// 3 //  multiplier by trial and error (need to balance threshold, co2 gen, o2 consumption)
+            lungOn = false;
         }
+        if (prevLungAct <= 1 && lungActivation > 1){
+            int o2Index = cp->nameMap["sO2"];
+            dStewiep->activationBlade->add(o2Index, 0, 6*o2Consumption); // multiplier by trial and error.
+            lungOn = true;
+        }
+        
+       
         printf("LUNG activation: %f\n", lungActivation);
         
         /*

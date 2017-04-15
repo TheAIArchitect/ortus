@@ -236,9 +236,10 @@ kernel void OrtusKernel(global float* elementAttributes,
     local float activationDecayConstant, minActivation, maxActivation, inhibitRevPot, exciteRevPot, inhibitExciteRange;
     
     activationDecayConstant = .2; // loses % of its charge (multiply by 100 for %)
-    inhibitRevPot = -10.0f;
-    exciteRevPot = 30.0f;
+    inhibitRevPot = -20.0f;
+    exciteRevPot = 20.0f;
     inhibitExciteRange = exciteRevPot - inhibitRevPot;
+    float midRange = 0; //inhibitExciteRange/2.f + inhibitRevPot;
     minActivation = -100.f;
     maxActivation = 100.f;
     int weightPageSize = kernelArg2Cols * kernelArg2Rows;
@@ -311,10 +312,6 @@ kernel void OrtusKernel(global float* elementAttributes,
         if (gId == postPrint && preElement == prePrint) printf("(gId: %d) pre: %d, post: %d - csWeight: %.2f, gjWeight: %.2f => relation {type: %.1f, polarity: %.1f, age: %.2f, tresh: %.2f, decay: %.2f, mutability: %.2f}\n", gId, preElement, postElement, csWeight, gjWeight, relationType, relationPolarity, relationAge, relationThresh, relationDecay, relationMutability);
     
         relationThresh = 5.f;
-        // CHANGE THIS FOR GJ!!!!!!!
-        if (fabs(preActivation) < relationThresh){ // nothing happens if it's less than thresh.
-            continue;
-        }
         //////////////////////////////////// TEMP ////////////////////////////
         //////////////////////////////////////////////////////////////////////
         if (fCompare(csWeight,0)) continue;
@@ -325,7 +322,7 @@ kernel void OrtusKernel(global float* elementAttributes,
         
         float addedActivation = 0;
         float conductance = 0;
-        if(csWeight != 0.0){
+        if(csWeight != 0.0 && preActivation >= relationThresh){ // preActivation must be greater than or equal to relationThresh
             ///// NOTE: CHECK ALL OF THIS ////////////
             //////////////////////////////////////////
             // - starting conductance is .5 -- similar to wicks' work, just simplified.
@@ -336,16 +333,17 @@ kernel void OrtusKernel(global float* elementAttributes,
             //no conductance at the moment...
             //added_v = cs_weight * conductance * their_v_curr;
             //added_v = cs_weight * their_v_curr;
+            
+            // the -5 is just a little more than wicks' number to give more usable range
+            conductance = (1.f/(1.f + exp(-5.f * (fabs(preActivation - midRange)/inhibitExciteRange))));
             if(relationPolarity < 0){ // if inhibit
-                float preToEq = fabs(preActivation - inhibitRevPot);
                 float actDiff = inhibitRevPot - postActivation;
-                conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/inhibitExciteRange))))) - .0134;
+                //conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/inhibitExciteRange))))) - .0134;
                 addedActivation = csWeight * conductance * actDiff;
             }
             else { // excite
-                float preToEq = fabs(preActivation - exciteRevPot);
                 float actDiff = exciteRevPot - postActivation;
-                conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/inhibitExciteRange))))) - .0134;
+                //conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/inhibitExciteRange))))) - .0134;
                 addedActivation = csWeight * conductance * actDiff;
                 //if (gId == postPrint) printf("!!!!!!!!! %f\n", addedActivation);
             }
