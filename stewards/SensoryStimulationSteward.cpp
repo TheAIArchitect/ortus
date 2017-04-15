@@ -110,10 +110,15 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         ////}
        
     }
-    if (steps >= 50){
-        // at 50 steps, then cycle 20 on, 30 off.
-        if (inhibitO2 && fmod(steps, 50) == 20){
+    if (steps >= 50 && steps <= 500 ){
+        // at 50 steps, then cycle 10 on, 40 off.
+        if (inhibitO2 && fmod(steps, 50) == 10){
             inhibitO2 = false;
+            int co2Index = cp->nameMap["sCO2"];
+            dStewiep->activationBlade->add(co2Index, 0, -6*co2Generation);// 3 //  multiplier by trial and error (need to balance threshold, co2 gen, o2 consumption)
+            int o2Index = cp->nameMap["sO2"];
+            dStewiep->activationBlade->add(o2Index, 0, 7.5*o2Consumption); // multiplier by trial and error.
+         
         }
         else if (!inhibitO2 && fmod(steps, 50) == 0){
             inhibitO2 = true;
@@ -124,6 +129,16 @@ void SensoryStimulationSteward::performSensoryStimulation(){
             dStewiep->activationBlade->add(h2oIndex, 0, 5);
         }
     }
+    if (steps > 600 && steps <= 700){// trigger *only* sH20, without O2 deprivation. should see fear rise.
+        int h2oIndex = cp->nameMap["sH2O"];
+        dStewiep->activationBlade->add(h2oIndex, 0, 5);
+    }
+    
+    /*
+    if (steps > 700 && steps < 750){ // inhibit O2, but don't stimulate sH20. should see isH20c increase (due to backlink)
+        inhibitO2 = true;
+    }
+     */
     steps++;
     
     /**NOTE:

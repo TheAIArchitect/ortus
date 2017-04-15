@@ -158,6 +158,16 @@ void Architect::designConnectome(){
         }
         connectomep->primarySensoryElements[i]->marked = false; // don't need this anymore, so 'reset' all values
     }
+    /*  NOT SURE HOW PERMANENT THIS IS... BUT:
+     * here we set the above 'structural' causal relationships to essentially be immutable,
+     * so that learning can't screw them up.
+     */
+    for (auto entry : connectomep->causesRelations){
+        std::vector<ElementRelation*> currVec = entry.second;
+        for (auto relp : currVec){
+            relp->setAttribute(RelationAttribute::Mutability, 0.01f);// just picked this to be small but not zero.
+        }
+    }
     
     /** NOTE:
      * will need to implement sensor array creation. e.g.:
@@ -242,8 +252,9 @@ void Architect::designConnectome(){
         // all causes
         ElementRelationType ert = ElementRelationType::CAUSES;
         newRelAttribs[RelationAttribute::Type] = static_cast<float>(ert);
-        // age, mutability, thresh, decay??
         //// NEED TO SET LOW MUTABILITY!!!
+        newRelAttribs[RelationAttribute::Mutability] = .01f; // these are sensory links... maybe in the future mutability for them should increase.
+        // age, mutability, thresh, decay??
         // now we create as many relations as we have elements in our group to link, and set the weight to be
         // <total desired weight>/<group size>
         for (j = 0; j < curGroupSize; ++j){
@@ -274,6 +285,7 @@ void Architect::designConnectome(){
         sci_to_eei_attribs[RelationAttribute::Polarity] = 1.f;
         ert = ElementRelationType::CAUSES;
         sci_to_eei_attribs[RelationAttribute::Type] = static_cast<float>(ert);
+        sci_to_eei_attribs[RelationAttribute::Mutability] = 1.f; // very high.
         ElementRelation* sciToFear = dataStewardp->addRelation(sci_to_eei_attribs, scip, eFeip, ert);
         ElementRelation* sciToPleasure = dataStewardp->addRelation(sci_to_eei_attribs, scip, ePeip, ert);
         // use a weight of totalDesiredCSWeight/2.f... just for fun? I suppose to decrease sensitivity? might not be needed.
@@ -287,6 +299,7 @@ void Architect::designConnectome(){
         eei_to_sci_backlink_attribs[RelationAttribute::Polarity] = 1.f;
         ert = ElementRelationType::CAUSES;
         eei_to_sci_backlink_attribs[RelationAttribute::Type] = static_cast<float>(ert);
+        eei_to_sci_backlink_attribs[RelationAttribute::Mutability] = .1;// no justification for this other than it should be somewhat mutable, but shouldn't overpower the 'forward' link...
         ElementRelation* fearToSCI = dataStewardp->addRelation(eei_to_sci_backlink_attribs, eFeip, scip, ert);
         ElementRelation* pleasureToSCI = dataStewardp->addRelation(eei_to_sci_backlink_attribs, ePeip, scip, ert);
         float backlinkMultiplier = .25f;
@@ -298,6 +311,7 @@ void Architect::designConnectome(){
         // all GJ
         ert = ElementRelationType::CORRELATED;
         eei_to_e_attribs[RelationAttribute::Type] = static_cast<float>(ert);
+        eei_to_e_attribs[RelationAttribute::Mutability] = .01f; // these are pretty static, id think.
         // age, mutability, thresh, decay??
         ElementRelation* eFeiToE = dataStewardp->addRelation(eei_to_e_attribs, eFeip, connectomep->fearElements[0], ert);
         eFeiToE->setGJWeight(totalDesiredGJWeight);

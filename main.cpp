@@ -32,7 +32,7 @@ int Ort::SLOPE_SIZE = 2;
 int Ort::WEIGHT_HISTORY_SIZE = 4; // not based on anything, really -- seems better than 2, and not sure if 4 is needed (last index is staging area (it might be faster to have the history be read only, and create a different kernel arg for writing the new values in the future).
 // END DEFAULT VALUES
 
-int Ort::NUM_ITERATIONS = 100; // 300, really 600
+int Ort::NUM_ITERATIONS = 500; // 300, really 600
 
 
 
