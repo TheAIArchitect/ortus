@@ -39,7 +39,7 @@ void SensoryStimulationSteward::setStimuli(){
 
 void SensoryStimulationSteward::createCO2Generator(){
     // NOTE: this also must be a pointer, not a reference...
-    ConstantSignal* co2Signal = new ConstantSignal(co2Generation, 0, 500, 500);
+    ConstantSignal* co2Signal = new ConstantSignal(co2Generation, 0, 1000, 1000);
     // NOTE: this must be a pointer, not a reference...
     PrimitiveStimulus* co2Generator = new PrimitiveStimulus("co2Generator");
     co2Generator->setSignal(co2Signal);
@@ -55,7 +55,7 @@ void SensoryStimulationSteward::createCO2Generator(){
  */
 void SensoryStimulationSteward::createO2Consumer(){
     // NOTE: this also must be a pointer, not a reference...
-    ConstantSignal* o2NegSignal = new ConstantSignal(-o2Consumption, 0, 500, 500);
+    ConstantSignal* o2NegSignal = new ConstantSignal(-o2Consumption, 0, 1000, 1000);
     // NOTE: this must be a pointer, not a reference...
     PrimitiveStimulus* o2Consumer = new PrimitiveStimulus("o2Consumer");
     o2Consumer->setSignal(o2NegSignal);
@@ -110,7 +110,7 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         ////}
        
     }
-    if (steps >= 50 && steps <= 500 ){
+    if (steps >= 50 && steps < 500 ){
         // at 50 steps, then cycle 10 on, 40 off.
         if (inhibitO2 && fmod(steps, 50) == 10){
             inhibitO2 = false;
