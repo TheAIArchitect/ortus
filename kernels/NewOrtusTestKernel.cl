@@ -311,7 +311,7 @@ kernel void OrtusKernel(global float* elementAttributes,
         int prePrint = 0;
         if (gId == postPrint && preElement == prePrint) printf("(gId: %d) pre: %d, post: %d - csWeight: %.2f, gjWeight: %.2f => relation {type: %.1f, polarity: %.1f, age: %.2f, tresh: %.2f, decay: %.2f, mutability: %.2f}\n", gId, preElement, postElement, csWeight, gjWeight, relationType, relationPolarity, relationAge, relationThresh, relationDecay, relationMutability);
     
-        relationThresh = 5.f;
+        relationThresh = 6.f;
         //////////////////////////////////// TEMP ////////////////////////////
         //////////////////////////////////////////////////////////////////////
         if (fCompare(csWeight,0)) continue;

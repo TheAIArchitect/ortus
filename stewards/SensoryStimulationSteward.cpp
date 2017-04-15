@@ -13,7 +13,7 @@
 // and how much o2 is inhaled and co2 exhaled by lung...
 // further, the kernel threshold must be taken into account -- nothing gets passed on from CSes
 // if activation level is below threshold.
-float SensoryStimulationSteward::o2Consumption = 2.5f;//2.f;
+float SensoryStimulationSteward::o2Consumption = 3.3f;//2.f;
 float SensoryStimulationSteward::co2Generation = 3.5f; // 3
 
 SensoryStimulationSteward::SensoryStimulationSteward(DataSteward* dStewiep, Connectome* cp){
@@ -149,12 +149,12 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         float lungActivationSlope = lungActivation - prevLungAct;
         if (lungOn){
             int co2Index = cp->nameMap["sCO2"];
-            dStewiep->activationBlade->add(co2Index, 0, -5*co2Generation);// 3 //  multiplier by trial and error (need to balance threshold, co2 gen, o2 consumption)
+            dStewiep->activationBlade->add(co2Index, 0, -6*co2Generation);// 3 //  multiplier by trial and error (need to balance threshold, co2 gen, o2 consumption)
             lungOn = false;
         }
         if (prevLungAct <= 1 && lungActivation > 1){
             int o2Index = cp->nameMap["sO2"];
-            dStewiep->activationBlade->add(o2Index, 0, 6*o2Consumption); // multiplier by trial and error.
+            dStewiep->activationBlade->add(o2Index, 0, 7.5*o2Consumption); // multiplier by trial and error.
             lungOn = true;
         }
         

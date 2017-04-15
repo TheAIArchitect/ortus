@@ -111,7 +111,6 @@ void Architect::designConnectome(){
                     // doing this because otherwise bad things happen like normal breathing scares the hell out of ortus.
                     newRelp->setCSWeight(totalDesiredHardwiredEmotionCSWeight);
                     
-                    
                 }
                 else {
                     newRelp->setCSWeight(totalDesiredCSWeight);
