@@ -72,7 +72,7 @@ void Architect::designConnectome(){
     
     // these numbers are purely guesses...
     float MIN_MUTABILITY = .0001;
-    float STANDARD_MUTABILITY = .1;
+    float STANDARD_MUTABILITY = .15;
     float LOW_MUTABILITY = .001;
     float totalDesiredCSWeight = 1.f;
     float totalDesiredCSMotorToMuscleWeight = 1.f;

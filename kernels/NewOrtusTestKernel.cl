@@ -423,8 +423,12 @@ kernel void OrtusKernel(global float* elementAttributes,
             //if (preActivation < relationThresh) { // weaken
             //    weightDelta =  -1;
             //}
-            if (test1 + test2 == 2){
+            if (test1 + test2 == 2){ // Hebb's Postulate
                 weightDelta = relationMutability;
+            }
+            // and the Stentian extension to Hebb's Postulate
+            else if (((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) < .25) && preActivation > relationThresh){
+                weightDelta = -relationMutability*.25;
             }
             /*
             if (weightDelta > .01){
