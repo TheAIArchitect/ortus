@@ -37,11 +37,10 @@ public:
     int maxRows;
     int maxCols;
     int maxPages;
-    int pageSize; // currentRows * currentCols  -- this is multiplied by 'page' when accessing a 3D index in a Blade, to get the right offset for the page being requested.
+    int pageSize; // maxRows * maxCols  -- this is multiplied by 'page' when accessing a 3D index in a Blade, to get the right offset for the page being requested.
     int dimensions;
     // perhaps this stuff should be private? maybe all/most vars should be private?
     cl_mem_flags memFlags;
-    size_t currentSize;
     size_t maxSize;
     T* data;
     T* zeros;
@@ -90,7 +89,6 @@ public:
         this->maxCols = maxCols;
         this->maxPages = maxPages;
         pageSize = maxRows * maxCols;
-        updateCurrentSize(); // also updates pageSize
         maxSize = maxRows * maxCols * maxPages;
         data = new T[maxSize](); // init zeroed with '()'
         zeros = new T[maxSize]();
@@ -279,7 +277,6 @@ public:
         if(currentRows < maxRows){
             currentRows++;
         }
-        updateCurrentSize();
         return currentRows;
     }
     
@@ -288,7 +285,6 @@ public:
         if((currentRows+numRowsToAdd) <= maxRows){
             currentRows += numRowsToAdd;
         }
-        updateCurrentSize();
         return currentRows;
     }
     
@@ -297,7 +293,6 @@ public:
         if(currentCols < maxCols){
             currentCols++;
         }
-        updateCurrentSize();
         return currentCols;
     }
     
@@ -306,7 +301,6 @@ public:
         if((currentCols+numColsToAdd) <= maxCols){
             currentCols += numColsToAdd;
         }
-        updateCurrentSize();
         return currentCols;
     }
     
@@ -315,7 +309,6 @@ public:
         if(currentPages < maxPages){
             currentPages++;
         }
-        updateCurrentSize();
         return currentPages;
     }
     
@@ -333,7 +326,6 @@ public:
         else if (oldColCount == newColCount){
             currentRows = oldRowCount; // same as above
         }
-        updateCurrentSize();
     }
     
     
@@ -343,9 +335,9 @@ public:
      * NOTE: This doesn't do any error checking, other than total length. Make sure the two data arrays are of equal dimensions.
      */
     bool copyData(Blade* otherBlade){
-        if ((*otherBlade).currentSize != currentSize)
+        if ((*otherBlade).maxSize != maxSize)
             return false;
-        for (int i = 0; i < currentSize; ++i){
+        for (int i = 0; i < maxSize; ++i){
             data[i] = (*otherBlade).data[i];
         }
         return true;
@@ -364,14 +356,6 @@ public:
             printf("Error: Attempting to set kernel argument from Blade, however Blade is not a read-only scalar. This action *must* be completed using the 'CLBuffer'.\n");
             exit(43);
         }
-        /* NOTE: BELOW CASE (the general use case) *MUST* BE TAKEN CARE OF IN 'CLBuffer'!!!
-         * this->clHelper->err = clSetKernelArg(*kernel, clArgIndex, sizeof(cl_mem), &clData);
-        else if (deviceScratchPad){
-            this->clHelper->err = clSetKernelArg(*kernel, clArgIndex, currentSize*sizeof(T), NULL);// note, we don't set an address for the arg, BUT, we tell the kernel how big the __local buffer needs to be!
-        }
-        else {
-        
-        */
         this->clHelper->check_and_print_cl_err(this->clHelper->err);
     }
     
@@ -451,15 +435,6 @@ public:
             output.push_back(getv(i));
         }
         return output;
-    }
-    
-    
-    
-private:
-    
-    void updateCurrentSize(){
-        currentSize = currentRows * currentCols * currentPages;
-        pageSize = currentRows * currentCols;
     }
     
 };

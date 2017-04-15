@@ -131,23 +131,26 @@ void DataSteward::executePostRunMemoryTransfers(){
     
     fullActivationHistory.push_back(outputActivationVector);
     
+    
+    
     // now shift the weights. same idea as activations, but this is 3D.
     int k;
     historySize = Ort::WEIGHT_HISTORY_SIZE - 1;
     for (k = historySize-1; k > 0; --k){
-        for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
-            for (j = 0; j < Ort::NUM_ELEMENTS; ++j){
+        for (i = 0; i < Ort::MAX_ELEMENTS; ++i){
+            for (j = 0; j < Ort::MAX_ELEMENTS; ++j){
                 weightBladeMap[WeightAttribute::CSWeight]->set(i, j, k, weightBladeMap[WeightAttribute::CSWeight]->getv(i, j, k-1));
                 weightBladeMap[WeightAttribute::GJWeight]->set(i, j, k, weightBladeMap[WeightAttribute::GJWeight]->getv(i, j, k-1));
             }
         }
     }
-    for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
-        for (j = 0; j < Ort::NUM_ELEMENTS; ++j){
-            weightBladeMap[WeightAttribute::CSWeight]->set(i, j, 0, weightBladeMap[WeightAttribute::CSWeight]->getv(i, j, k));
-            weightBladeMap[WeightAttribute::GJWeight]->set(i, j, 0, weightBladeMap[WeightAttribute::GJWeight]->getv(i, j, k));
+    for (i = 0; i < Ort::MAX_ELEMENTS; ++i){
+        for (j = 0; j < Ort::MAX_ELEMENTS; ++j){
+            weightBladeMap[WeightAttribute::CSWeight]->set(i, j, 0, weightBladeMap[WeightAttribute::CSWeight]->getv(i, j, historySize));
+            weightBladeMap[WeightAttribute::GJWeight]->set(i, j, 0, weightBladeMap[WeightAttribute::GJWeight]->getv(i, j, historySize));
         }
     }
+    
    
 }
 
@@ -185,7 +188,6 @@ void DataSteward::updateMetadataBlades(){
     // really only need to run this for the kernel iteration pointer,
     // but for now, who cares.
     metadataBladeMap[MetadataAttribute::NumElements]->set(Ort::NUM_ELEMENTS);
-    printf("NUM ELEMENTS: %d\n",Ort::NUM_ELEMENTS);
     metadataBladeMap[MetadataAttribute::MaxElements]->set(Ort::MAX_ELEMENTS);
     metadataBladeMap[MetadataAttribute::KernelIterationNum]->set(*kernelIterationNumberp);
     metadataBladeMap[MetadataAttribute::ActivationHistorySize]->set(Ort::ACTIVATION_HISTORY_SIZE);

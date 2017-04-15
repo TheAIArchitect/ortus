@@ -191,7 +191,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     kernelArgNum = 2;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg2Stride, &kernelArg2Rows, &kernelArg2Cols, &kernelArg3Pages);
     if (gId ==1 && ka2_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka2_blades, kernelArgBladeCount);
-    //if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg2Stride, kernelArg2Rows, kernelArg2Cols, kernelArg3Pages);
+    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg2Stride, kernelArg2Rows, kernelArg2Cols, kernelArg3Pages);
     // (kernel arg 3): activations -- 1D Blades
     kernelArgNum = 3;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg3Stride, &kernelArg3Rows, &kernelArg3Cols, &kernelArg3Pages);
@@ -222,13 +222,88 @@ kernel void OrtusKernel(global float* elementAttributes,
     int USABLE_ACTIVATION_HISTORY = ACTIVATION_HISTORY_SIZE - 2;
     int UPDATED_ACTIVATION_SLOT = postActivationBaseIndex + (ACTIVATION_HISTORY_SIZE - 1);
     
-    
+    bool statsAvailable = false;
+    /** BEGIN XCORR AND SLOPE CODE HERE!!! **/
     if (KERNEL_ITERATION_NUM >= USABLE_ACTIVATION_HISTORY){ // can't compute anything with historic values until we have historic values.
         // do XCorr and Slope computations
         computeXCorr(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, gId, lId, scratchpad, xcorrScratchpadBaseIndex, NUM_XCORR_COMPUTATIONS, XCORR_SIZE);
-        computeSlope(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, gId, lId, (scratchpad + (sizeof(float)*scratchpadBladeStride)), slopeScratchpadBaseIndex, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
+        computeSlope(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, gId, lId, scratchpad, slopeScratchpadBaseIndex, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
+        statsAvailable = true;
+        // do XCorr
+        // do gap nd chem work
+        int bI = gId *ACTIVATION_HISTORY_SIZE;
+        if (gId == 3) printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",activations[bI],activations[bI+1],activations[bI+2],activations[bI+3],activations[bI+4],activations[bI+5],activations[bI+6],activations[bI+7]);
+        
+        
+        if (gId == 18){ // eFear
+            int otherElement = 17; // sH2O
+            int spiXcorrOne = xcorrScratchpadBaseIndex + (otherElement * NUM_XCORR_COMPUTATIONS);
+            int spiXcorrTwo = xcorrScratchpadBaseIndex + (otherElement * NUM_XCORR_COMPUTATIONS) + 1;
+            int spiXcorrThree = xcorrScratchpadBaseIndex + (otherElement * NUM_XCORR_COMPUTATIONS) + 2;
+            int spiXcorrFour = xcorrScratchpadBaseIndex + (otherElement * NUM_XCORR_COMPUTATIONS) + 3;
+            int spiSlopeOne = slopeScratchpadBaseIndex + (otherElement * NUM_SLOPE_COMPUTATIONS);
+            int spiSlopeTwo = slopeScratchpadBaseIndex + (otherElement * NUM_SLOPE_COMPUTATIONS) + 1;
+            int spiSlopeThree = slopeScratchpadBaseIndex + (otherElement * NUM_SLOPE_COMPUTATIONS) + 2;
+            int spiSlopeFour = slopeScratchpadBaseIndex + (otherElement * NUM_SLOPE_COMPUTATIONS) + 3;
+            float xcorrOne = scratchpad[spiXcorrOne];
+            float xcorrTwo = scratchpad[spiXcorrTwo];
+            float xcorrThree = scratchpad[spiXcorrThree];
+            float xcorrFour = scratchpad[spiXcorrFour];
+            float voltageRocOne = scratchpad[spiSlopeOne];
+            float voltageRocTwo = scratchpad[spiSlopeTwo];
+            float voltageRocThree = scratchpad[spiSlopeThree];
+            float voltageRocFour = scratchpad[spiSlopeFour];
+            printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",KERNEL_ITERATION_NUM, gId, otherElement, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
+        }
+        
+        // Now, this is where we adjust the connectome weights.
+        
+        // first rule we want to (try) to implement is:
+        // if xcorr indices 0, 1, and 2 are all greater than .75, AND, 0 < 1 < 2
+        // then, we increase weight by some rule
+        // possibly: += learningRate
+        // -------> learningRate will (very shortly) be different for every synapse, based upon age (maybe have learning rate slightly decrease each time its used to adjust the synaptic weight?
+        /*
+        float learningRate = .1;
+        for ( i = 0; i < numElements; ++i){
+            if (i == gid){
+                continue;
+            }
+            int spiOne = getScratchPadIndex(startingScratchPadOffset, i, 0, numXCorrEntries);
+            int spiTwo = getScratchPadIndex(startingScratchPadOffset, i, 1, numXCorrEntries);
+            int spiThree = getScratchPadIndex(startingScratchPadOffset, i, 2, numXCorrEntries);
+            int spiFour = getScratchPadIndex(startingScratchPadOffset, i, 3, numXCorrEntries);
+            float xcorrOne = XCorrScratchPad[spiOne];
+            float xcorrTwo = XCorrScratchPad[spiTwo];
+            float xcorrThree = XCorrScratchPad[spiThree];
+            float xcorrFour = XCorrScratchPad[spiFour];
+            float voltageRocOne = voltageRateOfChangeScratchPad[spiOne];
+            float voltageRocTwo = voltageRateOfChangeScratchPad[spiTwo];
+            float voltageRocThree = voltageRateOfChangeScratchPad[spiThree];
+            float voltageRocFour = voltageRateOfChangeScratchPad[spiFour];
+            float vrocMin = .3;
+            //float vrocMax = 2.0;
+            float xcorrMin = .95;
+            
+            //float avgVROC = (voltageRocOne+voltageRocTwo+voltageRocThree+voltageRocFour)/4.0;
+            //                if ((voltageRocOne >= vrocMin && voltageRocTwo >= vrocMin && voltageRocThree >= voltageRocFour && voltageRocFour >= vrocMin) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+            if ((voltageRocOne >= voltageRocTwo && voltageRocTwo >= voltageRocThree && voltageRocThree >= voltageRocFour && voltageRocFour >= vrocMin) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+                //if ((avgVROC >= vrocMin && avgVROC <= vrocMax) && (xcorrOne >= xcorrMin && xcorrTwo >= xcorrOne && xcorrThree >= xcorrTwo && xcorrFour >= xcorrThree)){
+                // then we increase the CHEM weight (different rule for GJ)
+                //printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",kernelIterationNum, gid, i, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
+                
+                weight_idx = getConnectomeIndex(gid, i, numElements); // ROW MAJOR
+                if (chemWeights[weight_idx] < 0){
+                    // it's inhibitory, leave it be for now (and in this section)
+                    continue;
+                }
+                chemWeights[weight_idx] = chemWeights[weight_idx] + ((max_cs_weight - chemWeights[weight_idx]) * learningRate);
+            }
+        }
+         */
+        
     }
-    /** INSERT XCORR AND SLOPE PRINTING CODE HERE!!! **/
+    /* END XCORR AND SLOPE CODE */
     
     
     
@@ -275,6 +350,7 @@ kernel void OrtusKernel(global float* elementAttributes,
         bladeIndexRelativeToKernelArg = 5;
         relationThreshIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
         relationThresh = relationAttributes[relationThreshIndex];
+        relationThresh = 6.f;
         // relationDecay
         bladeIndexRelativeToKernelArg = 6;
         relationDecayIndex = getIndex(postElement, preElement, 0, bladeIndexRelativeToKernelArg, kernelArg1Rows, kernelArg1Cols, kernelArg1Pages, kernelArg1Stride);
@@ -297,6 +373,9 @@ kernel void OrtusKernel(global float* elementAttributes,
         gjWeight = weights[gjWeightBaseIndex];
         gjHistoric1 = weights[gjWeightBaseIndex + weightPageSize]; // 2D weight histories are stacked, so, hopefully this works...
         gjHistoric2 = weights[gjWeightBaseIndex + 2*weightPageSize];
+        
+        
+        
         // kernel arg 3 (activations) -- 2D Blades
         // we already have the base indices, and as each 'timestep's activations are a 1D vector,
         // to go from the current activation ("index 0", to the 1st, 2nd, 3rd, etc. prior activations, just add the number of columns that many times.
@@ -306,15 +385,65 @@ kernel void OrtusKernel(global float* elementAttributes,
         preActivation = activations[preActivationBaseIndex];
         postActivation = activations[postActivationBaseIndex];
         
+            float weightDelta = 0;
+        
+        if (statsAvailable){
+            int spiXcorrOne = xcorrScratchpadBaseIndex + (preElement * NUM_XCORR_COMPUTATIONS);
+            int spiXcorrTwo = xcorrScratchpadBaseIndex + (preElement * NUM_XCORR_COMPUTATIONS) + 1;
+            int spiXcorrThree = xcorrScratchpadBaseIndex + (preElement * NUM_XCORR_COMPUTATIONS) + 2;
+            int spiXcorrFour = xcorrScratchpadBaseIndex + (preElement * NUM_XCORR_COMPUTATIONS) + 3;
+            int spiSlopeOne = slopeScratchpadBaseIndex + (preElement * NUM_SLOPE_COMPUTATIONS);
+            int spiSlopeTwo = slopeScratchpadBaseIndex + (preElement * NUM_SLOPE_COMPUTATIONS) + 1;
+            int spiSlopeThree = slopeScratchpadBaseIndex + (preElement * NUM_SLOPE_COMPUTATIONS) + 2;
+            int spiSlopeFour = slopeScratchpadBaseIndex + (preElement * NUM_SLOPE_COMPUTATIONS) + 3;
+            float xcorrOne = scratchpad[spiXcorrOne];
+            float xcorrTwo = scratchpad[spiXcorrTwo];
+            float xcorrThree = scratchpad[spiXcorrThree];
+            float xcorrFour = scratchpad[spiXcorrFour];
+            float voltageRocOne = scratchpad[spiSlopeOne];
+            float voltageRocTwo = scratchpad[spiSlopeTwo];
+            float voltageRocThree = scratchpad[spiSlopeThree];
+            float voltageRocFour = scratchpad[spiSlopeFour]; 
+            
+            // low mutability stops change, as does low correlation, as does low slope
+            // the 4.5 forces the average slope to be >= 1.5.
+            //if (xcorrOne == 1 || xcorrTwo == 1 || xcorrThree == 1 || xcorrFour == 1){
+            //    weightDelta = -1;
+            //}
+            int test1 = 0;
+            int test2 = 0;
+            if ((voltageRocOne + voltageRocTwo + voltageRocThree) - 4.5 > 0){
+                test1 = 1;
+            }
+            if ((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) > 3.6){ // each xcorr must be >= .9
+                test2 = 1;
+            }
+            //weightDelta = relationMutability * ((xcorrOne + xcorrTwo + xcorrThree + xcorrFour)/4.0) * ((voltageRocOne + voltageRocTwo + voltageRocThree) - 4.5) * .001; // last number is 'learning rate'.. to be changed later.
+            //if (gId ==18) printf("(gId: %d, pre: %d) weight delta: %f\n",gId, preElement, weightDelta);
+            //if (preActivation < relationThresh) { // weaken
+            //    weightDelta =  -1;
+            //}
+            if (test1 + test2 == 2){
+                weightDelta = relationMutability;
+            }
+            /*
+            if (weightDelta > .01){
+                printf("ALERT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ALERT !!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d, %d: %f\n",gId, preElement, weightDelta);
+            }
+             */
+        }
+        
         // print info to make sure we're reading everything properly / data is where we think it is
         int postPrint = 8;
         int prePrint = 0;
-        if (gId == postPrint && preElement == prePrint) printf("(gId: %d) pre: %d, post: %d - csWeight: %.2f, gjWeight: %.2f => relation {type: %.1f, polarity: %.1f, age: %.2f, tresh: %.2f, decay: %.2f, mutability: %.2f}\n", gId, preElement, postElement, csWeight, gjWeight, relationType, relationPolarity, relationAge, relationThresh, relationDecay, relationMutability);
+        //if (gId == postPrint && preElement == prePrint) printf("(gId: %d) pre: %d, post: %d - csWeight: %.2f, gjWeight: %.2f => relation {type: %.1f, polarity: %.1f, age: %.2f, tresh: %.2f, decay: %.2f, mutability: %.2f}\n", gId, preElement, postElement, csWeight, gjWeight, relationType, relationPolarity, relationAge, relationThresh, relationDecay, relationMutability);
     
-        relationThresh = 6.f;
         //////////////////////////////////// TEMP ////////////////////////////
         //////////////////////////////////////////////////////////////////////
-        if (fCompare(csWeight,0)) continue;
+        //if (fCompare(csWeight,0)) continue;
+        
+        //csWeight = csWeight + .1;
+        csWeight = csWeight + weightDelta;
         
         // use log(weight + 1)/log(max weight) -- this gives a logarithmic gain, a weight of 1 is .176, and a max weight is 1.
         // input equation here to see: https://www.desmos.com/calculator
@@ -345,7 +474,6 @@ kernel void OrtusKernel(global float* elementAttributes,
                 float actDiff = exciteRevPot - postActivation;
                 //conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/inhibitExciteRange))))) - .0134;
                 addedActivation = csWeight * conductance * actDiff;
-                //if (gId == postPrint) printf("!!!!!!!!! %f\n", addedActivation);
             }
             // PROBE
             //if (shouldProbe == 1){
@@ -367,10 +495,12 @@ kernel void OrtusKernel(global float* elementAttributes,
         
         /** NOTE: need to move GJ so they're not bound by threshold, and need to account for outgoing GJs... */
         
-        
         // NOTE: UPDATE WEIGHTS HERE
         // but, use weights[<type>WeightBaseIndex + (LAST_WEIGHT_HISTORY_INDEX * weightPageSize)]
+        weights[csWeightBaseIndex + LAST_WEIGHT_HISTORY_INDEX * weightPageSize] = csWeight;
+        weights[gjWeightBaseIndex + LAST_WEIGHT_HISTORY_INDEX * weightPageSize] = gjWeight;
     }
+    
     
     totalIncomingActivation = gjIncoming + csIncoming;
     // is this the right way to do this, to compute based upon current activation, and then at the end decay it?
@@ -503,20 +633,30 @@ float XCorrMultiply(global float* activations, int postOffset, int preOffset, in
  ... as it is now, the same thing gets computed by every instance... some things get recomputed, too, i believe. */
 void computeSlope(global float* activations, int NUM_ELEMENTS, int ACTIVATION_HISTORY_SIZE, int gId, int lId, local float* SlopeScratchpad, int slopeScratchpadBaseIndex, int NUM_SLOPE_COMPUTATIONS, int SLOPE_SIZE){
     int i, j;
-    float timeSteps = SLOPE_SIZE;
+    int timeStepsInt = SLOPE_SIZE;
+    float timeSteps = (float)timeStepsInt;
     int elementBaseIndex = -1;
     int elementLastIndex = -1;
     float rateOfChange = -1.f;
     int scratchpadIndex = -1;
+    //float temp;
     for (i = 0; i < NUM_ELEMENTS; ++i){
+        //if (gId == 3) printf("i (%d): ", i);
         for (j = 0; j < NUM_SLOPE_COMPUTATIONS; ++j){
             // use j for col because on each iteration, it will move forward by 1
             elementBaseIndex = getIndex(i, j, 0, 0, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, 0, 0); // like XCorr computation, last two don't matter
-            elementLastIndex = elementBaseIndex + timeSteps;
-            rateOfChange = (activations[elementLastIndex] - activations[elementBaseIndex])/timeSteps;
+            elementLastIndex = elementBaseIndex + timeStepsInt;
+            //temp = activations[elementLastIndex] - activations[elementBaseIndex];
+            rateOfChange = (activations[elementBaseIndex] - activations[elementLastIndex])/timeSteps;
+            //if (gId == 3) printf("%f, ", rateOfChange);
+            //if (gId == 3) printf("%f (%f), ", temp, rateOfChange);
+            //if (gId == 3) printf("(%f <-> %f), ", (activations[elementLastIndex] - activations[elementBaseIndex]));
             scratchpadIndex = slopeScratchpadBaseIndex + (i * NUM_SLOPE_COMPUTATIONS) + j;
             SlopeScratchpad[scratchpadIndex] = rateOfChange;
+            //if (gId == 3 && i == 1) printf("(%d, %d, %d - %f), ", i, j, scratchpadIndex, SlopeScratchpad[scratchpadIndex]);
+            
         }
+        //if (gId == 3) printf("\n");
     }
 }       
         

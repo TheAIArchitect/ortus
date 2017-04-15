@@ -149,10 +149,11 @@ std::string ElementRelation::toString(){
                      getAttribute(RelationAttribute::Age));
             break;
         case CAUSES: {
-            snprintf(buffer, max,"<CAUSES> (%d -> %d) (%s->%s, weight (cs, gj): (%f, %f), polarity: %.2f, age: %f, thresh: %f)",pre->id, post->id, preName.c_str(),postName.c_str(), *csWeight[0], *gjWeight[0],
+            snprintf(buffer, max,"<CAUSES> (%d -> %d) (%s->%s, weight (cs, gj): (%f, %f), polarity: %.2f, age: %f, thresh: %f, mutability: %f)",pre->id, post->id, preName.c_str(),postName.c_str(), *csWeight[0], *gjWeight[0],
                      getAttribute(RelationAttribute::Polarity),
                     getAttribute(RelationAttribute::Age),
-                     getAttribute(RelationAttribute::Thresh));
+                     getAttribute(RelationAttribute::Thresh),
+                     getAttribute(RelationAttribute::Mutability));
             break;
         }
         case DOMINATES:
