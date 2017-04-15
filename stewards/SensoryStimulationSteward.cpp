@@ -8,8 +8,13 @@
 
 #include "SensoryStimulationSteward.hpp"
 
-float SensoryStimulationSteward::o2Consumption = 2.5f;
-float SensoryStimulationSteward::co2Generation = 3.f;
+// these two values were determined by experiementation.
+// you need to balance the rate of o2 consumption with co2 generation,
+// and how much o2 is inhaled and co2 exhaled by lung...
+// further, the kernel threshold must be taken into account -- nothing gets passed on from CSes
+// if activation level is below threshold.
+float SensoryStimulationSteward::o2Consumption = 2.f;
+float SensoryStimulationSteward::co2Generation = 2.f; // 3
 
 SensoryStimulationSteward::SensoryStimulationSteward(DataSteward* dStewiep, Connectome* cp){
     this->dStewiep = dStewiep;
@@ -124,11 +129,11 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         float lungActivationSlope = lungActivation - prevLungAct;
         if (lungActivationSlope > 0 && lungActivation > 0) { // it's getting excited, give it O2
             int o2Index = cp->nameMap["sO2"];
-            dStewiep->activationBlade->add(o2Index, 0, 2.5*o2Consumption); // 4 // 3.5
+            dStewiep->activationBlade->add(o2Index, 0, 2.5*o2Consumption); // multiplier by trial and error.
         }
         else if (lungActivationSlope < 0 && lungActivation > 0) { // it's relaxing (if activation is less than 0, it's probably already fully "exhaled"
             int co2Index = cp->nameMap["sCO2"];
-            dStewiep->activationBlade->add(co2Index, 0, -3*co2Generation); // -4.5 // -4
+            dStewiep->activationBlade->add(co2Index, 0, -2*co2Generation);// 3 //  multiplier by trial and error (need to balance threshold, co2 gen, o2 consumption)
         }
         printf("LUNG activation: %f\n", lungActivation);
         

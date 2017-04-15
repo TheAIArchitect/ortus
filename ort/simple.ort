@@ -26,6 +26,8 @@ elements:
 opposes:
     sO2:
         sCO2:
+    sCO2:
+        sO2:
     mINHALE:
         mEXHALE:
     mEXHALE:

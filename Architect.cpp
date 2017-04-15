@@ -72,6 +72,8 @@ void Architect::designConnectome(){
     
     float totalDesiredCSWeight = 1.f;
     float totalDesiredCSMotorToMuscleWeight = 2.f;
+    float totalDesiredHardwiredEmotionCSWeight = 0.25f;// as it is now, i think we create a double connection... (because the SEIs connect during the combinatoric thing too..)
+    float totalDesiredAssociationPotentialInitializationCSWeight = .25f;
     float totalDesiredGJWeight = 1.f;
     int i,j;
     int causalIndex = 0;
@@ -105,7 +107,15 @@ void Architect::designConnectome(){
                 // for the time being, we can re-use the attribute map
                 ElementRelationType ert = ElementRelationType::CAUSES;
                 ElementRelation* newRelp = dataStewardp->addRelation(newRelAttribs, seip, elRelp->post, ert);
-                newRelp->setCSWeight(totalDesiredCSWeight);
+                if (elRelp->post->eType == ElementType::EMOTION){// then we want to use our 'hardwiredEmotionCSWeight'
+                    // doing this because otherwise bad things happen like normal breathing scares the hell out of ortus.
+                    newRelp->setCSWeight(totalDesiredHardwiredEmotionCSWeight);
+                    
+                    
+                }
+                else {
+                    newRelp->setCSWeight(totalDesiredCSWeight);
+                }
                 //
                 // since we added a neuron in the middle, let's check to see if there is an opposing relationship
                 // also, this is (probably) a bad way to do this. opposes should be stored in the relation above... searching for it separately seems silly (at the moment...)
@@ -268,8 +278,8 @@ void Architect::designConnectome(){
         ElementRelation* sciToFear = dataStewardp->addRelation(sci_to_eei_attribs, scip, eFeip, ert);
         ElementRelation* sciToPleasure = dataStewardp->addRelation(sci_to_eei_attribs, scip, ePeip, ert);
         // use a weight of totalDesiredCSWeight/2.f... just for fun? I suppose to decrease sensitivity? might not be needed.
-        sciToFear->setCSWeight(totalDesiredCSWeight/2.f);
-        sciToPleasure->setCSWeight(totalDesiredCSWeight/2.f);
+        sciToFear->setCSWeight(totalDesiredAssociationPotentialInitializationCSWeight);
+        sciToPleasure->setCSWeight(totalDesiredAssociationPotentialInitializationCSWeight);
         //
         // next, connect the EEIs' "backlink" to the SCI,
         // BUT IT MUST HAVE A MUCH LOWER WEIGHT!!! (not sure what it should be).. maybe totalDesiredCSWeight * .1?
@@ -280,8 +290,9 @@ void Architect::designConnectome(){
         eei_to_sci_backlink_attribs[RelationAttribute::Type] = static_cast<float>(ert);
         ElementRelation* fearToSCI = dataStewardp->addRelation(eei_to_sci_backlink_attribs, eFeip, scip, ert);
         ElementRelation* pleasureToSCI = dataStewardp->addRelation(eei_to_sci_backlink_attribs, ePeip, scip, ert);
-        fearToSCI->setCSWeight(totalDesiredCSWeight * .1);
-        pleasureToSCI->setCSWeight(totalDesiredCSWeight * .1);
+        float backlinkMultiplier = .25f;
+        fearToSCI->setCSWeight(totalDesiredAssociationPotentialInitializationCSWeight * backlinkMultiplier);
+        pleasureToSCI->setCSWeight(totalDesiredAssociationPotentialInitializationCSWeight * backlinkMultiplier);
         //
         // finally, connect each new EEI to its 'primary' emotion (index 0 in each emotions' respective element vector)
         std::unordered_map<RelationAttribute, cl_float> eei_to_e_attribs;
