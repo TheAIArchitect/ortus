@@ -14,10 +14,11 @@
 #include "StimuliSteward.hpp"
 #include "ConstantSignal.hpp"
 #include "Signal.hpp"
+#include "Connectome.hpp"
 
 class SensoryStimulationSteward {
 public:
-    SensoryStimulationSteward(DataSteward* dStewiep);
+    SensoryStimulationSteward(DataSteward* dStewiep, Connectome* cp);
     ~SensoryStimulationSteward();
     void performSensoryStimulation();
     void setStimuli();
@@ -26,7 +27,11 @@ public:
     std::vector<std::string> elementsToStimulate;
     
     DataSteward* dStewiep;
+    Connectome* cp;
     StimuliSteward* stimuliStewardp;
+    
+    static float o2Consumption;
+    static float co2Generation;
     
     
     // this function (as is noted in the source) is essentially a copy of the chemical synapse implementation in the kernel. if the kernel changes, this should too.
@@ -34,6 +39,8 @@ public:
     
 public:// the stimuli creators
     void createCO2Generator();
+    void createO2Consumer();
+    
     void createO2DeprevationAndH2OGenerator();
     void createH2OStimulator();
 };

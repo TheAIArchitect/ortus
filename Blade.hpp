@@ -264,6 +264,16 @@ public:
         return false;
     }
     
+    /* only valid for a 2D matrix. adds 'value' to the data contained at location [(row*maxCols) + col]. will return false if not a 2D matrix */
+    bool add(int row, int col, T value){
+        if (dimensions == 2 && col < currentCols && row < currentRows){
+            data[(row*maxCols) + col] += value;
+            return true;
+        }
+        return false;
+    }
+    
+    
     /* adds a row, if currentRows < maxRows, and returns new row count (will be unchanged if check fails) */
     int addRow(){
         if(currentRows < maxRows){

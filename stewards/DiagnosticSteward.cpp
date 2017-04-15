@@ -130,7 +130,9 @@ std::unordered_map<int, ortus::vectrix> DiagnosticSteward::computeXCorrBetweenVo
     // third index is xcorr computation 0 to dStewiep->numXCorrComputations-1
     // NOTE: totalXCorr[x][x][x] gives the autocorrelation for element X, which should be 1.0 (due to normalization)
     ortus::partialxcorr totalPartialXCorr(numIndices);
-    ortus::vectrix voltageHistoryVector = dStewiep->outputVoltageHistory->convertDataTo2DVector();
+    
+    //ortus::vectrix voltageHistoryVector = dStewiep->outputVoltageHistory->convertDataTo2DVector();
+    ortus::vectrix voltageHistoryVector;
     size_t numElements = voltageHistoryVector.size();
     /*
     printf("VOLTAGE OUTPUT WHAT WHAT:\n");

@@ -89,12 +89,12 @@ void ElementRelation::setAttributeDataPointers(std::unordered_map<RelationAttrib
         // entry.second is a Blade*
         if (Ort::STORE_RELATIONS_TRANSPOSED){ // SWAPS preId and PostId
             relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(postId, preId);
-            printf("(set data pointer -- transposed) %s (id: %d) ->%s (id: %d)-- attribute #%d: %f\n",preName.c_str(), preId, postName.c_str(), postId, static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
+            //printf("(set data pointer -- transposed) %s (id: %d) ->%s (id: %d)-- attribute #%d: %f\n",preName.c_str(), preId, postName.c_str(), postId, static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
         }
         else {
             relationAttributeMap[static_cast<int>(entry.first)] = entry.second->getp(preId, postId);
         //attributeTracker[static_cast<int>(entry.first)] = true;
-            printf("(set data pointer -- transposed) %s (id: %d) ->%s (id: %d)-- attribute #%d: %f\n",preName.c_str(), preId, postName.c_str(), postId, static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
+            //printf("(set data pointer -- transposed) %s (id: %d) ->%s (id: %d)-- attribute #%d: %f\n",preName.c_str(), preId, postName.c_str(), postId, static_cast<int>(entry.first),relationAttributeMap[static_cast<int>(entry.first)]);
         }
     }
 }
@@ -145,21 +145,21 @@ std::string ElementRelation::toString(){
     char buffer[max];
     switch (rtype) {
         case CORRELATED:
-            snprintf(buffer, max,"<CORRELATED> (%s->%s,  weight (cs, gj): (%.3f, %.3f), age: %f)",preName.c_str(),postName.c_str(), *csWeight[0], *gjWeight[0],
+            snprintf(buffer, max,"<CORRELATED> (%d -> %d) (%s->%s,  weight (cs, gj): (%.3f, %.3f), age: %f)",pre->id, post->id, preName.c_str(),postName.c_str(), *csWeight[0], *gjWeight[0],
                      getAttribute(RelationAttribute::Age));
             break;
         case CAUSES: {
-            snprintf(buffer, max,"<CAUSES> (%s->%s, weight (cs, gj): (%f, %f), polarity: %.2f, age: %f, thresh: %f)",preName.c_str(),postName.c_str(), *csWeight[0], *gjWeight[0],
+            snprintf(buffer, max,"<CAUSES> (%d -> %d) (%s->%s, weight (cs, gj): (%f, %f), polarity: %.2f, age: %f, thresh: %f)",pre->id, post->id, preName.c_str(),postName.c_str(), *csWeight[0], *gjWeight[0],
                      getAttribute(RelationAttribute::Polarity),
                     getAttribute(RelationAttribute::Age),
                      getAttribute(RelationAttribute::Thresh));
             break;
         }
         case DOMINATES:
-            snprintf(buffer, max,"<DOMINATES> (%s->%s)",preName.c_str(),postName.c_str());
+            snprintf(buffer, max,"<DOMINATES> (%d -> %d) (%s->%s)", pre->id, post->id, preName.c_str(),postName.c_str());
             break;
         case OPPOSES:
-            snprintf(buffer, max,"<OPPOSES> (%s->%s, thresh: %f)",preName.c_str(),postName.c_str(), getAttribute(RelationAttribute::Thresh));
+            snprintf(buffer, max,"<OPPOSES> (%d -> %d) (%s->%s, thresh: %f)", pre->id, post->id,preName.c_str(),postName.c_str(), getAttribute(RelationAttribute::Thresh));
             break;
         default:
             snprintf(buffer,max,"-- ERROR -- CAN'T PRINT ELEMENT RELATION TYPE '%d'",rtype);

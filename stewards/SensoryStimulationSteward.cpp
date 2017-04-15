@@ -8,9 +8,12 @@
 
 #include "SensoryStimulationSteward.hpp"
 
+float SensoryStimulationSteward::o2Consumption = 2.5f;
+float SensoryStimulationSteward::co2Generation = 3.f;
 
-SensoryStimulationSteward::SensoryStimulationSteward(DataSteward* dStewiep){
+SensoryStimulationSteward::SensoryStimulationSteward(DataSteward* dStewiep, Connectome* cp){
     this->dStewiep = dStewiep;
+    this->cp = cp;
     stimuliStewardp = new StimuliSteward();
 }
 
@@ -19,22 +22,41 @@ SensoryStimulationSteward::~SensoryStimulationSteward(){
 }
 
 void SensoryStimulationSteward::setStimuli(){
+    // these two are necessary for "life"
     createCO2Generator();
-    createO2DeprevationAndH2OGenerator();
-    createH2OStimulator();
-    elementsToStimulate.push_back("SCO2");
-    elementsToStimulate.push_back("SH2O");
-    elementsToStimulate.push_back("SO2");
+    createO2Consumer();
+    //createO2DeprevationAndH2OGenerator();
+    //createH2OStimulator();
+    elementsToStimulate.push_back("sO2");
+    elementsToStimulate.push_back("sCO2");
+    //elementsToStimulate.push_back("sH2O");
 }
 
 void SensoryStimulationSteward::createCO2Generator(){
     // NOTE: this also must be a pointer, not a reference...
-    ConstantSignal* co2Signal = new ConstantSignal(2.5f, 0, 500, 500);
+    ConstantSignal* co2Signal = new ConstantSignal(co2Generation, 0, 500, 500);
     // NOTE: this must be a pointer, not a reference...
     PrimitiveStimulus* co2Generator = new PrimitiveStimulus("co2Generator");
     co2Generator->setSignal(co2Signal);
-    addStimulus("SCO2", co2Generator);
+    addStimulus("sCO2", co2Generator);
 }
+
+/** humans typically use less O2 than the amount of CO2 they expel.
+ *
+ * so, if we 'use' 2 oxygen, and 'generate' 2.5 CO2, that puts the
+ * ratio of O2 used to CO2 produced at .8, which is reasonable.
+ *
+ * it's possible im thinking about this improperly...
+ */
+void SensoryStimulationSteward::createO2Consumer(){
+    // NOTE: this also must be a pointer, not a reference...
+    ConstantSignal* o2NegSignal = new ConstantSignal(-o2Consumption, 0, 500, 500);
+    // NOTE: this must be a pointer, not a reference...
+    PrimitiveStimulus* o2Consumer = new PrimitiveStimulus("o2Consumer");
+    o2Consumer->setSignal(o2NegSignal);
+    addStimulus("sO2", o2Consumer);
+}
+
 
 void SensoryStimulationSteward::createO2DeprevationAndH2OGenerator(){
     ConstantSignal* h2oSignal = new ConstantSignal(2.5f, 100, 150, 50);
@@ -60,8 +82,8 @@ void SensoryStimulationSteward::createH2OStimulator(){
 
 
 void SensoryStimulationSteward::addStimulus(std::string elementName, Stimulus* stimulusp){
-    ////int elementIndex = dStewiep->officialNameToIndexMap[elementName];
-    ////stimuliStewardp->addStimulus(elementIndex, stimulusp);
+    int elementIndex = cp->nameMap[elementName];
+    stimuliStewardp->addStimulus(elementIndex, stimulusp);
 }
 
 /** NOTE: this is a poorly implemented bit of functionality -- as it is now, we push back the element to stimulate, perhaps more than once if we don't check, and if we make ComplexStimuli, we have no way to differentitate a part of the signal that should stimulate one element from another. we should have a set of elements that are getting stimulated, and when we call that element, we get the total stimulation for that element... OR, we could run through each stimulus and add to each element's stimulation total, and then run through all the totals, and then stimulate each element that we have a non-zero total for. that might make the most sense
@@ -70,10 +92,10 @@ void SensoryStimulationSteward::performSensoryStimulation(){
     bool inhibitO2 = false;
     
     for (auto& vecIter : elementsToStimulate){
-        ////int elementIndex = dStewiep->officialNameToIndexMap[vecIter];
-        ////float finalStimulus = stimuliStewardp->getStimuliForElement(elementIndex);
+        int elementIndex = cp->nameMap[vecIter];
+        float finalStimulus = stimuliStewardp->getStimuliForElement(elementIndex);
         // ... this call should *probably* really tell DataSteward to do it... we probably shouldn't do it ourselves....
-        ////dStewiep->voltages->add(elementIndex, finalStimulus);
+        dStewiep->activationBlade->add(elementIndex, 0, finalStimulus);
         ////if (vecIter == "SO2" && finalStimulus == -1.0){
         ////    inhibitO2 = true;
         ////}
@@ -90,14 +112,27 @@ void SensoryStimulationSteward::performSensoryStimulation(){
     // since motor neurons can only *try* to get something to happen (e.g., MINHALE can activate and *try* to increase oxygen (O2)), here we will look at the activations of Motors, and stimulate the sensory neurons accordingly. This allows us to control whether or not inhaling actually increases oxygen or not -- something we couldn't do if it was 'wired' into the connectome.
     
     // inhale and o2
-    int motorIndex;
-    float motorV;
+    int lungIndex;
+    float lungActivation;
     int sensorIndex;
     float sensorV;
     float vFromMotor = 0.f;
     if (!inhibitO2){
-        ////motorIndex = dStewiep->officialNameToIndexMap["MINHALE"];
-        motorV = dStewiep->voltages->getv(motorIndex);
+        lungIndex = cp->nameMap["LUNG"];
+        lungActivation = dStewiep->activationBlade->getv(lungIndex, 0);
+        float prevLungAct = dStewiep->activationBlade->getv(lungIndex, 1);
+        float lungActivationSlope = lungActivation - prevLungAct;
+        if (lungActivationSlope > 0 && lungActivation > 0) { // it's getting excited, give it O2
+            int o2Index = cp->nameMap["sO2"];
+            dStewiep->activationBlade->add(o2Index, 0, 2.5*o2Consumption); // 4 // 3.5
+        }
+        else if (lungActivationSlope < 0 && lungActivation > 0) { // it's relaxing (if activation is less than 0, it's probably already fully "exhaled"
+            int co2Index = cp->nameMap["sCO2"];
+            dStewiep->activationBlade->add(co2Index, 0, -3*co2Generation); // -4.5 // -4
+        }
+        printf("LUNG activation: %f\n", lungActivation);
+        
+        /*
         ////sensorIndex = dStewiep->officialNameToIndexMap["SO2"];
         sensorV = dStewiep->voltages->getv(sensorIndex);
         vFromMotor = chemicalSynapseSimulator(1, motorV, sensorV);
@@ -109,6 +144,7 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         sensorV = dStewiep->voltages->getv(sensorIndex);
         vFromMotor = chemicalSynapseSimulator(-1, motorV, sensorV);
         dStewiep->voltages->add(sensorIndex, vFromMotor);
+         */
     }
  
     

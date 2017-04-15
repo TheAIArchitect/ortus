@@ -59,8 +59,8 @@ void Steward::initialize(){
     
     
     //dataStewardp->init(computeStewardp->workGroupSize);
-    //sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp);
-    //sensoryStimulationStewardp->setStimuli();
+    sensoryStimulationStewardp = new SensoryStimulationSteward(dataStewardp, dataStewardp->connectomep);
+    sensoryStimulationStewardp->setStimuli();
     diagnosticStewardp = new DiagnosticSteward(dataStewardp);
     
 }
@@ -71,6 +71,7 @@ void Steward::run(){
     /** maybe some function to give all classes all pointers -- e.g:
      -> it sets all instances of dataStewardp necessary, etc.
      */
+    dataStewardp->connectomep->cat();
     
     for (int i = 0; i < Ort::NUM_ITERATIONS; ++i){
         printf("iteration: %d starting...\n", i);
@@ -82,7 +83,7 @@ void Steward::run(){
         computeStewardp->executePostRunOperations();
         
         // Stimulate the sensors 
-        //sensoryStimulationStewardp->performSensoryStimulation();
+        sensoryStimulationStewardp->performSensoryStimulation();
         
         //diagnosticStewardp->runAdvancedDiagnostics();
         printf("iteration: %d complete...\n", i);

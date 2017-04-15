@@ -35,6 +35,7 @@ opposes:
 causes:
     +sO2:
         +mEXHALE:
+        +ePLEASURE:
     +sCO2:
         +mINHALE:
         +eFEAR: { thresh= 2 } // 1 is normal, 2 is high, for now. only abnormally high levels of CO2 cause fear

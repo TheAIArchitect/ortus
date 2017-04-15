@@ -127,7 +127,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     NUM_SLOPE_COMPUTATIONS = (int) metadata[metadataBladeNum];
     metadataBladeNum = 7;
     SLOPE_SIZE = (int) metadata[metadataBladeNum];
-    //if (gId == 1) printf("Ortus Metadata:\nNUM_ELEMENTS: %d\nMAX_ELEMENTS: %d\nKERNEL_ITERATION_NUM: %d\nACTIVATION_HISTORY_SIZE: %d\nNUM_XCORR_COMPUTATIONS: %d\nXCORR_SIZE: %d\nNUM_SLOPE_COMPUTATIONS: %d\nSLOPE_SIZE: %d\n", NUM_ELEMENTS, MAX_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, XCORR_SIZE, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
+    if (gId == 1 && KERNEL_ITERATION_NUM == 0) printf("Ortus Metadata:\nNUM_ELEMENTS: %d\nMAX_ELEMENTS: %d\nKERNEL_ITERATION_NUM: %d\nACTIVATION_HISTORY_SIZE: %d\nNUM_XCORR_COMPUTATIONS: %d\nXCORR_SIZE: %d\nNUM_SLOPE_COMPUTATIONS: %d\nSLOPE_SIZE: %d\n", NUM_ELEMENTS, MAX_ELEMENTS, KERNEL_ITERATION_NUM, ACTIVATION_HISTORY_SIZE, NUM_XCORR_COMPUTATIONS, XCORR_SIZE, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
    
     int WEIGHT_HISTORY_SIZE = 4; // 3 is for the updated values, 0, 1, and 2 are current, historic1, and historic2.
     int LAST_WEIGHT_HISTORY_INDEX = WEIGHT_HISTORY_SIZE - 1;
@@ -153,7 +153,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     bladeIndexRelativeToKernelArg = 2;
     elementThreshIndex = getIndex(0, gId, 0, bladeIndexRelativeToKernelArg, kernelArgRows, kernelArgCols, kernelArgPages, kernelArgStride);
     elementThresh = elementAttributes[elementThreshIndex];
-    printf("\telement '%d' {type: %f, affect: %f, thresh: %f}\n", gId, elementType, elementAffect, elementThresh);
+    if (KERNEL_ITERATION_NUM == 0) printf("\telement '%d' {type: %f, affect: %f, thresh: %f}\n", gId, elementType, elementAffect, elementThresh);
     
     // (kernel arg 5): scratchpads -- 2D Blades
     // => each instance's base index = local_id * (num_elements * xcorr_computations)
@@ -228,6 +228,9 @@ kernel void OrtusKernel(global float* elementAttributes,
         computeXCorr(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, gId, lId, scratchpad, xcorrScratchpadBaseIndex, NUM_XCORR_COMPUTATIONS, XCORR_SIZE);
         computeSlope(activations, NUM_ELEMENTS, ACTIVATION_HISTORY_SIZE, gId, lId, (scratchpad + (sizeof(float)*scratchpadBladeStride)), slopeScratchpadBaseIndex, NUM_SLOPE_COMPUTATIONS, SLOPE_SIZE);
     }
+    /** INSERT XCORR AND SLOPE PRINTING CODE HERE!!! **/
+    
+    
     
     // START main loop
     local float activationDecayConstant, minActivation, maxActivation, inhibitRevPot, exciteRevPot, inhibitExciteRange;
@@ -303,9 +306,13 @@ kernel void OrtusKernel(global float* elementAttributes,
         postActivation = activations[postActivationBaseIndex];
         
         // print info to make sure we're reading everything properly / data is where we think it is
-        if (gId == 1) printf("(gId: %d) pre: %d, post: %d - csWeight: %.2f, gjWeight: %.2f => relation {type: %.1f, polarity: %.1f, age: %.2f, tresh: %.2f, decay: %.2f, mutability: %.2f}\n", gId, preElement, postElement, csWeight, gjWeight, relationType, relationPolarity, relationAge, relationThresh, relationDecay, relationMutability);
+        int postPrint = 8;
+        int prePrint = 0;
+        if (gId == postPrint && preElement == prePrint) printf("(gId: %d) pre: %d, post: %d - csWeight: %.2f, gjWeight: %.2f => relation {type: %.1f, polarity: %.1f, age: %.2f, tresh: %.2f, decay: %.2f, mutability: %.2f}\n", gId, preElement, postElement, csWeight, gjWeight, relationType, relationPolarity, relationAge, relationThresh, relationDecay, relationMutability);
     
-        if (fabs(postActivation) < relationThresh){ // nothing happens if it's less than thresh.
+        relationThresh = 5.f;
+        // CHANGE THIS FOR GJ!!!!!!!
+        if (fabs(preActivation) < relationThresh){ // nothing happens if it's less than thresh.
             continue;
         }
         //////////////////////////////////// TEMP ////////////////////////////
@@ -340,6 +347,7 @@ kernel void OrtusKernel(global float* elementAttributes,
                 float actDiff = exciteRevPot - postActivation;
                 conductance = (2.0f - (2.0f/(1.0f + exp(-5.0f*(preToEq/inhibitExciteRange))))) - .0134;
                 addedActivation = csWeight * conductance * actDiff;
+                //if (gId == postPrint) printf("!!!!!!!!! %f\n", addedActivation);
             }
             // PROBE
             //if (shouldProbe == 1){
@@ -359,6 +367,7 @@ kernel void OrtusKernel(global float* elementAttributes,
             gjIncoming += addedActivation;
         }
         
+        /** NOTE: need to move GJ so they're not bound by threshold, and need to account for outgoing GJs... */
         
         
         // NOTE: UPDATE WEIGHTS HERE
@@ -381,6 +390,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     
     // now that we're finished, set the updated activation
     // by putting the new value at the end, we can use 0-ACTIVATION_HISTORY_SIZE-2 for computations
+    //if (gId == 8) printf("updatedActivation = %f\n", updatedActivation);
     activations[UPDATED_ACTIVATION_SLOT] = updatedActivation;
     
     

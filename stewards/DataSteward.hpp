@@ -55,9 +55,11 @@ public: /** NEW */
     bool connectomeNewed;
     
     
+    void init();
     void setComputeStewardPointers(ComputeSteward* computeStewardp);
     void initializeConnectome(std::string ortFile);
     void createElementsAndElementRelations();
+    void executePostRunMemoryTransfers();
     
     
     ElementInfoModule* addElement(std::string name);
@@ -106,109 +108,6 @@ public: /** NEW */
     const static std::vector<Scratchpad> SCRATCHPAD_KEYS;
     
     
-    
-    
-    /** OLD */
-public: // super important variables
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //std::unordered_map<std::string,int> officialNameToIndexMap;
-    //std::unordered_map<int,std::string> officialIndexToNameMap;
-    //std::vector<std::string*> officialNamepVector; // change name to master
-    // NOTE: the voltages Blade gets read from and written to by opencl!!!
-    Blade<float>* voltages;
-    // NOTE: the outputVotlageHistory Blade has one neuron's voltages per ROW (so, it's an n x 5 'matrix', if we store 5 previous values)
-    //NOTE2: maybe we should make 2 of these -- one for reading only, one for writing only... maybe same for voltages, idk...
-    //NOTE3: look into CL_MEM_USE_HOST_PTR and clEnqueueMapBuffer
-    Blade<float>* outputVoltageHistory;
-    Blade<float>* gaps;
-    Blade<float>* chems;
-    Blade<float>* learningRates;
-    Blade<float>* chemContrib;
-    Blade<float>* gapContrib;
-    
-    //Blade<cl_uint>* rowCount;
-    //Blade<cl_uint>* colCount;
-    Blade<cl_float>* gapNormalizer; // we divide gap weights by this
-    Blade<cl_float>* chemNormalizer; // we divide chem weights by this
-    
-    // (zero indexed): [rowCount, colCount, kernelIterationNum, voltageHistorySize ]
-    Blade<cl_int>* metadata;
-    
-    Blade<cl_float>* deviceScratchPadXCorr; // memory is local on device, so size depends upon work-group size, XCorr comptuations
-    Blade<cl_float>* deviceScratchPadVoltageROC; // memory is local on device, so size depends upon work-group size, voltage rate of change computations
-    
-
-    
-public:
-    
-    
-   
-    void init();
-    //void createElements();
-    //void createConnections();
-    void initializeData();
-    void executePostRunMemoryTransfers();
-    
-    //void growConnectome();
-    //void reconfigureConnectomeStructure();
-    //bool writeConnectome(std::string csv_name);
-    
-    //void setKernelp(cl_kernel* kp);
-    void setCLHelperp(CLHelper* clhp);
-    
-    
-    void initializeBlades();
-    //void fillInputVoltageBlade();
-    // these two might be irrelevant now, if we carry these ops out in KernelBuddy
-    // void setOpenCLKernelArgs();
-
-    void feedProbe();
-    void run(size_t global, size_t local, int numIterations = 1);
-    //void updateOutputVoltageVector();
-    //std::vector<float> getOutputVoltageVector();
-    
-    
-public:
-    //std::vector<float> outputVoltageVector;
-    std::vector<ElementInfoModule*> elements;
-    //std::vector<std::vector<std::string>> csvDat;
-    float maxGapWeight;
-    float maxChemWeight;
-    Probe* probe;
-    AblationStation ablator;
-    //std::vector<std::vector<float>> kernelVoltages; // might need to move
-    //MuscleInfoModule** mim;
-    //NeuronInfoModule** nim;
-    
-    
-  
-    
-    
-    // static and/or constant vars
-    //static double constexpr CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000;
-#warning -- NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 in Core.hpp uses NUM_ELEMS... NUM_ELEMS either must remain a multiple of 8, or we need to change how we set NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8
-    //static unsigned int NUM_ELEMENTS;
-    //static unsigned int NUM_ROWS;
-    //const static int CSV_OFFSET = 2;// first two rows and columns in both csv files are column/row information
-    //static int CSV_ROWS;
-    //static int CSV_COLS;
-    //static int CONNECTOME_ROWS;
-    //static int CONNECTOME_COLS;
-    
-    
-   
-    //static unsigned int NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8;
-    
-    
-
     
     
     

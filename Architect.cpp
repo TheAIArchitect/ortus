@@ -71,6 +71,7 @@ ElementInfoModule* Architect::createSEI(ElementInfoModule* pre, std::unordered_m
 void Architect::designConnectome(){
     
     float totalDesiredCSWeight = 1.f;
+    float totalDesiredCSMotorToMuscleWeight = 2.f;
     float totalDesiredGJWeight = 1.f;
     int i,j;
     int causalIndex = 0;
@@ -80,15 +81,14 @@ void Architect::designConnectome(){
     ElementRelation* elRelp;
     // causesRelations will grow, but we don't want to create new SEIs for the SEIs...
     // so, don't recompute size.
-    for (causalIndex = 0; causalIndex < numCausal; ++causalIndex){
+    //for (causalIndex = 0; causalIndex < numCausal; ++causalIndex){
+    for (auto entry : connectomep->causesRelations){
         // all relations in this vector should have the same pre
-        elRelVec = connectomep->causesRelations[causalIndex];
+        causalIndex = entry.first; // this is the element index
+        elRelVec = entry.second;
         elRelVecSize = elRelVec.size();
         for (j = 0; j < elRelVecSize; ++j){
             elRelp = elRelVec[j];
-            if (elRelp->preId != causalIndex){
-                printf("PreId != i -> %d != %d\n",elRelp->preId, causalIndex);
-            }
             // so, now we need to create a causal relationship between the pre and post elements.
            
             // make an inter for the sensory pre's, connect them with a CS,
@@ -128,13 +128,15 @@ void Architect::designConnectome(){
                     //// ALSO probably want to do something about the 'opposes'
             }
             else if (elRelp->pre->getEType() == ElementType::MOTOR){
-                elRelp->setCSWeight(totalDesiredCSWeight);
+                elRelp->setCSWeight(totalDesiredCSMotorToMuscleWeight);
                 elRelp->setAttribute(RelationAttribute::Polarity, elRelp->getAttribute(RelationAttribute::PostDirection));
             }
+            /* should deal with muscle stuff in the sensory stimulator...
             else if (elRelp->pre->getEType() == ElementType::MUSCLE){
                 elRelp->setCSWeight(totalDesiredCSWeight);
                 elRelp->setAttribute(RelationAttribute::Polarity, elRelp->getAttribute(RelationAttribute::PostDirection));
             }
+             */
             
         }
     }
@@ -293,7 +295,7 @@ void Architect::designConnectome(){
         ePeiToE->setGJWeight(totalDesiredGJWeight);
         // need to do the other way, too.
         ElementRelation* eToEfEI = dataStewardp->addRelation(eei_to_e_attribs, connectomep->fearElements[0], eFeip, ert);
-        ElementRelation* eToEpEI = dataStewardp->addRelation(eei_to_e_attribs, connectomep->fearElements[0], ePeip, ert);
+        ElementRelation* eToEpEI = dataStewardp->addRelation(eei_to_e_attribs, connectomep->pleasureElements[0], ePeip, ert);
         eToEfEI->setGJWeight(totalDesiredGJWeight);
         eToEpEI->setGJWeight(totalDesiredGJWeight);
         

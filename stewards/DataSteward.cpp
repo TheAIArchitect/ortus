@@ -55,19 +55,7 @@ DataSteward::DataSteward(){
 }
 
 DataSteward::~DataSteward(){
-    delete voltages;
-    delete outputVoltageHistory;
-    delete gaps;
-    delete chems;
-    delete chemContrib;
-    delete gapContrib;
-    //delete rowCount;
-    //delete colCount;
-    delete gapNormalizer;
-    delete chemNormalizer;
-    delete metadata;
-    
-    delete probe;
+    //delete probe;
     if (connectomeNewed){
         delete connectomep;
         connectomeNewed = false;
@@ -99,19 +87,6 @@ void DataSteward::createElementsAndElementRelations(){
     
 }
 
-void DataSteward::initializeData(){
-    
-    /*
-    createElements();
-    createConnections();
-    NUM_ELEMS = elements.size();
-    NUM_ROWS = NUM_ELEMS;
-    int modEight = NUM_ELEMS % 8;
-    NUM_NEURONS_CLOSEST_LARGER_MULTIPLE_OF_8 = DataSteward::NUM_ELEMS + (8 - modEight);
-    initializeBlades();
-    probe = new Probe(); // NOTE: probe not working right now. needs to be re-worked.
-     */
-}
 
 void DataSteward::executePostRunMemoryTransfers(){
     readOpenCLBuffers();
@@ -143,6 +118,7 @@ void DataSteward::executePostRunMemoryTransfers(){
     for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
         outputActivationVector[i] = activationBlade->getv(i,historySize);
     }
+    
     for (j = historySize-1; j > 0; --j){ // init j to historySize-1 to get last *history* *index*
         for (i = 0; i < Ort::NUM_ELEMENTS; ++i){
             activationBlade->set(i, j, activationBlade->getv(i,j-1));
@@ -221,6 +197,8 @@ void DataSteward::updateMetadataBlades(){
 
 void DataSteward::executePreRunOperations(){
     updateMetadataBlades();
+    
+    
     pushOpenCLBuffers();
 }
 
@@ -253,6 +231,9 @@ void DataSteward::pushOpenCLBuffers(){
     
     //printf("pushing kernel arg info...\n");
     kernelArgInfoBlade->pushDataToDevice();
+    
+    
+    
     
     //printf("all Blades pushed.\n");
 
@@ -319,8 +300,6 @@ ElementInfoModule* DataSteward::addElement(std::string name){
         }
     }
     newElement->setAttributeDataPointers(elementAttributeBladeMap);
-    // ka0 -- element attributes => cols per blade (index 4)
-    kernelArgInfoBlade->set(0, 4, Ort::NUM_ELEMENTS);
     //
     // relation attributes
     for (auto entry : relationAttributeBladeMap){
@@ -333,9 +312,6 @@ ElementInfoModule* DataSteward::addElement(std::string name){
             return NULL;
         }
     }
-    // ka1 -- relation attributes => rows and cols per blade (indices 3, 4)
-    kernelArgInfoBlade->set(1, 3, Ort::NUM_ELEMENTS);
-    kernelArgInfoBlade->set(1, 4, Ort::NUM_ELEMENTS);
     //
     // weights
     for (auto entry : weightBladeMap){
@@ -348,9 +324,6 @@ ElementInfoModule* DataSteward::addElement(std::string name){
             return NULL;
         }
     }
-    // ka2 -- weight attributes => rows and cols per blade (indices 3, 4)
-    kernelArgInfoBlade->set(2, 3, Ort::NUM_ELEMENTS);
-    kernelArgInfoBlade->set(2, 4, Ort::NUM_ELEMENTS);
     //
     // activations
     if (newRowCountTest != (updateResult = activationBlade->addRow())){
@@ -358,8 +331,6 @@ ElementInfoModule* DataSteward::addElement(std::string name){
         return NULL;
     }
     newElement->setActivationDataPointer(activationBlade);
-    // ka3 -- activations => rows per blade (index 3)
-    kernelArgInfoBlade->set(3, 4, Ort::NUM_ELEMENTS);
     //
     // scratchpads
     int newScratchpadRowCountTest = Ort::NUM_ELEMENTS * (*openCLWorkGroupSize);
@@ -368,11 +339,6 @@ ElementInfoModule* DataSteward::addElement(std::string name){
             printf("(DataSteward) Error: new row count in scratchpad blade %d not equal to %d (%d returned).\n",entry.first, newScratchpadRowCountTest, updateResult);
         }
     }
-    // ka5 -- scratchpads => rows per blade (index 3)
-    kernelArgInfoBlade->set(5, 3, calculateScratchpadRows("current"));
-    //
-    // ka4 -- metadata blades get updated just before kernel args get pushed (updateMetadataBlades)
-    
     // add new element (and its info) to the connectome data structures
     connectomep->nameMap[name] = newElement->id;
     connectomep->indexMap[newElement->id] = name;
@@ -446,7 +412,7 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     numBlades = (int) elementAttributeBladeMap.size();
     maxSize = (int) elementAttributeBladeMap[ELEMENT_KEYS[0]]->maxSize;
     rowsPerBlade = 1;
-    colsPerBlade = Ort::NUM_ELEMENTS;
+    colsPerBlade = Ort::MAX_ELEMENTS;
     pagesPerBlade = 1;
     // add the data to our temporary vector (we can't set a kernel arg out of order, and we want it at the end)
     // it also makes it easier to collect the data, in a way. 
@@ -462,8 +428,8 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // collect metadata
     numBlades = (int) relationAttributeBladeMap.size();
     maxSize = (int) relationAttributeBladeMap[RELATION_KEYS[0]]->maxSize;
-    rowsPerBlade = Ort::NUM_ELEMENTS;
-    colsPerBlade = Ort::NUM_ELEMENTS;
+    rowsPerBlade = Ort::MAX_ELEMENTS;
+    colsPerBlade = Ort::MAX_ELEMENTS;
     pagesPerBlade = 1;
     // add the data to temp vector
     tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
@@ -481,8 +447,8 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // collect metadata
     numBlades = (int) weightBladeMap.size();
     maxSize = (int) weightBladeMap[WEIGHT_KEYS[0]]->maxSize;
-    rowsPerBlade = Ort::NUM_ELEMENTS;
-    colsPerBlade = Ort::NUM_ELEMENTS;
+    rowsPerBlade = Ort::MAX_ELEMENTS;
+    colsPerBlade = Ort::MAX_ELEMENTS;
     pagesPerBlade = Ort::WEIGHT_HISTORY_SIZE;
     // add the data to temp vector
     tempKernelArgInfo.push_back(std::vector<int>{(int)currentKernelArgNum, numBlades, maxSize, rowsPerBlade, colsPerBlade, pagesPerBlade});
@@ -497,7 +463,7 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // collect metadata
     numBlades = 1;// just one blade here, no map
     maxSize = (int) activationBlade->maxSize;
-    rowsPerBlade = Ort::NUM_ELEMENTS;
+    rowsPerBlade = Ort::MAX_ELEMENTS;
     colsPerBlade = Ort::ACTIVATION_HISTORY_SIZE;
     pagesPerBlade = 1;
     // add the data to temp vector
@@ -530,14 +496,14 @@ void DataSteward::initializeKernelArgsAndBlades(CLHelper* clHelper, cl_kernel* k
     // KERNEL ARG #5!!!  Scratchpads (temporary storage of info in kernel)
     printf("Creating KernelArg # %d of %d\n",currentKernelArgNum, maxKernelIndex);
     // CHECK THIS!!!
-    size_t scratchpadRows = calculateScratchpadRows("current");
+    size_t scratchpadRows = calculateScratchpadRows("current"); // not sure if this matters...
     size_t scratchpadMaxRows = calculateScratchpadRows("max");
     KernelArg<cl_float, Scratchpad>  ka5(clHelper, kernelp, currentKernelArgNum, SCRATCHPAD_KEYS);
     scratchpadBladeMap = *(ka5.addKernelArgWithBufferAndBlades(scratchpadRows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, scratchpadMaxRows, Ort::SCRATCHPAD_COMPUTATION_SLOTS, 1, true));
     // collect metadata 
     numBlades = (int) scratchpadBladeMap.size();
     maxSize = (int) scratchpadBladeMap[SCRATCHPAD_KEYS[0]]->maxSize;
-    rowsPerBlade = (int) scratchpadRows;
+    rowsPerBlade = (int) scratchpadMaxRows;
     colsPerBlade = Ort::SCRATCHPAD_COMPUTATION_SLOTS;
     pagesPerBlade = 1;
     // add the data to temp vector
