@@ -1,9 +1,8 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  16 APR 2017 16:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  16 APR 2017 17:15
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
-**ortus_paper.tex
+**ortus_paper
 (./ortus_paper.tex
 LaTeX2e <2016/03/31>
 Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
@@ -179,11 +178,6 @@ LaTeX Font Info:    Try loading font information for OT1+pcr on input line 132.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 ) [2]
-
-Package natbib Warning: Citation `Beir2015' on page 3 undefined on input line 1
-62.
-
-
 Underfull \hbox (badness 1810) in paragraph at lines 162--163
 []\OT1/ptm/b/n/10 BR 5: \OT1/ptm/m/n/10 Specif-i-cally with re-gard to the mam-
 malian
@@ -232,13 +226,13 @@ Package natbib Warning: There were undefined citations.
 
 ] (./ortus_paper.aux) ) 
 Here is how much of TeX's memory you used:
- 1987 strings out of 493014
- 28156 string characters out of 6133351
- 97318 words of memory out of 5000000
- 5515 multiletter control sequences out of 15000+600000
+ 1989 strings out of 493014
+ 28197 string characters out of 6133351
+ 97359 words of memory out of 5000000
+ 5517 multiletter control sequences out of 15000+600000
  19796 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,10n,23p,1848b,223s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,10n,23p,1844b,223s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base
 /8r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
 10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7
@@ -250,7 +244,7 @@ sr/local/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local
 /texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2
 016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-
 dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ortus_paper.pdf (6 pages, 131508 bytes).
+Output written on ortus_paper.pdf (6 pages, 132123 bytes).
 PDF statistics:
  64 PDF objects out of 1000 (max. 8388607)
  45 compressed objects within 1 object stream
