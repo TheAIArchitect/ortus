@@ -108,9 +108,22 @@ The remaning sections of this paper outline Ortus' design and implementation, de
 
 As Ortus aims to be a virtual analogy to intelligent life, we tried to only implement functions that either had a known analogous biological process, or which may have an analogous biological implementation that is unknown, but can be defended based off anecdotal evidence. Following each Ortus design element (ODE) below, is its biological rationale (BR):
 
+% 0: O2/CO2 driven
+% 1: emotion--driven
+% 2: emotions tied to funcitonality necessary for life
+% 3: Hebbian learning (correlation), and Stentiann extension 
+% 4: Ortus builds itself based off of rules, this creates a generally applicable/extensible framework 
+% 5: emotional backlink circuit to allow prior experiences connected to an emotional state to be recalled by that emotional state, if elevated (need not cross thresh..)
+% 6: sensory consolidatory inter neurons allow association of multiple stimuli with emotion (all emotions to each SCI..)
+% 7: certain emotional states dominate others
+% 8: emotional interneurons connected via GJs to flood emotion through 'brain'
+% 9: connection weights inverse to num connections
 
+% somewhere in this section should be the diagram S => SEI => SCI
 
+% do another diagram for actual network? probably not.
 
+% diagram for respiratory circuit?
 
 1)
 
@@ -180,7 +193,8 @@ Choices are:
 2) Rather, it is probably the case that our brains aren't quite as connected as they appear to be. (e.g., within a certain radius, two places on your skin feel like the same location. visual system either might be an exception, however it is well known that visual information gets interpolated.)
 There must be some sort of neural processing shortcuts ... approximation. e.g., if you are quickly reading, you might read "New York", when the only word there was "York"
 
-There is evidence that neighboring neurons in the same ``layer'' are connected in C. elegans \citep{Azulay2016}, so it is not unreasonable to assume a certain amount of information consolidation occurs.
+There is evidence that neighboring neurons in the same ``layer'' are connected in C. elegans \citep{Azulay2016}, so it seems reasonable to assume a certain amount of information consolidation occurs.
+
 
 \citet{Schroter2017} suggests that C. elegans' neurons may have multiplexed functions, meaning that one neuron may contribute to more than one behavior. This is another possible way to decrease the number of necessary neurons in Ortus.
 
@@ -236,7 +250,7 @@ From an artificial intelligence standpoint, the
 
 Together, these afford artificial neural networks far greater flexibility and thereby power. It is possible that this will enable more nuanced behavior.
 
-From an artificial life standpoint: people are modeling networks with less complexity than this to attempt to recreate C. elegans' behavior from its connectome (cite beer.. and newer). This work pivoted from that approach, because in attempting to model the entire connectome, it became clear that there were too many unknowns. However, it also became clear that there was a certain logic to the way the neurons were wired; a notion backed up by (cite c elegans wiring works... have some in mendeley).
+From an artificial life standpoint: people are modeling networks with less complexity than this to attempt to recreate C. elegans' behavior from its connectome (cite openworm). This work pivoted from that approach, because in attempting to model the entire connectome, it became clear that there were too many unknowns. However, it also became clear that there was a certain logic to the way the neurons were wired; a notion backed up by (cite c elegans wiring works... have some in mendeley).
 
 A simple idea is, how can C. elegans <DO SOMETHING> -- point here is to describe the requirement that certain things inhibit while others excite, in order to allow a certain behavior to happen.
 
