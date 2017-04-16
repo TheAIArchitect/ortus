@@ -321,6 +321,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     float csIncoming = 0.f;
     float gjIncoming = 0.f;
     float totalIncomingActivation = 0.f;
+    float MAX_CS_WEIGHT = 2.f;
     for (preElement = 0; preElement < NUM_ELEMENTS; ++preElement){
         
         preActivationBaseIndex = preElement * kernelArg3Cols;
@@ -440,8 +441,11 @@ kernel void OrtusKernel(global float* elementAttributes,
             }
             */
             // and the Stentian extension to Hebb's Postulate
-            else if (((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) < .1) && preActivation > relationThresh){
-                weightDelta = -relationMutability;
+            if (((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) < .05) && preActivation > relationThresh && postActivation < relationThresh){
+                //weightDelta = -relationMutability*.001;
+            }
+            else if(((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) > 3.5) && preActivation > relationThresh && postActivation > relationThresh){
+                //weightDelta = relationMutability*.001;
             }
             /*
             if ((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) < -3.0){
@@ -477,6 +481,9 @@ kernel void OrtusKernel(global float* elementAttributes,
         
         //csWeight = csWeight + .1;
         csWeight = csWeight + weightDelta;
+        //if (csWeight > MAX_CS_WEIGHT){
+        //    csWeight = MAX_CS_WEIGHT;
+        //}
         
         // use log(weight + 1)/log(max weight) -- this gives a logarithmic gain, a weight of 1 is .176, and a max weight is 1.
         // input equation here to see: https://www.desmos.com/calculator
@@ -533,6 +540,13 @@ kernel void OrtusKernel(global float* elementAttributes,
         weights[csWeightBaseIndex + LAST_WEIGHT_HISTORY_INDEX * weightPageSize] = csWeight;
         weights[gjWeightBaseIndex + LAST_WEIGHT_HISTORY_INDEX * weightPageSize] = gjWeight;
     }
+    
+    /** this is for the GJ leak associated with outgoing GJs */
+    // and now we're going to read down a column to get all gjs that are *outgoing*
+    //int postToThisElement = 0;
+    //for (postToThisElement = 0; postToThisElement < NUM_ELEMENTS; ++postToThisElement){
+    //    int ptteIndex = postToThisElement gId *
+    //}
     
     
     totalIncomingActivation = gjIncoming + csIncoming;
