@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  16 APR 2017 09:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  16 APR 2017 09:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -173,7 +173,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 
 
 ]
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 121.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 134.
 
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/ot1pcr.fd
@@ -181,23 +181,23 @@ File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 
 Package natbib Warning: Citation `MNCF:wiredforbehaviors' on page 2 undefined o
-n input line 135.
+n input line 148.
 
-LaTeX Font Info:    Try loading font information for OMS+pcr on input line 141.
+LaTeX Font Info:    Try loading font information for OMS+pcr on input line 154.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omspcr.fd
 File: omspcr.fd 
 )
 LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 141.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 154.
 
-Underfull \hbox (badness 10000) in paragraph at lines 143--144
+Underfull \hbox (badness 10000) in paragraph at lines 156--157
 []\OT1/ptm/b/n/10 element: \OT1/pcr/m/n/10 eFEAR: \OMS/cmsy/m/n/10 f\OT1/pcr/m/
 n/10 type=emotion,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 144--145
+Underfull \hbox (badness 10000) in paragraph at lines 157--158
 []\OT1/ptm/b/n/10 element: \OT1/pcr/m/n/10 ePLEASURE: \OMS/cmsy/m/n/10 f\OT1/pc
 r/m/n/10 type=emotion,
  []
@@ -205,18 +205,18 @@ r/m/n/10 type=emotion,
 [2]
 
 Package natbib Warning: Citation `Beir2015' on page 3 undefined on input line 1
-61.
+74.
 
 [3]
 
 Package natbib Warning: Citation `wiredforbehaviors' on page 4 undefined on inp
-ut line 197.
+ut line 211.
 
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 199.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 213.
 
 Package natbib Warning: Citation `Johansens2014' on page 4 undefined on input l
-ine 223.
+ine 237.
 
 (./ortus_paper.bbl [4]
 Missing character: There is no â in font ptmr7t!
@@ -243,7 +243,7 @@ Package natbib Warning: There were undefined citations.
 Here is how much of TeX's memory you used:
  1983 strings out of 493014
  28105 string characters out of 6133351
- 95255 words of memory out of 5000000
+ 94255 words of memory out of 5000000
  5511 multiletter control sequences out of 15000+600000
  19796 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
