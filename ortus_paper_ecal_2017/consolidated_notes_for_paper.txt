@@ -1,0 +1,39 @@
+big picture:
+
+with the ort files, one should be able to specify a list of behavioral desires/interactions, have ortus design its connectome on its own, similar to a "vritual DNA" instruction set (w.e), and then as it runs and ages, ortus can learn by associating multiple stimuli with each other, and with specific emotional states. potential applications for this are a more nuanced AI -- with the goal to approach human abilities.
+
+ortus intrinstically knows something is bad. of course the question is then, how do we know what is inherently good or bad, but the feels bro
+
+The authors would like to emphatically note that while this is a neural network, it is 
+
+
+ \textbf{This another premise of Ortus:} The idea of ``emotions'', as we know them, are simply th    e rise and fall in activation of different groups of neurons, tied to very fundamental behaviors    . The concepts of ``good'' and ``bad'' sensations or emotions only carry meaning to us because o    f their associations to circuits that are either desirable or undesirable from a longevity/survi    val perspective.
+119
+
+textbf{Ortus basic premise:} entire system works similarly to the CO2 and O2 regulation mechani    sm.
+112 Aim is to keep a balance. E.g., if IFEAR goes up, this should inherently be bad.
+113 Could be that the reason for this is that it is tied to a very basic system, like breathing.
+114 So, if system is wired such that as INO2 increases, IFEAR increases, and an increase in INO2 cau    ses an intake of O2, which decreases INO2; thus, the system \textit{inherently} wants to minimiz    e INO2 and IFEAR. Everything should build off of and/or expand this basic idea/structure.
+
+
+127 \point rodent and human brain have same basic structure, it seems. things tend to be organized f    airly similarly, relative to each other. \ref{MNCF:wiredforbehaviors}
+128 \point \ref{MNCF:wiredforbehaviors} are discussing rodent experiments that cause lesions to regi    ons of the brain, so ortus should be able to function by using single neurons to represent group    s of neurons, while there isn't a requirement for greater behavioral nuance.
+
+
+155 \point Article talking about synaptic strength scaling with connections (more or less inversely     proportional), seems to further suggest that it's alright to model regions of the brain with one     or a few neurons, and expand as necessary for more nuanced behavior.
+
+
+
+
+\point as you do something more and more, the ``sensory'' impact of it decreases, but the pathways that deal with learning the behavior get stronger.
+163     \subpoint there seems to be an inverse relationship here. The more novel a stimulus, the more quickly connections are formed, and as the stimulus is repeated and connection strengths grow, there is generally less action (due to a less excited/activated neuron
+164         \subsubpoint should have a large reaction to new stimuli, and that should decrease as ``novelty'' wears down
+165             \supersubpoint can possibly just be implemented by strength of synapse, which would require sensory (or other sort of) habituation, so that really strong synapses don't create an unstable situation
+
+
+
+\cite{MNCF:wiredforbehaviors}
+\cite{Kutsarova2016}}
+\cite{Gore2015}
+\cite{Johansens2014}
+

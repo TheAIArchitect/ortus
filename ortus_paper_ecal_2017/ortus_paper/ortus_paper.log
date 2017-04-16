@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  16 APR 2017 05:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  16 APR 2017 09:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -173,32 +173,79 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 
 
 ]
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 137.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 121.
 
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [2]
-(./ortus_paper.bbl
-Underfull \hbox (badness 5161) in paragraph at lines 4--9
+)
+
+Package natbib Warning: Citation `MNCF:wiredforbehaviors' on page 2 undefined o
+n input line 135.
+
+LaTeX Font Info:    Try loading font information for OMS+pcr on input line 141.
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omspcr.fd
+File: omspcr.fd 
+)
+LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 141.
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--144
+[]\OT1/ptm/b/n/10 element: \OT1/pcr/m/n/10 eFEAR: \OMS/cmsy/m/n/10 f\OT1/pcr/m/
+n/10 type=emotion,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 144--145
+[]\OT1/ptm/b/n/10 element: \OT1/pcr/m/n/10 ePLEASURE: \OMS/cmsy/m/n/10 f\OT1/pc
+r/m/n/10 type=emotion,
+ []
+
+[2]
+
+Package natbib Warning: Citation `Beir2015' on page 3 undefined on input line 1
+61.
+
+[3]
+
+Package natbib Warning: Citation `wiredforbehaviors' on page 4 undefined on inp
+ut line 197.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 199.
+
+Package natbib Warning: Citation `Johansens2014' on page 4 undefined on input l
+ine 223.
+
+(./ortus_paper.bbl [4]
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+
+Underfull \hbox (badness 5161) in paragraph at lines 23--28
 []\OT1/ptm/m/n/9 Bowren, J., Pugh, J., and Stan-ley, K. (2016).  Fully
  []
 
 
-Underfull \hbox (badness 1715) in paragraph at lines 4--9
+Underfull \hbox (badness 1715) in paragraph at lines 23--28
 \OT1/ptm/m/it/9 ceed-ings of the Ar-ti-fi-cial Life Con-fer-ence 2016\OT1/ptm/m
 /n/9 , (Al-ife
  []
 
-[3]) [4
+)
+
+Package natbib Warning: There were undefined citations.
+
+[5
 
 ] (./ortus_paper.aux) ) 
 Here is how much of TeX's memory you used:
- 1926 strings out of 493014
- 27096 string characters out of 6133351
- 94924 words of memory out of 5000000
- 5458 multiletter control sequences out of 15000+600000
- 17663 words of font info for 33 fonts, out of 8000000 for 9000
+ 1983 strings out of 493014
+ 28105 string characters out of 6133351
+ 95255 words of memory out of 5000000
+ 5511 multiletter control sequences out of 15000+600000
+ 19796 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  37i,10n,23p,982b,223s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base
@@ -207,14 +254,15 @@ Here is how much of TeX's memory you used:
 .pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.p
 fb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb>
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
-/usr/local/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/loc
-al/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive
-/2016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texm
-f-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ortus_paper.pdf (4 pages, 105318 bytes).
+/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></u
+sr/local/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local
+/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2
+016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-
+dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on ortus_paper.pdf (5 pages, 129663 bytes).
 PDF statistics:
- 54 PDF objects out of 1000 (max. 8388607)
- 38 compressed objects within 1 object stream
+ 61 PDF objects out of 1000 (max. 8388607)
+ 43 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
