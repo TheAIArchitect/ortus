@@ -5,54 +5,53 @@ The style file: apalike.bst
 Database file #1: ortus_paper.bib
 Warning--entry type for "darpa" isn't style-file defined
 --line 1 of file ortus_paper.bib
-Warning--I didn't find a database entry for "MNCF:wiredforbehaviors"
 Warning--I didn't find a database entry for "Beir2015"
-Warning--I didn't find a database entry for "wiredforbehaviors"
 Warning--I didn't find a database entry for "Johansens2014"
 Warning--to sort, need author or key in Wicks1996
 Warning--empty author in Wicks1996
 Warning--empty journal in Wicks1996
 Warning--there's a number but no volume in Bowren2016
 Warning--empty journal in Sinapayen2016
-You've used 16 entries,
+Warning--empty publisher in Weiner2015
+You've used 18 entries,
             1935 wiz_defined-function locations,
-            588 strings with 7177 characters,
-and the built_in function-call counts, 6856 in all, are:
-= -- 663
-> -- 313
+            595 strings with 7526 characters,
+and the built_in function-call counts, 7812 in all, are:
+= -- 741
+> -- 389
 < -- 6
-+ -- 108
-- -- 108
-* -- 648
-:= -- 1190
-add.period$ -- 47
-call.type$ -- 16
-change.case$ -- 134
-chr.to.int$ -- 16
-cite$ -- 22
-duplicate$ -- 225
-empty$ -- 462
-format.name$ -- 129
-if$ -- 1306
++ -- 136
+- -- 136
+* -- 745
+:= -- 1367
+add.period$ -- 52
+call.type$ -- 18
+change.case$ -- 157
+chr.to.int$ -- 18
+cite$ -- 25
+duplicate$ -- 253
+empty$ -- 510
+format.name$ -- 159
+if$ -- 1479
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 15
-newline$ -- 82
-num.names$ -- 45
-pop$ -- 107
+missing$ -- 18
+newline$ -- 91
+num.names$ -- 51
+pop$ -- 133
 preamble$ -- 1
-purify$ -- 134
+purify$ -- 158
 quote$ -- 0
-skip$ -- 166
+skip$ -- 185
 stack$ -- 0
-substring$ -- 532
-swap$ -- 18
+substring$ -- 562
+swap$ -- 20
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 96
-warning$ -- 5
-while$ -- 56
+type$ -- 106
+warning$ -- 6
+while$ -- 61
 width$ -- 0
-write$ -- 204
-(There were 10 warnings)
+write$ -- 227
+(There were 9 warnings)
