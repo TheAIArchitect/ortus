@@ -72,7 +72,7 @@ void Architect::designConnectome(){
     
     // these numbers are purely guesses...
     float MIN_MUTABILITY = .0001;
-    float STANDARD_MUTABILITY = .15;
+    float STANDARD_MUTABILITY = .1;
     float LOW_MUTABILITY = .001;
     float totalDesiredCSWeight = 1.f;
     float totalDesiredCSMotorToMuscleWeight = 1.f;
@@ -143,7 +143,10 @@ void Architect::designConnectome(){
             else if (elRelp->pre->getEType() == ElementType::MOTOR){
                 elRelp->setCSWeight(totalDesiredCSMotorToMuscleWeight);
                 elRelp->setAttribute(RelationAttribute::Polarity, elRelp->getAttribute(RelationAttribute::PostDirection));
+                elRelp->setAttribute(RelationAttribute::Mutability, MIN_MUTABILITY);
             }
+            
+           
             /* should deal with muscle stuff in the sensory stimulator...
             else if (elRelp->pre->getEType() == ElementType::MUSCLE){
                 elRelp->setCSWeight(totalDesiredCSWeight);
@@ -306,11 +309,11 @@ void Architect::designConnectome(){
         eei_to_sci_backlink_attribs[RelationAttribute::Mutability] = LOW_MUTABILITY;// no justification for this other than it should be somewhat mutable, but shouldn't overpower the 'forward' link...
         ElementRelation* fearToSCI = dataStewardp->addRelation(eei_to_sci_backlink_attribs, eFeip, scip, ert);
         ElementRelation* pleasureToSCI = dataStewardp->addRelation(eei_to_sci_backlink_attribs, ePeip, scip, ert);
-        float backlinkMultiplier = .25f;
+        float backlinkMultiplier = .5f;
         fearToSCI->setCSWeight(totalDesiredAssociationPotentialInitializationCSWeight * backlinkMultiplier);
         pleasureToSCI->setCSWeight(totalDesiredAssociationPotentialInitializationCSWeight * backlinkMultiplier);
         //
-        // finally, connect each new EEI to its 'primary' emotion (index 0 in each emotions' respective element vector)
+        // then, connect each new EEI to its 'primary' emotion (index 0 in each emotions' respective element vector)
         std::unordered_map<RelationAttribute, cl_float> eei_to_e_attribs;
         // all GJ
         ert = ElementRelationType::CORRELATED;
@@ -326,7 +329,23 @@ void Architect::designConnectome(){
         ElementRelation* eToEpEI = dataStewardp->addRelation(eei_to_e_attribs, connectomep->pleasureElements[0], ePeip, ert);
         eToEfEI->setGJWeight(totalDesiredGJWeight);
         eToEpEI->setGJWeight(totalDesiredGJWeight);
+        //
+        // finally, since certain emotional states 'dominate' others (HOWEVER, IN THE CONNECTOME, CURRENTLY, eFEAR SIMPLY CAUSES ePLEASURE TO DECREASE!!!
+        //
+        // <also, this below section of code assumes there's a causal between fear and pleasure... this should be specified in the connectome,
+        // but im out of time... it's fine though, because there are only 2 emotions, and the connectome does actually specify this relationship.
+        //
+        // note that this causes the 'sub-emotion' (EEI) neurons for each SCI to connect. then the GJs from the 'central' neuron for that emotion
         
+        std::unordered_map<RelationAttribute, cl_float> eei_to_eei_attribs;
+        ert = ElementRelationType::CORRELATED;
+        eei_to_e_attribs[RelationAttribute::Type] = static_cast<float>(ert);
+        eei_to_e_attribs[RelationAttribute::Mutability] = MIN_MUTABILITY; // these are also pretty static, id think.
+        // this is kind of cheating, just because the actual processing for this isn't in place. it's assumed that we're using fear and pleasure, and fear inhibits pleasure, so we set polarity to -1.
+        float CHEAT_POLARITY_FIX_THIS_IMMEDIATELY = -1.f;
+        ElementRelation* eFeip_ePeip = dataStewardp->addRelation(eei_to_eei_attribs, eFeip, ePeip, ert);
+        eFeip_ePeip->setAttribute(RelationAttribute::Polarity, CHEAT_POLARITY_FIX_THIS_IMMEDIATELY);
+        eFeip_ePeip->setCSWeight(.15);
     }
     
     

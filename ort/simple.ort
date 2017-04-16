@@ -4,7 +4,7 @@ MAX_ELEMENTS = 100 // need to know this for Blade creation
 XCORR_COMPUTATIONS = 4  // number of xcorr computations
 XCORR_SIZE = 4 // number of values used to compute xcorr
 SLOPE_COMPUTATIONS = 4 // number of slope computations
-SLOPE_SIZE = 4 // number of values used to compute slope
+SLOPE_SIZE = 2 // number of values used to compute slope
 // need at least XCORR_SIZE + (XCORR_SIZE-1) activation history size, 
 // same idea for slope.
 ACTIVATION_HISTORY_SIZE = 8 // nth index will be for current activation (staging area), so history is this number -1 
@@ -49,6 +49,8 @@ causes:
         +sO2:
     -LUNG:
         -sCO2:
+    +eFEAR:
+        -ePLEASURE:
     // "attempting" to breath, and not being able to, should cause fear too.
 dominates:
     //+sO2:

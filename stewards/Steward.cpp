@@ -74,7 +74,7 @@ void Steward::run(){
     dataStewardp->connectomep->cat();
     
     for (int i = 0; i < Ort::NUM_ITERATIONS; ++i){
-        //printf("iteration: %d starting...\n", i);
+        printf("iteration: %d starting...\n", i);
         computeStewardp->executePreRunOperations();
         
         computeStewardp->run();

@@ -191,7 +191,7 @@ kernel void OrtusKernel(global float* elementAttributes,
     kernelArgNum = 2;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg2Stride, &kernelArg2Rows, &kernelArg2Cols, &kernelArg3Pages);
     if (gId ==1 && ka2_blades != kernelArgBladeCount) printf("Error: incorrect blade count for kernel arg %d (should be %d, actually is %d)\n", kernelArgNum, ka2_blades, kernelArgBladeCount);
-    if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg2Stride, kernelArg2Rows, kernelArg2Cols, kernelArg3Pages);
+    //if (gId == 1) printKernelArgInfo(kernelArgNum, kernelArgBladeCount, kernelArg2Stride, kernelArg2Rows, kernelArg2Cols, kernelArg3Pages);
     // (kernel arg 3): activations -- 1D Blades
     kernelArgNum = 3;
     getKernelArgInfo(kernelArgInfo, kernelArgNum, &kernelArgBladeCount, &kernelArg3Stride, &kernelArg3Rows, &kernelArg3Cols, &kernelArg3Pages);
@@ -232,7 +232,7 @@ kernel void OrtusKernel(global float* elementAttributes,
         // do XCorr
         // do gap nd chem work
         int bI = gId *ACTIVATION_HISTORY_SIZE;
-        if (gId == 3) printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",activations[bI],activations[bI+1],activations[bI+2],activations[bI+3],activations[bI+4],activations[bI+5],activations[bI+6],activations[bI+7]);
+        //if (gId == 3) printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f\n",activations[bI],activations[bI+1],activations[bI+2],activations[bI+3],activations[bI+4],activations[bI+5],activations[bI+6],activations[bI+7]);
         
         
         if (gId == 18){ // eFear
@@ -253,7 +253,7 @@ kernel void OrtusKernel(global float* elementAttributes,
             float voltageRocTwo = scratchpad[spiSlopeTwo];
             float voltageRocThree = scratchpad[spiSlopeThree];
             float voltageRocFour = scratchpad[spiSlopeFour];
-            printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",KERNEL_ITERATION_NUM, gId, otherElement, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
+            //printf("kernel iteration %d: elementIDs %d vs. %d... XCorr: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f) VROC: (0: %.2f, 1: %.2f, 2: %.2f, 3: %.2f)\n",KERNEL_ITERATION_NUM, gId, otherElement, xcorrOne, xcorrTwo, xcorrThree, xcorrFour, voltageRocOne, voltageRocTwo, voltageRocThree, voltageRocFour);
         }
         
         // Now, this is where we adjust the connectome weights.
@@ -410,31 +410,60 @@ kernel void OrtusKernel(global float* elementAttributes,
             //if (xcorrOne == 1 || xcorrTwo == 1 || xcorrThree == 1 || xcorrFour == 1){
             //    weightDelta = -1;
             //}
-            int test1 = 0;
-            int test2 = 0;
+            /*
+            bool test1 = false;
+            bool test2 = false;
+            bool test3 = false;
             if ((voltageRocOne + voltageRocTwo + voltageRocThree) - 4.5 > 0){
-                test1 = 1;
+                test1 = true;
             }
             if ((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) > 3.6){ // each xcorr must be >= .9
-                test2 = 1;
+                test2 = true;
             }
+            if ((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) > 3.8){
+                test3 = true;
+            }
+             */
             //weightDelta = relationMutability * ((xcorrOne + xcorrTwo + xcorrThree + xcorrFour)/4.0) * ((voltageRocOne + voltageRocTwo + voltageRocThree) - 4.5) * .001; // last number is 'learning rate'.. to be changed later.
             //if (gId ==18) printf("(gId: %d, pre: %d) weight delta: %f\n",gId, preElement, weightDelta);
             //if (preActivation < relationThresh) { // weaken
             //    weightDelta =  -1;
             //}
-            if (test1 + test2 == 2){ // Hebb's Postulate
-                weightDelta = relationMutability;
+            
+            // do something to limit this
+            /*
+            if (test1 + test2 == 2 && preActivation > relationThresh){ // Hebb's Postulate
+                weightDelta = relationMutability *1.25;
             }
+            else if (test3 == 1 && preActivation > relationThresh){// two constant signals
+                weightDelta = relationMutability*.5;
+            }
+            */
             // and the Stentian extension to Hebb's Postulate
-            else if (((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) < .25) && preActivation > relationThresh){
-                weightDelta = -relationMutability*.25;
+            else if (((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) < .1) && preActivation > relationThresh){
+                weightDelta = -relationMutability;
             }
             /*
-            if (weightDelta > .01){
-                printf("ALERT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ALERT !!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d, %d: %f\n",gId, preElement, weightDelta);
+            if ((xcorrOne + xcorrTwo + xcorrThree + xcorrFour) < -3.0){
+                weightDelta = -relationMutability;
             }
              */
+
+            /////////// (values below experimentally determined)
+            // sum of xcorr >= 3.92 (so, avg must be at least a .98)
+            // AND
+            // sum of abs() of slopes of length (2) must be less than .08 (so, avg must be no more than +/-.02)
+            // AND
+            // both must be above activation threshold.
+            //
+            // we're basically looking for pairs of flat lines, *above* the 'activation threshold'
+            float sumXCorrs = (xcorrOne + xcorrTwo + xcorrThree + xcorrFour);
+            float sumROCs = (voltageRocOne + voltageRocTwo + voltageRocThree + voltageRocFour);
+            if (sumXCorrs >= 3.98 && fabs(sumROCs)  < .02 && preActivation > relationThresh && postActivation > relationThresh){
+                // then we can strengthen the synapse.
+                weightDelta = relationMutability;
+            }
+            
         }
         
         // print info to make sure we're reading everything properly / data is where we think it is

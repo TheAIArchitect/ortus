@@ -110,17 +110,17 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         ////}
        
     }
-    if (steps >= 50 && steps < 500 ){
+    if (steps >= 100 && steps < 500 ){
         // at 50 steps, then cycle 10 on, 40 off.
-        if (inhibitO2 && fmod(steps, 50) == 10){
+        if (inhibitO2 && fmod(steps, 100) == 10){
             inhibitO2 = false;
             int co2Index = cp->nameMap["sCO2"];
-            dStewiep->activationBlade->add(co2Index, 0, -6*co2Generation);// 3 //  multiplier by trial and error (need to balance threshold, co2 gen, o2 consumption)
+            dStewiep->activationBlade->add(co2Index, 0, -6.5*co2Generation);// 3 //  multiplier by trial and error (need to balance threshold, co2 gen, o2 consumption)
             int o2Index = cp->nameMap["sO2"];
-            dStewiep->activationBlade->add(o2Index, 0, 7.5*o2Consumption); // multiplier by trial and error.
+            dStewiep->activationBlade->add(o2Index, 0, 7*o2Consumption); // multiplier by trial and error.
          
         }
-        else if (!inhibitO2 && fmod(steps, 50) == 0){
+        else if (!inhibitO2 && fmod(steps, 100) == 0){
             inhibitO2 = true;
         }
         
@@ -174,7 +174,7 @@ void SensoryStimulationSteward::performSensoryStimulation(){
         }
         
        
-        printf("LUNG activation: %f\n", lungActivation);
+        //printf("LUNG activation: %f\n", lungActivation);
         
         /*
         ////sensorIndex = dStewiep->officialNameToIndexMap["SO2"];
