@@ -463,9 +463,9 @@ kernel void OrtusKernel(global float* elementAttributes,
             // we're basically looking for pairs of flat lines, *above* the 'activation threshold'
             float sumXCorrs = (xcorrOne + xcorrTwo + xcorrThree + xcorrFour);
             float sumROCs = (voltageRocOne + voltageRocTwo + voltageRocThree + voltageRocFour);
-            if (sumXCorrs >= 3.98 && fabs(sumROCs)  < .02 && preActivation > relationThresh && postActivation > relationThresh){
+            if (sumXCorrs >= 3.92 && fabs(sumROCs)  < .02 && preActivation > relationThresh && postActivation > relationThresh){
                 // then we can strengthen the synapse.
-                weightDelta = relationMutability;
+                weightDelta = relationMutability * .25;
             }
             
         }
@@ -543,16 +543,22 @@ kernel void OrtusKernel(global float* elementAttributes,
     
     /** this is for the GJ leak associated with outgoing GJs */
     // and now we're going to read down a column to get all gjs that are *outgoing*
-    //int postToThisElement = 0;
-    //for (postToThisElement = 0; postToThisElement < NUM_ELEMENTS; ++postToThisElement){
-    //    int ptteIndex = postToThisElement gId *
-    //}
+    int postToThisElement = 0;
+    float sumOfOutgoingGJWeights = 0;
+    gjWeightBaseIndex = getIndex(postToThisElement, gId, 0, bladeIndexRelativeToKernelArg, kernelArg2Rows, kernelArg2Cols, kernelArg2Pages, kernelArg2Stride);
+    for (postToThisElement = 0; postToThisElement < NUM_ELEMENTS; ++postToThisElement){
+        sumOfOutgoingGJWeights = weights[gjWeightBaseIndex + kernelArg2Cols]; // collect outgoing GJ weights
+    }
+    int outgoingGJActivation = sumOfOutgoingGJWeights*.1*postActivation;// .1 is a very wild guess.. really, it depends upon the 'posts' activation (see above gj rule)
+    // .1 kind of comes from the idea that there's probably not a huge difference in potentials, and it'll be no more than half of the difference (think water tanks)
+    
+    
     
     
     totalIncomingActivation = gjIncoming + csIncoming;
     // is this the right way to do this, to compute based upon current activation, and then at the end decay it?
     // maybe we should decay it earlier on, prior to computing...
-    float activationDecay = activationDecayConstant * postActivation;
+    float activationDecay = activationDecayConstant * postActivation - outgoingGJActivation;
     float updatedActivation = (postActivation - activationDecay) + totalIncomingActivation;
     
     // keep our activation within range... (not necessarily biologially unrealistic)

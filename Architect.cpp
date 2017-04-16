@@ -78,7 +78,7 @@ void Architect::designConnectome(){
     float totalDesiredCSMotorToMuscleWeight = 1.f;
     float totalDesiredHardwiredEmotionCSWeight = 0.25f;// as it is now, i think we create a double connection... (because the SEIs connect during the combinatoric thing too..)
     float totalDesiredAssociationPotentialInitializationCSWeight = .25f;
-    float totalDesiredGJWeight = .05f;
+    float totalDesiredGJWeight = .1f;
     int i,j;
     int causalIndex = 0;
     int numCausal = connectomep->causesRelations.size();
@@ -338,14 +338,14 @@ void Architect::designConnectome(){
         // note that this causes the 'sub-emotion' (EEI) neurons for each SCI to connect. then the GJs from the 'central' neuron for that emotion
         
         std::unordered_map<RelationAttribute, cl_float> eei_to_eei_attribs;
-        ert = ElementRelationType::CORRELATED;
+        ert = ElementRelationType::CAUSES;
         eei_to_e_attribs[RelationAttribute::Type] = static_cast<float>(ert);
         eei_to_e_attribs[RelationAttribute::Mutability] = MIN_MUTABILITY; // these are also pretty static, id think.
         // this is kind of cheating, just because the actual processing for this isn't in place. it's assumed that we're using fear and pleasure, and fear inhibits pleasure, so we set polarity to -1.
         float CHEAT_POLARITY_FIX_THIS_IMMEDIATELY = -1.f;
         ElementRelation* eFeip_ePeip = dataStewardp->addRelation(eei_to_eei_attribs, eFeip, ePeip, ert);
         eFeip_ePeip->setAttribute(RelationAttribute::Polarity, CHEAT_POLARITY_FIX_THIS_IMMEDIATELY);
-        eFeip_ePeip->setCSWeight(.15);
+        eFeip_ePeip->setCSWeight(.35f);
     }
     
     
