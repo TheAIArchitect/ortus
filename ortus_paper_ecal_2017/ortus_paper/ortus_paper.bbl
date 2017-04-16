@@ -1,0 +1,37 @@
+\begin{thebibliography}{}
+
+\bibitem[Bowren et~al., 2016]{Bowren2016}
+Bowren, J., Pugh, J., and Stanley, K. (2016).
+\newblock {Fully Autonomous Real-Time Autoencoder-Augmented Hebbian Learning
+  through the Collection of Novel Experiences}.
+\newblock {\em Proceedings of the Artificial Life Conference 2016}, (Alife
+  15):382--389.
+
+\bibitem[DARPA, 2017]{darpa}
+DARPA (2017).
+\newblock Toward machines that improve with experience.
+
+\bibitem[Izquierdo and Beer, 2016]{Izquierdo2016}
+Izquierdo, E.~J. and Beer, R.~D. (2016).
+\newblock {The whole worm: Brain-body-environment models of C. elegans}.
+\newblock {\em Current Opinion in Neurobiology}, 40:23--30.
+
+\bibitem[Marblestone et~al., 2016]{Marblestone2016}
+Marblestone, A.~H., Wayne, G., and Kording, K.~P. (2016).
+\newblock {Towards an integration of deep learning and neuroscience}.
+\newblock {\em bioRxiv}, 10(September):1--61.
+
+\bibitem[Roper et~al., 2017]{Roper2017}
+Roper, M., Fernando, C., and Chittka, L. (2017).
+\newblock {Insect Bio-inspired Neural Network Provides New Evidence on How
+  Simple Feature Detectors Can Enable Complex Visual Generalization and
+  Stimulus Location Invariance in the Miniature Brain of Honeybees}.
+\newblock {\em PLOS Computational Biology}, 13(2):e1005333.
+
+\bibitem[Sinapayen et~al., 2016]{Sinapayen2016}
+Sinapayen, L., Masumori, A., and Ikegami, T. (2016).
+\newblock {Learning by Stimulation Avoidance: A Principle to Control Spiking
+  Neural Networks Dynamics}.
+\newblock page~17.
+
+\end{thebibliography}
