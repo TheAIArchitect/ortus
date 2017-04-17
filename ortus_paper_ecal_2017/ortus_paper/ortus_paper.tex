@@ -82,7 +82,7 @@ awm32@cs.drexel.edu} % email of corresponding author
 \section{Introduction}
 
 
-While much work has been done to develop artificial intelligence (AI) systems that borrow principles from organic nervous systems, far less has been done that specifically targets the intersection of biology and artificial intelligence such that adherance to biological principles is of primary concern---rather than to the specific applicability of the technology---with the main goal being a virtual system that exhibits biological intelligence (BI).
+While much work has been done to develop artificial intelligence (AI) systems that borrow principles from organic nervous systems, far less has been done that specifically targets the intersection of biology and artificial intelligence such that adherence to biological principles is of primary concern---rather than to the specific applicability of the technology---with the main goal being a virtual system that exhibits biological intelligence (BI).
 As our understanding of organic nervous systems, and access to computation power are ever--growing, widespread interest in systems that do exactly this is greatly increasing. Evidence of this lies in DARPA's recent L2M project, which publicizes their search for machines that learn throughout their lives \citep{darpa}.
 
 Researchers in the realm of computational biology and neuroscience have made progress toward developing systems that model specific organisms or neural circuits, as seen in work done with the nematode Caenorhabditis elegans (C. elegans) \citep{Izquierdo2016}. These systems have the potential to require too much focus on organism--specific details in order to achieve proper functionality, shifting focus away from creating more generalized neurologically--inspired intelligent systems.
@@ -151,7 +151,7 @@ There is, however, a far stronger argument for the strength of the SCI inputs: i
 \begin{figure}[t]
 \begin{center}
 \includegraphics[width=3.5in]{images/ortus_diagram.png}
-\caption{Diagram of Ortus' emotional integration. Each color (other than black, which are sensory neurons) represents a specifc layer of interneuron. SEIs are purple, SCIs are orange, EEIs are blue, and primary emotions ($eF_0$ and $eP_0$) are teal. Dark green arrows represent excitatory chemical synapses, while light green arrows represent weak chemical synapses. Black bars with flat caps on each end depict bidirectional gap junctions, and the red connection with an ``X'' at the end, symbolizes an inhibitory (``opposing'') relationship, in which not only does $eF_0$ inhibit $eP_0$, but the group of EEI$_F$s inhibit the EEI$_P$s connected to their respective SCIs. This is the basic structure that Ortus employs. Currently there is no restriction regarding which interneurons can connect to motor neurons.}
+\caption{Diagram of Ortus' emotional integration. Each color (other than black, which are sensory neurons) represents a specific layer of interneurons. SEIs are purple, SCIs are orange, EEIs are blue, and primary emotions ($eF_0$ and $eP_0$) are teal. Dark green arrows represent excitatory chemical synapses, while light green arrows represent weak chemical synapses. Black bars with flat caps on each end depict bidirectional gap junctions, and the red connection with an ``X'' at the end, symbolizes an inhibitory (``opposing'') relationship, in which not only does $eF_0$ inhibit $eP_0$, but the group of EEI$_F$s inhibit the EEI$_P$s connected to their respective SCIs. This is the basic structure that Ortus employs. Currently there is no restriction regarding which interneurons can connect to motor neurons.}
 \label{diagram}
 \end{center}
 \end{figure}
@@ -166,7 +166,7 @@ The idea behind the synapse from the EEI to the SCI is to allow an emotional sta
 In this case, ``remembering'' is defined as measurably increased activation in the SCI that the EEI synapses onto.
 In practice, we have observed a very slight difference in Ortus as a result of these connections; currently they exist more as a concept that doesn't break the system. A diagram of this layout may be seen in Fig. \ref{diagram}.
 
-\textbf{BR 5:} Specifically with regard to the mammalian dopamine circuit, there exists a small locus of dopaminergic cells, that receive inputs from diverse sources, and project to divers parts of the brain, as discussed by \citet{Beier2015}. From a psychological perspective, it is clear that when one enters an emotional state, the emotion is globally encompassing rather than localized. It is also clear that a stimulus or activity is likley to be ``colored'' by the emotional state one was in when the stimulus occurred. The approach we took with Ortus is a simplification of the dopamine circuit, and a generalization across emotional states; it will likely need refinement.
+\textbf{BR 5:} Specifically with regard to the mammalian dopamine circuit, there exists a small locus of dopaminergic cells, that receive inputs from diverse sources, and project to divers parts of the brain, as discussed by \citet{Beier2015}. From a psychological perspective, it is clear that when one enters an emotional state, the emotion is globally encompassing rather than localized. It is also clear that a stimulus or activity is likely to be ``colored'' by the emotional state one was in when the stimulus occurred. The approach we took with Ortus is a simplification of the dopamine circuit, and a generalization across emotional states; it will likely need refinement.
 
 \textbf{ODE 6:} Certain emotional states preside over (dominate) others. In Ortus, fear dominates pleasure.
 
@@ -219,8 +219,8 @@ Where $CS_{pre,post}$ is the weight of the chemical synapse from the $pre$--syna
     S_g = {1 \over { 1 + e^{(-5 { A_{pre}[m] \over A_{range} } )} }}
 \end{equation}
 
-Where $A_{range}$ is the activation range of the presynaptic neuron (which is the difference between the exitatory and inhibitory reversal potentials). Eq. \ref{eq:conductance} uses -5 to vary the conductance from a little less than 10\% to a little more than 90\%.
-It should be noted that generally, we would subtract the equlibrium activation, $A_{eq}$, from $A_{pre}[m]$ prior to dividing by $A_{range}$, but this is not necessary because $A_{eq} = 0$.
+Where $A_{range}$ is the activation range of the presynaptic neuron (which is the difference between the excitatory and inhibitory reversal potentials). Eq. \ref{eq:conductance} uses -5 to vary the conductance from a little less than 10\% to a little more than 90\%.
+It should be noted that generally, we would subtract the equilibrium activation, $A_{eq}$, from $A_{pre}[m]$ prior to dividing by $A_{range}$, but this is not necessary because $A_{eq} = 0$.
 We use the presynaptic neuron's activation to determine the synaptic conductance because our neurons are non--spiking, and as such, activate their synapses with magnitude  proportionate to the neuron's activation level \citep{Wicks1996}.
 
 \begin{equation}
@@ -234,7 +234,7 @@ Where $C_D$ is a constant decay percentage (set to 20\%), and $A_{GJ_{out}}[m]$ 
     A_{GJ_{out}} = \sum_{j=1}^{N}{(GJ_{out_j} {(A[m] - A_j[m]) \over 2 })}
 \end{equation}
 
-Where $GJ_{out_j}$ is the weight of neuron $i$'s $j^{th}$ outgoing gap junction, $N$ is the number of neurons,  and $A_j[m]$ is the $j^{th}$ neuron's activation. Note that to compute the activation that neuron $i$ will lose due to its outgoing gap junctions, we treat it as the presynaptic neron. 
+Where $GJ_{out_j}$ is the weight of neuron $i$'s $j^{th}$ outgoing gap junction, $N$ is the number of neurons,  and $A_j[m]$ is the $j^{th}$ neuron's activation. Note that to compute the activation that neuron $i$ will lose due to its outgoing gap junctions, we treat it as the presynaptic neuron. 
 
 \subsection{Learning}
 
@@ -260,7 +260,7 @@ Combing the $XCorr$ and $Slope$ computation results, assuming both neurons invol
 
 \begin{itemize}
     \itemsep0em
-    \item rapid strengthening occurrs if there is a highly synchronous pair of singals nearly constant signals:
+    \item rapid strengthening occurrs if there is a highly synchronous pair of signals nearly constant signals:
         \subitem $\sum_{i=1}^{4}{ XCorr[i]} \ge 3.92$, and
         \subitem $\sum_{i=1}^{4}{ Slope[i]} \le .02$
     \item synaptic strenghting occurrs slowly if:
@@ -284,7 +284,7 @@ Further, after the four rounds of conditioning, we expected to observe an increa
 \begin{figure}
 \begin{center}
 \includegraphics[width=3.3in]{images/conditioning_small.png}
-\caption{Ortus' fear conditioning with $CO_2$ exhalation prevention and $O_2$ deprevation. Each time $H_2O$ is introduced under these conditions, Ortus' fear response grows, as evidenced by a strengthening response of \texttt{eFEAR} during each of the four rounds of conditioning.}
+\caption{Ortus' fear conditioning with $CO_2$ exhalation prevention and $O_2$ deprivation. Each time $H_2O$ is introduced under these conditions, Ortus' fear response grows, as evidenced by a strengthening response of \texttt{eFEAR} during each of the four rounds of conditioning.}
 \label{conditioning}
 \end{center}
 \end{figure}
@@ -300,7 +300,7 @@ Further, after the four rounds of conditioning, we expected to observe an increa
 \begin{figure}
 \begin{center}
 \includegraphics[width=3.3in]{images/no_conditioning_small.png}
-\caption{In the absence of fear condtioning, $H_2O$ introduction causes a very subtle, slowly growing association with fear. This is likley due to instability in Ortus, and is an indication Ortus' learning needs more nuance.}
+\caption{In the absence of fear conditioning, $H_2O$ introduction causes a very subtle, slowly growing association with fear. This is likely due to instability in Ortus, and is an indication Ortus' learning needs more nuance.}
 \label{no_conditioning}
 \end{center}
 \end{figure}
@@ -315,7 +315,7 @@ Further, after the four rounds of conditioning, we expected to observe an increa
 
 Our initial experiments with Ortus show that it has great potential as a biologically--based framework for developing virtual life that exhibits complex intelligence. That said, there are a number of shortcomings that must be addressed in order for Ortus to grow much more complex than it currently is.
 
-First, there is instability in the system. Further development, analysis, and experimentation of the emotional circuit(s) is necessary. The current approach is quite naive, and seems to play a role in the observable instability. A number of additional things could play a role in its instability as well; at this point, it is quite easy to throw Ortus out of balance. Small changes to the weights can have vast implications for the functionality of the system because an initial small change can multiply causing the system to become unstable. \citet{Johansen2014} suggests that in mice, while synchronous activity (correlation) is necessary for synaptic plasticity, it is not sufficient; neuromodulatory signaling is also required. This could be a way to control some of the unstable behavior seen as a result of the purely correlation--based learning rules implemented. In general, implementing more biologically--based constraints should help solve this, though refinment of the neural structuring rules is also likely neccessary.
+First, there is instability in the system. Further development, analysis, and experimentation of the emotional circuit(s) is necessary. The current approach is quite naive, and seems to play a role in the observable instability. A number of additional things could play a role in its instability as well; at this point, it is quite easy to throw Ortus out of balance. Small changes to the weights can have vast implications for the functionality of the system because an initial small change can multiply causing the system to become unstable. \citet{Johansen2014} suggests that in mice, while synchronous activity (correlation) is necessary for synaptic plasticity, it is not sufficient; neuromodulatory signaling is also required. This could be a way to control some of the unstable behavior seen as a result of the purely correlation--based learning rules implemented. In general, implementing more biologically--based constraints should help solve this, though refinement of the neural structuring rules is also likely necessary.
 
 In fact, the neural structure needs refinement for combinatoric reasons anyway; in order to implement a sensor array (e.g., any sort of topographically ordered sensory inputs, like vision), using a ``fully--wired'' approach is completely unfeasible. Even 32 sensors would require over 4 billion neurons, if each possible combination of sensory inputs mapped to a different neuron. \citet{Schroter2017} suggests that C. elegans' neurons may have multiplexed functions, meaning that one neuron may contribute to more than one behavior. This is another possible way to decrease the number of necessary neurons in Ortus.
 
