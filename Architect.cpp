@@ -78,7 +78,7 @@ void Architect::designConnectome(){
     float totalDesiredCSMotorToMuscleWeight = 1.f;
     float totalDesiredHardwiredEmotionCSWeight = 0.25f;// as it is now, i think we create a double connection... (because the SEIs connect during the combinatoric thing too..)
     float totalDesiredAssociationPotentialInitializationCSWeight = .25f;
-    float totalDesiredGJWeight = .1f;
+    float totalDesiredGJWeight = .2f;
     int i,j;
     int causalIndex = 0;
     int numCausal = connectomep->causesRelations.size();

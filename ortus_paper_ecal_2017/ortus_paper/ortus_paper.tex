@@ -74,7 +74,7 @@ awm32@cs.drexel.edu} % email of corresponding author
 
 \begin{abstract}
 % Abstract length should not exceed 250 words
- Ortus is a simple virtual organism that also serves as a framework for developing biologically based artificial intelligence. Born from a goal to create complex virtual intelligence and an initial attempt to model C. elegans, Ortus implements a number of mechanisms observed in organic nervous systems, and attempts to fill in unknowns based upon plausible biological implementations, psychological observations. Implemented mechanisms include excitatory and inhibitory chemical synapses, bidirectional gap junctions, Hebbian learning with its Stentian extension.  We present an initial experiment that showcases Ortus'€™ fundamental principles; specifically, a cyclic respiratory circuit, and emotionally--driven associative learning with respect to an input stimulus. Finally, we discuss the implications and future directions for Ortus and similar systems.
+ Ortus is a simple virtual organism that also serves as an initial framework for investigating and developing biologically--based artificial intelligence. Born from a goal to create complex virtual intelligence and an initial attempt to model C. elegans, Ortus implements a number of mechanisms observed in organic nervous systems, and attempts to fill in unknowns based upon plausible biological implementations and psychological observations. Implemented mechanisms include excitatory and inhibitory chemical synapses, bidirectional gap junctions, and Hebbian learning with its Stentian extension.  We present an initial experiment that showcases Ortus' fundamental principles; specifically, a cyclic respiratory circuit, and emotionally--driven associative learning with respect to an input stimulus. Finally, we discuss the implications and future directions for Ortus and similar systems.
 
 
 \end{abstract}
@@ -82,22 +82,22 @@ awm32@cs.drexel.edu} % email of corresponding author
 \section{Introduction}
 
 
-While much work has been done to develop artificial intelligence (AI) systems that borrow principles from organic nervous systems, far less has been done that specifically targets the intersection of biology and artificial intelligence such that biological principles---rather than a specific applicability of the technology---are of primary concern, with the main goal being a virtual system that exhibits biological intelligence (BI). As our understanding of organic nervous systems and access to computation power both increase, widespread interest in systems that do exactly this is greatly increasing; as evidenced by DARPA's recent L2M project, in search of machines that learn throughout their lives \citep{darpa}.
+While much work has been done to develop artificial intelligence (AI) systems that borrow principles from organic nervous systems, far less has been done that specifically targets the intersection of biology and artificial intelligence such that adherance to biological principles is of primary concern---rather than to the specific applicability of the technology---with the main goal being a virtual system that exhibits biological intelligence (BI).
+As our understanding of organic nervous systems, and access to computation power are ever--growing, widespread interest in systems that do exactly this is greatly increasing. Evidence of this lies in DARPA's recent L2M project, which publicizes their search for machines that learn throughout their lives \citep{darpa}.
 
+Researchers in the realm of computational biology and neuroscience have made progress toward developing systems that model specific organisms or neural circuits, as seen in work done with the nematode Caenorhabditis elegans (C. elegans) \citep{Izquierdo2016}. These systems have the potential to require too much focus on organism--specific details in order to achieve proper functionality, shifting focus away from creating more generalized neurologically--inspired intelligent systems.
 
-Researchers in the realm of computational biology and neuroscience have started making progress toward developing systems that model specific organisms or neural circuits, such as the nematode Caenorhabditis elegans (C. elegans) \citep{Izquierdo2016}, though these systems have the potential to require too much focus on organism--specific details to achieve proper functionality, shifting focus away from creating more generalized neurologically--inspired intelligent systems.
-
-On the other hand more traditional (application focused) AI research has started taking more inspiration from human learning, such as developing an auto--encoder augmented by Hebbian learning, decreasing the need for an initial supervised--like learning period \citep{Bowren2016}. Further, \citet{Marblestone2016} discusses ways that artificial neural networks (ANNs) can more closely approximate neural functionality.
-In the context of biologically--inspired AI, the frameworks underlying these approaches may be too constraining for full exploration of the potential for that field of study. 
+On the other hand, more traditional (application focused) AI research has started taking more inspiration from human learning, such as the development of an auto--encoder augmented by Hebbian learning, decreasing the need for an initial supervised--like learning period \citep{Bowren2016}. Further, \citet{Marblestone2016} discusses ways that artificial neural networks (ANNs) can more closely approximate neural functionality.
+In the context of biologically--inspired AI, the frameworks underlying these approaches may be too constraining for full exploration of the potential for the field of biologically--based artificial intelligence. 
 
 Recent work at the intersection of these two areas includes \citet{Sinapayen2016}, which investigates the applicability and biological plausibility of spiking neural networks learning by ``stimulation avoidance''. Perhaps the project most closely aligned to Ortus is a biologically inspired neural network modeled off of a honey bee's visual system, which merges biological mechanisms and neural networks \citep{Roper2017}.
 
 
 \subsubsection{Ortus} is an initial implementation of, and framework for creating, virtual life aimed at approximating the intelligence of living organisms.
-Bourn from the study and analysis of C. elegans' connectome and behavior, it aims to strike a balance between biological abstraction, retention of biological fidelity, and computation scalability in order to as closely as possible approximate biological intelligence and learning.
+Born from the study and analysis of C. elegans' connectome and behavior, it aims to strike a balance between biological abstraction, retention of biological fidelity, and computation scalability in order to approximate biological intelligence and learning as closely as possible.
 At its core, Ortus is a network of biologically--inspired, non--spiking neurons, capable of forming excitatory, inhibitory, and electrical synapses.
-Similar to the way the structure of C. elegans' 302 neuron nervous system is capable of complex behaviors including toxin avoidance, reflexively withdrawing from a ``tap'', and ``remembering'' the temperature it found food  \citep{Jarrell2012}, Ortus' ``connectome'' (neural structure) enables its inherent functionality.
-Once running, Ortus refines its network---similar to the way organic nervous systems adjust themselves, based upon Ortus' intrinsic ``understanding'' that certain things are ``good'' and others are ``bad'', with regard to its own longevity.
+Similar to the way the structure of C. elegans' 302 neuron nervous system is capable of complex behaviors including toxin avoidance, reflexively withdrawing from a ``tap'', and ``remembering'' the temperature at which it found food \citep{Jarrell2012}, Ortus' ``connectome'' (neural structure) enables its inherent functionality.
+Once running, Ortus refines its network---similar to the way organic nervous systems adjust themselves (though far simplified, and not yet as dynamic), based upon Ortus' intrinsic ``understanding'' that certain things are ``good'' and others are ``bad'', with regard to its own longevity.
 This understanding is derived from the structure of the nervous system it generates for itself from a set of input definitions given to it.
 
 
@@ -106,7 +106,7 @@ The remaining sections of this paper outline Ortus' design and implementation, d
 \section{System Design}
 
 
-As Ortus aims to be a virtual analogy to intelligent life, we tried to only implement functions that either had a known analogous biological process, or which may have an analogous biological implementation that is unknown, but can be defended based off anecdotal evidence. Following each Ortus design element (ODE) below, is its biological rationale (BR):
+As Ortus aims to be a virtual analogy to intelligent life, we tried to only implement functions that either had a known analogous biological process, or which may have an analogous biological implementation that is unknown, but can be defended with anecdotal evidence. Following each Ortus design element (ODE) below, is its biological rationale (BR):
 
 % 0: O2/CO2 respiratory framework, that provides a definition for emotional state 
 % 1: emotion--driven
@@ -125,67 +125,73 @@ As Ortus aims to be a virtual analogy to intelligent life, we tried to only impl
 
 % diagram for respiratory circuit?
 
-\textbf{ODE 1:} The underlying source of ``life'' for Ortus is its respiratory circuit, which maintains a balance of $O_2$ and $CO_2$. $O_2$ is consumed, and $CO_2$ is generated, as a product of Ortus being ``alive''. As $CO_2$ rises and $O_2$ falls, motor neurons responsible for excitation and inhibition of the lung muscle are excited and inhibited (respectively), and the lung increases in activation, supplying $O_2$ and expelling $CO_2$. 
+\textbf{ODE 1:} The underlying source of ``life'' for Ortus is its respiratory circuit, which maintains a balance of $O_2$ and $CO_2$. $O_2$ is consumed, and $CO_2$ is generated, as a product of Ortus being ``alive''. As activation of the $CO_2$ sensory neuron, $sCO_2$, rises, and activation of the $O_2$ sensory neuron, $sO_2$, falls, motor neurons responsible for excitation and inhibition of the lung muscle are excited and inhibited (respectively), and the lung increases in activation, supplying $O_2$ and expelling $CO_2$. 
 
 \textbf{BR 1:} Maintaining a given system concentration of $CO_2$ is fundamental to mammalian life, and is very strongly linked to the mammalian fear response (e.g., you get scared if you can't breathe). The ability to regulate one's level of $CO_2$ appears to at least be part of the basis for defining what is a ``good'' and ``bad'' event/stimulus in the mammalian brain.
 
-\textbf{ODE 2:} Currently, Ortus has two ``emotions'', fear and pleasure, represented by emotional interneurons, \texttt{eFEAR} and \texttt{ePLEASURE}, which are both tied into the respiratory circuit. When $CO_2$ rises, \texttt{eFEAR} rises, and Ortus would then be in a fearful state. As $CO_2$ falls, its contribution to Ortus' fearful state falls. The interaction between $O_2$ and \texttt{ePLEASURE} is the same. In this way, any stimulus presented in combination with either increased $CO_2$ or increased $O_2$ will become known as either a desirable (good) or undesirable (bad) stimulus. In this way, emotions are the driving force behind associative learning in Ortus. In Ortus, the idea of ``emotions'', are simply the rise and fall in activation of different neurons or groups of neurons, tied to very fundamental behaviors---such as ``breathing''. The concepts of ``good'' and ``bad'' sensations or emotions only carry meaning to us because of their associations to circuits that are either fundamentally desirable or undesirable from a longevity/survival perspective.
+\textbf{ODE 2:} Currently, Ortus has two ``emotions'', fear and pleasure, represented by emotional interneurons, \texttt{eFEAR} and \texttt{ePLEASURE}, which are both tied into the respiratory circuit. When $CO_2$ rises, \texttt{eFEAR}'s activation rises, and Ortus would then be in a fearful state. As $CO_2$ falls, its contribution to Ortus' fearful state falls. The interaction between $O_2$ and \texttt{ePLEASURE} is the same. In this way, any stimulus presented in combination with either increased $CO_2$ or increased $O_2$ will become known as either a desirable (good) or undesirable (bad) stimulus. Thus, it is via linking new stimuli to known stimuli, that emotions are the driving force behind associative learning in Ortus. In Ortus, the idea of ``emotion'' is simply the rise and fall of activation levels of different neurons or groups of neurons, tied to fundamental behaviors---such as ``breathing''.
 
-\textbf{BR 2:} Clearly, mammals don't normally get scared when they exhale, nor do they feel a measurable increase in pleasure upon inhalation, however the relations do exist on some level. As stated by \citet{Verma2015}, "emotions, motivations, and reinforcement are a closely related, evolutionarily---conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment". Along with \citet{Gore2015}, which suggests that associative learning is funneled through innate behavior circuits to assign positive or negative emotions to neutral sensory stimuli, it seems that building a virtual organism driven by emotional states is a fairly sound approach. 
+\textbf{BR 2:} Clearly, mammals don't normally get scared when they exhale, nor do they feel a measurable increase in pleasure upon inhalation, however the relations do exist on some level. The concept of ``good'' and ``bad'' sensations or emotions only carry meaning to us because of their associations to other neural circuits that are either fundamentally desirable or undesirable from a longevity/survival perspective.
+As stated by \citet{Verma2015}, "emotions, motivations, and reinforcement are a closely related, evolutionarily---conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment". Taking this idea into account, along with work by \citet{Gore2015}, which suggests that associative learning is funneled through innate behavior circuits to assign positive or negative emotions to neutral sensory stimuli, it seems that building a virtual organism driven by emotional states is a fairly sound approach. 
 
 While at the human level, the emotional ``part'' of the brain is quite complex, it is not unreasonable to assume that as organismic complexity (and thereby intelligence) decreases, the complexity of emotions decreases. Numerous experiments done on rodents, such as those described by \citet{Weiner2015}, show that the major structures of the brain can be examined by lesioning portions of the brain. One can infer then, that representing regions of the brain by single neurons would enable a rough approximation of the region's functionality. If one follows this line of thought, the possibility emerges that organisms like C. elegans may, in fact, be driven by ``emotions'' as well. For example, C. elegans is capable of toxin avoidance, a tap--withdrawal response, as well as learning that it found food at a certain temperature \textbf{(citations?)} -- one must ask how this can be. There is nothing external that assists it in differentiating good from bad, yet it wants to avoid certain things, while is attracted to others. In Ortus, we make the assumption that that these behaviors are a result of a \textit{very} simple emotional subsystem that forms the basis for C. elegans' behavior.
 
 
-\textbf{ODE 3:} Ortus employs four different classes of interneurons at the moment. First are ``Sensory Extension Interneurons'' (SEIs). These take input directly from sensory neurons, and pass the input along to the second class of interneurons, ``Sensory Consolidatory Interneurons'' (SCIs).
-SCIs take anywhere from 1 to the number of sensory inputs as chemical synapses, with incoming synaptic weights equal to \textit{1 / (\# sensory inputs)}.
+\textbf{ODE 3:} Ortus employs four different classes of interneurons. First are ``Sensory Extension Interneurons'' (SEIs). These take input directly from sensory neurons, and pass the input along to the second class of interneurons, ``Sensory Consolidatory Interneurons'' (SCIs).
+SCIs take anywhere from 1 to the number of sensory inputs as chemical synapses (CSs), with incoming synaptic weights equal to \textit{1 / (\# sensory inputs)}.
 The idea behind SCIs is to enable different types of sensors to combine their input, and trigger emotions, effectively as a ``new'' sensory input, thereby forming associations between two stimuli. We defer the descriptions of the last two interneurons to \textbf{ODE 5}.
 
-\textbf{BR 3:} Admittedly, SEIs may not be necessary. We included these so that we could give sensory neurons a functionality that was separate from interneurons if the need arose. With regard to SCIs, it is suggested by \citet{Xie2016} that neurons in the brain are organized according to the idea that if there are $N$ neurons, then the brain has the ability to represent all $2^N-1$ possible combinations. Clearly, for anything but the most simple organisms, having one neuron that collects the input for each of the $2^N-1$ possibilities is unrealistic (as the authors note); however, the authors suggest there may be additional combining of neuron inputs to decrease the computational and spacial complexity (in organic brains, that is). It also possible that mammalian brains are not quite as connected as their owners are led to believe, and a great deal of what amounts to interpolation is the reality. Regardless, we employed the idea of $2^N-1$ SCIs because losing sensory resolution with such few neurons (that only have one neuron per sensory input) doesn't make sense. This will have to be reassessed. There is, however, a far stronger argument for the strength of the SCI inputs: it seems that synaptic strength scales inversely with the number of connections, ``$K$ as ~ $1 \over \sqrt{k}$'' \citep{Barral2016}. This makes intuitive sense; if neuron \texttt{A} synapses onto \texttt{B} with a weight of $1$, and \texttt{C, D, E} all synapse onto \texttt{F}, the weight of each of the latter three connections must be $1 \over 3$ in order to maintain equivalence between \texttt{B} and \texttt{F}. In addition, there is evidence that neighboring neurons in the same ``layer'' are connected in C. elegans \citep{Azulay2016}, which suggests that a certain amount of information consolidation may occur.
+\textbf{BR 3:} Admittedly, SEIs may not be necessary. We included these to easily give sensory neurons a functionality that was separate from interneurons if the need arose. With regard to SCIs, it is suggested by \citet{Xie2016} that neurons in the brain are organized according to the idea that if there are $N$ neurons, then the brain has the ability to represent all $2^N-1$ possible combinations.
+Clearly, for anything but the most simple organisms, having one neuron that collects the input for each of the $2^N-1$ possibilities is unrealistic (as the authors note).
+However, the authors suggest there may be additional combining of neuron inputs to decrease the computational and spacial complexity (in organic brains, that is).
+It also possible that mammalian brains are not quite as connected as they seem to think they are, and a great deal of what the brain does amounts to interpolation.
+Regardless, we employed the idea of $2^N-1$ SCIs because losing sensory resolution with such few neurons (that only have one neuron per sensory input) doesn't make sense.
+This will have to be reassessed as the system develops.
+There is, however, a far stronger argument for the strength of the SCI inputs: it seems that synaptic strength scales inversely with the number of connections, ``K as ~ 1 /$\sqrt{K}$'' \citep{Barral2016}. This makes intuitive sense; if neuron \texttt{A} synapses onto \texttt{B} with a weight of $1$, and \texttt{C, D, E} all synapse onto \texttt{F}, the weight of each of the latter three connections must be $1 \over 3$ in order to maintain equivalence between \texttt{B} and \texttt{F}. In addition, there is evidence that neighboring neurons in the same ``layer'' are connected in C. elegans \citep{Azulay2016}, which suggests that a certain amount of information consolidation may occur.
 
 
-\textbf{ODE 4:} Ortus currently implements both Hebbian learning and the Stentian extension to Hebbian learning. Specifically, for each chemical synapse, on every timestep, if activity is sufficiently synchronous or sufficiently asynchronous, the synapse strengthens or weakens (respectively) according to its \textit{mutability index} (\textit{MI}). The \textit{MI} determines a synapses' potential to be modified. Currently, \textit{MI}s are static, though in the future we plan to vary them with synaptic age, among other things.
+\textbf{ODE 4:} Ortus currently implements both Hebbian learning and the Stentian extension to Hebbian learning. Specifically, for each chemical synapse, on every timestep, if activity is sufficiently synchronous or sufficiently asynchronous, the synapse strengthens or weakens (respectively) according to its \textit{mutability index} (\textit{MI}). The \textit{MI} determines a synapse's potential to be modified. Currently, \textit{MI}s are static, though in the future we plan to vary them with synaptic age, among other things.
 
 \textbf{BR 4:} Hebbian and Stentian learning, relating to the correlation (or lack thereof) between presynaptic and postsynaptic pairs is a proven learning paradigm in neuroscience, as described by \citet{Kutsarova2016}.
 
 
 
 \textbf{ODE 5:} The third class of interneurons is comprised of ``Emotion Extension Interneurons'' (EEIs), which are essentially auxiliary emotion neurons.
-EEIs are specific to each emotion, and receive input from SCIs via chemical synapses, and pass that input on to their respective primary emotion neurons via gap junctions.
+EEIs are specific to each emotion, and receive input from SCIs via chemical synapses, and pass that input on to their respective primary emotion neurons via gap junctions (GJs).
 Emotional learning is achieved by strengthening synapses (via Hebbian learning) of interneurons that form synapses between SCIs (consolidated sensory information), and EEIs.
 The GJ connection enables a given emotional state, incurred by any stimulus, to permeate through Ortus---resulting in an ``emotional state'' of the system (gap junctions in Ortus have no activation threshold).
 The effect of this, is that if a certain sensory input causes a given emotion to increase in activation, the introduction of another sensory input will cause the synapses at the junction of the newly introduced sensory input and elevated emotion to strengthen. (graph here?). 
-Further, as each SCI synapses onto one EEI per emotional state, each EEI has a ``backlink'' chemical synapses to their parent SCI.
-The idea behind the backlinks is to allow an emotional state to ``trigger'', or cause Ortus to ``remember'' a stimulus that previously invoked (and thus become associated with) that emotional state.
-In this case, ``remembering'' is defined as measurably increased activation in the SCI that the EEI backlinks into.
-In practice, we have observed a very slight difference in Ortus as a result of the backlink connections; currently they exist more as a concept that doesn't break the system. A diagram of this layout may be seen in \textbf{DIAGRAM!}.
+Further, as each SCI synapses onto one EEI per emotional state, each EEI has an excitatory chemical synapse to their parent SCI.
+The idea behind the synapse from the EEI to the SCI is to allow an emotional state to ``trigger'', or cause Ortus to ``remember'' a stimulus that previously invoked (and thus become associated with) that emotional state.
+In this case, ``remembering'' is defined as measurably increased activation in the SCI that the EEI synapses onto.
+In practice, we have observed a very slight difference in Ortus as a result of these connections; currently they exist more as a concept that doesn't break the system. A diagram of this layout may be seen in \textbf{DIAGRAM!}.
 
-\textbf{BR 5:} Specifically with regard to the mammalian dopamine circuit, there exists a small locus of dopaminergic cells, but the they receive inputs from diverse sources, as well as project to divers parts of the brain, as discussed by \citet{Beier2015}. From a psychological perspective, it is clear that when one enters an emotional state, the emotion is encompassing, not localized. It is also clear that a stimulus or activity is likley to be ``colored'' by the emotional state one was in when the stimulus occurred. The approach we took with Ortus is a simplification of the dopamine circuit, and a generalization across emotional states; it will likely need refinement.
+\textbf{BR 5:} Specifically with regard to the mammalian dopamine circuit, there exists a small locus of dopaminergic cells, that receive inputs from diverse sources, and project to divers parts of the brain, as discussed by \citet{Beier2015}. From a psychological perspective, it is clear that when one enters an emotional state, the emotion is globally encompassing rather than localized. It is also clear that a stimulus or activity is likley to be ``colored'' by the emotional state one was in when the stimulus occurred. The approach we took with Ortus is a simplification of the dopamine circuit, and a generalization across emotional states; it will likely need refinement.
 
 \textbf{ODE 6:} Certain emotional states preside over (dominate) others. In Ortus, fear dominates pleasure.
 
 \textbf{BR 6:} The idea of a hierarchical system, where certain emotional states dominate others, is supported by the inhibition of fear in mice, in favor of searching for food when hungry (blood glucose levels falling causing the release of hormones), but greater concern for safety when not hungry \citep{Verma2015}. Further, \citet{Leknes2008} discusses the ``Motivation--Decision Model'', which suggests that anything that is more important for survival than pain should inhibit the feeling of pain.
 
 
-
-\textbf{ODE 7:} Ortus builds its nervous system by reading in a \textit{.ort} file, using our ``\textit{Ortus Development Rules}'' language. First, ``elements'' (neurons and muscles) must be specified, with attributes such as the type of element, its affect, and activation threshold. Then, relationships between elements may be specified. Currently, there are four relationships:
+\textbf{ODE 7:} Ortus builds its nervous system by reading in a \textit{.ort} file, using our ``\textit{Ortus Development Rules}'' language. First, ``elements'' (neurons and muscles) must be specified, along with attributes such as the type of element, its affect, and activation threshold. Once all elements have been defined, relationships between elements may be specified. Currently, there are four relationships:
 \begin{itemize}
     \itemsep0em
-   \item \texttt{+A} \textbf{causes} \texttt{+B}
-        \subitem Where the ``+'' indicates an increase (and a ``-'' a decrease) in the presynaptic neuron causes an increase in the postsynaptic neuron. This translates into a chemical synapse.
+    \item \texttt{\[+-\]A} \textbf{causes} \texttt{\[+-\]B}
+        \subitem Where the ``+''/``-'' indicates an increase/decrease in the presynaptic neuron causes an increase/decrease in the postsynaptic element. This translates into a chemical synapse.
     \item \texttt{A} \textbf{correlated} \texttt{B}
-        \subitem Where A and B are correlated. This translates into a gap junction.
+        \subitem Where A and B are correlated. This translates into a bidirectional gap junction.
     \item \texttt{A} \textbf{opposes} \texttt{B}
         \subitem Where A and B inhibit each other.
      \item \texttt{A} \textbf{dominates} \texttt{B}
          \subitem Where A inhibits B.
 \end{itemize}
 
-Along with relationship--level attributes such as: ``mutability'', ``weight'', ``polarity'', and ``age''. At this time, most relationship attributes need not be specified as Ortus uses default values. Once Ortus reads these instructions in, it creates interneurons and connections as described by the \textbf{ODE}s above to satisfy all constraints imposed, and to allow associative learning between all emotional states and sensory stimuli (both individual and combined) as described in \textbf{ODE 5}.
+Relationship--level attributes may be specified, such as: ``mutability'', ``weight'', and ``polarity''. At this time, most relationship attributes need not be specified as Ortus uses default values for mutability and weight, while polarity is determined from the relationships defined. Once Ortus reads these instructions in, it creates interneurons and connections as described by the \textbf{ODE}s above to satisfy all constraints imposed, and to allow associative learning between all emotional states and sensory stimuli (both individual and combined) as described in \textbf{ODE 5}.
 
 
 \textbf{BR 7:}
 
-Our goal in creating the \textit{Ortus Development Rules} was to approximate, in a greatly simplified manner, the way a brain grows itself, based upon genetic instructions that cause circuits to form in certain ways via gene expression \citep{Weiner2015}. Ortus' neural structure is essentially wired to force it to behave in certain ways, similarly to the development of the mammals, and how genes . Further, \citet{Schroter2017} provides evidence for the existence of organizational ``motifs'' found in C. elegans that may underly more complex networks in larger brains; this also lends credence to Ortus' rule--based development approach.
+Our goal in creating the \textit{Ortus Development Rules} was to approximate, in a greatly simplified manner, the way a brain grows itself, based upon genetic instructions that cause circuits to form in certain ways via gene expression \citep{Weiner2015}. Ortus' neural structure is essentially wired to force it to behave in certain ways, akin to the innate behaviors observed in mammals. Further, \citet{Schroter2017} provides evidence for the existence of organizational ``motifs'' found in C. elegans that may underly more complex networks in larger brains; this also lends credence to Ortus' rule--based development approach.
 
 
 %the ORT filetype is a specification of ``rules'', akin to very simplified approximation ``virtual DNA'' that define elements (neurons and muscles), and relationships between them, currently: A causes B, A is correlated with B, A opposes B, and A dominates B. Each realtionship has a number of paramters, such as Age, Mutability, Threshold, and either a chemical synapse (CS) weight (unidirectional), or a gap junction (GJ) weight (bidirectional) (NOTE: equations!).
@@ -207,11 +213,34 @@ Our goal in creating the \textit{Ortus Development Rules} was to approximate, in
 %\end{enumerate}<++>
 
 
-\subsection{Implementation Details} Ortus is written in C++ and OpenCL. Each iteration of the OpenCL kernel constitutes one timestep, during which, each neuron sums incoming (positive or negative) ``activation'' from presynaptic cells via chemical synapses (CSes) and gap junctions (GJs).  \textbf{NOTE: maybe this is a good spot for the equations!}
+\subsection{Implementation Details} Ortus is written in C++ and OpenCL. Initial development of its neural structure, and sensory stimulation, are carried out though c++, while all signal transmission between neurons and learning is done in the OpenCL kernel. Each iteration of the OpenCL kernel constitutes one timestep, during which, each neuron sums incoming (positive or negative) ``activation'' from presynaptic cells via chemical synapses (CSes) and gap junctions (GJs).  \textbf{NOTE: maybe this is a good spot for the equations!}
 
-The chemical synapse and gap junction activation transfer equations were simplified from those described by \cite{Wicks1996} to ignore physical properties of neurons (such as neuron length).
+The chemical synapse and gap junction activation transfer equations were simplified from those described by \cite{Wicks1996} to ignore physical properties of neurons (such as neuron length), decrease computational complexity, and reduce potential sources of hard--to--trace error.
 
 Ortus' neurons are based upon C. elegans' neurons, and are non--spiking, but do not transmit any ``activation'' (footnote about why activation is used instead of voltage? or use 'potential?) below a given threshold, as in \citep{Graubard1014}. The equations for CS and GJ synapses were derived (simplified) from Wicks' 1996 paper (cite), and appear to have been used in recent C. elegans' models (cite Beer's 2013).
+
+\begin{equation}
+    A_{i}[n+1] = (A_i[n] - A_{i_{decay}}) + A_{GJ_{in}} + A_{CS_{in}} 
+\end{equation}
+
+\begin{equation}
+    A_{CS_{in}} =  CS_{pre,post} * A_{i_{g}} * (A_{rev} - A_{post})
+\end{equation}
+
+\begin{equation}
+    A_{post_{g}} = {1 \over { 1 + e^{-5 * { A_{pre} \over A_{range} } } }}
+\end{equation}
+
+Note, that the equilibrium activation is 0.
+
+\begin{equation}
+    A_{decay} = C_D * A[n] - A_{GJ_{out}}[n]
+\end{equation}
+
+\begin{equation}
+A_{GJ_{out}} = \sum{i=1}^{N} i * .1 * A[n] 
+\end{equation}
+
 
 
 % CS equation
@@ -222,6 +251,13 @@ Ortus' neurons are based upon C. elegans' neurons, and are non--spiking, but do 
 
 % 
 
+Hebbian and Stentian learning are gov
+
+Cross Correlation (XCorr) Computation
+
+Ortus employs an XCorr computation of length 4, using \ldots
+
+In addition to XCorr, Ortus computes four of the most recent slopes of all neurons, using the previous 5 activations of each neuron.
 
 \subsubsection{Implementation Details}
 - C++, OpenCL
@@ -230,14 +266,21 @@ Ortus' neurons are based upon C. elegans' neurons, and are non--spiking, but do 
 
 \section{Experimental Design and Results}
 
-\subsubsection{Experiment.} To test our initial implementation of Ortus, we implemented the configuration described above, with the addition of an $H_2O$ sensory neuron. We then ``exposed'' Ortus to water via $H_2O$ sensory stimulation four times in bursts spaced 100 timesteps apart, in order to allow injected activation to naturally decay. During each burst of $H_2O$ exposure, we prevented Ortus from exhaling $CO_2$ or inhaling $O_2$, thereby inducing an enhanced state of fear. After repeating the conditioning exposure four times, we allowed Ortus 200 timesteps to let any injected activation to decay. Finally, we exposed Ortus to water, without inducing a fearful state, to determine if it had learned to be fearful of water.
+\subsubsection{Experiment.} To test our initial implementation of Ortus, we implemented the configuration described above, with the addition of an $H_2O$ sensory neuron, $sH_2O$.
+We then ``exposed'' Ortus to water via $sH_2O$ stimulation four times in bursts spaced 100 timesteps apart, in order to allow injected activation to naturally decay.
+During each burst of $H_2O$ exposure, we prevented Ortus from exhaling $CO_2$ or inhaling $O_2$, thereby inducing an enhanced state of fear.
+After repeating the conditioning exposure four times, we allowed Ortus 200 timesteps to let any injected activation to decay.
+Finally, we exposed Ortus to water, without inducing a fearful state, to determine if it had learned to be fearful of water.
 
-\subsubsection{Results.} Since $CO_2$ activation causes fear, and $H_2O$ was presented during this time, we expected Ortus to become progressively more and more ``scared'' of water each time it was presented while it was in a state of elevated fear. As can be seen in \textbf{FIGURE}, during each exposure to $H_2O$, activation of \texttt{eFEAR} increased when compared to the previous exposure. Further, after the four rounds of conditioning, we observed a large spike in fear. Compared to simply exposing Ortus to $H_2O$ without prior fear conditioning, in which a very slight raise was observed, it is clear that we were able to successfully use classical conditioning to instill a fear of water in Ortus that was previously almost non--existent. 
-
-\ldots. should probably show graph of what happens when O2 isn't inhibited\ldots
+\subsubsection{Results.} Since $sCO_2$ activation causes fear, and $H_2O$ was presented ($sH_2O$ was stimulated) during this time, we expected Ortus to become progressively more and more ``scared'' of water each time it was presented while it was in a state of elevated fear.
+As can be seen in \textbf{FIGURE}, during each exposure to $H_2O$, activation of \texttt{eFEAR} increased when compared to the previous exposure.
+Further, after the four rounds of conditioning, we expected to observe an increase in activation in \texttt{eFEAR} when we presented Ortus with $H_2O$, in the absence of exhalation and inhalation restriction. The \textbf{FIGURE} confirms this increase in fear activation as a result of $sH_2O$ stimulation alone. Compared to simply exposing Ortus to $sH_2O$ stimulation without prior fear conditioning, in which a very slight raise was observed---as may be seen in \textbf{FIGURE}, it is clear that we were able to successfully use classical conditioning to instill a fear of water in Ortus that was previously almost non--existent. 
 
 
 \section{Discussion}
+
+While the results show that we achieved our goal of designing an implementing an initial framework 
+
 While the implementation presented is quite simple, the initial results presented pave the way for quick advances to Ortus' capability with regard to ``behaviors'' resulting from emotional amalgamation as well as the introduction of more complex sensory input.
 
 
@@ -256,6 +299,7 @@ However one current issue is if we have SCIs for sensory neurons \texttt{A}, and
 
 Sensory stimulation is sensed by sensory neurons that are topographically arranged, similar to those in organic systems. A recent study suggesting that the brain is organized based upon an n = 2something... and something about permutations lends credence to this approach (cite n something 2 permutation paper).
 
+GJ vs CS delay\ldots
 
 Talk about the combinatorial explosion, but then discuss how that can be pruned away... similar to babies. The $2^n - 1$ paper suggested reducing the resolution of inputs, so, instead of each sensor being able to connect with every other sensor, funnel 3 sensors (for example) into 1, to create a ``functional connectivity module'' (FCM). That approach might not be bad, however, it could be severely limiting. Perhaps this can be cut down by looking at relationships between sensors, and getting rid of things that don't matter?
 

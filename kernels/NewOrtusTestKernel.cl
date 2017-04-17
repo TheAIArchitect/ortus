@@ -525,7 +525,7 @@ kernel void OrtusKernel(global float* elementAttributes,
         addedActivation = 0; // reset this, because we use the same variable for cs and gj incoming...
         //float gj_weight = gapWeights[weight_idx]/max_gj_weight;// normalize to max GJ weight (again, cursory glance)
         if(gjWeight != 0.0){ // response is always the same as the source -- depolariziation of one, causes same in other, and vice versa.
-            addedActivation = gjWeight * (preActivation - postActivation);
+            addedActivation = gjWeight * (preActivation - postActivation)/2.f;
             // PROBE
             //if (shouldProbe == 1){
             //    gapContrib[weight_idx] = added_v;
@@ -547,9 +547,11 @@ kernel void OrtusKernel(global float* elementAttributes,
     float sumOfOutgoingGJWeights = 0;
     gjWeightBaseIndex = getIndex(postToThisElement, gId, 0, bladeIndexRelativeToKernelArg, kernelArg2Rows, kernelArg2Cols, kernelArg2Pages, kernelArg2Stride);
     for (postToThisElement = 0; postToThisElement < NUM_ELEMENTS; ++postToThisElement){
-        sumOfOutgoingGJWeights = weights[gjWeightBaseIndex + kernelArg2Cols]; // collect outgoing GJ weights
+//        sumOfOutgoingGJWeights = weights[gjWeightBaseIndex + kernelArg2Cols]; // collect outgoing GJ weights
+        sumOfOutgoingGJWeights = (weights[gjWeightBaseIndex + kernelArg2Cols]) * (postActivation - postToThisElement*kernelArg3Cols)/2.f; // collect outgoing GJ weights
     }
-    int outgoingGJActivation = sumOfOutgoingGJWeights*.1*postActivation;// .1 is a very wild guess.. really, it depends upon the 'posts' activation (see above gj rule)
+//    int outgoingGJActivation = sumOfOutgoingGJWeights*.1*postActivation;// .1 is a very wild guess.. really, it depends upon the 'posts' activation (see above gj rule)
+    int outgoingGJActivation = sumOfOutgoingGJWeights;
     // .1 kind of comes from the idea that there's probably not a huge difference in potentials, and it'll be no more than half of the difference (think water tanks)
     
     
