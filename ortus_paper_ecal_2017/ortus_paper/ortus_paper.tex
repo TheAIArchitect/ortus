@@ -108,22 +108,15 @@ The remaining sections of this paper outline Ortus' design and implementation, d
 
 As Ortus aims to be a virtual analogy to intelligent life, we tried to only implement functions that either had a known analogous biological process, or which may have an analogous biological implementation that is unknown, but can be defended with anecdotal evidence. Following each Ortus design element (ODE) below, is its biological rationale (BR):
 
-% 0: O2/CO2 respiratory framework, that provides a definition for emotional state 
-% 1: emotion--driven
-% 2: emotions tied to funcitonality necessary for life
-% 3: sensory consolidatory inter neurons allow association of multiple stimuli with emotion (all emotions to each SCI..)
-% 3: emotional backlink circuit to allow prior experiences connected to an emotional state to be recalled by that emotional state, if elevated (need not cross thresh..)
-% 4: Hebbian learning (correlation), and Stentiann extension 
-% 5: Ortus builds itself based off of rules, this creates a generally applicable/extensible framework 
-% 7: certain emotional states dominate others
-% 8: emotional interneurons connected via GJs to flood emotion through 'brain'
-% 9: connection weights inverse to num connections
 
-% somewhere in this section should be the diagram S => SEI => SCI
+\begin{figure}
+\begin{center}
+\includegraphics[width=3.3in]{images/respiration.png}
+\caption{Activation cycle of Ortus' respiratory circuit. It can be seen that $sCO_2$ ``naturally'' rises, while $sO_2$ ``naturally'' falls. In response to this, $isCO_2$ (an SEI) increases in activation, which excites the inhalation motor neuron (\texttt{mINHALE}), causing \texttt{LUNG} to activate. This in turn causes $O_2$ to spike, which excites $isO_2$ (also an SEI). The excited $isO_2$ inhibits \texttt{mINHALE} while exciting \texttt{mEXHALE}, thereby allowing $CO_2$ to rise---completing the cycle.}
+\label{respiration}
+\end{center}
+\end{figure}
 
-% do another diagram for actual network? probably not.
-
-% diagram for respiratory circuit?
 
 \textbf{ODE 1:} The underlying source of ``life'' for Ortus is its respiratory circuit, which maintains a balance of $O_2$ and $CO_2$. $O_2$ is consumed, and $CO_2$ is generated, as a product of Ortus being ``alive''. As activation of the $CO_2$ sensory neuron, $sCO_2$, rises, and activation of the $O_2$ sensory neuron, $sO_2$, falls, motor neurons responsible for excitation and inhibition of the lung muscle are excited and inhibited (respectively), and the lung increases in activation, supplying $O_2$ and expelling $CO_2$. 
 
@@ -155,16 +148,23 @@ There is, however, a far stronger argument for the strength of the SCI inputs: i
 \textbf{BR 4:} Hebbian and Stentian learning, relating to the correlation (or lack thereof) between presynaptic and postsynaptic pairs is a proven learning paradigm in neuroscience, as described by \citet{Kutsarova2016}.
 
 
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=3.5in]{images/ortus_diagram.png}
+\caption{Diagram of Ortus' emotional integration. Each color (other than black, which are sensory neurons) represents a specifc layer of interneuron. SEIs are purple, SCIs are orange, EEIs are blue, and primary emotions ($eF_0$ and $eP_0$) are teal. Dark green arrows represent excitatory chemical synapses, while light green arrows represent weak chemical synapses. Black bars with flat caps on each end depict bidirectional gap junctions, and the red connection with an ``X'' at the end, symbolizes an inhibitory (``opposing'') relationship, in which not only does $eF_0$ inhibit $eP_0$, but the group of EEI$_F$s inhibit the EEI$_P$s connected to their respective SCIs. This is the basic structure that Ortus employs. Currently there is no restriction regarding which interneurons can connect to motor neurons.}
+\label{diagram}
+\end{center}
+\end{figure}
 
 \textbf{ODE 5:} The third class of interneurons is comprised of ``Emotion Extension Interneurons'' (EEIs), which are essentially auxiliary emotion neurons.
 EEIs are specific to each emotion, and receive input from SCIs via chemical synapses, and pass that input on to their respective primary emotion neurons via gap junctions (GJs).
 Emotional learning is achieved by strengthening synapses (via Hebbian learning) of interneurons that form synapses between SCIs (consolidated sensory information), and EEIs.
 The GJ connection enables a given emotional state, incurred by any stimulus, to permeate through Ortus---resulting in an ``emotional state'' of the system (gap junctions in Ortus have no activation threshold).
-The effect of this, is that if a certain sensory input causes a given emotion to increase in activation, the introduction of another sensory input will cause the synapses at the junction of the newly introduced sensory input and elevated emotion to strengthen. (graph here?). 
-Further, as each SCI synapses onto one EEI per emotional state, each EEI has an excitatory chemical synapse to their parent SCI.
+The effect of this, is that if a certain sensory input causes a given emotion to increase in activation, the introduction of another sensory input will cause the synapses at the junction of the newly introduced sensory input and elevated emotion to strengthen. 
+Further, as each SCI synapses onto one EEI per emotional state, each EEI has a fairly weak excitatory chemical synapse to their parent SCI.
 The idea behind the synapse from the EEI to the SCI is to allow an emotional state to ``trigger'', or cause Ortus to ``remember'' a stimulus that previously invoked (and thus become associated with) that emotional state.
 In this case, ``remembering'' is defined as measurably increased activation in the SCI that the EEI synapses onto.
-In practice, we have observed a very slight difference in Ortus as a result of these connections; currently they exist more as a concept that doesn't break the system. A diagram of this layout may be seen in \textbf{DIAGRAM!}.
+In practice, we have observed a very slight difference in Ortus as a result of these connections; currently they exist more as a concept that doesn't break the system. A diagram of this layout may be seen in \ref{diagram}.
 
 \textbf{BR 5:} Specifically with regard to the mammalian dopamine circuit, there exists a small locus of dopaminergic cells, that receive inputs from diverse sources, and project to divers parts of the brain, as discussed by \citet{Beier2015}. From a psychological perspective, it is clear that when one enters an emotional state, the emotion is globally encompassing rather than localized. It is also clear that a stimulus or activity is likley to be ``colored'' by the emotional state one was in when the stimulus occurred. The approach we took with Ortus is a simplification of the dopamine circuit, and a generalization across emotional states; it will likely need refinement.
 
@@ -176,7 +176,7 @@ In practice, we have observed a very slight difference in Ortus as a result of t
 \textbf{ODE 7:} Ortus builds its nervous system by reading in a \textit{.ort} file, using our ``\textit{Ortus Development Rules}'' language. First, ``elements'' (neurons and muscles) must be specified, along with attributes such as the type of element, its affect, and activation threshold. Once all elements have been defined, relationships between elements may be specified. Currently, there are four relationships:
 \begin{itemize}
     \itemsep0em
-    \item \texttt{\[+-\]A} \textbf{causes} \texttt{\[+-\]B}
+    \item \texttt{[+-]A} \textbf{causes} \texttt{[+-]B}
         \subitem Where the ``+''/``-'' indicates an increase/decrease in the presynaptic neuron causes an increase/decrease in the postsynaptic element. This translates into a chemical synapse.
     \item \texttt{A} \textbf{correlated} \texttt{B}
         \subitem Where A and B are correlated. This translates into a bidirectional gap junction.
@@ -189,80 +189,85 @@ In practice, we have observed a very slight difference in Ortus as a result of t
 Relationship--level attributes may be specified, such as: ``mutability'', ``weight'', and ``polarity''. At this time, most relationship attributes need not be specified as Ortus uses default values for mutability and weight, while polarity is determined from the relationships defined. Once Ortus reads these instructions in, it creates interneurons and connections as described by the \textbf{ODE}s above to satisfy all constraints imposed, and to allow associative learning between all emotional states and sensory stimuli (both individual and combined) as described in \textbf{ODE 5}.
 
 
-\textbf{BR 7:}
-
-Our goal in creating the \textit{Ortus Development Rules} was to approximate, in a greatly simplified manner, the way a brain grows itself, based upon genetic instructions that cause circuits to form in certain ways via gene expression \citep{Weiner2015}. Ortus' neural structure is essentially wired to force it to behave in certain ways, akin to the innate behaviors observed in mammals. Further, \citet{Schroter2017} provides evidence for the existence of organizational ``motifs'' found in C. elegans that may underly more complex networks in larger brains; this also lends credence to Ortus' rule--based development approach.
+\textbf{BR 7:} Our goal in creating the \textit{Ortus Development Rules} was to approximate, in a greatly simplified manner, the way a brain grows itself, based upon genetic instructions that cause circuits to form in certain ways via gene expression \citep{Weiner2015}. Ortus' neural structure is essentially wired to force it to behave in certain ways, akin to the innate behaviors observed in mammals. Further, \citet{Schroter2017} provides evidence for the existence of organizational ``motifs'' found in C. elegans that may underly more complex networks in larger brains; this also lends credence to Ortus' rule--based development approach.
 
 
-%the ORT filetype is a specification of ``rules'', akin to very simplified approximation ``virtual DNA'' that define elements (neurons and muscles), and relationships between them, currently: A causes B, A is correlated with B, A opposes B, and A dominates B. Each realtionship has a number of paramters, such as Age, Mutability, Threshold, and either a chemical synapse (CS) weight (unidirectional), or a gap junction (GJ) weight (bidirectional) (NOTE: equations!).
+\subsection{Implementation Details} Ortus is written in C++ and OpenCL. Initial development of its neural structure, and sensory stimulation, are carried out though C++, while all signal transmission between neurons and learning is done in the OpenCL kernel. Each iteration of the OpenCL kernel constitutes one timestep, during which, each neuron sums incoming (positive or negative) ``activation'' from presynaptic cells via chemical synapses and gap junctions. We use the term ``activation'' in place of ``potential'' or ``voltage'' to make it clear that we aren't dealing with the transfer of electrical current, but have abstracted that away to simply ``activation''. The chemical synapse and gap junction activation transfer equations below were adapted and simplified from those described by \cite{Wicks1996} to ignore physical properties of neurons (such as neuron length), decrease computational complexity, and reduce potential sources of hard--to--trace error.
 
-
-
-%\begin{enumerate}
-%    \item \textbf{element:} \texttt{sO2: \{type=sense, affect=pos\}}
-%    \item \textbf{element:} \texttt{sCO2: \{type=sense, affect=neg\}}
-%    \item \textbf{element:} \texttt{eFEAR: \{type=emotion, affect=neg\}}
-%    \item \textbf{element:} \texttt{ePLEASURE: \{type=emotion, affect=pos\}}
-%    \item \textbf{element:} \texttt{mINHALE: \{type=motor\}}
-%    \item \textbf{element:} \texttt{mEXHALE: \{type=motor\}}
-%    \item \textbf{element:} \texttt{LUNG: \{type=muscle\}}
-%    \item \texttt{sO2} \textbf{opposes} \texttt{sCO2}
-%    \item \texttt{mINHALE} \textbf{opposes} \texttt{sCO2}
-%    \item \texttt{+A} \textbf{causes} \texttt{+B}
-%    \item \texttt{A} \textbf{dominates} \texttt{B}
-%\end{enumerate}<++>
-
-
-\subsection{Implementation Details} Ortus is written in C++ and OpenCL. Initial development of its neural structure, and sensory stimulation, are carried out though c++, while all signal transmission between neurons and learning is done in the OpenCL kernel. Each iteration of the OpenCL kernel constitutes one timestep, during which, each neuron sums incoming (positive or negative) ``activation'' from presynaptic cells via chemical synapses (CSes) and gap junctions (GJs).  \textbf{NOTE: maybe this is a good spot for the equations!}
-
-The chemical synapse and gap junction activation transfer equations were simplified from those described by \cite{Wicks1996} to ignore physical properties of neurons (such as neuron length), decrease computational complexity, and reduce potential sources of hard--to--trace error.
-
-Ortus' neurons are based upon C. elegans' neurons, and are non--spiking, but do not transmit any ``activation'' (footnote about why activation is used instead of voltage? or use 'potential?) below a given threshold, as in \citep{Graubard1014}. The equations for CS and GJ synapses were derived (simplified) from Wicks' 1996 paper (cite), and appear to have been used in recent C. elegans' models (cite Beer's 2013).
+Ortus' neurons are based upon C. elegans' neurons, and are non--spiking, but do not transmit any ``activation'' below a given threshold, as described by \citet{Graubard1014}. The equations governing activation transmission between Ortus' neurons are as follows (unless otherwise specified, $A$ refers to the postsynaptic neuron, $i$):
 
 \begin{equation}
-    A_{i}[n+1] = (A_i[n] - A_{i_{decay}}) + A_{GJ_{in}} + A_{CS_{in}} 
+    A[m+1] = (A[m] - A_{decay}) + A_{GJ_{in}} + A_{CS_{in}} 
 \end{equation}
+
+Where $A[m]$ and $A[m+1]$ are the activations of neuron $i$ we are working on for the current and next timestep, $A_{decay}$ is the amount of activation lost by neuron $i$ during the current timestep, and $A_{GJ_{in}}$ and $A_{CS_{in}}$ are the ``incoming'' activations to neuron $i$ from gap junctions and chemical synapses (respectively).
 
 \begin{equation}
-    A_{CS_{in}} =  CS_{pre,post} * A_{i_{g}} * (A_{rev} - A_{post})
+    A_{GJ_{in}} =  GJ_{pre,post} {(A_{pre}[m] - A[m]) \over 2}
 \end{equation}
+
+Where $GJ_{pre,post}$ is the weight of the chemical synapse from the $pre$--synaptic to $post$--synaptic neuron, $A_{pre}[m]$ is the presynaptic neuron's activation. We divide the activation difference by 2 because only half of the difference should move into the $i^{th}$ neuron; $pre$ will lose that half to $i$, and will keep the other half. This is analogous to pouring water into one of two water tanks joined at the bottom.
 
 \begin{equation}
-    A_{post_{g}} = {1 \over { 1 + e^{-5 * { A_{pre} \over A_{range} } } }}
+    A_{CS_{in}} =  CS_{pre,post} S_g  (A_{rev} - A[m])
 \end{equation}
 
-Note, that the equilibrium activation is 0.
+Where $CS_{pre,post}$ is the weight of the chemical synapse from the $pre$--synaptic to $post$--synaptic neuron, $S_g$ is the synaptic conductance of synapse $CS_{pre,post}$, and $A_{rev}$ is the reversal activation for the synapse (will be negative if an inhibitory synapse, and positive if excitatory).
 
 \begin{equation}
-    A_{decay} = C_D * A[n] - A_{GJ_{out}}[n]
+    \label{eq:conductance}
+    S_g = {1 \over { 1 + e^{(-5 { A_{pre}[m] \over A_{range} } )} }}
 \end{equation}
+
+Where $A_{range}$ is the activation range of the presynaptic neuron (which is the difference between the exitatory and inhibitory reversal potentials). Eq. \ref{eq:conductance} uses -5 to vary the conductance from a little less than 10\% to a little more than 90\%.
+It should be noted that generally, we would subtract the equlibrium activation, $A_{eq}$, from $A_{pre}[m]$ prior to dividing by $A_{range}$, but this is not necessary because $A_{eq} = 0$.
+We use the presynaptic neuron's activation to determine the synaptic conductance because our neurons are non--spiking, and as such, activate their synapses with magnitude  proportionate to the neuron's activation level \citep{Wicks1996}.
 
 \begin{equation}
-A_{GJ_{out}} = \sum{i=1}^{N} i * .1 * A[n] 
+    A_{decay} = (C_D A[m]) - A_{GJ_{out}}[m]
 \end{equation}
 
+Where $C_D$ is a constant decay percentage (set to 20\%), and $A_{GJ_{out}}[m]$ is the amount of activation neuron $i$ will lose from outgoing gap junctions. 
 
 
-% CS equation
+\begin{equation}
+    A_{GJ_{out}} = \sum_{j=1}^{N}{(GJ_{out_j} {(A[m] - A_j[m]) \over 2 })}
+\end{equation}
 
-% GJ equation
+Where $GJ_{out_j}$ is the weight of neuron $i$'s $j^{th}$ outgoing gap junction, $N$ is the number of neurons,  and $A_j[m]$ is the $j^{th}$ neuron's activation. Note that to compute the activation that neuron $i$ will lose due to its outgoing gap junctions, we treat it as the presynaptic neron. 
 
-% voltage leak
+\subsection{Learning}
 
-% 
+In order to implement biologically plausible Hebbian and Stentian learning, synchronous activity had to be locally determined, on a per--neuron basis. Each postsynaptic neuron computes a cross--correlation between its previous four activations, and all other neurons from the current time, to four timesteps back, as seen in \ref{eq:xcorr}. This allows a postsynaptic neuron \texttt{A} to determine how every other neuron is moving with respect to itself at the current time ($t=0$), and how their activity may have \textit{influenced} it, by assessing the level of correlation between progressively earlier historical activations of the other neurons relative to itself. A high correlation at $XCorr[3]$, for example, would indicate that the $post$ neuron acted similarly to neuron $j$, three timesteps after neuron $j$ acted that way.
 
-Hebbian and Stentian learning are gov
+Neurons also compute the slopes of the activations of all neurons, as shown in Eq. \ref{eq:slope}, which allows detection of a constant, or rapidly changing neuron's activation.
 
-Cross Correlation (XCorr) Computation
+\begin{equation}
+    \label{eq:xcorr}
+    XCorr[t] =  xcorr(H_{post}[0..3], H_{j}[t..t+4])
+\end{equation}
 
-Ortus employs an XCorr computation of length 4, using \ldots
+Where $XCorr[t]$ is the $t^{th}$ cross--correlation computation between $post$ and presynaptic neuron $j$, $H$ is the activation history indexed by most recent activation at $H[0]$, and $xcorr$ is the cross--correlation computation. 
 
-In addition to XCorr, Ortus computes four of the most recent slopes of all neurons, using the previous 5 activations of each neuron.
+\begin{equation}
+    \label{eq:slope}
+    Slope_j[t] =  slope_u(H_{j}[t..t+u])
+\end{equation}
 
-\subsubsection{Implementation Details}
-- C++, OpenCL
-- each neuron operates on its incoming connections, so it only does ``postsynaptic'' work, leaving its ``presynaptic'' work to neurons that it is presynaptic to (see ``shortcomings'')
-- sensory consolidation causes resolution loss, currently maximum resolution for any sensor array (e.g., not just O2) has a maximum resolution of 2 for intra--sensor consolidation, and 3 for inter--sensor consolidation. Single neuron sensors have no minimum for either. (NOTE: sensor array not implemented yet... take this out if it doesn't get implemented)
+Where $Slope_j[t]$ is the $t^{th}$ slope computation for neuron $j$, $u$ is the number of timesteps to use when computing the slope (set to 2), $slope$ computes the slope.
+
+Combing the $XCorr$ and $Slope$ computation results, assuming both neurons involved have activations above the activation threshold (note that the maximum $XCorr$ value is 1):
+
+\begin{itemize}
+    \itemsep0em
+    \item rapid strengthening occurrs if there is a highly synchronous pair of singals nearly constant signals:
+        \subitem $\sum_{i=1}^{4}{ XCorr[i]} \ge 3.92$, and
+        \subitem $\sum_{i=1}^{4}{ Slope[i]} \le .02$
+    \item synaptic strenghting occurrs slowly if:
+        \subitem $\sum_{i=1}^{4}{ XCorr[i]} < .05$
+    \item synaptic weakening occurrs slowly if:
+        \subitem $\sum_{i=1}^{4}{ XCorr[i]} > 3.5$
+\end{itemize}
 
 \section{Experimental Design and Results}
 
@@ -273,94 +278,65 @@ After repeating the conditioning exposure four times, we allowed Ortus 200 times
 Finally, we exposed Ortus to water, without inducing a fearful state, to determine if it had learned to be fearful of water.
 
 \subsubsection{Results.} Since $sCO_2$ activation causes fear, and $H_2O$ was presented ($sH_2O$ was stimulated) during this time, we expected Ortus to become progressively more and more ``scared'' of water each time it was presented while it was in a state of elevated fear.
-As can be seen in \textbf{FIGURE}, during each exposure to $H_2O$, activation of \texttt{eFEAR} increased when compared to the previous exposure.
-Further, after the four rounds of conditioning, we expected to observe an increase in activation in \texttt{eFEAR} when we presented Ortus with $H_2O$, in the absence of exhalation and inhalation restriction. The \textbf{FIGURE} confirms this increase in fear activation as a result of $sH_2O$ stimulation alone. Compared to simply exposing Ortus to $sH_2O$ stimulation without prior fear conditioning, in which a very slight raise was observed---as may be seen in \textbf{FIGURE}, it is clear that we were able to successfully use classical conditioning to instill a fear of water in Ortus that was previously almost non--existent. 
+As can be seen in Fig. \ref{conditioning}, during each exposure to $H_2O$, activation of \texttt{eFEAR} increased when compared to the previous exposure.
+Further, after the four rounds of conditioning, we expected to observe an increase in activation in \texttt{eFEAR} when we presented Ortus with $H_2O$, in the absence of exhalation and inhalation restriction. Fig. \ref{conditioned} confirms this increase in fear activation as a result of $sH_2O$ stimulation alone. Compared to simply exposing Ortus to $sH_2O$ stimulation without prior fear conditioning, in which a very slight raise was observed---as may be seen in \textbf{FIGURE}, it is clear that we were able to successfully use classical conditioning to instill a fear of water in Ortus that was previously almost non--existent. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=3.3in]{images/conditioning_small.png}
+\caption{Ortus' fear conditioning with $CO_2$ exhalation prevention and $O_2$ deprevation. Each time $H_2O$ is introduced under these conditions, Ortus' fear response grows, as evidenced by a strengthening response of \texttt{eFEAR} during each of the four rounds of conditioning.}
+\label{conditioning}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=3.3in]{images/conditioned_small.png}
+\caption{The final result of conditioning Ortus to fear $H_2O$. After the four rounds of conditioning, simply exposing Ortus to $H_2O$ is enough to induce a state of fear.}
+\label{conditioned}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=3.3in]{images/no_conditioning_small.png}
+\caption{In the absence of fear condtioning, $H_2O$ introduction causes a very subtle, slowly growing association with fear. This is likley due to instability in Ortus, and is an indication Ortus' learning needs more nuance.}
+\label{no_conditioning}
+\end{center}
+\end{figure}
+
+
+
+
 
 
 \section{Discussion}
 
-While the results show that we achieved our goal of designing an implementing an initial framework 
 
-While the implementation presented is quite simple, the initial results presented pave the way for quick advances to Ortus' capability with regard to ``behaviors'' resulting from emotional amalgamation as well as the introduction of more complex sensory input.
+Our initial experiments with Ortus show that it has great potential as a biologically--based framework for developing virtual life that exhibits complex intelligence. That said, there are a number of shortcomings that must be addressed.
 
+First, there is instability in the system. Further development, analysis, and experimentation of the emotional circuit(s) is necessary. The current approach is quite naive, and seems to play a role in the oservable instability. A number of additional things could play a role in its instability as well; at this point, it is quite easy to throw Ortus out of balance. Small changes to the weights can have vast implications for the functionality of the system, because an initial small change can multiply causing the system to become unstable. \citet{Johansen2014} suggests that in mice, while synchronous activity (correlation) is necessary for synaptic plasticity, it is not sufficient; neuromodulatory signaling is also required. This could be a way to control some of the unstable behavior seen as a result of the purely correlation--based learning rules implemented. In general, implementing more biologically--based constraints should help solve this, though refinment of the neural structuring rules is also likely neccessary.
 
-Clearly more emotions can be added, and can be combined in various ways, meaning there is the potential for Ortus to experience quite complex emotional states.
-
-While Ortus' eventual goal is to develop complex ``neural'' functionality akin to that observed in complex systems, we
-
-\citet{Kutsarova2016} indicates that, relative to synaptic strengthening and weakening, axonal branch tips emerge to form new synapses. synchronous activity stabilizes synapses and prolongs axonal branches. This is one way for Ortus to alter its structure in addition to synaptic weights.
-
-\cite{Johansens2014} suggests that in mice, while synchronous activity (correlation) is necessary for synaptic plasticity, it is not sufficient; neuromodulatory signaling is also required. This could be a way to control some of the unstable behavior seen as a result of the purely correlation--based learning rules implemented.
+In fact, the neural structure needs refinement for combinatoric reasons either way; in order to implement a sensor array (e.g., any sort of topographically ordered sensory inputs, like vision), using a ``fully--wired'' approach is completely unfeasible. Even 32 sensors would require over 4 billion connections. \citet{Schroter2017} suggests that C. elegans' neurons may have multiplexed functions, meaning that one neuron may contribute to more than one behavior. This is another possible way to decrease the number of necessary neurons in Ortus.
 
 
-Since disabling different parts of a given circuit can have slightly different effects (e.g. males will seek males, instead of females) \citet{Weiner2015}, it should be feasible to grow portions of Ortus where more nuanced behavior is desired.
-
-However one current issue is if we have SCIs for sensory neurons \texttt{A}, and \texttt{B}, we will have \texttt{iA}, and \texttt{iB}, and \texttt{iAB}. If \texttt{iAB} is activated, that means that \texttt{iA} and \texttt{iB} will also be activated. A solution might be for more complex SCIs to inhibit less complex ones, though that would perhaps unnecessarily add to computational complexity.
-
-Sensory stimulation is sensed by sensory neurons that are topographically arranged, similar to those in organic systems. A recent study suggesting that the brain is organized based upon an n = 2something... and something about permutations lends credence to this approach (cite n something 2 permutation paper).
-
-GJ vs CS delay\ldots
-
-Talk about the combinatorial explosion, but then discuss how that can be pruned away... similar to babies. The $2^n - 1$ paper suggested reducing the resolution of inputs, so, instead of each sensor being able to connect with every other sensor, funnel 3 sensors (for example) into 1, to create a ``functional connectivity module'' (FCM). That approach might not be bad, however, it could be severely limiting. Perhaps this can be cut down by looking at relationships between sensors, and getting rid of things that don't matter?
-
-Choices are:
-1) an array of 9 sensors, if 0,1,2 > A, 2,3,4 > B, 4,5,6 > C, 6,7,8 > D, then sum {nCr(k,n)} for n from 1 to k is $2^n - 1$. It is clear that to get a fully connected network, capable of expressing all possible combinations, even from a living organism perspective, things become unfeasible.
-
-2) Rather, it is probably the case that our brains aren't quite as connected as they appear to be. (e.g., within a certain radius, two places on your skin feel like the same location. visual system either might be an exception, however it is well known that visual information gets interpolated.)
-There must be some sort of neural processing shortcuts ... approximation. e.g., if you are quickly reading, you might read "New York", when the only word there was "York"
+Lastly, we would like to make Ortus' learning far more nuanced, and capable of picking up on more subtle changes than it currently can, however working on resolving the aforementioned issues should help the learning aspect as well. Additionally, \citet{Kutsarova2016} indicates that, relative to synaptic strengthening and weakening, axonal branch tips emerge to form new synapses, and that synchronous activity stabilizes synapses and prolongs axonal branches. This is one way for Ortus to modify its approach to learning that in addition to simply altering synaptic weights. It also suggests there is biological precedent to implement a ``floor'' so that as Ortus learns new things, they can't be unlearned beyond a certain point (perhaps drive a synapse's mutability toward 0 as it ages). 
 
 
 
-\cite{Weiner2015} talks about topographic organization\ldots useful for sensors in array (e.g. visual)
-
-Need to implement habituation 
-
-From an artificial intelligence standpoint, the
-
-\begin{enumerate}
-\item less connections
-\item ability to specify initial behavior
-\item don't need a massive training set
-\item 3 types of interactions: inhibitory CS, excitatory CS, and GJ.
-\end{enumerate}
-
-Together, these afford artificial neural networks far greater flexibility and thereby power. It is possible that this will enable more nuanced behavior.
-
-From an artificial life standpoint: people are modeling networks with less complexity than this to attempt to recreate C. elegans' behavior from its connectome (cite openworm). This work pivoted from that approach, because in attempting to model the entire connectome, it became clear that there were too many unknowns. However, it also became clear that there was a certain logic to the way the neurons were wired; a notion backed up by (cite c elegans wiring works... have some in mendeley).
-
-A simple idea is, how can C. elegans <DO SOMETHING> -- point here is to describe the requirement that certain things inhibit while others excite, in order to allow a certain behavior to happen.
-
-
-
-\citet{Schroter2017} suggests that C. elegans' neurons may have multiplexed functions, meaning that one neuron may contribute to more than one behavior. This is another possible way to decrease the number of necessary neurons in Ortus.
-
-
-floor so that learned stuff can't be unlearned beyond a certain point -- e.g., as a relationship ages, it's mutability should tend toward 0.
-
-
-\subsubsection{Shortcomings and Issues.}
-There is no temporal differentiation between CS and GJ transmission. On each timestep, neurons collect all incoming ``activation'' from.
-
-There is minimal presynaptic processing -- (NOTE:how true is this? )
-
-No location--based axon growth, as is seen in, relative to hebbian plasticity (cite)
-
+Shortcomings aside, the results of our classical conditioning experiment with Ortus show that we successfully created a biologically--based virtual system that has a ``self--sustaining'' respiratory circuit and is capable of Hebbian and Stentian learning. To suggest Ortus was virtually ``alive'' at any point during our experimentation seems as though it would be quite a stretch, however, once Ortus and similar systems increase in complexity, we must pose the question: when something cross the boundary from computer program to sentient virtual being? When it can ``feel''? What defines a ``feeling'' then? We have made the case that Ortus is emotion--driven, and have shown that we can not only induce fear in it by interrupting its respiration cycle. On one hand, it seems a bit silly to suggest a few virtual neurons consitute virtual life. On the other hand, why does it not seem silly to suggest C. elegans, a 302 neuron organism \textit{does} constitute organic life? Because we can see it? We can make Ortus ``see'' things, too.
 
 
 
 
 \section{Conclusion}
-We have presented Ortus, an initial approach to a framework that exhibits basic emotionally--based learning (fear conditioning), self--sustaining inherent behavior (cyclic breathing), and a topographical approach to sensory processing that enables inter-sensory associative learning, with or without an emotional component.
-
-Ortus also has a system to map sensory inputs such as "breathe" to the stimulation of O2 sensors.
-
-
-
+We have presented Ortus, an initial approach to a framework that exhibits basic emotionally--based learning (fear conditioning), self--sustaining inherent behavior (cyclic breathing via a respiratory circuit), and approach to sensory processing that enables inter-sensory associative learning, with or without an emotional component. While the implementation of Ortus presented is quite simple, the design principles are solidly based in biology, and with further development and refinement, the potential exists for Ortus' development of (artificial) biological intelligence to quickly increase. %resulting from emotional amalgamation and the introduction of more complex sensory input.
 
 
 
 \section{Acknowledgements}
 
+We thank..
 This work was supported by NSF grant No.\ ?????????????????.
 
 \footnotesize
@@ -368,365 +344,5 @@ This work was supported by NSF grant No.\ ?????????????????.
 \bibliography{ortus_paper} % replace by the name of your .bib file
 
 
-%\section{Self-Organization in Evolution}
-%
-%The idea that the evolutionary process occurs in spurts, jumps, and
-%bursts rather than gradual, slow and continuous changes has been
-%around for over 75 years \citep{WIL}, but has gained prominence as
-%``punctuated equilibrium'' through the work of \citet{GE77,GE93}. The
-%general idea is that evolutionary innovations are not bestowed upon an
-%existing species as a whole, gradually, but rather by the emergence of
-%{\em one} better adapted mutant which, by its superiority, serves as
-%the seed of a new breed that sweeps through an ecological niche and
-%supplants the species previously occupying it. The global dynamics
-%thus has a microscopic origin, as shown experimentally, e.g., in
-%populations of {\it E. Coli} \citep{ECL96}.
-%
-%Such avalanches can be viewed in two apparently contradictory ways. On
-%the one hand we may consider the wave of extinction touching all
-%species that are connected by their ecological relations, a process
-%akin to percolation and therefore suitably described by the language
-%of second-order critical phenomena \citep{BS}. Such a scenario relies
-%on the {\em coevolution} of species (to build their ecological
-%relations) and successfully describes power-law distributions obtained
-%from the fossil record \citep{SB96,BP96}. There is, on the other hand,
-%a description in terms of {\em informational} avalanches that does not
-%require coevolution and leads to the same statistics, as we show
-%here. Rather than contradicting the aforementioned picture
-%\citep{NFST}, we believe it to be complementary.
-%
-%In the following, we set up a scenario in which {\em information} is
-%viewed as the agent of self-organization in evolving and adapting
-%populations. Information is, in the strict sense of Shannon theory, a
-%measure of correlation between two ensembles: here a population of
-%genomes and the environment it is adapting to. As described elsewhere
-%\citep{IAL}, this correlation grows as the population stores more and
-%more information about the environment via random measurements,
-%implementing a very effective {\em natural Maxwell demon}. Any time a
-%stochastic event increases the information stored in the population, a
-%wave of extinction removes the less adapted genomes and establishes a
-%new era. Yet, information cannot leave the population as a whole,
-%which therefore may be thought of as protected by a {\em
-%semi-permeable membrane} for information, the hallmark of the Maxwell
-%demon. Let us consider this dynamics in more detail.
-%
-%The simple living systems we consider here are populations of
-%self-replicating strings of instructions, coded in an alphabet of
-%dimension ${\cal D}$ with variable string length $\ell$. The total
-%number of possible strings is exponentially large. Here, we consider
-%the subset of all strings currently in existence in a finite
-%population of size $N$, harboring $N_g$ different types, where
-%$N_g\ll{\cal D}^\ell$. Each {\em genotype} (particular sequence of
-%instructions) is characterized by its replication rate $\epsilon_i$,
-%which depends on the sequence only, while its survival rate is given
-%by $\epsilon_i/\langle \epsilon\rangle$, in a ``stirred-reactor''
-%environment that allows a mean-field picture. This average replication
-%rate $\langle \epsilon\rangle$ characterizes the fitness of the
-%population as a whole, and is given by
-%\begin{eqnarray}
-%\langle \epsilon\rangle=\sum_i^{N_g}\frac{n_i}N \epsilon_i\;,
-%\end{eqnarray}
-%where $n_i$ is the {\em occupation number}, or frequency, of genotype
-%$i$ in the population. As $N_g$ is not fixed in time, the average
-%depends on time also, and is to be taken over all genotypes currently
-%living. The total abundance, or size, of a genotype is then
-%\begin{eqnarray}
-%s_i=\int_0^\infty n_i(t)\, dt=\int_{T_c}^{T_e}n_i(t)\, dt\;,
-%\label{size}
-%\end{eqnarray}
-%where $T_c$ is the time of creation of this particular genotype, and
-%$T_e$ the moment of extinction. Before we obtain this distribution in
-%Avida, let us delve further into the statistical description of the
-%extinction events.
-%
-%At any point in time, the fate of every string in the population is
-%determined by the craftiness of the best adapted member of the
-%population, described by $\epsilon_{\rm best}$. In this simple,
-%finite, world, which does not permit strings to affect other members
-%of the population except by replacing them, not being the best reduces
-%a string to an ephemeral existence. Thus, every string is
-%characterized by a {\em relative} fitness, or {\em inferiority}
-%\begin{eqnarray}
-%E_i=\epsilon_{\rm best}-\epsilon_i
-%\end{eqnarray}
-%which plays the role of an {\em energy} variable for strings of
-%information {IAL}. Naturally, $\langle E\rangle=0$ characterizes the
-%{\em ground state}, or vacuum, of the population, and strings with
-%$E_i>0$ can be viewed as occupying {\em excited} states, soon to
-%``decay'' to the ground state (by being replaced by a string with
-%vanishing inferiority). Through such processes, the dynamics of the
-%system tend to minimize the average inferiority of the population, and
-%the fitness landscape of replication rates thus provides a Lyapunov
-%function. Consequently, we are allowed to proceed with our statistical
-%analysis. Imagine a population in equilibrium, at minimal average
-%inferiority as allowed by the ``temperature'': the rate (or more
-%precisely, the probability) of mutation. Imagine further that a
-%mutation event produces a new genotype, fitter than the others,
-%exploiting the environment in novel ways, replicating faster than all
-%the others. It is thus endowed with a new best replication rate,
-%$\epsilon_{\rm best}^{\rm new}$, larger than the old ``best'' by an
-%amount $\Delta \epsilon$, and redefining what it means to be
-%inferior. Indeed, all inferiorities must now be {\em renormalized}:
-%what passed as a ground state ($E=0$) string before now suddenly finds
-%itself in an excited state. The seed of a new generation has been
-%sown, a phase transition must occur. In the picture just described,
-%this is a first-order phase transition with latent heat
-%$\Delta\epsilon$ (see Fig.\ref{fig1}), starting at the ``nucleation''
-%point, and leading to an expanding {\em bubble} of ``new phase''.
-%
-%
-%\begin{figure}[t]
-%\begin{center}
-%\includegraphics[width=2.1in,angle=-90]{fig1.eps}
-%\caption{``Energies'' (inferiorities) of strings in a first-order
-%  phase transition with latent heat $\Delta\epsilon$.}
-%\label{fig1}
-%\end{center}
-%\end{figure}
-%
-%This bubble expands with a speed given by the Fisher velocity
-%\begin{eqnarray}
-%v\sim\sqrt{D\Delta\epsilon}\;, \label{eq4}
-%\end{eqnarray}
-%where $D$ is the diffusion coefficient (of information) in this
-%medium, until the entire population has been converted \citep{CHU}.
-%This marks the end of the phase transition, as the population returns
-%to equilibrium via mutations acting on the new species, creating new
-%diversity and restoring the {\em entropy} of the population to its
-%previous value. This prepares the stage for a new avalanche, as only
-%an equilibrated population is vulnerable to even the smallest
-%perturbation. The system has returned to a critical point, driven by
-%mutations, self-organized by information.
-%
-%Thus we see how a first-order scenario, without coevolution, can lead
-%to self-organized and critical dynamics. It takes place within a
-%single, finite, ecological niche, and thus does not contradict the
-%dynamics taking place for populations that span many niches. Rather,
-%we must conclude that the descriptions complement each other, from the
-%single-niche level to the ecological web. Let us now take a closer
-%look at the statistics of avalanches in this model, i.e., at the
-%distribution of genotype sizes.
-%
-%
-%\section{Exponents and Power Laws}
-%
-%\hyphenation{ap-proximated}
-%
-%In this particular system avalanche size can be approximated
-%by the size $s$ of the genotype that gave rise to it,
-%Eq.~(\ref{size}).  We shall measure the distribution of these sizes
-%$P(s)$ in the Artificial Life system Avida, which implements a
-%population of self-replicating computer programs written in a simple
-%machine language-like instruction set of ${\cal D}=24$ instructions,
-%with programs of varying sequence length. In the course of
-%self-replication, these programs produce mutant off-spring because the
-%{\tt copy} instruction they use is flawed at a rate $R$ errors per
-%instruction copied, and adapt to an environment in which the
-%performance of {\em logical} computations on externally provided
-%numbers is akin to the catalysis of chemical reactions \citep{OBA}. In
-%this {\em artificial chemistry} therefore, successful computations
-%accelerate the metabolism (i.e., the CPU) of those strings that carry
-%the {\em gene} (code) necessary to perform the trick, and any program
-%discovering a new trick is the seed of another avalanche.
-%
-%Avida is not a stirred-reactor environment (although one can be
-%simulated). Rather, the programs live on a two-dimensional grid, each
-%program occupying one site. The size of the grid is finite, and chosen
-%in these experiments to be small enough that avalanches are generally
-%over before a new one starts. As is well-known, this is the condition
-%{\em sine qua non} for the observation of SOC behavior, a separation
-%of time scales which implies that the system is driven at
-%infinitesimal rates.
-%
-%Let $\tau$ denote the average duration of an avalanche. Then, a
-%separation of time scales occurs if the average time between the
-%production of new seeds of avalanches is much larger than $\tau$. New
-%seeds, in turn, are produced with a frequency $\langle\epsilon\rangle
-%P$, where $\langle\epsilon\rangle$ is again the average replication
-%rate, and $P$ is the mutation probability (per replication period) for
-%an average sequence of length $\ell$,
-%\begin{eqnarray}
-%P=1-(1-R)^\ell\;.
-%\end{eqnarray}
-%For small enough $R$ and not too large $\ell$ (so that the product
-%$R\ell$ is smaller than unity) we can approximate
-%$P\approx R\ell$, and infinitesimal driving occurs in the limit
-%\begin{eqnarray}
-%\langle \epsilon\rangle R\ell \ll\frac1\tau\;.\label{cond}
-%\end{eqnarray}
-%Furthermore
-%\begin{eqnarray}
-%\tau\sim\frac{L}v
-%\end{eqnarray}
-%with $L$ the diameter of the system and $v$ a typical Fisher velocity.
-%The fastest waves are those for which the latent heat is of the order
-%of the new fitness, i.e., $\Delta\epsilon\sim\epsilon$, in which case
-%$v\approx \epsilon$ \citep[because $D\sim\epsilon$ in
-%Eq.~(\ref{eq4}),][]{CHU}, and a separation of time scales is assured
-%whenever
-%\begin{eqnarray}
-%\frac1{R\ell}\gg {L}\;,
-%\end{eqnarray}
-%that is, in the limit of vanishing mutation rate or small population
-%sizes. For the $L=60$ system used here, this condition is obeyed (for
-%the fastest waves) only for the smallest mutation rate tested and
-%sequence lengths of the order of the ancestor.
-%
-%
-%\begin{figure}[t]
-%\includegraphics[width=2.3in, angle=90]{fig2.eps}
-%\caption{Fitness of the dominant genotype in the population, $\epsilon_{\rm best}$ as a function of time (in updates).}
-%\label{fig2}
-%\end{figure}
-%
-%
-%In the following, we keep the population size constant (a $60\times60$
-%grid) and vary the mutation rate. From the previous arguments, we
-%expect true scale-free dynamics only to appear in the limit of small
-%mutation rates.  As in this limit avalanches occur less and less
-%frequently, this is also the limit where data are increasingly
-%difficult to obtain, and other finite size effects can come into play.
-%We shall try to isolate the scale-free regime by fitting the
-%distribution to a power law
-%\begin{eqnarray}
-%P(s)\sim s^{-D(R)}\label{power}
-%\end{eqnarray}
-%and monitor the behavior of $D$ from low to high mutation rates.
-%
-%In Fig.~\ref{fig2}, we display a typical history of $\epsilon_{\rm
-%best}$, i.e., the fitness of the dominant genotype.\footnote{As the
-%replication rate $\epsilon$ is exponential in the bonus obtained for a
-%successful computation, $\epsilon_{\rm best}$ increases exponentially
-%with time.}  Note the ``staircase'' structure of the curve reflecting
-%the ``punctuated'' dynamics, where each step reflects a new avalanche
-%and concurrently an extinction event. Staircases very much like these
-%are also observed in adapting populations of {\it E. Coli}
-%\citep{LT94}.
-%
-%As touched upon earlier, the Avida world represents an environment
-%replete with information, which we encode by providing bonuses for
-%performing logical computations on externally provided (random)
-%numbers. The computations rewarded usually involve two inputs $A$ and
-%$B$, are finite in number and listed in Table~1. At the end of a
-%typical run (such as Fig.~\ref{fig2}) the population of programs is
-%usually proficient in almost all tasks for which bonuses are given
-%out, and the genome length has grown to several multiples of the
-%initial size to accommodate the acquired information.
-%
-%\begin{table}[h]
-%\center{
-%\begin{tabular}{|c|c|c|c|}\hline
-%Name & Result & Bonus $b_i$ & Difficulty\\ \hline\hline
-%Echo & I/O   & 1 & --\\
-%Not  & $\neg A$ & 2 & 1 \\
-%Nand & $\neg(A\wedge B)$ & 2 & 1 \\
-%Not Or & $\neg A \vee B$ & 3 & 2 \\
-%And  &  $ A \wedge B $   & 3 & 2 \\
-%Or   &  $ A \vee B $     & 4 & 3 \\
-%And Not & $A\wedge\neg B$& 4 & 3 \\
-%Nor  & $\neg(A\vee B)$   & 5 & 4 \\
-%Xor  & $ A\ {\rm xor}\ B$ &   6 & 4 \\
-%Equals &$\neg(A\ {\rm xor}\ B)$&6& 4 \\ \hline
-%\end{tabular}
-%}
-%\vskip 0.25cm
-%\caption{Logical calculations on random inputs $A$ and $B$ rewarded,
-%bonuses, and difficulty (in minimum number of {\tt nand} instructions
-%required). Bonuses $b_i$ increase the speed of a CPU by a factor
-%$\nu_i=1+2^{b_i-3}$.}
-%\end{table}
-%
-%Because the amount of information stored in the landscape is finite,
-%adaptation, and the associated avalanches, must stop when the
-%population has exhausted the landscape.  However, we shall see that
-%even a `flat' landscape (on which evolution is essentially neutral
-%after the sequence has optimized its replicative strategy) gives rise
-%to a power law of genotype sizes, as long as the programs do not
-%harbor an excessive amount of ``junk'' instructions.  A typical
-%abundance distribution (for the run depicted in Fig.~\ref{fig2}) is
-%shown in Fig.~\ref{fig3}.
-%
-%
-%\begin{figure}[ht]
-%\begin{center}
-%\includegraphics[width=2.25in, angle=90]{fig3.eps}
-%\caption{Distribution of genotypes sizes $P(s)$ fitted to a power law
-%  (solid line) at mutation rate $R=0.004$.}
-%\label{fig3}
-%\end{center}
-%\end{figure}
-%
-%
-%As mentioned earlier, we can also turn {\em off} all bonuses listed in
-%Tab.~1, in which case fitness is related to replicative abilities
-%only. Still, avalanches occur (within the first 50,000 updates
-%monitored) due to minute improvements in fitness, but the length of
-%the genomes typically stays in the range of the ancestor, a program of
-%length 31 instructions. We expect a change of dynamics once the
-%``true'' maximum of the local fitness landscape is reached, however,
-%we did not reach this regime in the experiments presented here. The
-%distribution of genotype sizes for the flat landscape is depicted in
-%Fig.~\ref{fig4}.
-%
-%
-%\begin{figure}[!tbp]
-%\begin{center}
-%\includegraphics[width=2.25in, angle=90]{fig4.eps}
-%\caption{Distribution of genotypes sizes $P(s)$ for a landscape devoid
-%  of the bonuses listed in Tab.~1, at mutation rate $R=0.003$.} \label{fig4}
-%\end{center}
-%\end{figure}
-%
-%
-%Clearly then, even such landscapes (flat with respect to all other
-%activities except replication) are not neutral. Indeed, it is known
-%that neutral evolution, where the chance for a genotype to increase or
-%decrease in number is even, leads to a power law in the abundance
-%distribution with exponent $D=1.5$ \citep{ABH}.
-%
-%
-%\begin{figure}[t]
-%\begin{center}
-%\includegraphics[width=2.2in, angle=90]{fig5.eps}
-%\vskip 0.25cm
-%\caption{Fitted exponent of power law for 34 runs at mutation rates
-%  between $R=0.0005$ and $R=0.01$ copy errors per instruction
-%  copied. The error bars reflect the standard deviation across the
-%  sample of runs taken at each mutation rate. The solid line is to
-%  guide the eye only.
-%}
-%\label{fig5}
-%\end{center}
-%\end{figure}
-%
-%
-%In order to test the dependence of the fitted exponent $D(R)$
-%[Eq.~(\ref{power})] on the mutation rate, we conduct a set of
-%experiments at varying copy-mutation rates from $0.5\times10^{-3}$ to
-%$10\times10^{-3}$ and take data for 50,000 updates. Again, a ``best''
-%genotype is not reached after this time, and we must assume that
-%avalanches were still occurring at the end of these runs. Furthermore,
-%in some runs we find that a genotype comes to dominate the population
-%(usually after most `genes' have been discovered) which carries an
-%unusual amount of junk instructions. As mentioned earlier, such
-%species produce a distribution that is exponentially suppressed at
-%large genotype sizes (data not shown). To avoid contamination from
-%such species, we stop recording genotypes after a plateau of fitness
-%was reached, i.e., if the population had discovered most of the
-%bonuses. Furthermore, in order to minimize finite size effects on the
-%determination of the critical exponent, we excluded from this fit all
-%genotype abundances larger than 15, i.e., we only fitted the smallest
-%abundances. Indeed, at larger mutation rates the higher abundances are
-%contaminated by a pile-up effect due to the toroidal geometry, while
-%at lower mutation rates a scale appears to enter which prevents
-%scale-free behavior. We have not, as yet, been able to determine the
-%origin of this scale.
-%
-%In the results reported here, we show the dependence of the fitted
-%exponent $D$ as a function of the mutation rate $R$ used in the run,
-%which, however, is a good measure of the mutation probability $P$ only
-%at small $R$ and if the sequence length is not excessive. As a
-%consequence, data points at large $R$, as well as runs where an
-%excessive sequence length developed, carry a systematic error.
-%
+
 \end{document}

@@ -39,6 +39,8 @@ void DataVisualizer::plotXCorr(std::vector<double>& dataX, std::vector<double>& 
 
 
 void DataVisualizer::makePlots(){
+    //makeConferencePlots();
+    //return;
     const int plotOneSize = 7;
     std::string plotOneSet[plotOneSize] = {"sO2","sCO2","isO2", "isCO2", "mINHALE", "mEXHALE", "LUNG"};
     const int plotTwoSize = 5;
@@ -70,6 +72,8 @@ void DataVisualizer::makePlots(){
     }
     plot.grid(true);
     plot.legend();
+    plot.xlabel("Timesteps (iterations)");
+    plot.ylabel("Activation");
     plot.subplot("212");
     kwArgs.clear();
     for (int i = 0; i < plotTwoSize; ++i){
@@ -90,7 +94,65 @@ void DataVisualizer::makePlots(){
     
 }
 
-
+void DataVisualizer::makeConferencePlots(){
+    const int plotOneSize = 7;
+    std::string plotOneSet[plotOneSize] = {"sO2","sCO2","isO2", "isCO2", "mINHALE", "mEXHALE", "LUNG"};
+    const int plotTwoSize = 5;
+    std::string plotTwoSet[plotTwoSize] = {"sO2","sCO2","ePLEASURE", "eFEAR", "sH2O"};
+    
+    int max = stewie->fullActivationHistory.size();
+    Plot plot(true);
+    
+    std::vector<double> xVals;// windows
+    std::vector<double> yVals;// neuron voltages
+    for ( int i = 0; i < max; ++i){
+        xVals.push_back(i);//window number
+    }
+    plot.addXValues<double>(xVals);
+    plot.figure();
+    plot.grid(true);
+    plot.legend();
+    plot.xlabel("Timesteps (iterations)");
+    plot.ylabel("Activation");
+    
+    //plot.subplot("211");
+    //Plot::kwargsMap kwArgs;
+    std::unordered_map<std::string, std::string> kwArgs;
+    for (int i = 0; i < plotOneSize; ++i){
+        int idx = stewie->connectomep->nameMap[plotOneSet[i]];
+        kwArgs["label"] = plotOneSet[i];
+        yVals.clear();
+        for (int j = 0; j < max; ++j){
+            yVals.push_back(stewie->fullActivationHistory[j][idx]);
+        }
+        plot.addYValues<double>(yVals);
+        plot.plot(kwArgs);
+    }
+    plot.grid(true);
+    plot.legend();
+    plot.show();
+    
+    plot.xlabel("Timesteps (iterations)");
+    plot.ylabel("Activation");
+    //plot.subplot("212");
+    kwArgs.clear();
+    for (int i = 0; i < plotTwoSize; ++i){
+        int idx = stewie->connectomep->nameMap[plotTwoSet[i]];
+        kwArgs["label"] = plotTwoSet[i];
+        yVals.clear();
+        for (int j = 0; j < max; ++j){
+            yVals.push_back(stewie->fullActivationHistory[j][idx]);
+        }
+        plot.addYValues<double>(yVals);
+        plot.plot(kwArgs);
+    }
+    plot.grid(true);
+    plot.legend();
+    
+    plot.show();
+ 
+    
+}
 
 void DataVisualizer::plotSet(std::string* names, int numNames){
 

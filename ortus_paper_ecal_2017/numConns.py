@@ -37,4 +37,5 @@ print("from 2^n-1 paper..")
 compute(8,1)
 compute(8,4)
 compute(4,1)
+compute(32,1)
 

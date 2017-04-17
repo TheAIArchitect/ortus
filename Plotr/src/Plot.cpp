@@ -130,6 +130,19 @@ bool Plot::title(std::string title){
     return Pytils::call(py.getPyObject("title"), packedArgs);
 }
 
+bool Plot::ylabel(std::string ylabel){
+    PyObject* packedArgs;
+    Pytils::packTuple( &packedArgs, {PyString_FromString(ylabel.c_str())});
+    return Pytils::call(py.getPyObject("ylabel"), packedArgs);
+}
+
+bool Plot::xlabel(std::string xlabel){
+    PyObject* packedArgs;
+    Pytils::packTuple( &packedArgs, {PyString_FromString(xlabel.c_str())});
+    return Pytils::call(py.getPyObject("xlabel"), packedArgs);
+}
+
+
 /*
  * This take
  */
