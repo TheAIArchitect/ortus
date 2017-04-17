@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  17 APR 2017 04:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  17 APR 2017 05:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -193,10 +193,7 @@ Overfull \hbox (13.55061pt too wide) in paragraph at lines 153--154
  [] 
  []
 
-
-Underfull \vbox (badness 2744) has occurred while \output is active []
-
- [3 <./images/ortus_diagram.png>]
+[3 <./images/ortus_diagram.png>]
 Underfull \hbox (badness 1810) in paragraph at lines 169--170
 []\OT1/ptm/b/n/10 BR 5: \OT1/ptm/m/n/10 Specif-i-cally with re-gard to the mam-
 malian
@@ -233,9 +230,11 @@ File: images/no_conditioning_small.png Graphic file (type png)
 Package pdftex.def Info: images/no_conditioning_small.png used on input line 30
 2.
 (pdftex.def)             Requested size: 238.49121pt x 116.60919pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [6 <./images/conditioning_small.png> <./images/conditioned_small.png> <./image
-s/no_conditioning_small.png>]
-(./ortus_paper.bbl
+s/no_conditioning_small.png>] (./ortus_paper.bbl
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
@@ -254,13 +253,13 @@ Underfull \hbox (badness 1715) in paragraph at lines 23--28
 
 ] (./ortus_paper.aux) ) 
 Here is how much of TeX's memory you used:
- 2025 strings out of 493014
- 29074 string characters out of 6133351
- 97458 words of memory out of 5000000
- 5546 multiletter control sequences out of 15000+600000
+ 2028 strings out of 493014
+ 29116 string characters out of 6133351
+ 96489 words of memory out of 5000000
+ 5549 multiletter control sequences out of 15000+600000
  19796 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,10n,23p,1224b,275s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,10n,23p,1227b,275s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base
 /8r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
 10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
@@ -275,7 +274,7 @@ al/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texli
 ve/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/te
 xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on ortus_paper.pdf (8 pages, 4307773 bytes).
+Output written on ortus_paper.pdf (8 pages, 4308097 bytes).
 PDF statistics:
  95 PDF objects out of 1000 (max. 8388607)
  61 compressed objects within 1 object stream
