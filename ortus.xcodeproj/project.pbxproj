@@ -227,6 +227,7 @@
 		F715148F1E7F98E4008F6292 /* ort */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ort; sourceTree = "<group>"; };
 		F71514901E7F991C008F6292 /* OrtUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OrtUtil.cpp; sourceTree = "<group>"; };
 		F71514911E7F991C008F6292 /* OrtUtil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OrtUtil.hpp; sourceTree = "<group>"; };
+		F72CE1DA1EA570BA001CFCB4 /* NextSteps.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NextSteps.txt; sourceTree = "<group>"; };
 		F748803C1E2448A00083763E /* DataSteward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataSteward.cpp; path = stewards/DataSteward.cpp; sourceTree = "<group>"; };
 		F748803D1E2448A00083763E /* DataSteward.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DataSteward.hpp; path = stewards/DataSteward.hpp; sourceTree = "<group>"; };
 		F748803E1E2448A00083763E /* Steward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Steward.cpp; path = stewards/Steward.cpp; sourceTree = "<group>"; };
@@ -525,6 +526,7 @@
 				F74880491E25AE210083763E /* todo.txt */,
 				F748804D1E25EF860083763E /* correlationNotes.txt */,
 				F753A7C51E283A0200625EBC /* learningNotes.txt */,
+				F72CE1DA1EA570BA001CFCB4 /* NextSteps.txt */,
 			);
 			name = notes;
 			sourceTree = "<group>";

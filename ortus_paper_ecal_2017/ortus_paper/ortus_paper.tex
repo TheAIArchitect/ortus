@@ -118,14 +118,14 @@ As Ortus aims to be a virtual analogy to intelligent life, we tried to only impl
 \end{figure}
 
 
-\textbf{ODE 1:} The underlying source of ``life'' for Ortus is its respiratory circuit, which maintains a balance of $O_2$ and $CO_2$. $O_2$ is consumed, and $CO_2$ is generated, as a product of Ortus being ``alive''. As activation of the $CO_2$ sensory neuron, $sCO_2$, rises, and activation of the $O_2$ sensory neuron, $sO_2$, falls, motor neurons responsible for excitation and inhibition of the lung muscle are excited and inhibited (respectively), and the lung increases in activation, supplying $O_2$ and expelling $CO_2$. 
+\textbf{ODE 1:} The underlying source of ``life'' for Ortus is its respiratory circuit, which maintains a balance of $O_2$ and $CO_2$. $O_2$ is consumed, and $CO_2$ is generated, as a product of Ortus being ``alive''. As activation of the $CO_2$ sensory neuron, $sCO_2$, rises, and activation of the $O_2$ sensory neuron, $sO_2$, falls, motor neurons responsible for excitation and inhibition of the lung muscle are excited and inhibited (respectively), and the lung increases in activation, supplying $O_2$ and expelling $CO_2$. Fig. \ref{respiration} shows the cyclic nature of the respiratory circuit.
 
 \textbf{BR 1:} Maintaining a given system concentration of $CO_2$ is fundamental to mammalian life, and is very strongly linked to the mammalian fear response (e.g., you get scared if you can't breathe). The ability to regulate one's level of $CO_2$ appears to at least be part of the basis for defining what is a ``good'' and ``bad'' event/stimulus in the mammalian brain.
 
 \textbf{ODE 2:} Currently, Ortus has two ``emotions'', fear and pleasure, represented by emotional interneurons, \texttt{eFEAR} and \texttt{ePLEASURE}, which are both tied into the respiratory circuit. When $CO_2$ rises, \texttt{eFEAR}'s activation rises, and Ortus would then be in a fearful state. As $CO_2$ falls, its contribution to Ortus' fearful state falls. The interaction between $O_2$ and \texttt{ePLEASURE} is the same. In this way, any stimulus presented in combination with either increased $CO_2$ or increased $O_2$ will become known as either a desirable (good) or undesirable (bad) stimulus. Thus, it is via linking new stimuli to known stimuli, that emotions are the driving force behind associative learning in Ortus. In Ortus, the idea of ``emotion'' is simply the rise and fall of activation levels of different neurons or groups of neurons, tied to fundamental behaviors---such as ``breathing''.
 
 \textbf{BR 2:} Clearly, mammals don't normally get scared when they exhale, nor do they feel a measurable increase in pleasure upon inhalation, however the relations do exist on some level. The concept of ``good'' and ``bad'' sensations or emotions only carry meaning to us because of their associations to other neural circuits that are either fundamentally desirable or undesirable from a longevity/survival perspective.
-As stated by \citet{Verma2015}, "emotions, motivations, and reinforcement are a closely related, evolutionarily---conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment". Taking this idea into account, along with work by \citet{Gore2015}, which suggests that associative learning is funneled through innate behavior circuits to assign positive or negative emotions to neutral sensory stimuli, it seems that building a virtual organism driven by emotional states is a fairly sound approach. 
+As stated by \citet{Verma2015}, ``emotions, motivations, and reinforcement are a closely related, evolutionarily---conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment''. Taking this idea into account, along with work by \citet{Gore2015}, which suggests that associative learning is funneled through innate behavior circuits to assign positive or negative emotions to neutral sensory stimuli, it seems that building a virtual organism driven by emotional states is a fairly sound approach. 
 
 While at the human level, the emotional ``part'' of the brain is quite complex, it is not unreasonable to assume that as organismic complexity (and thereby intelligence) decreases, the complexity of emotions decreases. Numerous experiments done on rodents, such as those described by \citet{Weiner2015}, show that the major structures of the brain can be examined by lesioning portions of the brain. One can infer then, that representing regions of the brain by single neurons would enable a rough approximation of the region's functionality. If one follows this line of thought, the possibility emerges that organisms like C. elegans may, in fact, be driven by ``emotions'' as well. For example, C. elegans is capable of toxin avoidance, a tap--withdrawal response, as well as learning that it found food at a certain temperature \citep{Wicks1996,Xu2012} -- one must ask how this can be. There is nothing external that assists it in differentiating good from bad, yet it wants to avoid certain things, while is attracted to others. In Ortus, we make the assumption that that these behaviors are a result of a \textit{very} simple emotional subsystem that forms the basis for C. elegans' behavior.
 
@@ -194,13 +194,13 @@ Relationship--level attributes may be specified, such as: ``mutability'', ``weig
 
 \subsection{Implementation Details} Ortus is written in C++ and OpenCL. Initial development of its neural structure, and sensory stimulation, are carried out though C++, while all signal transmission between neurons and learning is done in the OpenCL kernel. Each iteration of the OpenCL kernel constitutes one timestep, during which, each neuron sums incoming (positive or negative) ``activation'' from presynaptic cells via chemical synapses and gap junctions. We use the term ``activation'' in place of ``potential'' or ``voltage'' to make it clear that we aren't dealing with the transfer of electrical current, but have abstracted that away to simply ``activation''. The chemical synapse and gap junction activation transfer equations below were adapted and simplified from those described by \cite{Wicks1996} to ignore physical properties of neurons (such as neuron length), decrease computational complexity, and reduce potential sources of hard--to--trace error.
 
-Ortus' neurons are based upon C. elegans' neurons, and are non--spiking, but do not transmit any ``activation'' below a given threshold, as described by \citet{Graubard1014}. The equations governing activation transmission between Ortus' neurons are as follows (unless otherwise specified, $A$ refers to the postsynaptic neuron, $i$):
+Ortus' neurons are based upon C. elegans' neurons, and are non--spiking, but do not transmit any ``activation'' below a given threshold (for chemical synapses, gap junctions have no threshold), as described by \citet{Graubard1014}. The equations governing activation transmission between Ortus' neurons are as follows (unless otherwise specified, $A$ refers to the postsynaptic neuron, $i$):
 
 \begin{equation}
     A[m+1] = (A[m] - A_{decay}) + A_{GJ_{in}} + A_{CS_{in}} 
 \end{equation}
 
-Where $A[m]$ and $A[m+1]$ are the activations of neuron $i$ we are working on for the current and next timestep, $A_{decay}$ is the amount of activation lost by neuron $i$ during the current timestep, and $A_{GJ_{in}}$ and $A_{CS_{in}}$ are the ``incoming'' activations to neuron $i$ from gap junctions and chemical synapses (respectively).
+Where $A[m]$ and $A[m+1]$ are the activations of neuron $i$ for the current and next timestep, $A_{decay}$ is the amount of activation lost by neuron $i$ during the current timestep, and $A_{GJ_{in}}$ and $A_{CS_{in}}$ are the ``incoming'' activations to neuron $i$ from gap junctions and chemical synapses (respectively).
 
 \begin{equation}
     A_{GJ_{in}} =  GJ_{pre,post} {(A_{pre}[m] - A[m]) \over 2}
@@ -254,18 +254,18 @@ Where $XCorr[t]$ is the $t^{th}$ cross--correlation computation between $post$ a
     Slope_j[t] =  slope_u(H_{j}[t..t+u])
 \end{equation}
 
-Where $Slope_j[t]$ is the $t^{th}$ slope computation for neuron $j$, $u$ is the number of timesteps to use when computing the slope (set to 2), $slope$ computes the slope.
+Where $Slope_j[t]$ is the $t^{th}$ slope computation for neuron $j$, $u$ is the number of timesteps to use when computing the slope (set to 2), and $slope$ computes the slope.
 
 Combing the $XCorr$ and $Slope$ computation results, assuming both neurons involved have activations above the activation threshold (note that the maximum $XCorr$ value is 1):
 
 \begin{itemize}
     \itemsep0em
-    \item rapid strengthening occurrs if there is a highly synchronous pair of signals nearly constant signals:
+    \item rapid strengthening occurrs if there is a highly synchronous pair of nearly constant signals:
         \subitem $\sum_{i=1}^{4}{ XCorr[i]} \ge 3.92$, and
         \subitem $\sum_{i=1}^{4}{ Slope[i]} \le .02$
-    \item synaptic strenghting occurrs slowly if:
-        \subitem $\sum_{i=1}^{4}{ XCorr[i]} < .05$
     \item synaptic weakening occurrs slowly if:
+        \subitem $\sum_{i=1}^{4}{ XCorr[i]} < .05$
+    \item synaptic strengthening occurrs slowly if:
         \subitem $\sum_{i=1}^{4}{ XCorr[i]} > 3.5$
 \end{itemize}
 
@@ -279,7 +279,7 @@ Finally, we exposed Ortus to water, without inducing a fearful state, to determi
 
 \subsubsection{Results.} Since $sCO_2$ activation causes fear, and $H_2O$ was presented ($sH_2O$ was stimulated) during this time, we expected Ortus to become progressively more and more ``scared'' of water each time it was presented while it was in a state of elevated fear.
 As can be seen in Fig. \ref{conditioning}, during each exposure to $H_2O$, activation of \texttt{eFEAR} increased when compared to the previous exposure.
-Further, after the four rounds of conditioning, we expected to observe an increase in activation in \texttt{eFEAR} when we presented Ortus with $H_2O$, in the absence of exhalation and inhalation restriction. Fig. \ref{conditioned} confirms this increase in fear activation as a result of $sH_2O$ stimulation alone. Compared to simply exposing Ortus to $sH_2O$ stimulation without prior fear conditioning, in which a very slight raise was observed---as may be seen in \textbf{FIGURE}, it is clear that we were able to successfully use classical conditioning to instill a fear of water in Ortus that was previously almost non--existent. 
+Further, after the four rounds of conditioning, we expected to observe an increase in activation in \texttt{eFEAR} when we presented Ortus with $H_2O$, in the absence of exhalation and inhalation restriction. Fig. \ref{conditioned} confirms this increase in fear activation as a result of $sH_2O$ stimulation alone. Compared to simply exposing Ortus to $sH_2O$ stimulation without prior fear conditioning, in which a very slight raise was observed---as may be seen in Fig. \ref{no_conditioning}, it is clear that we were able to successfully use classical conditioning to instill a fear of water in Ortus that was previously almost non--existent. 
 
 \begin{figure}
 \begin{center}
@@ -326,7 +326,7 @@ Lastly, we would like to make Ortus' learning far more nuanced, and capable of p
 Shortcomings aside, the results of our classical conditioning experiment with Ortus show that we successfully created a biologically--based virtual system that has a ``self--sustaining'' respiratory circuit, and is capable of Hebbian and Stentian learning. To suggest Ortus was virtually ``alive'' at any point during our experimentation seems as though it would be quite a stretch, however, once Ortus and similar systems increase in complexity, we must pose the question: when does something cross the boundary from computer program to sentient virtual being? When it can ``feel''? What defines a ``feeling'' then? We have made the case that Ortus is emotion--driven, and have shown that we can both induce fear in it by interrupting its respiration cycle, and teach it to fear things it hadn't previously feared. If Ortus \textit{can} feel, and isn't alive, what would it need to do in order to be alive? Alternatively, If Ortus \textit{can't} feel, what would it take for a virtual organism to be able to ``feel''?
 
 \section{Conclusion}
-We have presented Ortus, an initial approach to a framework that exhibits basic emotionally--based learning (fear conditioning), self--sustaining inherent behavior (cyclic breathing via a respiratory circuit), and approach to sensory processing that enables inter-sensory associative learning, with or without an emotional component. While the implementation of Ortus presented is quite simple, the design principles are solidly based in biology, and with further development and refinement, the potential exists for Ortus' development of (artificial) biological intelligence to quickly increase. %resulting from emotional amalgamation and the introduction of more complex sensory input.
+We have presented Ortus, an initial approach to a framework that exhibits basic emotionally--based learning (fear conditioning), self--sustaining inherent behavior (cyclic breathing via a respiratory circuit), and an approach to sensory processing that enables inter-sensory associative learning, with or without an emotional component. While the implementation of Ortus presented is quite simple, the design principles are solidly based in biology, and with further development and refinement, the potential exists for Ortus' development of (artificial) biological intelligence to quickly increase. %resulting from emotional amalgamation and the introduction of more complex sensory input.
 
 
 \section{Acknowledgements}

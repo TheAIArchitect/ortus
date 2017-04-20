@@ -1,3 +1,6 @@
+note: in intro, jarrell citation refers to the structure and complex behavior... actual behaviors aren't necessarily in that article.... thoughts?
+
+
 big picture:
 
 with the ort files, one should be able to specify a list of behavioral desires/interactions, have ortus design its connectome on its own, similar to a "vritual DNA" instruction set (w.e), and then as it runs and ages, ortus can learn by associating multiple stimuli with each other, and with specific emotional states. potential applications for this are a more nuanced AI -- with the goal to approach human abilities.
@@ -36,4 +39,7 @@ textbf{Ortus basic premise:} entire system works similarly to the CO2 and O2 reg
 \cite{Kutsarova2016}}
 \cite{Gore2015}
 \cite{Johansens2014}
-
+\cite{Verma2015}
+\citet{Schroter2017}
+\cite{Liknes2008}
+\citet{Barral2016}

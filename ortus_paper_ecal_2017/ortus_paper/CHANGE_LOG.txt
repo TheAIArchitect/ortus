@@ -1,0 +1,11 @@
+1) Added reference to Figure 1 at end of ODE 1.
+2) Fixed two instances of incorrect quotation mark style in first paragraph of BR 2.
+3) Specified that it is only chemical synapses which are bound by an activation threshold in last paragraph of "Implementation Details"
+4) Deleted "we are working on" from Eq. 1's explanation.
+5) Added "and" at end of descriptions of Eq. 8.
+6) Deleted first "signals" from first bullet point describing learning rules.
+7) Changed "strengthing" (no, not a typo here) to "weakening" in the second bullet point describing learning rules.
+8) Changed "weakening" to "strengthening" in the third bullet point describing learning rules.
+9) Deleted "to" in second to last sentence of description of experiment.
+10) Removed "FIGURE" in "Results" section, and replaced it with a reference to Figure 5.
+11) Added "an" to a sentence in conclusion.
