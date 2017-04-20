@@ -3,7 +3,7 @@
 //  LearningOpenGL
 //
 //  Created by onyx on 11/23/15.
-//  Copyright © 2015 AweM. All rights reserved.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #include "Artist.hpp"
@@ -35,6 +35,7 @@ Artist::~Artist(){
 
 
 
+/*
 void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::mat4* view_ptr,  glm::mat4* model_ptr, Camera camera){
     muscleShader.Use();
     glBindVertexArray(muscles_vao);
@@ -67,12 +68,12 @@ void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::m
     float xshift = .01f;
     float zshift = .1f;
     for (int k = 0; k < 95; k+=1){
-        /** this should be 'pushed' -- MatrixStack !!!! */
+        /// this should be 'pushed' -- MatrixStack !!!!
         glm::mat4 model(1.0f);
         //glm::mat4 model = glm::rotate(pmodel,(float) (-M_PI/2.0f),glm::vec3(0.0f,1.0f,0.0f));
         //model = glm::translate(model,glm::vec3(1.0f,0.0f,-1.0f));
         //model = glm::rotate(model,(float) (M_PI/2.0f),glm::vec3(1.0f,0.0f,0.0f));
-        /* end push */
+        /// end push
         int start = 0;
         //glm::vec3 cur = fakeStewie->mim[k]->centerMassPoint->center;
         //model = glm::translate(model,cur);
@@ -83,7 +84,7 @@ void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::m
             // if we don't want to show muscles, and it's not marked, then we don't want to show it
             continue;
         }
-        int eid = fakeStewie->mim[k]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
+        int eid = fakeStewie->mim[k]->id();// we need to access the voltage array by the element_id, **NOT** by k.
         
         model = glm::scale(model, MuscleInfoModule::MUSCLE_SIZE_SCALE*glm::vec3(1.f, 1.f, MuscleInfoModule::length_z_scale));
         model = glm::translate(model,(MuscleInfoModule::MUSCLE_TRANS_SCALE*fakeStewie->mim[k]->centerMassPoint->center)*glm::vec3(1.f, 1.f,MuscleInfoModule::trans_z_scale));// 2.5 is half of the night of the muscle model (i think)
@@ -105,13 +106,14 @@ void Artist::draw_muscles(Shader muscleShader, glm::mat4* projection_ptr, glm::m
     
     glBindVertexArray(0);
 }
+*/
 
 
 
 void Artist::prep_muscles(){
     mesher.muscleShapes;
     mesher.muscleMaterials;
-    mesher.loadMesh(FileShit::muscleObjFile, mesher.muscleShapes, mesher.muscleMaterials);
+    mesher.loadMesh(FileAssistant::muscleObjFile, mesher.muscleShapes, mesher.muscleMaterials);
     num_muscles_verts = mesher.muscleShapes[0].mesh.positions.size();
     num_muscles_indices = mesher.muscleShapes[0].mesh.indices.size();
     num_muscles_normals = mesher.muscleShapes[0].mesh.normals.size();
@@ -175,7 +177,6 @@ void Artist::prep_muscles(){
 
 /**
  * Neurons
- */
 
 void Artist::prep_neurons(){
     //glm::vec4* neuron_positions = new glm::vec4[302];
@@ -208,7 +209,8 @@ void Artist::prep_neurons(){
     glVertexAttribPointer(1,3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (GLvoid*) (3*sizeof(GLfloat)));
     glBindVertexArray(0);
 }
-
+*/
+/*
 void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::mat4* view_ptr,  glm::mat4* model_ptr, Camera camera){
     
     neuronShader.Use();
@@ -245,11 +247,11 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
     //////// model_ptr IS NOT BEING USED!!!!
     //////////////////////////////////////////////////////////////////////
     for (int k = 0; k < fakeStewie->num_neuron_mass_points; k++){
-        /** this should be 'pushed' -- MatrixStack !!!! */
+        /////////// this should be 'pushed' -- MatrixStack !!!!
         //glm::mat4 model = glm::rotate(pmodel,(float) (-M_PI/2.0f),glm::vec3(0.0f,1.0f,0.0f));
         //model = glm::rotate(model,(float) (M_PI/2.0f),glm::vec3(1.0f,0.0f,0.0f));
         glm::mat4 model(1.0f);
-        /* end push */
+        /////////// end push
         int start = 0;
         float scale1 = NeuronInfoModule::NEURON_SIZE_SCALE;
         float scale2 = NeuronInfoModule::NEURON_TRANS_SCALE;
@@ -257,7 +259,7 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
             // if we don't want to show all neurons, and it's not marked, then we don't want to show it
             continue;
         }
-        int eid = fakeStewie->nim[k]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
+        int eid = fakeStewie->nim[k]->id();// we need to access the voltage array by the element_id, **NOT** by k.
         float diam = fakeStewie->nim[k]->soma_diameter;
         model = glm::translate(model,(scale2*fakeStewie->nim[k]->massPoint->center));
         model = glm::scale(model, (scale1*glm::vec3(diam/2.0f, diam/2.0f, diam/2.0f)));
@@ -266,11 +268,7 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
         //printf("frame: %d\n",Camera::voltageFrame);
         //glUniform4f(colorLoc,(*voltages)[Camera::voltageFrame][k],(*voltages)[Camera::voltageFrame][k],(*voltages)[Camera::voltageFrame][k],1.0f);
         float currentActivation = (*voltages)[Camera::voltageFrame][eid];
-        /*
-        if (fakeStewie->nim[k]->name == "ASEL"){
-            printf("ASEL (%d): %.4f\n", Camera::voltageFrame, currentActivation);
-        }
-         */
+
         glm::vec4 currentColor = colorByActivation((*voltages)[Camera::voltageFrame][eid]);
         glUniform4f(colorLoc,currentColor[0],currentColor[1],currentColor[2],currentColor[3]);
         color_step += 4;
@@ -280,11 +278,7 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
             glDrawArrays(GL_TRIANGLE_STRIP,start, num_verts);
             start += num_verts;
         }
-        /*
-         if (k > 10){
-         break;
-         }
-         */
+ 
     }
     
     //glDrawArrays(GL_TRIANGLE_STRIP,1, 202);
@@ -293,6 +287,7 @@ void Artist::draw_neurons(Shader neuronShader, glm::mat4* projection_ptr, glm::m
     
     glBindVertexArray(0);
 }
+*/
 /**
  * Axes
  */
@@ -445,11 +440,11 @@ void Artist::draw_neuron_names(Shader textShader, Camera camera, glm::mat4* proj
     for (int i = 0; i < fakeStewie->NUM_ELEMS; ++i){
         glm::mat4 billboard_mat(1.0f);
         glm::vec3 pos;
-        if (fakeStewie->bioElements[i]->getEType() == MUSCLE){
-            if (!OptionForewoman::WormOpts[SHOW_MUSCLES] && !fakeStewie->bioElements[i]->marked){
+        if (fakeStewie->elements[i]->getEType() == MUSCLE){
+            if (!OptionForewoman::WormOpts[SHOW_MUSCLES] && !fakeStewie->elements[i]->marked){
                 continue;
             }
-            MuscleInfoModule* tmim = (MuscleInfoModule*)fakeStewie->bioElements[i];
+            MuscleInfoModule* tmim = (MuscleInfoModule*)fakeStewie->elements[i];
             pos = tmim->centerMassPoint->center;
             
             billboard_mat = glm::scale(billboard_mat, MuscleInfoModule::MUSCLE_SIZE_SCALE*glm::vec3(1.f, 1.f, MuscleInfoModule::length_z_scale));
@@ -462,10 +457,10 @@ void Artist::draw_neuron_names(Shader textShader, Camera camera, glm::mat4* proj
             //billboard_mat = glm::translate(billboard_mat, pos+(MuscleInfoModule::MUSCLE_SIZE_SCALE*2.f/2.f)); // translate and then offset from center of neuron
         }
         else {
-            if (!OptionForewoman::WormOpts[SHOW_ALL_NEURONS] && !fakeStewie->bioElements[i]->marked){
+            if (!OptionForewoman::WormOpts[SHOW_ALL_NEURONS] && !fakeStewie->elements[i]->marked){
                 continue;
             }
-            NeuronInfoModule* tnim = (NeuronInfoModule*)fakeStewie->bioElements[i];
+            NeuronInfoModule* tnim = (NeuronInfoModule*)fakeStewie->elements[i];
             glm::vec3 pos = tnim->massPoint->center;// - (nim[i].soma_diameter/2.0f);
             billboard_mat = glm::translate(billboard_mat, ((NeuronInfoModule::NEURON_TRANS_SCALE*pos) + (NeuronInfoModule::NEURON_SIZE_SCALE*tnim->soma_diameter/2.f))); // translate and then offset from center of neuron
         }
@@ -479,14 +474,14 @@ void Artist::draw_neuron_names(Shader textShader, Camera camera, glm::mat4* proj
         std::string label = "";
         if (OptionForewoman::WormOpts[SHOW_ACTIVATION]){
             // get activation
-            int eid = fakeStewie->bioElements[i]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
+            int eid = fakeStewie->elements[i]->id();// we need to access the voltage array by the element_id, **NOT** by k.
             float currentActivation = (*voltages)[Camera::voltageFrame][eid];
-            label =fakeStewie->bioElements[i]->graphicalName + ": "+std::to_string(currentActivation);
+            label =fakeStewie->elements[i]->graphicalName + ": "+std::to_string(currentActivation);
         }
         else {
-            label = fakeStewie->bioElements[i]->graphicalName;
+            label = fakeStewie->elements[i]->graphicalName;
         }
-        if (fakeStewie->bioElements[i]->getEType() == MUSCLE){ // maybe we want a different scale or something for muscle labels
+        if (fakeStewie->elements[i]->getEType() == MUSCLE){ // maybe we want a different scale or something for muscle labels
             textMaker.make_text(textShader, label, pos, .01f/MuscleInfoModule::MUSCLE_TRANS_SCALE, glm::vec3(1.0f, 1.0f, 1.0f));
         }
         else{
@@ -499,7 +494,7 @@ void Artist::draw_neuron_names(Shader textShader, Camera camera, glm::mat4* proj
 void Artist::prep_center_cylinder(){
     mesher.centerCylinderShapes;
     mesher.centerCylinderMaterials;
-    mesher.loadMesh(FileShit::centerCylinderObjFile, mesher.centerCylinderShapes, mesher.centerCylinderMaterials);
+    mesher.loadMesh(FileAssistant::centerCylinderObjFile, mesher.centerCylinderShapes, mesher.centerCylinderMaterials);
     num_cc_verts = mesher.centerCylinderShapes[0].mesh.positions.size();
     num_cc_indices = mesher.centerCylinderShapes[0].mesh.indices.size();
     num_cc_normals = mesher.centerCylinderShapes[0].mesh.normals.size();
@@ -562,6 +557,7 @@ void Artist::prep_center_cylinder(){
     
 }
 
+/*
 void Artist::draw_center_cylinder(Shader cc_shader,glm::mat4* projection_ptr, glm::mat4* view_ptr, Camera camera){
     cc_shader.Use();
     glBindVertexArray(cc_vao);
@@ -588,9 +584,10 @@ void Artist::draw_center_cylinder(Shader cc_shader,glm::mat4* projection_ptr, gl
         glDrawElements(GL_TRIANGLES, num_cc_indices, GL_UNSIGNED_INT, NULL);
     }
 }
+*/
 
 void Artist::prep_petriDish(){
-    mesher.loadMesh(FileShit::petriDishObjFile, mesher.petriDishShapes, mesher.petriDishMaterials);
+    mesher.loadMesh(FileAssistant::petriDishObjFile, mesher.petriDishShapes, mesher.petriDishMaterials);
     num_petriDish_verts = mesher.petriDishShapes[0].mesh.positions.size();
     num_petriDish_indices = mesher.petriDishShapes[0].mesh.indices.size();
     num_petriDish_normals = mesher.petriDishShapes[0].mesh.normals.size();
@@ -659,7 +656,7 @@ void Artist::draw_petriDish(Shader petriDish_shader,glm::mat4* projection_ptr, g
 
 
 void Artist::prep_shroom(){
-    mesher.loadMesh(FileShit::mushroomObjFile, mesher.shroomShapes, mesher.shroomMaterials);
+    mesher.loadMesh(FileAssistant::mushroomObjFile, mesher.shroomShapes, mesher.shroomMaterials);
     num_shroom_verts = mesher.shroomShapes[0].mesh.positions.size();
     num_shroom_indices = mesher.shroomShapes[0].mesh.indices.size();
     num_shroom_normals = mesher.shroomShapes[0].mesh.normals.size();
@@ -853,67 +850,8 @@ void Artist::draw_conns(Shader axesShader, Camera camera, glm::mat4* projection_
     
 }
 
-void Artist::draw_conn_weights(Shader textShader, ConnectionComrade* commie, Camera camera, glm::mat4* projection_ptr, glm::mat4* view_ptr){
-    glUseProgram(textShader.Program);
-    int numConns = commie->currentlyUsedConns.size();
-    for (int i = 0; i < numConns; ++i){
-        /*
-        if ((!OptionForewoman::WormOpts[SHOW_ALL_NEURONS] && !fakeStewie->bioElements[i]->marked) || (!OptionForewoman::WormOpts[SHOW_MUSCLES] && !fakeStewie->bioElements[i]->marked)){
-            // if we don't want to show all neurons, and it's not marked, then we don't want to show it
-            continue;
-        }
-         */
-        glm::mat4 billboard_mat(1.0f);
-        glm::vec3 pos;
-       // if (fakeStewie->bioElements[i]->getEType() == MUSCLE){
-       //     MuscleInfoModule* tmim = (MuscleInfoModule*)fakeStewie->bioElements[i];
-        //    pos = tmim->centerMassPoint->center;
-            
-         //   billboard_mat = glm::scale(billboard_mat, MuscleInfoModule::MUSCLE_SIZE_SCALE*glm::vec3(1.f, 1.f, MuscleInfoModule::length_z_scale));
-          //  billboard_mat = glm::translate(billboard_mat,(MuscleInfoModule::MUSCLE_TRANS_SCALE*pos)*glm::vec3(1.f, 1.f,MuscleInfoModule::trans_z_scale));// 2.5 is half of the night of the muscle model (i think)
-            billboard_mat = glm::translate(billboard_mat,commie->currentlyUsedConns[i]->midpoint);
-            
-            //billboard_mat = glm::translate(billboard_mat,(pos*MuscleInfoModule::MUSCLE_TRANS_SCALE));
-            
-            //billboard_mat = glm::translate(billboard_mat, pos); // translate and then offset from center of neuron
-            //billboard_mat = glm::translate(billboard_mat, pos+(MuscleInfoModule::MUSCLE_SIZE_SCALE*2.f/2.f)); // translate and then offset from center of neuron
-        //}
-        //else {
-        /*
-            NeuronInfoModule* tnim = (NeuronInfoModule*)fakeStewie->bioElements[i];
-            glm::vec3 pos = tnim->massPoint->center;// - (nim[i].soma_diameter/2.0f);
-            billboard_mat = glm::translate(billboard_mat, ((NEURON_TRANS_SCALE*pos) + (NEURON_SIZE_SCALE*tnim->soma_diameter/2.f))); // translate and then offset from center of neuron
-        }
-         */
-        billboard_mat = glm::rotate(billboard_mat, camera.m_theta, glm::vec3(0,1,0));
-         
-        billboard_mat = glm::rotate(billboard_mat, camera.m_phi - ((float)M_PI/2.f), glm::vec3(1,0,0));
-        //billboard_mat = glm::scale(billboard_mat, (.1f/NEURON_SIZE_SCALE*glm::vec3(1.f, 1.f, 1.f)));
-        glUniformMatrix4fv(glGetUniformLocation(textShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(*projection_ptr));
-        glUniformMatrix4fv(glGetUniformLocation(textShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(*view_ptr));
-        glUniformMatrix4fv(glGetUniformLocation(textShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(billboard_mat));
-        //printf("creating text: %s\n",fakeStewie->nim[i]->name.c_str());
-        
-        /*
-        if (OptionForewoman::WormOpts[SHOW_ACTIVATION]){
-            // get activation
-            int eid = fakeStewie->bioElements[i]->element_id;// we need to access the voltage array by the element_id, **NOT** by k.
-            float currentActivation = (*voltages)[Camera::voltageFrame][eid];
-            label =fakeStewie->bioElements[i]->graphicalName + ": "+std::to_string(currentActivation);
-        }
-        else {
-            label = fakeStewie->bioElements[i]->graphicalName;
-        }
-        */
-        //if (fakeStewie->bioElements[i]->getEType() == MUSCLE){ // maybe we want a different scale or something for muscle labels
-        textMaker.make_text(textShader, commie->currentlyUsedConns[i]->weightLabel, pos, 1.f/NeuronInfoModule::NEURON_TRANS_SCALE, glm::vec3(1.0f, 1.0f, 1.0f));
-        //}
-        //else{
-            //textMaker.make_text(textShader, label, pos, .5f/NEURON_TRANS_SCALE, glm::vec3(1.0f, 1.0f, 1.0f));
-        //}
-        //textMaker.make_text(textShader, label, pos, 1.f, glm::vec3(1.0f, 1.0f, 1.0f));
-    }
-}
+
+
 
 /* -100 - 100  ... 0 is grey */
 glm::vec4 Artist::colorByActivation(float activation){

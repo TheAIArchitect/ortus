@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: NeuralCircuitDevelopmentNotes.aux
+The style file: ieeetr.bst
+Database file #1: NeuralCircuitDevelopment.bib
+Repeated entry---line 467 of file NeuralCircuitDevelopment.bib
+ : @article{DePitta2016
+ :                     ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 629 of file NeuralCircuitDevelopment.bib
+ : @article{Makino2016
+ :                    ,
+I'm skipping whatever remains of this entry
+Warning--empty publisher in Weiner2015
+Warning--empty journal in Fox2017
+Warning--empty journal in Kaneko2017
+Warning--empty journal in Catmur2016
+Warning--empty journal in Takeuchi2013
+You've used 45 entries,
+            1876 wiz_defined-function locations,
+            776 strings with 13359 characters,
+and the built_in function-call counts, 14948 in all, are:
+= -- 1512
+> -- 669
+< -- 0
++ -- 239
+- -- 194
+* -- 1150
+:= -- 2113
+add.period$ -- 46
+call.type$ -- 45
+change.case$ -- 44
+chr.to.int$ -- 0
+cite$ -- 50
+duplicate$ -- 723
+empty$ -- 1246
+format.name$ -- 194
+if$ -- 3603
+int.to.chr$ -- 0
+int.to.str$ -- 45
+missing$ -- 46
+newline$ -- 139
+num.names$ -- 45
+pop$ -- 82
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 569
+stack$ -- 0
+substring$ -- 1152
+swap$ -- 359
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 5
+while$ -- 158
+width$ -- 47
+write$ -- 472
+(There were 2 error messages)

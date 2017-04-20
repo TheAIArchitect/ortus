@@ -1,0 +1,35 @@
+http://courses.washington.edu/psych333/handouts/coursepack/
+
+<< Information Representation
+
+-> information is representated as a pattern of action potentials -- known as a "neural code"
+    -> for ortus (and non-spiking neurons in general), this should map to a pattern of activation levels.
+
+-> "spaciotemporal code" - which neurons are active, and when.
+
+-> spacial summation: individual neuron recieves simultaneous inputs from multiple sources
+-> temporal summation: second input arrives before first has gone away
+
+=> Modality Specifilicity:
+    -> At least initially, each sensory systme has its own separate pathway (visual data is separate from audio data)
+=> Filtering and Tuning:
+    -> Within each modality, different receptor cells respond differently to specific sets of stimulus conditions (e.g., different frequencies [pitches] of sound activate different nerve fibers)
+    -> Different fibers get 'tuned' to respond to different stimuli (so, a fequency range for sound, or a lighwave range for light, etc.)
+
+-> reflex vs consious tought (volitional) response
+    -> second presumably requires cortical processing
+    -> learned responses may be volitional at first, and reflexive later.
+
+
+-> 'sensory map': neurons within an 'array' or population are tuned to different values of a parameter (like pitch, or classes of chemical substance, etc.)
+    -> this causes a map of that parameter -- e.g, visual system has a 'map' of the retina corresponding to visual space at each level of the system. Each level of the auditory system contains a 'map' of the inner ear corresponding to sound frequency.
+    -> a systematically organized representation of a stimulus parameter (visual space, body surface, sound freq., etc), within a neural population, is called a topographic representation.
+        => the basic organization of each sensory map is generally established early in neural development, but the detailed organization of sensory maps remains somewhat plastic throughout life.
+            -> once created, the map may undergo various transformations (expansion, compression, sharpening, blurring, etc.)
+
+
+-> receptive field of a neuron is the region of space that a stimulus will affect the response of cell. These often overlap, to give information from different vantage points, regarding the same stimulus.
+
+-> lateral inhibition: http://courses.washington.edu/psych333/handouts/coursepack/ch11-Somatosensory_system_and_topographic_organization.pdf
+
+

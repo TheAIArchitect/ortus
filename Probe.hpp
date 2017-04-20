@@ -3,17 +3,17 @@
 //  delegans
 //
 //  Created by onyx on 10/21/16.
-//  Copyright © 2016 Sean Grimes. All rights reserved.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #ifndef Probe_hpp
 #define Probe_hpp
 
 
-#include "CLHelperClass.hpp"
+#include "CLHelper.hpp"
 #include <stdio.h>
 #include <vector>
-#include "DataSteward.hpp"
+//#include "DataSteward.hpp"
 #include "StrUtils.hpp"
 #include <string>
 
@@ -24,10 +24,11 @@ private:
     std::string elementToProbe;
     
 public:
-    Probe(DataSteward* ds);
-    DataSteward* stewie;
+    Probe();
+    //Probe(DataSteward& ds);
+    //DataSteward* stewie;
     static bool toggleProbe();
-    static cl_uint shouldProbe;
+    static cl_int shouldProbe;
     static bool probeAll;
     static bool probeEnabled;
     static bool update;

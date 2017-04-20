@@ -1,0 +1,63 @@
+MAX_ELEMENTS = 100 // need to know this for Blade creation
+// currently, the two below 'COMPUTATIONS' variables must be the same.
+// if they are different, ortus will use its default.
+XCORR_COMPUTATIONS = 4  // number of xcorr computations
+XCORR_SIZE = 4 // number of values used to compute xcorr
+SLOPE_COMPUTATIONS = 4 // number of slope computations
+SLOPE_SIZE = 2 // number of values used to compute slope
+// need at least XCORR_SIZE + (XCORR_SIZE-1) activation history size, 
+// same idea for slope.
+ACTIVATION_HISTORY_SIZE = 8 // nth index will be for current activation (staging area), so history is this number -1 
+WEIGHT_HISTORY_SIZE = 4 // nth index will be for current weight (staging area), so history is this number -1 
+
+elements:
+    sO2: {type=sense, affect=pos} 
+    sCO2: { type=sense, affect=neg }//, affect=neg } // no affect should mean no P/N interneurons are created... maybe? or, one of each??
+    sH2O: {type=sense}
+    eFEAR: { type=emotion, affect=neg }
+    //HAPPY: { type=emotion, affect=pos }
+    //HUNGRY: {type=emotion, affect=neg }
+    // neither pain nor pleasure are really emotions, but maybe that label will work for now?
+    ePLEASURE: { type=emotion, affect=pos }
+    //PAIN: { type=emotion, affect=neg}
+    mINHALE: { type=motor }
+    mEXHALE: { type=motor }
+    LUNG: { type=muscle }
+opposes:
+    sO2:
+        sCO2:
+    sCO2:
+        sO2:
+    mINHALE:
+        mEXHALE:
+    mEXHALE:
+        mINHALE:
+    //PLEASURE:
+        //PAIN:
+causes:
+    +sO2:
+        +mEXHALE:
+        +ePLEASURE:
+    +sCO2:
+        +mINHALE:
+        +eFEAR: { thresh= 2 } // 1 is normal, 2 is high, for now. only abnormally high levels of CO2 cause fear
+    +mEXHALE:
+        -LUNG:
+    +mINHALE:
+        +LUNG:
+    +LUNG:
+        +sO2:
+    -LUNG:
+        -sCO2:
+    +eFEAR:
+        -ePLEASURE:
+    // "attempting" to breath, and not being able to, should cause fear too.
+dominates:
+    //+sO2:
+        //+sHUNGRY:
+    //+eFEAR:
+        //+ePLEASURE:
+    //+eFEAR:
+        //+eHAPPY:
+    //maybe the + is irrelevant?
+

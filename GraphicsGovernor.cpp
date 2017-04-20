@@ -34,7 +34,7 @@ GLfloat deltaTime = 0.0f;
 
 
 // The MAIN function, from here we start our application and run our Game loop
-int initGraphics(Core* core)
+int initGraphics(DataSteward* stewie)
 {
     
     // Init GLFW
@@ -142,7 +142,7 @@ int initGraphics(Core* core)
     const int startingSetSize = 2;
     std::string startingSet[startingSetSize] = {"ASEL","ASER"};
     
-    ConnectionComrade comrade = ConnectionComrade(core->stewie.bioElements, startingSet, startingSetSize);
+    ConnectionComrade comrade = ConnectionComrade(core->stewie.elements, startingSet, startingSetSize);
     if (OptionForewoman::WormOpts[SHOW_MUSCLES]){
         comrade.generateConns(ConnectionComrade::MUSCLES | ConnectionComrade::STARTING_SET);
     }
@@ -290,17 +290,17 @@ int initGraphics(Core* core)
         }
      */
         if (Probe::newElementToProbeRequested){
-            std::string res = core->probe->setNewElementToProbe();
+            std::string res = stewie->probe->setNewElementToProbe();
             printf("%s\n", res.c_str());
         }
         
         // this should probably be held within Probe...
         if (Probe::update){// update isn't set to true unless Probe::probeEnabled == true... if that changes, we need to ensure it's enabled here.
             if (Probe::probeAll){
-                core->probe->printAll(Camera::voltageFrame);
+                stewie->probe->printAll(Camera::voltageFrame);
             }
             else {
-                core->probe->printCurrentProbe(Camera::voltageFrame);
+                stewie->probe->printCurrentProbe(Camera::voltageFrame);
             }
             Probe::update = false;
         }
@@ -444,7 +444,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
                 OptionForewoman::WAITING_ON_OPTION_REQUEST = false;
             }
             else if (key == GLFW_KEY_ENTER){
-                string res = "";
+                std::string res = "";
                 if (OptionForewoman::OPTION_REQUESTED == GLFW_KEY_P){ // we do something different... this should be fixed...
                     Probe::newElementToProbe = OptionForewoman::CHOICE;
                     Probe::newElementToProbeRequested = true;
@@ -478,17 +478,18 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             }
         }
         else if (key == GLFW_KEY_3){
-            string res = OptionForewoman::keyboardOptionGauntlet(SHOW_ALL_NEURONS,std::to_string(!OptionForewoman::WormOpts[SHOW_ALL_NEURONS]));
+            std::string res = OptionForewoman::keyboardOptionGauntlet(SHOW_ALL_NEURONS,std::to_string(!OptionForewoman::WormOpts[SHOW_ALL_NEURONS]));
             printf("%s\n",res.c_str());
         }
         else if (key == GLFW_KEY_4){
-            string res = OptionForewoman::keyboardOptionGauntlet(SHOW_MUSCLES, std::to_string(!OptionForewoman::WormOpts[SHOW_MUSCLES]));
+            std::string res = OptionForewoman::keyboardOptionGauntlet(SHOW_MUSCLES, std::to_string(!OptionForewoman::WormOpts[SHOW_MUSCLES]));
             printf("%s\n",res.c_str());
         }
         else if (key == GLFW_KEY_5){
-            string res = OptionForewoman::keyboardOptionGauntlet(SHOW_ACTIVATION,std::to_string(!OptionForewoman::WormOpts[SHOW_ACTIVATION]));
+            std::string res = OptionForewoman::keyboardOptionGauntlet(SHOW_ACTIVATION,std::to_string(!OptionForewoman::WormOpts[SHOW_ACTIVATION]));
             printf("%s\n",res.c_str());
         }
+        /*
         else if (key == GLFW_KEY_G){
             ConnectionComrade::doGaps = !ConnectionComrade::doGaps;
             OptionForewoman::REFRESH_CONNS = true;
@@ -499,9 +500,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
         else if (key == GLFW_KEY_W){
             ConnectionComrade::doChems = !ConnectionComrade::doChems;
-            string res = OptionForewoman::keyboardOptionGauntlet(SHOW_WEIGHTS,std::to_string(!OptionForewoman::WormOpts[SHOW_WEIGHTS]));
+            std::string res = OptionForewoman::keyboardOptionGauntlet(SHOW_WEIGHTS,std::to_string(!OptionForewoman::WormOpts[SHOW_WEIGHTS]));
             printf("%s\n",res.c_str());
         }
+         */
     }
     else if(action == GLFW_RELEASE){
             keys[key] = false;

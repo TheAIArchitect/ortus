@@ -1,0 +1,41 @@
+ortus todo
+
+*** need to add location to synapses, perhaps neurons,
+** implement "DNA" (see Thoughts in latex notes
+** alter synaptic plasticity (see Thoughts in latex notes)
+
+GOAL: get through any immediate reading prior to doing the above work on ortus (or anything else on it) tomorrow, and take wednesday to plan and implement these things.
+
+* alter writeConnectome to have it re-order to put all sensors before inters before motors (before muscles)
+* fix Probe
+* re-implement checks from get_conns (checks for ablated elements, etc.)
+* re-implement ComputeSteward's printReport
+* add new timing code to various places
+    -> TBD
+* implement StimuliSteward::normalizeStimuli
+* subplots for DataVisualizer (see "Plotr" below)
+* consider smart pointers.
+* kernel could use some clean-up
+
+
+
+
+
+
+/////////////////////
+
+next:
+
+- H2O has been added with O2 deprevation. Now, need to have ortus draw connection between IFEAR and H2O.
+- figure out good way to graph xcorr
+    -> this will be helpful to figure out rules for modifying gaps and chems
+    -> tie it into Probe, and either recompute or take values from kernel... then do a line per xcorr 'index'
+- apply rules to modify gaps and chems, based upon xcorr computation
+- modify writeConnectome to sort new neurons
+    -> also need a way to name them...
+- modify connectome to include learning rates
+    -> what should default learning rate be?
+    -> what are rules to govern changes in learning rate?
+- now that xcorr computation has been fixed, need to compute the voltage rate of change for each set of voltages that were used to compute the xcorr... then look at the voltage rate of change along with the xcorr to determine how to modify weights.
+
+

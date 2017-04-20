@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: ortus_paper.aux
+The style file: apalike.bst
+Database file #1: ortus_paper.bib
+Warning--entry type for "darpa" isn't style-file defined
+--line 1 of file ortus_paper.bib
+Warning--there's a number but no volume in Bowren2016
+Warning--empty journal in Sinapayen2016
+Warning--empty publisher in Weiner2015
+You've used 21 entries,
+            1935 wiz_defined-function locations,
+            612 strings with 8510 characters,
+and the built_in function-call counts, 9704 in all, are:
+= -- 915
+> -- 531
+< -- 8
++ -- 188
+- -- 188
+* -- 927
+:= -- 1707
+add.period$ -- 61
+call.type$ -- 21
+change.case$ -- 198
+chr.to.int$ -- 21
+cite$ -- 24
+duplicate$ -- 302
+empty$ -- 601
+format.name$ -- 217
+if$ -- 1836
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 21
+newline$ -- 106
+num.names$ -- 63
+pop$ -- 166
+preamble$ -- 1
+purify$ -- 199
+quote$ -- 0
+skip$ -- 226
+stack$ -- 0
+substring$ -- 673
+swap$ -- 31
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 124
+warning$ -- 3
+while$ -- 75
+width$ -- 0
+write$ -- 268
+(There were 4 warnings)

@@ -1,0 +1,62 @@
+Compute xcorr in opencl, using previous 5 windows:
+
+so, we'll have, as input to opencl (each row is the 5 previous activations for neuron 0, 1, ..., k):
+
+[n0[-5], n0[-4], n0[-3], n0[-2], n0[-1]],
+[n1[-5], n1[-4], n1[-3], n1[-2], n1[-1]],
+...
+[nk[-5], nk[-4], nk[-3], nk[-2], nk[-1]],
+
+and in opencl, each thread will take care of its own row, and do a xcorr with every other row, meaning opencl will want to return (assum T is 'thread', xc is xcorr, and the numbers refer to the neurons, as above):
+
+--> below, indices are windowNums
+T0:
+xc0,1[0], xc0,1[1],..., xc0,1[numWindows-1]
+xc0,2[0], xc0,2[1],..., xc0,2[numWindows-1]
+...
+xc0,k[0], xc0,k[1],..., xc0,k[numWindows-1]
+
+but this gives us 2D, (k-1) x (numWindows-1) matrix... for every neuron, making it a "K x (K-1) x (numWindows-1)" matrix, that we need to search through on every iteration of the kernel.
+
+obviously, that doesn't work -- it would be far too slow, especially if we have to pass all of that back to the CPU, and have it search through and update weights.
+
+so, what can we do to simplify this?
+
+-> First, we don't need, or even want, that many xcorr windows.
+    -> we care about signals that either have a causal relationship
+        -> so, does a rise in A cause a rise in B?
+            -> perhaps looking only 2 ahead would work
+                -> e.g., A -> B -> C
+                    -> A rises, B rises, C rises, and we increase weight from A -> C
+                    -> so, for a causal search, that's all we need:
+                        -> so, we need 5 previous voltages for each neuron, but only 3 xcorr computations (see diagram below)
+    -> we also care about a correlated relationship
+        -> Do A and B rise *together*
+            -> here, we just need one xcorr computation (see diagram below)
+
+xc[len-1] ==> only use [0, 1, 2], signals are stacked
+A          | | | | | c
+B          | | | | | c
+
+xc[len] ==> use [0, 1, 2] of A, [1, 2, 3] of B, now comparing A to B one time step in 'future'
+A          | | | | |
+B        | | | | |
+
+xc[len+1] ==> use [0, 1, 2] of A, [2, 3, 4] of B, now comparing A to B two time steps in 'future'
+A          | | | | |
+B      | | | | |
+
+
+xc[len-1] (above) compares the stacked signals, which is all we need for checking whether they rise/fall together
+
+
+So, the computation will actually be the normalized xcorr, so we'll have a value between -1 and 1 , with 0 meaning no correlation at all. Then, we can set thresholds, below which we ignore the correlation.
+
+If, however, the correlation is greater than or equal to the threshold, we increase the gap junction weight and/or chemical synapse weight
+
+
+
+==> Now, 'B' is the postsynaptic neuron in this example, If we set the current thread in the kernel to "B", then the other neurons it checks will be relative to it as pre-synaptic neurons, meaning that the thread is free to make weight alterations, because no other thread is reading its row, looking at its weights (each thread looks at one row, and 'sees' itself as the post-synaptic neuron).
+
+=> this means, we have to do 3*(k-1) xcorr computations per thread, don't have to pass anything back, and can augment the connectome in opencl!
+    -> if we wanted to expand the distance we look for correlations (e.g., 4 or 5 windows), we could do that too, without much trouble.

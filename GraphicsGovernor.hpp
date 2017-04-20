@@ -3,7 +3,7 @@
 //  delegans
 //
 //  Created by onyx on 9/15/16.
-//  Copyright © 2016 Sean Grimes. All rights reserved.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #ifndef GraphicsGovernor_h
@@ -27,18 +27,16 @@
 
 #include <queue>
 
-#include "Artist.hpp"
+//#include "Artist.hpp"
 
 
-#include "Core.hpp"
-#include "Playground.hpp"
 #include "OptionForewoman.hpp"
 
-#include "ConnectionComrade.hpp"
+//#include "ConnectionComrade.hpp"
 #include "Probe.hpp"
 
 
-int initGraphics(Core* core); // im not happy about doing this... graphics shouldn't hold core... something bigger should hold them both. and core should be called ComputeCore or something
+int initGraphics(DataSteward* stewie); // im not happy about doing this... graphics shouldn't hold core... something bigger should hold them both. and core should be called ComputeCore or something
 
 
 #endif /* Chief_h */

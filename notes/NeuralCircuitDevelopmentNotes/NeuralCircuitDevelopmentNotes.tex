@@ -1,0 +1,932 @@
+\documentclass[11pt, a4paper, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=1in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{fullpage}
+\usepackage{enumitem}
+\usepackage{notetaking}
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{amssymb}
+
+\usepackage{mathtools} % look into this for math tools needs!
+
+%SetFonts
+
+%SetFonts
+
+%\setlist[enumerate]{label*=\arabic*.} % this allows enumerations to be nested and have a label like 1.3.2
+\setlist[enumerate,2]{label=\roman*)}
+\setlist[enumerate,3]{label=\alph*)}
+\setlist[enumerate,4]{label=\Alph*)}
+
+
+
+\renewcommand{\outlinei}{enumerate}
+\renewcommand{\outlineii}{enumerate}
+\renewcommand{\outlineiii}{enumerate}
+\renewcommand{\outlineiiii}{enumerate}
+
+\usepackage{tikz}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+
+
+\hypersetup{
+  colorlinks   = true,
+  citecolor    = gray
+}
+\title{Neural Circuit Development Notes}
+\author{Andrew McDonald}
+%\date{}							% Activate to display a given date or no date
+\begin{document}
+\maketitle
+\hypersetup{linkcolor=blue}
+\tableofcontents
+\hypersetup{linkcolor=blue}
+\listoffigures
+\hypersetup{linkcolor=blue} %red
+
+\section{Ortus: Moving Forward}
+
+\textbf{The \textit{key} idea behind Ortus is: Ortus intrinsically \textit{knows} that different inputs are different, if they are different (to the extent to which it can differentiate them, based upon available sensors and its sensors' resolution), and it figures out what those differences mean, relative to eachother, and various \textit{other} sensory inputs and acceptable outputs (motor or otherwise). We can help teach it, by stimulating various sensors or 'feelings' (so, interneurons) together.}
+
+\begin{outline}
+    \point Location--based synaptic growth and decay
+        \subpoint will need to assign each neuron a 3D location
+            \subsubpoint initial synapse between two neurons will be midpoint between them, plus a little randomness to help ensure CSs and GJs between the same two neurons don't overlap
+        \subpoint then each synapse will ``look around'' by looking at near by synapses, and either probabilistically attempting to create a synapse, or (and probably better), creating a synapse if one near by (from the same neuron) is sufficiently strong (perhaps 2 at 1/2 of the required strength would be fine too?)
+            \subsubpoint the speed and strength of this will decay with age\ldots perhaps
+        \subpoint perhaps the location of synapses formed between two neurons could be the midpoint of the two closest synapses 
+    \point Connectome Instruction Units
+    \point Synaptic plasticity
+        \subpoint one way to fix the issue of needing to interact with the postsynaptic neuron and presynaptic neuron at the same time is to have a second connectome, just for writing, with modifications that should be made to the presynapses. This would be written by the postsynapses, informing the presynapse that it should increase or decrease strength.
+            \subsubpoint right now, the postsynapse increases the strength of the presynapse\ldots maybe that's not an issue? The only problem with that, as I currently see it, is that there's no good way to tell the presynaptic neuron that it should ``grow'' new exploratory synapses near a given synapse. 
+                \supersubpoint what about making the synapse matrix 3D, so that synapse exploration can occur based upon positive or negative change of surrounding synapses? Could probably get away with 2 or 3 ``history'' weights.
+\end{outline}
+
+Initial Goals:
+
+\begin{outline}
+    \point List of CIUs in place of connectome
+        \subpoint CIUs should have rules for CS vs GJ
+        \subpoint Build connectome using a 
+    \point Ortus should form connectome from list of CIUs
+    \point \checkmark Innate behavior should cause a breathing cycle, lack of O2/increased CO2 should cause fear
+    \point Ortus should learn to fear water alone, via association with lack of O2/increased CO2
+    \point Ortus should learn to like water in the presence of food, while retaining fear of water in the absence of food
+        \subpoint This will require a fear center, as well as a happy center (food should cause happiness) 
+\end{outline}
+
+Why these goals? 
+
+They approximate the most basic functionality of living organisms. From there, we can expand the number of sensors via CIUs, and allow Ortus to add interneurons as needed while constructing the initial connectome. It will add neurons as it needs to in order to learn more things.
+
+From there, the next set of goals revolve around the implementation of a very simple (e.g. 16 ``pixel'') visual system, that will enable ortus to ``see'', and associate visual stimuli with emotion. After the ``Initial Goals'', during which we will have added fear and happy centers, we might add anger and sad centers.
+
+
+Also want to create muscles so the outputs (actions) of Ortus can be visualized.
+
+\section{Thoughts}
+
+\begin{outline}
+    \point Titles:
+        \subpoint Ortus: Pioneering (artificial)  Biological Intelligence
+            \subsubpoint \ldots that one is a bit bold
+        \subpoint Ortus: An Approach to (artificial) Biological Intelligence
+        \subpoint Ortus: Approaching (artificial) Biological Intelligence
+        \subpoint Ortus: Emotionally Approaching (artificial) Biological Intelligence 
+        \subpoint Ortus: Introducing an Emotionally Driven Approach to (artificial) Biological Intelligence
+        \subpoint Ortus: an Emotionally--Driven Approach to (artificial) Biological Intelligence
+        \subpoint Ortus: Emotionally--Driven (artificial) Biological Intelligence
+        \subpoint An Approach to Emotionally--Driven (artificial) Biological Intelligence
+        \subpoint Ortus: A Simple Virtual Brain With Emotionally Driven Learning
+        \subpoint Ortus: Toward a Virtual Brain
+\end{outline}
+
+
+\textbf{Ortus basic premise:} entire system works similarly to the CO2 and O2 regulation mechanism.
+Aim is to keep a balance. E.g., if IFEAR goes up, this should inherently be bad. 
+Could be that the reason for this is that it is tied to a very basic system, like breathing.
+So, if system is wired such that as INO2 increases, IFEAR increases, and an increase in INO2 causes an intake of O2, which decreases INO2; thus, the system \textit{inherently} wants to minimize INO2 and IFEAR. Everything should build off of and/or expand this basic idea/structure.
+
+Take C. elegans, for example. It only has 302 neurons, and is a relatively simple organism, with is connectome nearly entirely known. Despite its relative simplicity, it is capable of avoiding toxins (cite toxin avoidance), and withdrawing from a touch to the head. Both of these actions show a tendency to minimize certain conditions. In the context of an organism as simple as C. elegans, it becomes clear that this tendency arises from a circuit configuration that causes certain ``pre-wired'' responses to be preside over others.
+
+\textbf{This another premise of Ortus:} The idea of ``emotions'', as we know them, are simply the rise and fall in activation of different groups of neurons, tied to very fundamental behaviors. The concepts of ``good'' and ``bad'' sensations or emotions only carry meaning to us because of their associations to circuits that are either desirable or undesirable from a longevity/survival perspective.
+
+
+\begin{outline}
+\point Perhaps use a ``chemical'' to signal that a synapse may be be created
+\point classical conditioning -- two stimuli paired, instrumental (operant) conditioning -- stimulus $\rightarrow$ response $\rightarrow$ reward
+\point as things get repeated, the pathway between input and output shortens (creates a ``reflexive reaction'', though not the same as a real reflex, like a knee jerk)
+  \subpoint Essentially, complex behaviors are more nuanced reflexes. A reflex goes from a sensory neuron to the spinal cord where interneurons redirect the signal to a motorneuron. Complex behaviors originate from some combination of existing neural activity and sensory input, which combine and, after being passed through a number of different interneurons, end up as signals to motor neurons, or loop back around to continue the ``thought'' process.
+  \point Maybe have a loop that re--energizes (in a decaying way) neural pathways/circuits that were recently used. In this way, perhaps we can implement instrumental learning, and time--based/sequence--based knowledge; see \ref{MNCF:Suvrathan2016}
+\point rodent and human brain have same basic structure, it seems. things tend to be organized fairly similarly, relative to each other. \ref{MNCF:wiredforbehaviors}
+\point \ref{MNCF:wiredforbehaviors} are discussing rodent experiments that cause lesions to regions of the brain, so ortus should be able to function by using single neurons to represent groups of neurons, while there isn't a requirement for greater behavioral nuance.
+\point Is there any merit to idea of  ``triangle inequality''? E.g.:
+    \subpoint If A fires, and B fires, and C fires, and A has a CS with B, and B has a CS with C, then we create a synapse between A and C.
+    \subpoint For GJs, if A fires, and D fires, and at the same time, B fires and C fires, and A has a CS with D, and B has a CS with C, then we can create a GJ between C and D.
+\point might make sense to have different ``genes'' responsible for excitatory and inhibitory synapses
+\point problem with worm was we would need to get too specific, and that doesn't necessarily help with generalized AI. For that goal, it makes sense to look at specific things, but then to figure out how to map that to a more generalized approach---e.g., map the concept of ``genes'' to something pluggable/switchable that can help shape a connectome.
+    \subpoint careful\ldots don't want to go down rabbit hole.
+    \subpoint essentially, virtual DNA (see example further down)
+        \subsubpoint InstructionUnits $\rightarrow$ CIU (Connectome Instruction Unit)
+  \point Perhaps theres a chemical marker for simultaneous actions that tells the body to associate two or more sets of stimuli?
+  \point visual encoding (assume 16 pixels):
+    \subpoint group of 4 pixels in center, red, needs to be associated with a ``touch'', so some neuron gets the input from those 4 pixels, and passes that signal along to another neuron, which also gets the touch. this neuron passes that signal along.
+    \subpoint other 4 pixels, same operation, different neuronal chain.
+    \subpoint now, it sees both at once, so the second layer of neurons both go into a different 3rd layer (separate from the other 2 3rd layer ones that had other associations), and tie that together with some other sensory input.
+    \subpoint the more you do this, the more intertwined and refined your visual system becomes.
+\point May need to work with space/location, but in a relative sense. A 3D coordinate may not be necessary or make sense, but perhaps each cell needs to know how close it is to other cells?
+    \subpoint might be able to use a proximity coefficient for any two neurons
+    \subpoint adjacent body parts, areas on skin, are ``represented'' by similarly adjacent neurons
+\point grow synapses with nearby neurons, maybe try reaching out probabilistically or something?
+\point The fact that new axonal branch tips emerge near existing synapses means that behavior gets reinforced and things ortus repeats will become more and more ingrained\ldots this seems to have implications for forming new memories, and working memory.
+\point look into integration (signal, sensory)
+\point for a sequence, you need to have a chain of neurons fire, and then that signal loops back to a sensory or inter neuron, that starts off a new chain (but slightly differently)\ldots maybe.
+\point Need to give synapses 3D location, and then we need to see which neurons have synapses within some range of that synapse. 
+    \subpoint Based upon that, a new synapse can grow, and if it doesn't get reinforced, it goes away. This seems like it would be done on the presynaptic side.
+\point to communicate with pre--synaptic neurons, there can be a read/write array that post--synaptic neurons can use to send ``messages'' to the pre--synaptic neurons on the next time--step (iteration). 
+\point the way to build normal associations is the same way you would go about building associations between any pair/set of stimuli.
+\point GJ formation implementation is wrong; don't look for exactly lined up correlation, it should be one time--step off. Think about how the worm's muscles are connected via GJs. They don't all activate at once, they activate in succession.
+\point Article talking about synaptic strength scaling with connections (more or less inversely proportional), seems to further suggest that it's alright to model regions of the brain with one or a few neurons, and expand as necessary for more nuanced behavior.
+\point Perhaps humans, as well as other living things, are essentially very complex state--machines
+    \subpoint maybe we know to do various tasks (like sequences) because we learn that when we are in state X, then we do Y, which brings us to state Z, so we do W (e.g., playing a song)
+\point when someone asks you a question, essentially, they are causing you to activate the parts of your brain that are related 
+\point if you have A that fires, which causes C to fire, when CO2 increases (or O2 decreases), and you have B that fires when H2O is present, and A and B fire together, A should cause B to fire C.
+    \subpoint i suspect this all hinges upon an inherent interconnection  -- i.e., the auditory system, visual system, and somatic system are all very much intertwined.
+        \subsubpoint possibly why it takes babies such a long time to learn to speak. initially they try to talk and just spew a bunch of sounds.
+\point as you do something more and more, the ``sensory'' impact of it decreases, but the pathways that deal with learning the behavior get stronger.
+    \subpoint there seems to be an inverse relationship here. The more novel a stimulus, the more quickly connections are formed, and as the stimulus is repeated and connection strengths grow, there is generally less action (due to a less excited/activated neuron
+        \subsubpoint should have a large reaction to new stimuli, and that should decrease as ``novelty'' wears down
+            \supersubpoint can possibly just be implemented by strength of synapse, which would require sensory (or other sort of) habituation, so that really strong synapses don't create an unstable situation
+        \subsubpoint need some way to measure the age of a connection, and a way to know how novel a stimulus is (either simple or composite)
+\point I searched for ``Artificial Neural Network Life'', ``Artificial Life AND Neural Network'', ``Self--organizing Neural Network'', ``Artificial life neurons'' to find related work\ldots good keywords might be:
+    \subpoint \ldots not sure yet.
+\point conscious vs sub--conscious could just be some activity threshold being crossed
+\point dopamine seems key to synaptic plasticity / hebbian learning, see notes for \ref{Gardoni2015}.
+\point when someone thinks, they don't always have an ``output'', like ANNs have. ``Thinking'' is an internal process, and there's only an output when a thought creates an output. Perhaps measuring interneurons is a better measure of ortus' ``recognition'' of something. 
+    \subpoint What is the mechanism needed to say, ``if you see a dog, then move your arm'' or some other output associated with recognizing something?
+        \subsubpoint maybe it's the same sort of idea as the pleasure center: you ``prime'' or ``energize'' a specific circuit, so that when something is recognized, the ``hand'' circuit, for example, is already energized, and that makes it cross the threshold, thus creating an action.
+            \supersubpoint this is based upon the assumption that the brain is highly interconnected.
+\end{outline}
+
+
+NOTE: Look into ``recurrent inhibition'': \url{http://neuroscience.uth.tmc.edu/s1/introduction.html}
+
+A neuron is kind of like a person\ldots You go out and meet 5 people. 3 of them you get along with, and 2 you don't. You end up meeting the friends of those 3 people, and maybe like a few of them, and then your network will grow/strengthen in much the same way as a neuron's axon does.
+
+\textbf{Example of CIU idea from above}
+Not going to model cell division, too low level. But, it's clear we need a set of sensory inputs, a set of motor outputs, a set of ``emotions'' (including things like pain, etc in that set), and an initial set of innate behaviors. For example:
+
+\textbf{Format: if ``A'' then ``B'' which is Rule \#X}
+\begin{outline}
+\point -O2 $\rightarrow$ +MINHALE, -MEXHALE $\Rightarrow$ R1
+\point +CO2 $\rightarrow$ +MEXHALE, -MINHALE $\Rightarrow$ R2
+\end{outline}
+
+Want to be able to show an image and do something that evokes an emotion, and then show that emotion getting evoked upon re-presentation of the image. 
+
+
+what if sensory neurons (maybe others, depending upon \ldots ) released a NT that would signal that two stimuli occurred. that would enable an association to form.
+
+
+Solution to current problem could be to decrease activity of unrelated circuits, so that sensory input causes higher activation. though, breathing has to do with sensory input\ldots but, potentially decreasing the threshold for certain cells, and adjusting other parameters, could help\ldots There's also the idea of desensitization
+
+\section{DNA, Genes, Proteins, and Cells}
+
+\subsection{How Genes work}
+\url{https://publications.nigms.nih.gov/thenewgenetics/chapter1.html}
+\url{https://online.science.psu.edu/biol011_sandbox_7239/node/7260}
+\url{http://genetics.thetech.org/about-genetics/how-do-genes-work}
+
+\subsection{Cell Signaling}
+\url{http://www.nature.com/scitable/topicpage/cell-signaling-14047077}
+
+\subsection{From DNA to protein}
+
+Video: From DNA to protein - 3D
+\url{https://www.youtube.com/watch?v=gG7uCskUOrA}
+
+\begin{outline}
+  \nopoint My understanding is:
+  \point DNA is made up of nucleotides
+  \point Sections of DNA encode various genes
+    \subpoint Intergenic DNA (DNA between genes) seems to play a part in determining which genes are turned on/off, among other things. (this is part of the 98\% of DNA not coding for genes)
+        \subsubpoint There is also DNA that sits in the middle of genes at times
+            \supersubpoint Exons $\rightarrow$ coding sequences, introns $\rightarrow$ intervening sequences
+  \point Enzymes unzip the DNA, and one side is transcribed to generate RNA---a single strand of nucleotides
+    \subpoint This happens for genes that are ``turned on'' 
+    \subpoint Each cell only ``turns on'' the genes it needs to do its job; this is due to proteins on the RNA polymerase
+  \point Codons are groups of 3 nucleotides, from the RNA strand, that code for amino acids
+    \subpoint There are ``start'' and ``end'' codons that mark the start and end of each gene
+  \point Amino acids are protein building blocks
+  \point The ribosomes then convert the codons from the RNA strand to proteins
+    \subpoint Prior to this, parts of the RNA are cut out during RNA splicing
+        \subsubpoint Exons are stitched together, using introns to dictate things like ``alternative splicing''
+    \subpoint genes are instructions for making certain proteins
+  \point The proteins ``made'' by some genes can act as switches
+    \subpoint If something goes wrong, a leg could grow instead of an antennae, for example.
+        \subsubpoint \textbf{This suggests that as replication happens, slight changes in the expressed genes are (more or less) deterministically carried out to ensure that things like arms, legs, vertebrae, etc. grow exactly as they should}
+  \point Some of these proteins are receptors for neurons 
+    \subpoint Some of these receptors are ligand--gated ion channels, that open to allow ions into or out of the neuron/cell.
+        \subsubpoint AKA ion--channel--linked receptors
+        \subsubpoint ligands are the neurotransmitters
+    
+
+  
+\end{outline}
+
+
+\section{Parts of the Brain}
+
+\begin{outline}
+    \point cerebral cortex (cerebrum)
+        \subpoint frontal lobe (top front) -- reasoning, planning, parts of speech, movement, emotions, problem solving
+        \subpoint parietal lobe (top middle)-- movement,  orientation, recognition, perception of stimuli
+        \subpoint occipital lobe -- visual processing
+        \subpoint temporal lobe -- perception and recognition of auditory stimuli, memory, and speech
+    \point cerebellum (little brain)
+        \subpoint associated with regulation and coordination of movement, posture, and balance
+        \subpoint evolutionarily really old; reptiles have this as more or less their full brain
+    \point limbic system (emotional brain) -- buried within cerebrum, like cerebellum, fairly old
+      \subpoint Thalamus - relays sensory impulses from receptors in various parts of the body to the cerebral cortex. Experts think of it as a gate. 98\% of sensory input is relayed by it (not olfaction? -- maybe olfaction is a more primitive sense that routes to cerebellum, and is similar to chemosensors in c. elegans?).
+      \subpoint Hypothalamus  -- controls release of 8 major hormones, involved in temperature regulation, control of food and water intake,  sexual behavior,  daily cycles in physiological state and behavior, and mediation of emotional responses. 
+      \subpoint Amygdala -- integrative center for emotions, emotional behavior, and motivation.  where memory and emotions are ``combined''. combines many different sensory inputs.
+        \subsubpoint Amygdalofugal Pathway (link whereby motivation and drives can influence responses, and where responses are learned, rewards and punishments), stria terminalis (similar to fornix) -- both important, come back to this.
+      \subpoint Hippocampus -- associated primarily with memory. looks like a seahorse. 
+    \point Brain Stem -- underneath limbic system, responsible for basic vital life functions such as breathing, heartbeat, and blood pressure.
+        \subpoint Midbrain -- (tectum, the 'roof', and tegmentum, in front of the tectum). Tectum responsible for visual reflexes. Tegmentum coordinates sensorimotor  information. 
+        \subpoint Pons -- connects the spinal cord to higher brain levels, and transfers info from cerebrum to cerebellum, some of which are part of the reticular formation, which  regulates alertness, sleep, and wakefulness.
+        \subpoint Medulla -- transmits signals between the spinal cord and higher parts of the brain, controls autonomic functions like heartbeat and respiration. Also holds part of reticular formation.
+    \point grey matter: pinkish--grey, contains cell bodies, dendrites, and axon terminals -- so, this is where the synapses actually are. On outside of brain, but inside of spinal cord.
+    \point white matter: axons, which are connecting the different parts of grey matter to each other. On inside of brain, but outside of spinal cord.
+\end{outline}
+
+
+So, basically, input goes into thalamus, and is then relayed, in this way, associations can be built. Thalamus has three groups of cells:
+\begin{outline}
+\point Sensory relay nuclei -- These include the ventral posterior nucleus and lateral and medial geniculate body. Relay primary sensations by passing specific sensory information to the corresponding cortical area. 
+\point Association nuclei -- receive input from specific areas of the cortex, which is projected back to the cortex to ``somewhat'' generalized association areas, where they regulate activity.
+\point non--specific nuclei (intralaminar and midline thalamic), which receive input from cerebral cortex and project information diffusely through it. Most of these interconnect brain activity between different areas of the brain and play a role in general functions such as alerting.
+\end{outline}
+
+\textbf{Note:} brain part info from
+
+\begin{outline}
+    \point http://www.news-medical.net/health/What-does-the-Thalamus-do.aspx
+    \point http://neuroscience.uth.tmc.edu/s4/chapter06.html -- talks about fear response and amygdala
+    \point Britannica, and other places too\ldots
+\end{outline}
+
+\section{Hebbian Learning notes form cornell: ``Lecture 12: Hebbian learning and plasticity''}
+
+\url{http://www.nbb.cornell.edu/neurobio/linster/BioNB420/hebb.pdf}
+
+
+\begin{outline}
+    \point In sea mollusk Aplysia, a touch to the siphon results in gill withdrawal. This response habituates with repeated stimulation (note: repitition suppression?), but if the touch is \textit{then} accompanied by an electrical stimulation to the tail, the gill withdrawl response returns (so, it seems that the ``noxious'' stimulus to the tail sensitizes the gill withdrawal reflex).
+    \point Mechanosensory neurons innervate siphon and tail, motor neurons innervate gill muscles.
+        \subpoint initially, EPSP occurs in gill motorneurons, and decreases as the siphon is repeatedly stimulated
+        \subpoint activation of serotonic facilatory interneurons by the tail shock enhances release of transmitter from sensory neurons onto the motor neurons, increasing the EPSP in the motor neurons, despite state of habituation. 
+    \point soon\ldots
+
+\end{outline}
+
+
+
+%\section{Neural reuse: a fundamental organizational principle of the brain. \cite{Anderson2010}}
+
+\section{Functional roles of short-term synaptic plasticity with an emphasis on inhibition \cite{Anwar2017}}
+
+
+\textbf{Note: paper was too high level to be immediately relevant}
+
+\begin{outline}
+    \point STP refers to transient activity--dependent changes in synaptic strength
+        \subpoint examples include short--term depression and facilitation in the millisecond range, but also longer--lasting changes in response to highly repetitive activity, such as augmentation (lasting seconds), and post--tetanic potentiation (lasting minutes).
+        \subpoint also: adaptation/sensitization, and gain control.
+    \point predominantly presynaptic
+        \subpoint STP leads to stronger synaptic connections at some firing frequencies over others $\rightarrow$ conveys frequency--filtering properties
+    \point Adaptation and sensitization allow sensory networks to change their sensitivity and properly relay fluctuating sensory signals, can be fast or slow, and happen at the receptor level as well as higher processing centers
+        \subpoint A study investigated the effect of STP in bipolar and amacrine synapses on contrast adaptation. Some bipolar to RGC synapses depressed while a similar number facilitated. the corresponding RGCs showed adaptation or sensitization to contrast, respectively. The facilitation observed in bipolar cell synapses is caused by depression of inhibitory feedback from amacrine cells. 
+    \point In the auditory system of birds, STP contributes to differences in the processing of different sound frequencies. Neurons in the chicken nucleus magnocellularis are organized in a tonotopic manner, and higher frequencies show less depression than lower ones. 
+  
+\end{outline}
+
+%\section{Emerging roles of astrocytes in neural circuit development. \cite{Clarke2013}}
+%\section{Synapse Formation in Developing Neural Circuits \cite{Colon-Ramos2009}}
+
+\section{Astrocytes: Orchestrating synaptic plasticity? \cite{DePitta2016}}
+
+Coming soon\ldots
+
+%\section{Two matrix metalloproteinase classes reciprocally regulate synaptogenesis \cite{Dear2015}}
+
+%Very low level.
+
+%\section{Neural circuits on a chip \cite{Hasan2016}}
+%\section{Understanding synaptogenesis and functional connectome in C. elegans by imaging technology \cite{Hong2016}}
+\section{Single-Cell Memory Regulates a Neural Circuit for Sensory Behavior \cite{Kobayashi2016}}
+
+Note: I only read part of the ``Results'' section.
+
+This seems suspect to me; they say that a thermosensory cell memorizes a temperature, but this is based upon cultivation temperature. While I have no doubt that the culture temperature impacts the ``activation'' temperature of a cell, and that non--thermosensory cells cannot sense temperature, I don't see the results discussed here as ``memory''. Further, I don't see how how this benefits the worm. I assume this is more of a baseline sort of thing; the worm is born, and grows, and the cell develops such that it can work within the temperature range that the worm grew up in.
+
+%\section{Neural circuit rewiring: insights from DD synapse remodeling. \cite{Kurup2016}}
+\section{Rules for shaping neural connections in the developing brain \cite{Kutsarova2016}}
+
+\textbf{note: get flow chart image, figure 2, on page 12}
+
+Review article, proposes a detailed set of cellular rules that govern activity--dependent circuit refinement. Synthesizes what has been learned in the extensive experimental lit. on the dev. of the visual system. (strong emphasis on data obtained from live imaging of the retinotectal projection in fish and frogs). Unlike mammals, these animals rely extensively on vision for survival from very early dev. stages, and use this same visual info to direct circuit refinement.
+
+Note: Presumably this translates to other parts of the brain, mammal or not\ldots
+
+\begin{outline}
+  \point In the contralateral optic tectum, axonal terminals are organized such that they reconstitute a topographic map of the retina
+    \point Binocular projections segregate into alternating eye--specific bands in the rostral colliculus (in mammals)
+    \point the dorsal lateral geniculate nuclei (LGN) in the thalamus is thought to serve as the fundamental relay station through which visual information is passed to higher order cortical visual centers where increasingly complex features are extracted from visual scenes
+    \point the most prominent activity--dependent stages of brain circuit refinement do not necessarily take place at the same time in development (organization for different parts matures at different times), so the rules that control retinotectal refinement may be fundamentally different, or manifest themselves differently, during later refinement events.
+\end{outline}
+
+\textbf{Rules for Retinotectal Structural Plasticity}
+
+\begin{outline}
+ \point Molecular guidance cues provide information for coarse axonal targeting 
+    \subpoint Retinal Ganglion Cell (RGC) axons will regrow to roughly the same (correct) locations after having been sectioned
+    \subpoint Gradients of expressions of ligands cause axon attraction and repulsion, and seems to guide the path axons take
+        \subsubpoint Known as Sperry's ``Chomaffinity Hypothesis''
+ \point Inputs compete for available synaptic target space
+    \subpoint It seems that relative levels of ligand expression controls the organization of a topographically ordered map.
+    \subpoint At the single axon level, a transplanted RGC was allowed to innervate the optic tectum of a lakritz mutant fish, incapable of generating its own RGCs. The single axon was free to innervate its target in the complete absence of competition from other retinal afferents. The axon managed to target its topographically appropriate termination zone, but formed abnormally large terminal arbors. (note: they switched from singular to plural midway though)
+        \subsubpoint this suggests that retinal axons do have at least a crudely defined inherent preferred termination zone within the target, presumably due to chemoaffinity cues, but that in the absence of competition for space, arbors can enlarge their coverage area (to an extent).
+    \subpoint Seems to be more--or--less independent of neural activity 
+        \subsubpoint reducing ability for some RGCs to fire decreases the size of arbors from those cells relative to those not restricted, however blocking all activity across the network restored normal arbor size to all cells.
+            \supersubpoint So, axon arbor size---important for the precision of connectivity--is regulated by activity--dependent competitive interactions
+ \point Axonal and dendritic arbors are highly dynamic, even after seemingly mature morphology is attained
+    \subpoint Live imaging of axonal and dendritic remodeling in intact, transparent zebrafish and Xenopus (frog) embryos has shown that axons are perpetually extending and retracting extensive interstitial branch tips to prob the target area
+    \subpoint In zebrafish, the process by which an axon arrives at and elaborates extensive branch tips within its final termination zone is not directed growth, but rather what appears to be be a process of random branch extension in which the overall progression of branch elongation and stabilization favors the future termination zone
+    \subpoint Similar in Xenopus, but individual arbors occupy a relatively larger proportion of the total tectal neuropil from earlier stages, creating a situation in which the topographic map increases in precision with age (by both restricting axonal branches to appropriate locations, and constant growth of the total retinorecipient field with age)
+    \subpoint As the tectum expands by adding cells, RGC arbors adjust and improve their relative retinotopic order by gradually shifting their positions
+    \subpoint even in relatively mature tadpoles, in which RGC axons have attained their mature size and complexity, time lapse imaging still reveals ongoing remodeling and exploratory probing at branch tips (at considerably slower rates)
+
+
+ \point Patterned neuronal activity provides instructive cues that help refine inputs:
+
+  \subpoint dark--rearing -- seems not to impact refinement of visual system, but dark rearing also doesn't necessarily deprive the visual system of all activity
+    \subpoint in contrast to dark--rearing, using TTX to block action potential firing during optic nerve regeneration (in adult goldfish) prevented the refinement of multiunit receptive field sizes, and resulted in the degradation of precision in the anatomical projection
+      \subsubpoint axonal arbors were significantly enlarged
+        \supersubpoint in Xenopus tadpoles, blocking retinal APs led to a rapid increase in axonal branch dynamics measured as number of branches added and lost per 2 h.
+    \subpoint Locally--correlated, patterned firing in the retina, whether mediated by visual stimuli or spontaneous retinal waves, carries information about the relative locations of RGCs with respect to one another that the system can use to instruct map refinement.
+      \subsubpoint The notion of correlated firing between pre and post synaptic cells modifying synaptic strength in response to coo-activation (Hebb synapse) comes from the observation of basal occlusion by $Mg^{2+}$ of the ion channel of NMDA receptors; which is the principal glutamate receptor type found at newly formed synapses
+        \supersubpoint only when the dual requirements of glutamate binding and simultaneous postsynaptic depolarization to relieve the $Mg^{2+}$ block of the pore are satisfied can the NMDAR flux current. This property of the NMDAR means that it can function as a molecular detector of correlated activity.
+        \supersubpoint \url{https://en.wikipedia.org/wiki/NMDA_receptor}
+      \subsubpoint blocking NMDARs with APV (which blocks the glutamate binding site) prevents refinement of retinotectal maps, meaning that NMDARs presumably act as correlation detectors.
+    \subpoint Stroboscopic rearing---producing an atypically high degree of correlation in the firing activity of RGCs---in goldfish, caused retinotectal projections to substantially overlap, and fail to refine throughout development.
+        \subsubpoint these animals showed poor topographic refinement, with atypically large response fields.
+            \supersubpoint regenerating projections exhibit a similar failure to refine under conditions of stroboscopic illumination
+        \subsubpoint individual RGCs showed long axonal arbors that were diffusely branched (rather than having formed dense clusters of branches at the temrination zone)
+        \subsubpoint Though it seems that mice, which normally have binocular innervation of the SC, that had experienced optogenetic simultaneous co--activation of the two eye during the period of retinotectal axon ingrowth prior to eye--opening, ipsilateral eye afferent were no longer restricted to deeper tectal layers but instead appeared able to stabilize inputs within the more superficial layers where contralateral inputs normally terminate exclusively.
+        \supersubpoint (Note: my understanding of this, is that the stimulation impacted the growth of the axons such that they tried to account for the activation, suggesting that the correlated stimulation of both eyes caused the axons to grow as if they were coming from the same eye---in a sense) \textbf{look into this\ldots}
+
+    \subpoint Synchronous firing stabilizes synapses and prolongs branch lifetimes while actively suppressing branch dynamics via N--methyl D--aspartate receptor (NMDAR)--dependent retrograde signaling
+
+        \subsubpoint In order for Hebbian structural plasticity to be relevant to map refinement, postsynaptic signaling must be able to drive changes in the presynaptic axons through the production of one or more retrograde signals that can act back on the presynaptic terminal
+        \subsubpoint normal visual experience during the period of developmental refinement can activate postsynaptic NMDARs, and blocking NMDARs (with APV) results in a rapid upregulation of presynaptic RGC axon branch dynamics (greater number of new branch tips added and retracted) at the axon terminal.
+        \subsubpoint further, virally infecting postsynaptic tectal neurons, but not presynaptic RGCs with tCaMKII (a constitutively active truncated form of CaMKII, which lacks the auto--inhibitory regulatory domain, but mimics the activation of CaMKII that takes place in LTP induction), showed the expected enhancement in synaptic AMPAR currents as NMDAR--only ``silent synapses'' matures en masse to become AMPAR-containing functional synapses
+            \supersubpoint also found that RGC axon arbors grew less and had a much lower branch tip density than control cells, suggesting the existence of a retrograde signal downstream of CaMKII activation that stabilizes existing branches and suppresses branch elaboration as it drives synaptic maturation
+
+    \subpoint Asynchronous activity weakens synapses (LTD)  and actively promotes axonal branch dynamics, including addition and elongation, as well as branch elimination (Stentian mechanisms)
+        \subsubpoint most retinotectal projection in Xenopus tadpoles is almost purely contralateral, occasionally one or two RGC axons end up projecting to the ipsilateral optictectum (accidentally). These end up forming synaptic contacts within the ipsilateral tectum, presumably responding to the same molecular cues that guide the contralateral RGC axons to form a crude map.
+        \subsubpoint can test Hebbian ``fire together, wire together'' on these animals  because the only way the lone ipsilateral RGC will fire tectal neurons is to make it fire at the same time as the contralateral inputs (so, flash light at one eye vs both eyes).
+        \subsubpoint electrophysiological recordings showed that when both eyes were stimulated together, the ipsilateral input maintained or even slightly increased its synaptic strength relative to the contralateral inputs, but when the two eyes were stimulated 1 second apart, the ipsilateral eye input (which by itself is usually not strong enough to drive the postsynaptic neurons to fire action potentials), very rapidly declines in synaptic strength and in many cases entirely loses its ability to evoke an AMPAR--mediated postsynaptic current.
+        \subsubpoint Asynchronous stimulation of the two eyes resulted in a rapid (within 30 min) and dramatic upregulation of new branch additions, and a significant increase in branch tip elongation compared with axon dynamics during a preceding period of darkness. Elimination of branch tips was also enhanced, indicating that rather than producing a larger arbor, asynchronous stimulation makes the axon more dynamic and exploratory (similar to the effects of the NMDAR blockade).
+          \supersubpoint its unlikely that the lone ipsilateral axon would by itself be able to drive sufficient depolarization of the postsynaptic tectal cell to permit $Ca^{2+}$ flux through NMDARs, and addition of MK801 to block NMDARs did not prevent the increased rate of branch additions in response to asynchronous stimulation. It is therefore possible that the source of the branch promoting signal may not be postsynaptic in origin, but could, for example be released by surrounding glial cells, or come directly from nearby axon terminals.
+        \subsubpoint in contrast, synchronous stimulation of the two eyes resulted in a rapid decrease in the rate of branch additions to levels seen in darkness. This decrease in branch dynamic behavior was completely prevented in the presence of MK801, or if tetanus toxin was expressed in the ipsilateral axon to render it incapable of releasing neurotransmitter.
+            \supersubpoint this indicates that the activation of postsynaptic NMDARs likely leads to the release of a retrograde branch suppressing factor. In addition, branches that did form during synchronous stimulation had longer lifetimes on average than those that emerged during periods of asynchronous stimulation, indicating that they were more stable overall.
+        \subsubpoint In the normal process of activity--dependent developmental refinement, a typical axon might be expected to experience a more modest range of local correlation and asynchrony that would lead to a slight upregulation of exploratory branching and synapse disassembly on those branches that extend away from the proper termination zone (promoting them to keep growing until they land in more welcoming territory), and a stabilization and synaptic strengthening on those branches that extend into the appropriate part of the map where inputs with similar activity patterns converge (promoting consolidation and further synaptogenesis at this site). See figure 1 in paper if interested\ldots
+    
+ \point In the absence of sensory input, correlated spontaneous firing provides surrogate patterned activity
+    \subpoint ``retinal waves'' are patterns of spontaneous activity that exhibit a high degree of local correlation in firing, observed in the fetal retinal
+    \subpoint RGCs located in close proximity overlap their bursting activity in time, whereas RGCs that reside further away from each other are less likely to be co-active. This spaciotemporal pattern of RGC activity results from a local initiation of depolarization, which propagates to adjacent neurons, spreading over long distances across the retina.
+  
+ \point New axonal branch tips emerge near existing synapses
+    \subpoint wherever a synapse strengthens (or weakens) through activity--dependent plasticity, it will be available (or not) to nucleate new branches from which new synapses can form.
+        \subsubpoint This constitutes a positive feedback loop that will lead to the targeted elaboration of axonal arbor at the site where that axon has formed effective, strong synaptic contacts, and the scaling back of branch initiation at inappropriate sites where synapses may form transiently but are subsequently eliminated.
+
+ \point Stronger synapses help stabilize the axons and dendrites on which they form (Synaptotropism)
+    \subpoint Synaptic sites are fairly labile (easily changed). The dendritic tree elaborates through a process of dynamic filopodial extensions followed rapidly by synapse formation.
+    \subpoint As synapses form, those synapse--bearing branches become consolidated, and further branch extension then proceeds by building upon those more stable sites.
+        \subsubpoint blocking neurexin/neuroligin signaling or AMPAR trafficking (in Xenopus) tectal neurons prevents synaptogenesis or synapse maturation (respectively)---resulting in a failure to elaborate normal complex dendritic arbors.
+    \subpoint in zebrafish and Xenopus tadpoles, within minutes of RGC axonal branch extension, synaptophysin-GFP puncta could be observed accumulating int he wake of the advancing growth cone. Some synaptic puncta were later lost, while other became more mature over time. When these branches later attempted to retract, the presence of a mature synaptic site conferred structural stability, preventing the branch from withdrawing beyond that site.
+
+ \point Homeostatic mechanisms help maintain the overall level of functional synaptic input to the target
+    \subpoint Both the Hebbian and Stentian mechanisms in the context of changes in synaptic efficacy are inherently unstable
+        \subsubpoint for Hebbian, the positive feedback loop would become unsustainable, and for Stent's extension, each time the synapse weakened, it would become less and less likely that it would strengthen again (because it would be less likely that they pre and post cells would be correlated)
+    \subpoint The brain overcomes this inherent instability by enforcing a range of synaptic transmission within which bidirectional changes in synaptic efficacy can occur---known as ``homeostatic plasticity''
+    \subsubpoint \textbf{look into this.}
+
+\end{outline}
+
+%\section{Correlated Synaptic Inputs Drive Dendritic Calcium Amplification and Cooperative Plasticity during Clustered Synapse Development \cite{Lee2016}}
+%\section{Neuronal development: Signalling synaptogenesis \cite{Lewis2016}}
+
+%pdf I have is not actual article, it has a citation to it though. might not be bad to look at at some point.
+
+\section{Circuit Mechanisms of Sensorimotor Learning \cite{Makino2016}}
+
+Coming soon\ldots
+
+%\section{Towards reverse engineering the brain: Modeling abstractions and simulation frameworks \cite{Nageswaran2010}}
+%\section{Biologically based neural circuit modelling for the study of fear learning and extinction \cite{Nair2016}}
+
+
+\section{A feedback neural circuit for calibrating aversive memory strength \cite{Ozawa2016}}
+
+Coming soon\ldots
+
+
+%\section{Neurotrophin regulation of neural circuit development and function \cite{Park2013}}
+
+\section{Neural plasticity across the lifespan \cite{Power2016}}
+
+Coming soon\ldots
+
+%\section{The Purkinje cell as a model of synaptogenesis and synaptic specificity \cite{Sasso??-Pognetto2016}}
+%\section{Synapse biology in the ?circuit-age'?paths toward molecular connectomics \cite{Schreiner2017}}
+%\section{Activity-Dependent Inhibitory Synaptogenesis in Cerebellar Cultures \cite{Seil2016}}
+%\section{Theoretical Models of Neural Circuit Development \cite{Simpson2009}}
+
+\section{The development of cortical circuits for motion discrimination. \cite{Smith2015}}
+
+Coming soon\ldots
+
+\section{The interplay between neurons and glia in synapse development and plasticity \cite{Stogsdill2017}}
+
+Coming soon\ldots
+
+\section{Timing Rules for Synaptic Plasticity Matched to Behavioral Function \cite{Suvrathan2016}}
+\label{MNCF:Suvrathan2016}
+
+from \url{http://www.neuroanatomy.wisc.edu/cere/text/P4/climb.htm}
+A single action potential from a climbing fiber elicits a burst of action potentials in the Purkinje Cells that it contacts. This burst is called a complex spike. Climbing fibers are ``lazy'' (but strong), thus Purkinje cells exhibit complex spikes at a rate of about 1 per second. 
+
+going to come back to this paper at some point\ldots
+
+
+
+\begin{outline}
+    \point Synaptic plasticity rules themselves can be highly specialized to match the functional requirements of a learning task
+    \point The fundamental requirement of associative learning is to store information about the correlations between events
+        \subpoint synaptic plasticity mechanisms have been described that can capture the correlations between coincident, or nearly coincident events
+           \subsubpoint \textbf{Feldman, D.E. (2012). The spike-timing dependence of plasticity. Neuron 75, 556–571.}
+        \subpoint Behavioral observations indicate the brain is also able to associate events separated in time, with requisite temporal precision
+            \subsubpoint During feedback--based learning, a delayed error signal must selectively modify synapses active at the specific, earlier time when the neural command leading to an error was generated
+            \supersubpoint known as the ``temporal credit assignment'' problem -- think of feedback delay when throwing a ball
+    \point During cerebellum--dependent learning, delayed feedback about performance errors is conveyed to the cerebellum by its climbing fiber input.
+        \subpoint Each spike in a climbing fiber produces a ``complex spike'', and concomitant calcium influx in its Purkinje cell targets. Related pairings of climbing fiber (CF) activation with the activation of parallel fiber (PF) synapses onto the Pukinje cells result in depression of the parallel fiber--to--Purkinje cell (PF--to--PC) synapses.
+            \subsubpoint Thus, error signals carried by the climbing fibers are thought to sculpt away, through associate synaptic depression, PF--to--PC synapses that were active around the time that an error was generated
+
+    
+\end{outline}
+
+
+
+
+
+
+%\section{Neural plasticity and behavior ??? sixty years of conceptual advances \cite{Sweatt2016}}
+
+
+\section{Homeostatic Plasticity of Subcellular Neuronal Structures: From Inputs to Outputs \cite{Wefelmeyer2016}}
+
+Coming soon\ldots
+
+\section{\textbf{[Book]}Mechanisms of Neural Circuit Formation \cite{Weiner2015}}
+(Note: title of relevant articles as subsections)
+
+\subsection{Introduction to mechanisms of neural circuit formation}
+Topics in book:
+\begin{outline}
+\point cell adhesion molecules (and downstream roles in cell identity, recognition, and synaptic specificity)
+\point axon guidance, formation of terminals, and dendritic arborization
+\point formation of synaptic structures themselves (remains subject to remodeling and plasticity throughout development and even in adult animals)
+\end{outline}
+
+\subsection{Wired for Behaviors: from development to function of innate limbic system circuitry, 2012}
+\label{MNCF:wiredforbehaviors}
+
+\begin{outline}
+  \point ``Limbic system links external cues possessing emotional, social, or motivational relevance to a specified set of contextual and species--specific appropriate behavioral outputs''
+  \point Some enhanced through experiential learning and reinforcement, but others are innate
+    \subpoint courtship, maternal care, defense, establishment of social hierarchy $\rightarrow$ all ensure survival of individual or offspring, and thus propagation of species
+    \subpoint regulated and influenced by sensory stimuli
+  \point ``Emotional salience, produced in the amygdala, is generally thought of as a prime driving force behind innate human behaviors, typically social in nature''
+  \point This review focuses on the rodent, and because sensory inputs to rodents are primarily smell, audio, and touch, (with minimal visual inputs), the review focuses on chemosensation and how it relates to mating, maternal care, etc.
+  \point innate rodent behaviors, e.g.: female prefers male urine odors to female, or no odors (naive); mouse that has never encountered a predator will display signs of fear in response to predator odors.
+  \subpoint These chemicals are detected in the nose, processed by the Main and Accessory Olfactory Bulbs (MOB, AOB), projections from the AOB and MOB (directly or indirectly) synapse onto a number of higher order structures (olfactory cortex, amygdala), and the amygdala sent projections to the hypothalamus for further integration and coordination with the brain stem to initiate ``fight or flight'' responses.
+      \subsubpoint although they will focus their attention on this circuit, they state that: ``we would like to emphasize that these brain hubs and their many feedback loops are not the sole components of a highly complex neural network important for the regulation of sociability an innate emotions''
+  \point disabling different parts of the aforementioned circuit, when looking at mating behaviors, can all have different effects on mating behavior (e.g., males seeking males)
+  \point defensive behaviors trigger slightly different areas of the amygdala and hypothalamus, depending upon whether the stimulus is a predator or a conspecific animal.
+    \subpoint NOTE: this seems to back up the idea of building on / expanding existing structures to grow the brain in Ortus
+  \point VNO organ (receptors) appear(s) to have evolved specifically to respond to cues that depend upon the animal's survival in the wild (so, to react to specific species)
+  \point Gene expression is correlated with ``patterns to subsets of innate behaviors''
+  \point Estrogen and Testosterone both greatly impact (at least certain) the development of innate behaviors. In females, it is the primary hormone in the ``induction of maternal care''.
+    \subpoint Enzyme ``aromatose'' converts testosterone to estrogen in male brains. Without this, all aggressive behavior against intruder males disappears.
+        \subsubpoint Perhaps the hormonal state of an animal influences the connectivity? (note: that seems like it would require *very* plastic synapses\ldots)
+  \point Hormones (sex, and others) have an impact on the formation of neural circuits as well as the modulation of innate sex--specific behaviors.
+  \point By embryonic day (E) 18, most neurons dedicated for the limbic system have migrated to their final locations, and in some cases, begun to make connections.
+    \subpoint Early post--natal period is primarily characterized by elaboration of both short and long range connections, and shaping of circuits via experience and sex--specific hormone levels (note: what about other hormones?)
+    \point Neuronal patterning and specification of neurons is accomplished via the actions of delineated sets of transcription factors (typically homeodomain and bHLH classes)
+        \subpoint These genes have been conserved through evolution and act in many species (fly, worm, mammals) -- so, they're important in neuronal dev.
+  \point Seems to be a genetically predetermined program of migration, differentiation, synaptogenesis, and maturation.
+  \point As a single olfactory sensory neuron matures, it will express a single olfactory receptor type, which detects a specific chemical cue.
+    \subpoint During development, olfactory receptor genes are turned on synchronously in a spatially restricted manner, establishing zones.
+  \point Axons from olfactory receptor neurons form glomeruli (glomerulus, singular) in olfactory bulbs through a hierarchical process (olfactory sensory epithelial neurons expressing the same receptor type innervate common glomeruli)
+    \subpoint May be driven by olfactory receptor itself where a mechanism downstream of the actual olfactory receptors enables fasciculation of axons that express similar receptors
+        \subsubpoint G--coupled receptors may generate  unique level of cAMP which regulates the expression of guidance factors Nrpl and Sema3A
+  \point Olfactory epithelial targeting of the olfactory bulb occurs at the same time that axonal projections from the olfactory bulb to deeper brain regions occur
+    \subpoint This suggests these guidance events are independent of each other, and sensory inputs.
+  \point Many neuronal cell types within the brain are generated far from the mature structures they will eventually populate (so, it's hard to draw connections between embryonic development and post--natal structures---this was in reference to development of amygdala and hypothalamus)
+  \point Different nuclei of the amygdala, associated with different behaviors, express distinct patterns of LIM--homeodomain containing genes during development.
+    \subpoint The combinatorial expression patterns of LIM genes may provide a comprehensive mechanism for patterning the amygdala
+    \subpoint A nucleus, as it relates to neuroanatomy is a cluster of neurons that have roughly similar connections and functions
+  \point The same sort of gene encoding of transcription factors and regional specificity seen in the amygdala is seen in the hypothalamus.
+  \point Mice that don't have certain genes won't have proper positioning of certain neurons, or necessary hypothalamic nuclei (influenced by Sim1, and Otp transcription factors, respectively)
+  \point It's possible that in addition to patterning neuronal identity, key transcription factors encode subsets of genes (most likely cell adhesion molecules) that would be required for limbic circuit specific connectivity)
+  \point Gene ``Met'', a receptor tyrosine kinase, detected in key limbic areas (cortex, amygdala, hypothalamus, and septum, can alter arbor complexity, increase growth and excitatory synapse formation. 
+
+\end{outline}
+
+
+  
+
+
+\subsection{Protocadherins, not prototypical: a complex tale of their interactions, expression, and functions}
+
+Paper was very low--level, discussed molecular adhesion relating to the specifics of Pcdhs---Protocadherins.
+
+\subsection{Molecular codes for neuronal individuality and cell assembly in the brain}
+
+Test\ldots
+
+\subsection{Synaptic clustering during development and learning: the why, when, and how}
+
+Test\ldots
+
+
+
+%\section{Synaptogenesis: A synaptic bridge \cite{Yates2016}}
+
+%Not actual article\ldots not sure if worth getting full one.
+
+\section{Gating of hippocampal activity, plasticity, and memory by entorhinal cortex long-range inhibition \cite{Basu2016}}
+
+Coming soon\ldots
+
+\section{Mind the Gap Junctions: The Importance of Electrical Synapses to Visual Processing \cite{Demb2016}}
+
+Coming soon\ldots
+
+\section{Molecular mechanisms underlying formation of long-term reward memories and extinction memories in the honeybee (Apis mellifera). \cite{Eisenhardt2014}}
+
+Coming soon\ldots
+
+%\section{Neurobiological basis of individual variation in stimulus-reward learning \cite{Flagel2017}}
+
+\section{Neural Representations of Unconditioned Stimuli in Basolateral Amygdala Mediate Innate and Learned Responses \cite{Gore2015}}
+
+NEXT PAPER
+ 
+Coming soon\ldots But, from the first page ``In Brief'':
+
+Neurons in the basolateral amygdala that mediate responses to intrinsically rewarding or aversive stimuli also elicit learned responses, indicating that associative learning is funneled through innate behavioral circuits to assign positive or negative emotions to neutral sensory stimuli.
+
+Note: This is good to hear, as it seems to back up one of the main principles of Ortus.
+
+\section{Relational associative learning induces cross-modal plasticity in early visual cortex \cite{Headley2015}}
+
+Coming soon\ldots
+
+\section{Distinct neural mechanisms for remembering when an event occurred \cite{Jenkins2016}}
+
+Coming soon\ldots
+
+\section{Reward-Guided Learning with and without Causal Attribution \cite{Jocham2016}}
+
+Coming soon\ldots
+
+\section{Hebbian and neuromodulatory mechanisms interact to trigger associative memory formation \cite{Johansen2014}}
+
+
+\begin{outline}
+    \point Hebbian plasticity refers to the strengthening of a presynaptic input onto a postsynaptic neuron when both pre-- and post--synaptic neurons are coactive
+        \subpoint Hebbian plasticity along may not be sufficient for producing synaptic plasticity, and neuromodulatory mechanisms are also involved.
+    \point Auditory threat (fear) conditioning is a form of associative learning during which a neutral auditory conditioned stimulus (CS) is temporally paired with an aversive unconditioned stimulus (US) (often a mild electric shock). Following training, the auditory CS comes to elicit behavioral defense responses (such as freezing) and supporting physiological changes controlled by the autonomic nervous and endocrine systems.
+        \subpoint These conditioned responses can be used to measure the associative memory created by CS--US pairing.
+    \point A critical site of associative plasticity has been identified in the lateral nucleus of the amygdala (LA)
+        \subpoint LA receives convergent input from the auditory system and from aversive nociceptive circuits (note: this suggests most sensory input could become associated in much the same way)
+    \point Auditory inputs are potentiated during threat conditioning, possibly as a result of auditory--evoked presynaptic activity occurring convergantly and contemporaneously with strong activation of postsynaptic LA pyramidal neurons by the aversive shock.
+    \point Previous studies found that weak behavioral memory could be acquired by directly stimulating LA neurons, as if it were an US, when many ``training'' trials were used (which suggests other factors are involved to enhance Hebbian neural plasticity). 
+    \point This study showed that activation of LA neurons during the shock period---when the activity of CS inputs and postsynaptic pyramidal neurons is correlated---was necessary for the formation of thread memories. (note: so, correlation is a necessary measure.)
+        \subpoint Also showed that disrupting correlated activity between auditory CS inputs and postsynaptic LA pyramidal neurons reduced learning--induced plasticity.
+    \point (somewhat unrelated to other points) CaMKII+ is a marker of pyramidal neurons, and also thought to be important in learning/memory formation.
+    \point They showed that activation of beta--noradrenergic receptor ($\beta$--ARs) in addition to Hebbian mechanisms is both necessary and sufficient to produce associative threat learning.
+    \subpoint Auditory stimulus, and direct activation of LA pyramidal neurons (causing correlation, as \textit{I believe} the neurons were artificially inhibited, so a normal shock wouldn't allow the LA pyramidal neurons to fire)), while presenting a footshock (which releases NE--so, activates $\beta$--ARs), \textit{and} microinjections of a $\beta$--AR antagonist significantly reduced learning, when compared to animals injected with only the vehicle (so, not blocking $\beta$--ARs). 
+        \subpoint Learning--induced potentiation of the CS (the auditory input) is dependent upon $\beta$--AR
+            \subsubpoint Note: as an aside, ``Beta Blockers'' are probably not good things to take\ldots
+
+\end{outline}
+
+\section{Evaluation of ambiguous associations in the amygdala by learning the structure of the environment \cite{Madarasz2016}}
+
+Coming soon\ldots
+
+\section{Synaptic mechanisms of associative memory in the amygdala \cite{Maren2005}}
+
+search for ``pavlonian learning mechanisms''
+
+\begin{outline}
+    \point NMDA receptor antagonists prevent the acuisition of fear memory
+    \point Rumpel et al, 2005, used modified AMPA-type glutamate receptors to measure learning--induced synaptic potentiation in single LA neurons after fear conditioning and to examine the consequences of blocking synaptic plasticity in a subset of LA neurons on fear learning and memory.
+        \subpoint Induction of LTP drives GluR1--containing AMPARs into synapses, and preventing AMPAR delivery reduces magnitude of LTP
+    \point LTP is expressed through an increase in synaptic AMPARs
+    \point Thalamo--amygdala: the induction and expression of LTP relies primarily on postsynaptic mechanisms (thought presynaptic increases in NTs may also occur after LTP induction)
+    \point Cortico--amygdala: plasticity may be induced either pre or post synaptically, but is mediated primarily by increases in presynaptic NT release.
+        \subpoint Presynaptic LTP induction is mediated by a novel synaptic mechanism in which activation of presynaptic NMDA receptors on cortical terminals by thalamic afferents induces an associative and heterosynaptic LTP at the cortico--amygdala synapse.
+\end{outline}
+
+Note: it seems like I should know this, but it's not clear to me what signal comes from the thalamus, and what signal comes from the cortical region\ldots
+
+%\section{Biologically based neural circuit modelling for the study of fear learning and extinction \cite{Nair2016}}
+\section{A circuit mechanism for differentiating positive and negative associations \cite{Namburi2015}}
+
+Coming soon\ldots
+
+%\section{Learning of anticipatory responses in single neurons of the human medial temporal lobe \cite{Reddy2015}}
+%\section{Mammalian Brain As a Network of Networks \cite{Samborska2016}}
+\section{Neuroscience: When perceptual learning occurs \cite{Sasaki2017}}
+
+``A study now finds that visual perceptual learning of complex features occurs due to enhancement of later, decision-related stages of visual processing, rather than earlier, visual encoding stages. It is suggested that strengthening of the readout of sensory information between stages may be reinforced by an implicit reward learning mechanism.''
+
+
+Note: Just glanced at paper, but this suggests that the approach I want to take with the visual system, having groups of neurons cluster together in effect, (described above), may be exactly what is happening in the brain.
+
+
+%\section{Chapter 13 - Neural Circuit Mechanisms of Value-Based Decision-Making and Reinforcement Learning \cite{Soltani2017}}
+%\section{Structure of plasticity in human sensory and motor networks due to perceptual learning. \cite{Vahdat2014}}
+%
+%Note: Just read ``Discussion'' section---paper wasn't exactly looking at what I thought it would, but the discussion section seems to suggest that the idea of expanding simple sub--networks (e.g., go from one ``touch'' neuron to a group as the need arises to differentiate between multiple types of touches) makes sense:
+%
+%\begin{outline}
+%   \point Perceptual training induces plasticity in the motor system that cannot be explained by activity in the somatosensory network
+%   \point Perceptual training changes the characteristics of subpsequent movements, and to improe somatosensory perceptual judgements
+%   \point 
+%\end{outline}
+
+
+
+\section{Hunger Promotes Fear Extinction by Activation of an Amygdala Microcircuit. \cite{Verma2015}}
+
+NOTE: first point backs up Ortus premises (well, at least the one about emotions driving everything, and motivations, in a sense, because very simple/fundamental motivations are a result of emotions -- e.g., motivation is to not have fear, and to balance O2 and CO2; fear is obviously the emotion.)
+
+
+\begin{outline}
+   \point Emotions, motivations, and reinforcement are a closely related, evolutionarily--conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment. 
+   \point The hypothesized that modulation of one survival circuit will provoke a significant impact on the other survival circuits
+        \subpoint e.g., if blood glucose levels fall, hormones are released and hypothalamic nucei will be activated, and food intake and search for food will prevail and emotional behavior will be adapted accordingly
+            \subsubpoint NOTE: similar to idea of O2, CO2, Water, fear, etc. in Ortus
+    \point Amygdala receives information about fear--provoking stimuli via thalamic and cortical afferents and regulates the resulting fear response by efferent projectiosn targeting hypothalamus and brain stem
+    \point The central Amygdala (CEA) represents major output station for generating an adaptive fear response
+        \subpoint receives afferent projections from the adjacent basolateral amygdala (BLA)
+        \subpoint recent evidences suggests that CEA is also essential for suppression of food intake and directing motivational behavior
+            \subsubpoint perhaps a hub for integration of survival circuits for fear and hunger
+    \point Neuropepdtide Y system is involved in both feeding and fear
+        \subpoint Neuropeptide Y4 receptors  are targeted by pancreatic polypeptide
+    \point Fear extinction is the process of repeatedly presenting a conditioned stimulus in the absence of a shock (for example) will result in a reduction of the acquired fear reaction (this is the underlying principle of exposure therapy in human patients)
+    \point This study provides evidence that the fear--related mechanisms controlled by amygdala circuitries are strongly correlated with those regulating food intake and energy balance.  They also demonstrate that short--term fasting results in the suppression of fear by enhancing feed--forward inhibition in an amygdala microcircuit, but genetic deletion of the Y4 receptor reduced appetite and impaired fear extinction.
+        \subpoint When hungry, the mice were more inclined to take on more risk (to explore), but when not hungry, safety is of greater concern
+        \subpoint Short-term fasting resutls in a drop in glucose, which activates the autonomic nervous system, and causes the release of stress hormones; this is important, because a certain degree of arousal is essential for successful fear extinction
+           \subsubpoint Essentially, it seems that being in a fasted state contributed to the ability to overcome a fear, even in the long term
+           \subsubpoint extinction learning is promoted by the fasted state, it seems, as evidenced by feed--forward inhibition increasing from the BLA to the CEm (note: presumably inhibiting the fear response, thus causing the synapse(s) to decay due to non--correlated firing?)
+                \supersubpoint (going off of ``note'' above, the reason for the inhibition might be the system prioritizing food over fear, so the brain inhibits fear to get the body to seek food (within reason, so, the amount of inhibitory connections, or at least the degree of inhibition may be relative to the severity of the hunger, so it wouldn't put itself into a great deal of danger if it was only moderately hungry).
+                \supersubpoint note: above point seems to support the idea of a hierarchical system for ortus.
+        \subpoint Feedforward inhibition:  A presynaptic cell excites an inhibitory interneuron (an interneuron is a neuron interposed between two neurons) and that inhibitory interneuron then inhibits the next follower cell.  This is a way of shutting down or limiting excitation in a downstream neuron in a neural circuit.
+
+
+\end{outline}
+
+\section{Why Neurons Have Thousands of Synapses, a Theory of Sequence Memory in Neocortex \cite{Hawkins2016}}
+
+Coming soon\ldots
+
+\section{Micro-connectomics: probing the organization of neuronal networks at the cellular scale \cite{Schroter2017}}
+
+\begin{outline}
+   \point Evidence exists of organizational motiefs that may underlie elementary units of neuronal information processing and provide a structural architecture for flexible adaptation to environmental constraints (e.g., C. elegans)
+    \point This study finds parallels between network motifs of small nervous systems and the cellular connectivity found in neuronal tissue from bigger brains
+        \subpoint Further empirical validation and conceptual work required to establish a more comprehensive and mechanistic understanding of links between neuronal tpology, computation, and behavior
+    \point key question: which generative mechanisms give rise to common comple structural proterties in neuronal network organization?
+    \point C. elegans is (apparently) not minimally wired, but the ``expensive'' wiring presumably adds justifiable functional value, e.g.:
+        \subpoint the GJ hub neurons RMG links several important sensory neurons and is of great importance in controlling the global state of the animal
+    \point Many neurons of C. elegans have multiplexed functions -- they contribute to more than one behavior
+    \point  \ldots
+
+    CURRENT PAPER
+
+\end{outline}
+
+\section{Integrating Hebbian and homeostatic plasticity : introduction \cite{Fox2017}}
+
+
+Coming soon\ldots
+
+\section{Homeostatic plasticity mechanisms in mouse V1 \cite{Kaneko2017}}
+
+NEXT AS WELL PAPER 
+
+Coming soon\ldots
+
+\section{Mechanisms underlying the formation of the amygdalar fear memory trace: A computational perspective \cite{Feng2016}}
+
+Coming Very Soon\ldots
+
+\section{Synaptic scaling rule preserves excitatory–inhibitory balance and salient neuronal network dynamics \cite{Barral2016}}
+
+NEXT NEXT NEXT NEXT PAPER
+
+Coming Soon\ldots
+
+
+\section{Rapid Encoding of New Memories by Individual Neurons in the Human Brain \cite{Ison2015}}
+
+\begin{outline}
+    \point individual neurons were measured upon showing subjects a picture of a family member, the Eiffel tower, and both together in order to attempt to create an association. The family member alone caused a mean firing rate of 13.1 spikes/s, the Eiffel tower along caused a mean firing rate of 3.6 spikes/s, After a single exposure to the composite picture, the mean response to the Eiffel tower alone rose to 7.6 spikes/s. The study did tests to ensure that the change in firing rate was a result of the association rather than familiarity.  
+    \point The authors suggest this is a result of single--cell encoding, however, to me:
+        \subpoint NOTE: This suggests that there is an immediate change in the structure of the brain, that occurs as a result of new associations forming
+        \subpoint NOTE: Further, as it was individual neurons that were being measured, there must be a chain of reactions (or numerous parallel reactions) occurring, that cause formation and strengthening of synapses (otherwise, it seems highly unlikely that the study happened to measure the one neuron that would undergo changes).
+            \subsubpoint NOTE: this suggests a global rule\ldots
+\point ``repetition suppression'' is a neural mechanism that gradually decreases the intensity of response to a repeated stimulus
+    \subpoint can have repetition suppression with plasticity; which might be why it's better to learn things over a long period of time rather than all at once. due to repetition suppression, the stimulus decreases in intensity, so the strengthening of new synapses slows. But, if you do it over time, the repetition suppression decays, and you get the full strength of the stimulus back.
+\end{outline}
+
+
+\section{Functional and structural underpinnings of neuronal assembly formation in learning \cite{Holtmaat2016}}
+
+NEXT NEXT PAPER
+
+Coming Soon\ldots
+
+
+\section{Mirror Neurons from Associative Learning \cite{Catmur2016}}
+
+Coming Soon\ldots
+
+
+\section{Functional basis of associative learning and their relationships with long-term potentiation evoked in the involved neural circuits: Lessons from studies in behaving mammals \cite{Gruart2015}}
+
+Coming Soon\ldots
+
+
+\section{Associative learning and sensory neuroplasticity: how does it happen and what is it good for? \cite{McGann2015}}
+
+NEXT NEXT NEXT PAPER
+ 
+Coming Soon\ldots
+
+
+\section{Associative learning and CA3-CA1 synaptic plasticity are impaired in D1R null, Drd1a-/- mice and in hippocampal siRNA silenced Drd1a mice. \cite{Ortiz2010}}
+
+Coming Soon\ldots
+
+
+\section{The synaptic plasticity and memory hypothesis : encoding , storage and persistence \cite{Takeuchi2013}}
+
+Coming Soon\ldots
+
+
+\section{Associative learning rapidly establishes neuronal representations of upcoming behavioral choices in crows. \cite{Veit2015}}
+
+Coming Soon\ldots
+
+
+\section{Associative Learning Drives the Formation of Silent Synapses in Neuronal Ensembles of the Nucleus Accumbens \cite{Whitaker2015}}
+
+Coming Soon\ldots
+
+\section{Neuroscience of affect: Brain mechanisms of pleasure and displeasure \cite{Berridge2013}}
+
+\begin{outline}
+    \point ``Affect'' is the hedonic quality of pleasure of displeasure, and is what distinguishes emotion from other psychological processes
+    \point Reward involves the hedonic affect of pleasure (``liking''), motivation to obtain the reward (``wanting''), and reward--related learning
+    \point Pleasure is never merely a sensation; even a sensory pleasure such as a sweet taste requires the co--recruitment of additional specialized pleasure--generating neural ciruitry to add the positive hedonic impact to the sweetness that elicits ``liking'' reactions
+    \point Joseph LeDoux (works with memory and emotion at the center for neural science at NYU) suggested that, ``By focusing on survivial functions instantiated in conserved circuits, key phenomena relevant to emotions and feelings are discussed with the natural direction of brain evolution in mind (by asking to what extent are functions and circuits that are present in other mammals are also present in humans)\ldots''
+    \point It appears that there is heavy overlap between seemingly disparate pleasures (e.g., delicious food, sex, drugs, seeing a loved one, listening to music)
+        \subpoint This suggests that the same hedonic generating circuit could give a ``pleasurable gloss'' to all such rewards, even when the final experience of each seems unique
+    \point Causation of affect suggests that affective reactions may be generated chiefly in the subcortical brain structures 
+        \subpoint This inclues fear, as well
+    \point Dopamine helps generate intense levels of ``wanting''
+    \point there seem to be ``hedonic hotspots'' where mu opiod stimulation more than doubles the intensity of ``liking'' reactions elicited by sweetness, but the same stimulations elsewhere only generate more ``wanting''
+    \point Hotspots in NAc and ventral pallidum interact together as a single integrated circuit, and unanimous recruitment of both hotspots seems necessary to magnify pleasure. Blocking either completely prevents opioid stimulation of the other hotspot from producing any ``liking'' enhancement
+    \point Damage to ventral pallidum can cause even sweet sucrose taste to elicit purely negative gapes and other digust reactions for days or weeks afterward
+    \point The NAc can generate many mixtures of desire versus fear, with each mixture dirggered at a different location (think of a musical keyboard generating different notes according to key location -- their example)
+\end{outline}
+
+
+\section{The neurobiology shaping affective touch: Expectation, motivation, and meaning in the multisensory context \cite{Ellingsen2016}}
+
+Coming Soon\ldots
+
+\section{A common neurobiology for pain and pleasure \cite{Leknes2008}}
+
+\begin{outline}
+    \point Rewards and punishments are defined as something that an animal will work to achieve or avoid, respectively
+        \subpoint Seeking pleasure and avoiding pain is important for survival, and these two motivations probably compete in the brain (which of two coinciding pain and pleasure events should be processed and acted on first?)
+        \subpoint Evidence exists suggesting significant overlap in the neural circuitry and chemistry of pain and pleasure processing systems
+    \point The Motivation--Decision Model suggests that anything that is more important for survival than pain should exert nociceptive effects.
+    \point pain is decreased by pleasant odors, images, pleasurable music, palatable food, and sexual behavior.
+    \point expectation of reward (even just pain stopping) decreases pain
+    \point Dopamine increases motivation for (but not pleasure of) something (``wanting''), while opioids influence the pain/pleasure one feels (``liking'')
+        \subpoint opioids are necessary for liking, dopamine is necessary for wanting
+    \point mu--opioids are released during painful stimulation in humans
+    \point pain decreases pleasure, and rewards induce analgesia (inability to feel pain)
+    
+\end{outline}
+
+\section{Modulation of the glutamatergic transmission by Dopamine: a focus on Parkinson, Huntington and Addiction diseases \cite{Gardoni2015}}
+
+Note: from wikipedia, NMDA Receptor page, it seems that GluN2A (aka NR2A, I think) receptors replace GluN2B (NR2B?) with age, and that  NR2B receptors stay open longer than NR2A, which could have implications for learning ability when young.
+
+Note: from wikipedia, AMPA Receptor page, The typical LTP induction protocol involves a “tetanus” stimulation, which is a 100 Hz stimulation for 1 second. When one applies this protocol to a pair of cells, one will see a sustained increase of the amplitude of the EPSP following tetanus.
+\begin{outline}
+   \point Dopamine (DA) plays a major role in cognitive functions as well as in reward processing by regulating glutamatergic inputs
+   \point It rapidly influences synaptic transmission modulating AMPA and NMDA receptors
+   \point DA can regulate the activity of ionotropic glutamate receptors with a reduction of AMPA receptor (AMPAR) evoked responses, and an increase of NMDA receptor (NMDAR) evoked responses
+    \subpoint Activation of D1R leads to potentiation of NMDAR--dependent currents
+        \subsubpoint wikinote: Activaiton of NMDAR seems to increase learning, but NMDARs are only activated once the cell has been depolarized (fires), and expells the magnesium blocking its pore(s). It's effectively a correlation detector.
+    \subpoint Activation of D2R induces a decrease of AMPAR--dependent responses
+        \subsubpoint wikinote: Activation of AMPAR causes the cell to depolarize, 
+    \subpoint NOTE: the above points suggest to me that:
+        \subsubpoint D1R is utilized primarily for positive reinforcement/LTP
+        \subsubpoint D2R is utilized primarily for negative reinforcement/LTD
+        \subsubpoint see below paper, \ref{Broussard2016} 
+    \point LTP is induced when postsynaptic spiking follows synaptic activity (positive timing)
+        \subpoint positive timing only gives rise to LTP when D1Rs are stimulated, otherwise it leads to LTD
+    \point LTD is induced when postsynaptic spiking preceeds synaptic activity (negative timing)
+        \subpoint D2R stimulation is necessary for LTD when the postsynaptic spiking is followed by synaptic stimulation
+
+\end{outline}
+
+\section{Dopamine Regulates Aversive Contextual Learning and Associated In Vivo Synaptic Plasticity in the Hippocampus \cite{Broussard2016}}
+ 
+
+Coming soon\ldots
+
+\section{Activation of D2 dopamine receptor-expressing neurons in the nucleus accumbens increases motivation \cite{Soares-Cunha2016}}
+
+
+\begin{outline}
+    \point Striatal dopamine receptor D1-expressing neurons have been classically associated with positive reinforcement and reward, whereas D2 neurons are associated with negative reinforcement and aversion  
+
+\end{outline}
+
+\bibliography{NeuralCircuitDevelopment}
+\bibliographystyle{ieeetr}
+\end{document}  
+%%%% READ TOMORROW %%%%%%
+% DONE % Rules for shaping neural connections
+% LOOKED AT / SKIMMED % Functional roles for short term synaptic plasticity
+% Timing Rules for Synaptic Plasticity\ldots
+% Neural Plasticity ACross the lifespan
+% Circuit Mechanisms of Sensory Motor Learning
+% Why Neurons have thousands of synapses (get citation from stupidfile.bib)
+
+% the purkinje cell
+
+%fuzzy image fusion, 
+
+
+
+
+
+%%%%%%%%%%%% 
+% There is a function, callable via ":call BibToSections()" in ~./vimrc that will run all these commands in successsion:
+
+%% command to delete .bib stuff except for @<thing> and title lines:
+% :g /^\(\<\(author\|doi\|file\|abstract\|publisher\|journal\|pages\|url\|year\|volume\|pmid\|keywords\|issn\|isbn\|booktitle\|number\|edition\)\>\|}\)\{1}.*$/ d 
+
+%% command to delete characters around reference 'name':
+% :%s/@.\{-}{\(.*\),/\point/g
+
+%% command to replace "}}," from the title line, with \cite{ and the reference name from the @... line:
+% :%s/}},/\=" \\cite{".getline(line('.')-1)."}}"/g    
+
+%% command to replace "title = {{" with "\section{"
+% :%s/title\ =\ {{\(.*}}\)/\\section{\point/g     
+
+%% and finally, a command to delete all lines that don't begin with \section
+% :g!/\\section.*/d 
+

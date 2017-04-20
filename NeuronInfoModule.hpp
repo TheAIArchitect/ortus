@@ -3,7 +3,7 @@
 //  LearningOpenGL
 //
 //  Created by onyx on 12/1/15.
-//  Copyright © 2015 AweM. All rights reserved.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #ifndef NeuronInfoModule_hpp
@@ -34,10 +34,9 @@ public:
     //glm::vec3 soma_position; // now massPoint->center
     MassPoint* massPoint;
     float soma_diameter;
-    int polarity;
     int neuron_id;
     static int NUM_NIMS; // number of neuron info modules. gets set in BioData::makeNeuronModules()
-    static float AVG_NEURON_DIAM; // this is set in FileShit, when neurons are read in. Used to allow the bezier drawing function to draw the bezier 'points' roughly the same size as the neurons
+    static float AVG_NEURON_DIAM; // this is set in FileAssistant, when neurons are read in. Used to allow the bezier drawing function to draw the bezier 'points' roughly the same size as the neurons
     
     
     static float NEURON_TRANS_SCALE;

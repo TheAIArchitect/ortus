@@ -3,7 +3,7 @@
 //  LearningOpenGL
 //
 //  Created by onyx on 12/16/15.
-//  Copyright © 2015 AweM. All rights reserved.
+//  Copyright © 2016 Andrew W.E. McDonald. All rights reserved.
 //
 
 #ifndef MuscleInfoModule_hpp

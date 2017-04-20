@@ -1,0 +1,134 @@
+
+Explanation of ortus xcorr
+
+Python file 'explanation_of_ortus_xcorr.py' has this discussion implemented. Note, the variable 'xc#_preNorm' used below is not used in the python file. Instead, xc# is used for the pre-norm xcorr value, and the value is replaced with the normalized one.
+
+A and B are signals, with A being the 'static' signal, and B being the 'dynamic' signal.
+
+The values in the table below, to the right of 'A' and 'B' are the signal values for the respective time window.
+
+Window|0|1|2|3|4|5|6|7|8|9
+Signal|-|-|-|-|-|-|-|-|-|-
+    A |5|7|9|3|1|4|
+    B |2|4|8|6|7|9|3|4|8|5
+
+First, we need to do autocorrelation for A[0..3] and B[0..3], so we can normalize the xcorr of these two signal 'fragments'.
+(note: autoA and autoB will be used for the autocorrelation corresponding to the current signal pair; as we move windows, assume each gets updated as necessary -- including xcorrDivisor)
+
+autoA = 5*5 + 7*7 + 9*9 + 3*3 = 164
+autoB = 2*2 + 4*4 + 8*8 + 6*6 = 120
+
+Then we compute our xcorrDivisor, that we use to normalize the xcorr computation:
+
+xcorrDivisor = sqrt(autoA * autoB) = sqrt(164*120) = 140.2854
+
+If our xcorr length is 4, then the first xcorr is between A[0..3] and B[0..3]. 
+Carrying out the computation (prior to normalization), we get: 
+
+xc0_preNorm = 5*2 + 7*4 + 9*8 + 3*6 = 128
+
+After normalizing xc0, we have:
+
+xc0 = xc0_preNorm/xcorrDivisor = 128/140.2854 = 0.9124
+
+So, xc0 is the xcorr between A[0..3] and B[0..3], and describes the correlation of signals A and B. This makes sense, because both signals are rising from [0..2], and then fall at [3].
+
+
+Then, for our second xcorr, we move B's window ahead by 1, so we compute the xcorr between A[0..3] and B[1..4].
+That is, we add (A[0]*B[1] + A[1]*B[2] + A[2]*B[3] + A[3]*B[4]) -- and then normalize.
+But, we have to recompute autoB for B[1..4], and then xcorrDivisor (previously, it was computed for B[0..3]):
+
+autoB = 4*4 + 8*8 + 6*6 + 7*7 = 165
+xcorrDivisor = sqrt(autoA*autoB) = sqrt(164*165) = 164.4992
+
+xc1 = xc1/xcorrDivisor = (5*4 + 7*8 + 9*6 + 3*7)/164.4992 = 151/164.4992 = 0.9179
+
+Then, we repleat the same steps for xc2, and xc3:
+
+xc2 = (A[0]*B[2] + A[1]*B[3] + A[2]*B[4] + A[3]*B[5])/xcorrDivisor = 0.8856
+xc3 = (A[0]*B[3] + A[1]*B[4] + A[2]*B[5] + A[3]*B[6])/xcorrDivisor = 0.9976
+
+
+=> So, A xcorr_4,4 B = xcAB = {0.9124, 0.9179, 0.8856, 0.9976}
+    -> A xcorr_C,L B means A is held static, while B moves forward C (count) units, and the cross correlation computation has length L.
+
+
+In other words:
+    => xcAB[0] tells us the the xcorr between A[0..3] and B[0..3] 
+    => xcAB[1] tells us the the xcorr between A[0..3] and B[1..4] 
+    => xcAB[2] tells us the the xcorr between A[0..3] and B[2..5] 
+    => xcAB[3] tells us the the xcorr between A[0..3] and B[3..6] 
+
+
+########## Application of the Ortus XCorr Computation #########
+
+-> assume we are discussing xcAB = A xcorr_4,4 B
+
+- We can only compute the xcorr between A and B when we are *on* the 8th time window (so, window [7]), if operating in 'real time',
+or if our aim is to graph the information available to the kernel, which would be computing these in 'real time'.
+    -> while we only need windows [0..3] for A, we need [0..6] for B, and won't have that in the voltage history until time window [7],
+because each instance of the kernel operates on its own element, and it isn't until all have returned that we have the full set of output voltages for a given timestep.
+
+- That means that there is no information available to the kernel until time window [7], and xcAB[0] is describing the cross correlation between A and B at time 0
+
+- The *dynamic* element, B, in this case, is the one that 
+
+
+         _
+        / \
+       /   \
+Z: ___/     \___
+           _
+          / \
+Y: ______/   \__
+
+t: 0123456789
+
+-> if 't', is time, and Z and Y are signals,
+if the starting value for each signal is 0,
+a slash is 2, and an underscore is 1:
+
+Z = [0, 0, 0, 2, 4, 6, 7, 6, 4, 2, 0, 0, 0]
+Y = [0, 0, 0, 0, 0, 0, 2, 4, 5, 4, 2, 0, 0]
+
+then (values normalized):
+
+Z[3..6] xcorr Y[3..6] => xcZY[0]: 0.6831
+Z[3..6] xcorr Y[4..7] => xcZY[1]: 0.8729
+Z[3..6] xcorr Y[5..8] => xcZY[2]: 0.9747
+Z[3..6] xcorr Y[6..9] => xcZY[3]: 0.9746
+
+
+-> it's clear that we have high correlation between Z[3..6] and Y[5..8]
+    -> as well as Y[6..9], but we will examine Z with respect to Y[5..8] for now
+
+-> For signal Z, this is at time window [3]
+-> For signal Y, this is at time window [5]
+-> For the kernel, it got this information at time window [10] (because we looked through to Y[9])
+    -> The way the kernel currently computes xcorr values, is it has a set of 7 usable voltage histories (and a last column for the newly updated output voltage, that can't yet be used becuase it doesn't have the other newly updated output voltages), and holds itslef (Z, in this case), static.
+It then looks at Z[0..4] and does a xcorr for Y[0..3], [1..4], [2..5], [3..6].
+Based upon these xcorr values (and 'Voltage Rate of Change' (VROC) calculations), adjusts weights. On the next iteration, all voltage histories from window 0 are gone, and the voltages from window 1 are put into its place.
+Then, Z[1..5] and does a xcorr for Y[1..4], [2..5], [3..6], [4..7], and so on.
+    => So, because for the static element, there is only one opportunity to look at a given window, e.g., Z[3..6], we couldn't see the xcorr between that and Y[5..8] any earlier (or later).
+
+
+%%%%%%%%%%%% FIX %%%%%%%%%%%
+what if we reverse it, so Y is static, and we instead look 'historically':
+so, Y[5..8] xcorr Z[5..8], Z[4..7], Z[3..6], Z[2..5]
+    -> Y would be the same element that the kernel is operating on (gid)
+    -> that would be much better: we would be Y, saying 'how does signal Z effect me?', whereas now we're Z, saying, 'how do I effect Y?'
+     
+> in this case:
+    - the kernel would be at time window [9] when it observed this
+    - it would correspond to when Y was at time window [5]
+        -> ([timeWindow] - xcorrLength)
+
+> to graph this in order to view the xcorr relationships outside the kernel:
+    -> for a 3D graph comparing Y to all other elements (Y being static, and all other elements dynamic in the backward direction) 
+        -> y-axis is xcorr value
+        -> z-axis is element, and 'lag' number: red => same time, green => one window shift back, blue => two back, purple => three back
+        -> x-axis is time window, e.g., in this case:
+            => Y[5..8] xcorr Z[5..8] would be at x = 5, red
+            => Y[5..8] xcorr Z[4..7] would be at x = 5, green
+
+

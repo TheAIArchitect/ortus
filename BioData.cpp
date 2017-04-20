@@ -19,8 +19,8 @@ void BioDataDecoder::makeGraph(std::vector<GapJunction> gaps, std::vector<ChemSy
 */
 
 BioData::BioData(){
-    get_conns(bioElements);
-    FileShit::get_neuron_data(&neuronMassPoints, &num_neuron_mass_points, &num_neurons_in_json, &bioElements);
+    get_conns(elements);
+    FileAssistant::get_neuron_data(&neuronMassPoints, &num_neuron_mass_points, &num_neurons_in_json, &elements);
     generateBodyMassPoints();
     generateCenterCylinderMassPoints();
 }
@@ -32,18 +32,18 @@ void BioData::makeModules(){
 
 void BioData::makeNeuronModules(){
     
-    int num_elements = bioElements.size();
+    int num_elements = elements.size();
     int num_neurons = 0;
     for (int i = 0; i < num_elements; i++){
-        if (bioElements[i]->element_type != MUSCLE){
+        if (elements[i]->element_type != MUSCLE){
             ++num_neurons;
         }
     }
     nim = new NeuronInfoModule*[num_neurons];
     int neuron_count = 0;
     for (int i = 0; i < num_elements; i++){
-        if (bioElements[i]->element_type != MUSCLE){
-            nim[neuron_count] = (NeuronInfoModule*) bioElements[i];
+        if (elements[i]->element_type != MUSCLE){
+            nim[neuron_count] = (NeuronInfoModule*) elements[i];
             ++neuron_count;
         }
     }
@@ -54,16 +54,16 @@ void BioData::makeMuscleModules(){
     
     mim = new MuscleInfoModule*[MAX_MUSCLES];
     MuscleInfoModule* temp_mim = new MuscleInfoModule[MAX_MUSCLES];
-    int num_elements = (int) bioElements.size();
+    int num_elements = (int) elements.size();
     int muscle_id = 0;
     int muscle_count = 0;
     int i;
     MuscleInfoModule tmim;
     for (i = 0; i < num_elements; i++){
-        if (bioElements[i]->element_type == MUSCLE && bioElements[i]->name.substr(1,3) == "BWM"){// only focusing on body wall muscles now
+        if (elements[i]->element_type == MUSCLE && elements[i]->name.substr(1,3) == "BWM"){// only focusing on body wall muscles now
             tmim = MuscleInfoModule();
-            tmim.name = bioElements[i]->name;
-            tmim.element_type = bioElements[i]->element_type;
+            tmim.name = elements[i]->name;
+            tmim.element_type = elements[i]->element_type;
             tmim.element_id = i;
             temp_mim[muscle_count] = tmim;
             muscle_count++;
@@ -86,7 +86,7 @@ void BioData::makeMuscleModules(){
             // group 0 -> full match, group 1 -> either d or v, group 2 -> BWM, group 3 -> L or R, group 4 -> number (1 or 2 digits)
             if (round == std::stoi(regres[4].str()) && (regres[1].str()+regres[3].str()) == opts[quadrant]){
             //std::string in = regres[1].str() + regres[3].str() + regres[4].str();
-                mim[muscle_id] = (MuscleInfoModule*) bioElements[temp_mim[i].element_id];
+                mim[muscle_id] = (MuscleInfoModule*) elements[temp_mim[i].element_id];
                 mim[muscle_id]->muscle_id = muscle_id;
                 ++muscle_id;
                 ++quadrant;

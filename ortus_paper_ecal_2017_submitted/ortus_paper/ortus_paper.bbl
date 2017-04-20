@@ -1,0 +1,133 @@
+\begin{thebibliography}{}
+
+\bibitem[Azulay et~al., 2016]{Azulay2016}
+Azulay, A., Itskovits, E., and Zaslaver, A. (2016).
+\newblock {The C. elegans Connectome Consists of Homogenous Circuits with
+  Defined Functional Roles}.
+\newblock {\em PLOS Computational Biology}, 12(9):e1005021.
+
+\bibitem[Barral and {D Reyes}, 2016]{Barral2016}
+Barral, J. and {D Reyes}, A. (2016).
+\newblock {Synaptic scaling rule preserves excitatory–inhibitory balance and
+  salient neuronal network dynamics}.
+\newblock {\em Nature Neuroscience}, 19(12):1690--1696.
+
+\bibitem[Beier et~al., 2015]{Beier2015}
+Beier, K.~T., Steinberg, E.~E., Deloach, K.~E., Xie, S., Miyamichi, K.,
+  Schwarz, L., Gao, X.~J., Kremer, E.~J., Malenka, R.~C., and Luo, L. (2015).
+\newblock {Circuit Architecture of VTA Dopamine Neurons Revealed by Systematic
+  Input-Output Mapping}.
+\newblock {\em Cell}, 162(3):622--634.
+
+\bibitem[Bowren et~al., 2016]{Bowren2016}
+Bowren, J., Pugh, J., and Stanley, K. (2016).
+\newblock {Fully Autonomous Real-Time Autoencoder-Augmented Hebbian Learning
+  through the Collection of Novel Experiences}.
+\newblock {\em Proceedings of the Artificial Life Conference 2016}, (Alife
+  15):382--389.
+
+\bibitem[DARPA, 2017]{darpa}
+DARPA (2017).
+\newblock Toward machines that improve with experience.
+
+\bibitem[Gore et~al., 2015]{Gore2015}
+Gore, F., Schwartz, E.~C., Brangers, B.~C., Aladi, S., Stujenske, J.~M.,
+  Likhtik, E., Russo, M.~J., Gordon, J.~A., Salzman, C.~D., and Axel, R.
+  (2015).
+\newblock {Neural Representations of Unconditioned Stimuli in Basolateral
+  Amygdala Mediate Innate and Learned Responses}.
+\newblock {\em Cell}, 162(1):134--145.
+
+\bibitem[Graubard, 1978]{Graubard1014}
+Graubard, K. (1978).
+\newblock Synaptic transmission without action potentials: input-output
+  properties of a nonspiking presynaptic neuron.
+\newblock {\em Journal of Neurophysiology}, 41(4):1014--1025.
+
+\bibitem[Izquierdo and Beer, 2016]{Izquierdo2016}
+Izquierdo, E.~J. and Beer, R.~D. (2016).
+\newblock {The whole worm: Brain-body-environment models of C. elegans}.
+\newblock {\em Current Opinion in Neurobiology}, 40:23--30.
+
+\bibitem[Jarrell et~al., 2012]{Jarrell2012}
+Jarrell, T.~A., Wang, Y., Bloniarz, A.~E., Brittin, C.~A., Xu, M., Thomson,
+  J.~N., Albertson, D.~G., Hall, D.~H., and Emmons, S.~W. (2012).
+\newblock {The Connectome of a Decision-Making Neural Network}.
+\newblock {\em Science}, 337(July):437--444.
+
+\bibitem[Johansen et~al., 2014]{Johansen2014}
+Johansen, J.~P., Diaz-Mataix, L., Hamanaka, H., Ozawa, T., Ycu, E., Koivumaa,
+  J., Kumar, A., Hou, M., Deisseroth, K., Boyden, E.~S., and LeDoux, J.~E.
+  (2014).
+\newblock {Hebbian and neuromodulatory mechanisms interact to trigger
+  associative memory formation}.
+\newblock {\em Proceedings of the National Academy of Sciences},
+  111(51):201421304.
+
+\bibitem[Kutsarova et~al., 2016]{Kutsarova2016}
+Kutsarova, E., Munz, M., and Ruthazer, E.~S. (2016).
+\newblock {Rules for shaping neural connections in the developing brain}.
+\newblock {\em Frontiers in Neural Circuits}, 10(January):111.
+
+\bibitem[Leknes and Tracey, 2008]{Leknes2008}
+Leknes, S. and Tracey, I. (2008).
+\newblock {A common neurobiology for pain and pleasure}.
+\newblock {\em Nature Reviews Neuroscience}, 9(4):314--320.
+
+\bibitem[Marblestone et~al., 2016]{Marblestone2016}
+Marblestone, A.~H., Wayne, G., and Kording, K.~P. (2016).
+\newblock {Towards an integration of deep learning and neuroscience}.
+\newblock {\em bioRxiv}, 10(September):1--61.
+
+\bibitem[Roper et~al., 2017]{Roper2017}
+Roper, M., Fernando, C., and Chittka, L. (2017).
+\newblock {Insect Bio-inspired Neural Network Provides New Evidence on How
+  Simple Feature Detectors Can Enable Complex Visual Generalization and
+  Stimulus Location Invariance in the Miniature Brain of Honeybees}.
+\newblock {\em PLOS Computational Biology}, 13(2):e1005333.
+
+\bibitem[Schr{\"{o}}ter et~al., 2017]{Schroter2017}
+Schr{\"{o}}ter, M., Paulsen, O., and Bullmore, E.~T. (2017).
+\newblock {Micro-connectomics: probing the organization of neuronal networks at
+  the cellular scale}.
+\newblock {\em Nature Reviews Neuroscience}, 18(3):131--146.
+
+\bibitem[Sinapayen et~al., 2016]{Sinapayen2016}
+Sinapayen, L., Masumori, A., and Ikegami, T. (2016).
+\newblock {Learning by Stimulation Avoidance: A Principle to Control Spiking
+  Neural Networks Dynamics}.
+\newblock page~17.
+
+\bibitem[Verma et~al., 2015]{Verma2015}
+Verma, D., Wood, J., Lach, G., Herzog, H., Sperk, G., and Tasan, R. (2015).
+\newblock {Hunger Promotes Fear Extinction by Activation of an Amygdala
+  Microcircuit.}
+\newblock {\em Neuropsychopharmacology : official publication of the American
+  College of Neuropsychopharmacology}, 41(2):431--439.
+
+\bibitem[Weiner et~al., 2015]{Weiner2015}
+Weiner, J.~A., Burgess, R.~W., and Jontes, J. (2015).
+\newblock {\em {Mechanisms of Neural Circuit Formation}}.
+
+\bibitem[Wicks et~al., 1996]{Wicks1996}
+Wicks, S.~R., Roehrig, C.~J., and Rankin, C.~H. (1996).
+\newblock {A dynamic network simulation of the nematode tap withdrawal circuit:
+  predictions concerning synaptic function using behavioral criteria.}
+\newblock {\em The Journal of neuroscience : the official journal of the
+  Society for Neuroscience}, 16(12):4017--4031.
+
+\bibitem[Xie et~al., 2016]{Xie2016}
+Xie, K., Fox, G.~E., Liu, J., Lyu, C., Lee, J.~C., Kuang, H., Jacobs, S., Li,
+  M., Liu, T., Song, S., and Tsien, J.~Z. (2016).
+\newblock {Brain Computation Is Organized via Power-of-Two-Based Permutation
+  Logic}.
+\newblock {\em Frontiers in Systems Neuroscience}, 10(November):95.
+
+\bibitem[Xu and Deng, 2012]{Xu2012}
+Xu, J.~X. and Deng, X. (2012).
+\newblock {Complex chemotaxis behaviors of C. elegans with speed regulation
+  achieved by dynamic neural networks}.
+\newblock {\em Proceedings of the International Joint Conference on Neural
+  Networks}, pages 10--15.
+
+\end{thebibliography}

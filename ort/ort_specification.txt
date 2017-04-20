@@ -1,0 +1,39 @@
+Ortus Development Rules Language
+
+1) filetype is *.ort
+
+2) Order of Rules is irrelevant in file.
+
+3) Rule format is:
+
+[-,+] <Pre> (<>,>) [-,+] <Post>
+
+Where:
+
+A) [-,+] is either "-" or "+".
+"-" means that the rule being expressed is valid when the <Pre> that follows *decreases* in activation.
+"+" means that the rule being expressed is valid when the <Pre> that follows *increases* in activation.
+If neither "-" nor "+", the rule being expressed must be a Gap Junction (GJ).
+
+B) <Pre> is the *case--insensitive* name of the presynaptic neuron.
+In a later version of this specification, it might be acceptable to combine multiple presynaptic neurons on one line, but at the moment, each line may only have one presynaptic neuron. 
+
+C) (<>,>) is either "<>" or ">".
+"<>" means that the rule being expressed is a GJ. In this case, it is not valid for the <Pre> or <Post> terms (neurons) to have a directional specififer (either "-" or "+")
+">" means that the rule being expressed is a Chemical Synapse (CS), and the direction is such that <Pre> influences <Post>. In this case, both <Pre> and <Post> *must* have a directional specifier.
+
+D) <Post> is the *case--insensitive* name of the postsynaptic neuron.
+In a later version of this specification, it might be acceptable to combine multiple presynaptic neurons on one line, but at the moment, each line may only have one presynaptic neuron. 
+
+E) Whitespace is irrelevant
+
+4) Comments begin with a double forward slash, "//". There are no block comments
+
+===========================
+== Processing .ort Ffiles ==
+===========================
+
+1) The file is read line by line, with lines beginning with "//" ignored.
+
+2) 
+
