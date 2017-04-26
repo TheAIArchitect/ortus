@@ -1,0 +1,25 @@
+Spiking approach:
+
+can't use the simplified model, so we need to modify the HH to work with one excitatory and inhibitory.
+
+>> put this into a latex doc
+
+> Learning by stimulation avoidance:
+
+-> NOTE: for new learning model, perhaps best approach would be to make learning increase (nonlinearly?) wrt to how long the two neurons fire together... the first time, maybe nearly ignore it, but then after 4-5 times or so, actively strengthen.
+
+-> Note: excitatory are fast spiking and inhibitory are slow spiking???
+
+-> ~15-20% of neurons are inhibitory (they have a citation)
+    -> Note: should calculate ratio of excitatory to inhibitory neurons for next paper!
+
+----------
+-> might be possible to have neurons self--regulate weight, in order to prevent over-stimulation
+    -> kind of working off of the LSA paper, but not learning per-se... just self--regulation
+
+
+-> implementing the new model loses the granularity of the chemical synapses.. NOT necessarily:
+    => the "I" parameter can be increased relative to v. well, if you do that, you might screw with the model. 
+
+
+=> check out burst firing papers in downloads folder (and others), but from experimenting, it seems that sensory neurons would need to fire in bursts to invoke an AP in interneurons. after that, it might not be too hard to keep the signal moving... but it might be hard.
