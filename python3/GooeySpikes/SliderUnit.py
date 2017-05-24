@@ -45,7 +45,9 @@ class SliderUnit(QWidget):
         # scaled:
         me.paramMin = paramMin
         me.paramMax = paramMax
-        me.parameterValue = paramDefault
+        me.paramDefault = paramDefault
+        me.paramValue = paramDefault
+        me.oldTypesDict = {}
         me.initUI()
 
     def initUI(me):
@@ -90,14 +92,14 @@ class SliderUnit(QWidget):
         me.sliderValueLine = QLabel(me)
         me.sliderValueLine.setMaximumSize(me.LINE_EDIT_WIDTH, me.LINE_EDIT_HEIGHT)
         me.sliderValueLine.setMinimumSize(me.LINE_EDIT_WIDTH, me.LINE_EDIT_HEIGHT)
-        me.sliderValueLine.setText(str(me.parameterValue))
+        me.sliderValueLine.setText(str(me.paramValue))
         me.upper_hBox.addWidget(me.sliderValueLine)
         ##### RIGHT HBOX
         # slider
         me.slider = QSlider(Qt.Horizontal, me)
         me.slider.setMinimum(me.sliderMin)
         me.slider.setMaximum(me.sliderMax)
-        me.slider.setValue(me.convertFromValueBox(me.parameterValue))
+        me.slider.setValue(me.convertFromValueBox(me.paramValue))
         me.slider.setTickPosition(QSlider.TicksBelow)
         #lcd = QLCDNumber(me)
         me.lower_hBox.addWidget(me.slider)
@@ -210,3 +212,13 @@ class SliderUnit(QWidget):
         except ValueError:
             pass
 
+    ''' allows saving state between neuron types '''
+    @pyqtSlot('QString', 'QString')
+    def updateSliderForTypeSwitch(me, oldType, newType):
+        me.oldTypesDict[oldType] = me.paramValue
+        if newType in me.oldTypesDict:
+            me.paramValue = me.oldTypesDict[newType]
+        else:
+            me.paramValue = me.paramDefault
+        me.slider.setValue(me.convertFromValueBox(me.paramValue))
+        
