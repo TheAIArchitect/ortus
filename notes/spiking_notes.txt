@@ -23,3 +23,8 @@ can't use the simplified model, so we need to modify the HH to work with one exc
 
 
 => check out burst firing papers in downloads folder (and others), but from experimenting, it seems that sensory neurons would need to fire in bursts to invoke an AP in interneurons. after that, it might not be too hard to keep the signal moving... but it might be hard.
+
+=> links below discusses neuronal firing in response to varying touch stimuli
+https://courses.washington.edu/conj/neuron/receptor.htm
+http://oerpub.github.io/epubjs-demo-book/content/m46526.xhtml
+

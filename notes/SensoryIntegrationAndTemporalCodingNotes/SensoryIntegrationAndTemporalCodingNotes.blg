@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: SensoryIntegrationAndTemporalCodingNotes.aux
+The style file: ieeetr.bst
+Database file #1: SensoryIntegrationAndTemporalCoding.bib
+Database file #2: ShortenedBibFromCircuitDevelopmentNotes.bib
+Warning--empty journal in Fox2017
+Warning--empty journal in Kaneko2017
+Warning--empty journal in Catmur2016
+You've used 25 entries,
+            1876 wiz_defined-function locations,
+            649 strings with 8564 characters,
+and the built_in function-call counts, 8329 in all, are:
+= -- 887
+> -- 291
+< -- 0
++ -- 106
+- -- 81
+* -- 591
+:= -- 1122
+add.period$ -- 25
+call.type$ -- 25
+change.case$ -- 25
+chr.to.int$ -- 0
+cite$ -- 28
+duplicate$ -- 431
+empty$ -- 717
+format.name$ -- 81
+if$ -- 2051
+int.to.chr$ -- 0
+int.to.str$ -- 25
+missing$ -- 25
+newline$ -- 78
+num.names$ -- 25
+pop$ -- 49
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 360
+stack$ -- 0
+substring$ -- 701
+swap$ -- 228
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 3
+while$ -- 86
+width$ -- 27
+write$ -- 260
+(There were 3 warnings)

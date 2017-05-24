@@ -1,0 +1,27 @@
+\contentsline {section}{\numberline {1}Ortus: Moving Forward}{2}{section.1}
+\contentsline {section}{\numberline {2}Thoughts}{2}{section.2}
+\contentsline {section}{\numberline {3}Multisensory integration and cross-modal learning in synaesthesia: A unifying model \cite {Newell2016}}{3}{section.3}
+\contentsline {section}{\numberline {4}Pyramidal neurons: dendritic structure and synaptic integration. \cite {Spruston2008}}{3}{section.4}
+\contentsline {section}{\numberline {5}Rate coding versus temporal order coding: what the retinal ganglion cells tell the visual cortex. \cite {VanRullen2001}}{3}{section.5}
+\contentsline {section}{\numberline {6}Synaptic diversity enables temporal coding of coincident multisensory inputs in single neurons. \cite {Chabrol2015}}{3}{section.6}
+\contentsline {section}{\numberline {7}Multimodal sensory integration in single cerebellar granule cells in vivo. \cite {Ishikawa2015}}{3}{section.7}
+\contentsline {section}{\numberline {8}Optimal Degrees of Synaptic Connectivity \cite {Litwin-Kumar2017}}{3}{section.8}
+\contentsline {section}{\numberline {9}Sensorimotor Representations in Cerebellar Granule Cells in Larval Zebrafish Are Dense, Spatially Organized, and Non-temporally Patterned \cite {Knogler2017}}{3}{section.9}
+\contentsline {section}{\numberline {10}Rate and Temporal Coding Convey Multisensory Information in Primary Sensory Cortices \cite {Bieler2017}}{3}{section.10}
+\contentsline {section}{\numberline {11}Multisensory Interactions Influence Neuronal Spike Train Dynamics in the Posterior Parietal Cortex \cite {VanGilder2016}}{3}{section.11}
+\contentsline {section}{\numberline {12}Timing Rules for Synaptic Plasticity Matched to Behavioral Function \cite {Suvrathan2016}}{3}{section.12}
+\contentsline {section}{\numberline {13}Homeostatic Plasticity of Subcellular Neuronal Structures: From Inputs to Outputs \cite {Wefelmeyer2016}}{4}{section.13}
+\contentsline {section}{\numberline {14}Mind the Gap Junctions: The Importance of Electrical Synapses to Visual Processing \cite {Demb2016}}{4}{section.14}
+\contentsline {section}{\numberline {15}Relational associative learning induces cross-modal plasticity in early visual cortex \cite {Headley2015}}{4}{section.15}
+\contentsline {section}{\numberline {16}Neuroscience: When perceptual learning occurs \cite {Sasaki2017}}{4}{section.16}
+\contentsline {section}{\numberline {17}Why Neurons Have Thousands of Synapses, a Theory of Sequence Memory in Neocortex \cite {Hawkins2016}}{5}{section.17}
+\contentsline {section}{\numberline {18}Integrating Hebbian and homeostatic plasticity : introduction \cite {Fox2017}}{5}{section.18}
+\contentsline {section}{\numberline {19}Homeostatic plasticity mechanisms in mouse V1 \cite {Kaneko2017}}{5}{section.19}
+\contentsline {section}{\numberline {20}Synaptic scaling rule preserves excitatory–inhibitory balance and salient neuronal network dynamics \cite {Barral2016}}{5}{section.20}
+\contentsline {section}{\numberline {21}Rapid Encoding of New Memories by Individual Neurons in the Human Brain \cite {Ison2015}}{5}{section.21}
+\contentsline {section}{\numberline {22}Functional and structural underpinnings of neuronal assembly formation in learning \cite {Holtmaat2016}}{6}{section.22}
+\contentsline {section}{\numberline {23}Mirror Neurons from Associative Learning \cite {Catmur2016}}{6}{section.23}
+\contentsline {section}{\numberline {24}Associative learning and sensory neuroplasticity: how does it happen and what is it good for? \cite {McGann2015}}{6}{section.24}
+\contentsline {section}{\numberline {25}Associative learning rapidly establishes neuronal representations of upcoming behavioral choices in crows. \cite {Veit2015}}{6}{section.25}
+\contentsline {section}{\numberline {26}Associative Learning Drives the Formation of Silent Synapses in Neuronal Ensembles of the Nucleus Accumbens \cite {Whitaker2015}}{6}{section.26}
+\contentsline {section}{\numberline {27}The neurobiology shaping affective touch: Expectation, motivation, and meaning in the multisensory context \cite {Ellingsen2016}}{6}{section.27}
