@@ -207,7 +207,7 @@ class Display(QWidget):
         # b: sensitivity of recoery variable u to subthreshold fluctuations of membrane potential v: .01 - 1 => default: .2
         # c: voltage reset: -25 - -100 => default: -65
         # d: after-spike reset of recovery variable u: 0 - 20 => default: 8
-        parameters = ['a', 'b', 'c', 'd']
+        parameters = ['a (recovery time)', 'b (u sense, sub-t fluc)', 'c (mV reset)', 'd (u reset)']
         parametersLow = [.001, .01, -100, 0]
         parametersHigh = [1, 1, -25, 20]
         parametersDefault = [.02, .2, -65, 8]
