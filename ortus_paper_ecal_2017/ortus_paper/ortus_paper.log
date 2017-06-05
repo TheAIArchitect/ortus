@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  18 APR 2017 02:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  5 JUN 2017 16:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -174,71 +174,73 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 File: images/respiration.png Graphic file (type png)
 
 <use images/respiration.png>
-Package pdftex.def Info: images/respiration.png used on input line 114.
+Package pdftex.def Info: images/respiration.png used on input line 115.
 (pdftex.def)             Requested size: 238.49121pt x 155.38983pt.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 115.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 116.
 
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [2 <./images/respiration.png>] <images/ortus_diagram.png, id=18, 963.6pt x 54
-2.025pt>
+) [2 <./images/respiration.png>]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 134.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 134.
+ <images/ortus_diagram.png, id=17, 963.6pt x 542.025pt>
 File: images/ortus_diagram.png Graphic file (type png)
 
 <use images/ortus_diagram.png>
-Package pdftex.def Info: images/ortus_diagram.png used on input line 153.
+Package pdftex.def Info: images/ortus_diagram.png used on input line 154.
 (pdftex.def)             Requested size: 252.94499pt x 142.27956pt.
 
-Overfull \hbox (13.55061pt too wide) in paragraph at lines 153--154
+Overfull \hbox (13.55061pt too wide) in paragraph at lines 154--155
  [] 
  []
 
 [3 <./images/ortus_diagram.png>]
-Underfull \hbox (badness 1810) in paragraph at lines 169--170
+Underfull \hbox (badness 1810) in paragraph at lines 170--171
 []\OT1/ptm/b/n/10 BR 5: \OT1/ptm/m/n/10 Specif-i-cally with re-gard to the mam-
 malian
  []
 
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 179.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 180.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 179.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 180.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 195.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 196.
  [4] [5]
-<images/conditioning_small.png, id=36, 826.58812pt x 433.62pt>
-File: images/conditioning_small.png Graphic file (type png)
+<images/conditioning_small_annotated.png, id=36, 826.58812pt x 433.62pt>
+File: images/conditioning_small_annotated.png Graphic file (type png)
 
-<use images/conditioning_small.png>
-Package pdftex.def Info: images/conditioning_small.png used on input line 286.
-(pdftex.def)             Requested size: 238.49121pt x 125.10477pt.
+<use images/conditioning_small_annotated.png>
+Package pdftex.def Info: images/conditioning_small_annotated.png used on input 
+line 300.
+(pdftex.def)             Requested size: 505.89pt x 265.3878pt.
 
-<images/conditioned_small.png, id=37, 829.0975pt x 433.62pt>
-File: images/conditioned_small.png Graphic file (type png)
+<images/conditioned_small_annotated.png, id=37, 829.0975pt x 433.62pt>
+File: images/conditioned_small_annotated.png Graphic file (type png)
 
-<use images/conditioned_small.png>
-Package pdftex.def Info: images/conditioned_small.png used on input line 294.
+<use images/conditioned_small_annotated.png>
+Package pdftex.def Info: images/conditioned_small_annotated.png used on input l
+ine 309.
 (pdftex.def)             Requested size: 238.49121pt x 124.72763pt.
 
-<images/no_conditioning_small.png, id=38, 886.81313pt x 433.62pt>
-File: images/no_conditioning_small.png Graphic file (type png)
+<images/no_conditioning_small_annotated.png, id=38, 886.81313pt x 433.62pt>
+File: images/no_conditioning_small_annotated.png Graphic file (type png)
 
-<use images/no_conditioning_small.png>
-Package pdftex.def Info: images/no_conditioning_small.png used on input line 30
-2.
+<use images/no_conditioning_small_annotated.png>
+Package pdftex.def Info: images/no_conditioning_small_annotated.png used on inp
+ut line 317.
 (pdftex.def)             Requested size: 238.49121pt x 116.60919pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [6 <./images/conditioning_small.png> <./images/conditioned_small.png> <./image
-s/no_conditioning_small.png>] (./ortus_paper.bbl
+ (./ortus_paper.bbl
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
-
+ [6]
 Underfull \hbox (badness 5161) in paragraph at lines 23--28
 []\OT1/ptm/m/n/9 Bowren, J., Pugh, J., and Stan-ley, K. (2016).  Fully
  []
@@ -249,32 +251,34 @@ Underfull \hbox (badness 1715) in paragraph at lines 23--28
 /n/9 , (Al-ife
  []
 
-[7]) [8
+[7 <./images/conditioning_small_annotated.png> <./images/conditioned_small_anno
+tated.png> <./images/no_conditioning_small_annotated.png>]) [8
 
-] (./ortus_paper.aux) ) 
+]
+(./ortus_paper.aux) ) 
 Here is how much of TeX's memory you used:
- 2028 strings out of 493014
- 29116 string characters out of 6133351
+ 2046 strings out of 493014
+ 29442 string characters out of 6133351
  97489 words of memory out of 5000000
- 5549 multiletter control sequences out of 15000+600000
- 19796 words of font info for 36 fonts, out of 8000000 for 9000
+ 5559 multiletter control sequences out of 15000+600000
+ 24789 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,10n,23p,1227b,275s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base
-/8r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
-10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
-0.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.
-pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pf
-b></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></u
-sr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/
-local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
-ocal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/loc
-al/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texli
-ve/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/te
-xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/f
-onts/type1/urw/times/utmri8a.pfb>
-Output written on ortus_paper.pdf (8 pages, 4307632 bytes).
+ 37i,10n,23p,1223b,275s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8
+r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10
+.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.
+pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pf
+b></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb>
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
+usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr
+/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/lo
+cal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loc
+al/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local
+/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive
+/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texm
+f-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fon
+ts/type1/urw/times/utmri8a.pfb>
+Output written on ortus_paper.pdf (8 pages, 4355888 bytes).
 PDF statistics:
  95 PDF objects out of 1000 (max. 8388607)
  61 compressed objects within 1 object stream

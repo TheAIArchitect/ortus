@@ -1,0 +1,135 @@
+iDear authors,
+
+Thank you for your submission 127 to ECAL 2017, entitled Ortus: an Emotion--Driven Approach to (artificial) Biological Intelligence.
+
+Your contribution has retained the attention of the committee for a poster, but needs a revision before it can be formally accepted for inclusion in the Open Access MIT Press Proceedings and for this poster.
+
+Please address the required changes and comments of the reviews below and submit the new version through the same Easychair system (https://easychair.org/conferences/?conf=ecal2017) before * June 12th *. 
+
+Please do not exceed the two- or eight-page limit, following the formatting instructions: 
+- One single PDF, no additional file.
+- PDF length <= 8 pages for full papers, <= 2 pages for extended abstracts.
+- PDF size < 5 Mb.
+- All pages sized consistently at 8.5 x 11 (US letter format).
+- No visible crop marks.
+- Images at *no greater* than 300 dpi, scaled at 100%.
+- Embedded open type fonts only.
+- All layers flattened.
+- All desired links active in the files.
+
+Your submission will be formally accepted for inclusion in the proceedings and for a poster if this new version properly addresses the required changes, if it respects the formatting instructions and if at least one of the authors has registered before June 20th.
+[Link to registration: https://project.inria.fr/ecal2017/registration/]
+
+Looking forward to meeting you in Lyon,
+
+ECAL 2017 organizers
+
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 127
+TITLE: Ortus: an Emotion--Driven Approach to (artificial) Biological Intelligence
+AUTHORS: Andrew W. E. Mcdonald, Sean Grimes and David Breen
+
+Relevance to ECAL topics: 4 (good)
+Scientific soundness: 3 (fair)
+Methodology: 3 (fair)
+Bibliography: 4 (good)
+Quality of the manuscript: 4 (good)
+Recommended decision: 1 (accept pending revision (indicate the requested changes below))
+
+----------- Review -----------
+This paper describes the implementation  of a simple biologically plausible adapting neural system that is used to mimic c. Elegans.  The model incorporates a number of life like elements and perhaps mor controversially an emotional response system, the focus of this study. The model makes use of standard approaches such as hebbian learning and a layered neuron interneuron architecture.
+The model is subjected to pulses of simulated water on its sensory inputs and was adapted to activate the fear neurons conditioning it appropriately. When extended water simulation was then applied the fear system became active. The authors claim this simple network gives insight into emotional impact of environmentally induced fear in an organism. While the work is interesting and has a novel paradigm the justification of the results and methodology is somewhat lacking. Authors should take more time to justify the arguments around fear in a model of an organism that in real life is not known to exhibit such properties. They also need to show that the response they get is a genuine phenomenon and has some robustness under variances of the tuning parameters used in the network.
+
+----------- Requested revisions -----------
+See above
+More on justification of model approximation and validity
+Some evidence of stability under network parameter shifts
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 127
+TITLE: Ortus: an Emotion--Driven Approach to (artificial) Biological Intelligence
+AUTHORS: Andrew W. E. Mcdonald, Sean Grimes and David Breen
+
+Relevance to ECAL topics: 5 (excellent)
+Scientific soundness: 3 (fair)
+Methodology: 3 (fair)
+Bibliography: 3 (fair)
+Quality of the manuscript: 3 (fair)
+Recommended decision: -2 (reject)
+
+----------- Review -----------
+The target of this paper is not clear at all to me. If it is directed at biologists who want to test things in a computer before testing then in vivo, it is probably too technical. If it is directed at simulators builders, it is not clear what the decisions taken have been and, besides, it does not seem to have been released either in source or in object code. Without the source code you cannot learn from it, without the object code you cannot even reproduce the results. The actuals resuls provided seem to send a mixed message, about the implementation not being exactly as the model, and a single experiment. 
+It is not clear either of its value as a model of the C. Elegans under study, which would be useful to students or to yield some insights over the neural mechanisms. 
+So, although technically correct, I think it would need a change of direction and more extensive experiments to be acceptable.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 127
+TITLE: Ortus: an Emotion--Driven Approach to (artificial) Biological Intelligence
+AUTHORS: Andrew W. E. Mcdonald, Sean Grimes and David Breen
+
+Relevance to ECAL topics: 4 (good)
+Scientific soundness: 4 (good)
+Methodology: 4 (good)
+Bibliography: 4 (good)
+Quality of the manuscript: 4 (good)
+Recommended decision: 2 (accept)
+
+----------- Review -----------
+This paper introduces Ortus, a simple organism to build an initial framework for investigating and developing biologically–based artificial intelligence. 
+
+The theme of the paper is of interest for ECAL community and it adopts an interesting approach. I especially liked the connections between Ortus design element (ODE) and biological rationales (BR).
+
+It is good on a methodological level. 
+
+The bibliography is adequate. I suggest to add some reference on existing approaches for biologically-inspired artificial intelligence. 
+
+The quality of the manuscript is good, it can be read flawlessly. I suggest to improve the readibility of figures written parts
+
+----------- Requested revisions -----------
+Some possible revisions to improve the paper are reported above.
+
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 127
+TITLE: Ortus: an Emotion--Driven Approach to (artificial) Biological Intelligence
+AUTHORS: Andrew W. E. Mcdonald, Sean Grimes and David Breen
+
+Relevance to ECAL topics: 5 (excellent)
+Scientific soundness: 2 (poor)
+Methodology: 4 (good)
+Bibliography: 3 (fair)
+Quality of the manuscript: 3 (fair)
+Recommended decision: 1 (accept pending revision (indicate the requested changes below))
+
+----------- Review -----------
+Review of the paper “Ortus: an Emotion–Driven Approach to (artificial) Biological Intelligence”
+
+The paper presents Ortus, a system loosely based on features found in the nervous system of C. elegans. The aim of the simulations presented is to show how the inclusion of “emotions” as part of a system may help to explain the emergence of biological intelligence.
+
+Although Ortus and the simulations were carefully designed and implemented and do give some interesting insights in the way negative and positive stimulus are processed by (artificial) organisms to their advantage, there are some flaws in the conceptual framework supporting the paper.
+
+To begin with, the paper lacks any discussion about “emotions”, which makes extremely difficult to understand what the authors mean by that word. This may seem of psychological or philosophical import only, but it is not: the working definitions I was able to gather reduce “fear” to the ability to react to negative stimulus by acting with caution, and “pleasure” to the ability to engage eagerly in behaviours link to positive stimulus. I think these two abilities can be explained without resorting to psychologically charged words (what about rejection/pursuit of negative/positive pay-off?). The authors could have adopted these more game-theoretical terms, but then their work would look positively less attractive as the contribution of their paper would be just a (plausible) way of implementing these reactions to stimulus.
+
+There is a gap between stimulus-driven reactions and emotions that philosophers and psychologists are trying to understand and fill. See for example the Handbook of Emotions, Michael Lewis and Jeannette M. Haviland-Jones (ed.) to have a very general idea of the discussions on this subject. No attempt is made to situate the paper in the very wide and varied research on this topic, at least for saying that it is not the authors' concern [looking at some of their references, this fault may not be exclusive to them].
+
+But they not take the neurological aspect of emotions too seriously either. In p. 2 there appears a very bold statement:
+
+“One can infer then, that representing regions of the brain by single neurons would enable a rough approximation of the region’s functionality.”
+
+That may or may not be correct. But it supports a huge extrapolation between a living organism's complex brain and a certain type of computational model (like Ortus) and its plausibility is not supported by any specialized references or, at least, an argumentation, even a weak one.
+
+In short: the authors present a model codifying a mechanism supposedly based on emotions but that could easily been explained in less charged terms and supported by very speculative considerations.
+
+The authors could have taken a less grandiose approach and offer a nice, tidy model of how to implement stimulus-driven reactions on computational mechanisms akin to neurological ones. In that way their work could be considered of interest for ECAL.
+
+On the other hand, their results are not really persuasive: the system is unstable (it overreacts to small changes in its settings) in the authors' own words. They just offer some hypothesis about the reasons for this and how they may fix them.
+
+Overall, the paper offer a mildly interesting model which needs further work to live to some its promises and which must be presented in more neutral, non-misleading terms. For the time being it is just a nice proof of concept.
+
+----------- Requested revisions -----------
+1. They should include a discussion on emotions to situate that paper in the field.
+2. They should tone-down some claims in the paper to adjust it to its limited scope, in line with my observations on the use of the word "emotions".
+3. They should state clearly in the beginning of the paper (not just at the end) that the system should be regarded as work in progress as its instability affects seriously its reliability and the authors are still to address this issue.
