@@ -1,5 +1,10 @@
 \begin{thebibliography}{}
 
+\bibitem[Anderson and Adolphs, 2014]{Anderson2014}
+Anderson, D.~J. and Adolphs, R. (2014).
+\newblock {A Framework for Studying Emotions across Species}.
+\newblock {\em Cell}, 157(1):187--200.
+
 \bibitem[Azulay et~al., 2016]{Azulay2016}
 Azulay, A., Itskovits, E., and Zaslaver, A. (2016).
 \newblock {The C. elegans Connectome Consists of Homogenous Circuits with
@@ -29,6 +34,12 @@ Bowren, J., Pugh, J., and Stanley, K. (2016).
 \bibitem[DARPA, 2017]{darpa}
 DARPA (2017).
 \newblock Toward machines that improve with experience.
+
+\bibitem[Fang-Yen et~al., 2012]{Fang-Yen2012}
+Fang-Yen, C., Gabel, C.~V., Samuel, A. D.~T., Bargmann, C.~I., and Avery, L.
+  (2012).
+\newblock {Laser Microsurgery in Caenorhabditis elegans}.
+\newblock {\em Methods in Cell Biology}, 107:177--206.
 
 \bibitem[Gore et~al., 2015]{Gore2015}
 Gore, F., Schwartz, E.~C., Brangers, B.~C., Aladi, S., Stujenske, J.~M.,

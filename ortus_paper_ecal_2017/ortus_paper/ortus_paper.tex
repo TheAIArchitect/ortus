@@ -1,6 +1,11 @@
 \documentclass[letterpaper]{article}
 
 \usepackage{natbib,alifeconf}  %% The order is important
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=gray}
+\urlstyle{rm}
+
 
 
 % *****************
@@ -92,18 +97,25 @@ In the context of biologically--inspired AI, the frameworks underlying these app
 
 Recent work at the intersection of these two areas includes \citet{Sinapayen2016}, which investigates the applicability and biological plausibility of spiking neural networks learning by ``stimulation avoidance''. Perhaps the project most closely aligned to Ortus is a biologically inspired neural network modeled off of a honey bee's visual system, which merges biological mechanisms and neural networks \citep{Roper2017}.
 
-
-\subsection{Ortus} is an initial implementation of---and framework for creating---virtual life aimed at approximating the intelligence of living organisms.
+\vspace{.1in}
+\textbf{Ortus} is an initial implementation of---and framework for creating---virtual life aimed at approximating the intelligence of living organisms.
 Born from the study and analysis of C. elegans' connectome and behavior, it aims to strike a balance between biological abstraction, retention of biological fidelity, and computation scalability in order to approximate biological intelligence and learning as closely as possible.
 At its core, Ortus is a network of biologically--inspired, non--spiking neurons, capable of forming excitatory, inhibitory, and electrical synapses.
 Similar to the way the structure of C. elegans' 302 neuron nervous system is capable of complex behaviors including toxin avoidance, reflexively withdrawing from a ``tap'', and ``remembering'' the temperature at which it found food \citep{Jarrell2012}, Ortus' ``connectome'' (neural structure) enables its inherent functionality.
 Once running, Ortus refines its network---similar to the way organic nervous systems adjust themselves (though far simplified, and not yet as dynamic)---based upon Ortus' intrinsic ``understanding'' that certain things are ``good'' and others are ``bad'', with regard to its own longevity.
 This understanding is derived from the structure of the nervous system it generates for itself from a set of input definitions.
+We stress that Ortus is \textit{not} intended to model C. elegans, nor any other specific organism. Rather, it is designed to further efforts to develop generalized artificial biological intelligence via generally applicable neurophysiological principles.\footnote{Source code for Ortus is available at \url{https://www.Github.com/TheAITherapist/Ortus_ECAL_2017}.}
+
 It should be noted that Ortus is a work--in--progress, and its instability impairs its reliability. This will be addressed in the future.
 
 \subsubsection{Contextualizing Emotion.}
 
-As discussed by \ref{Anderson2014}
+\citet{Anderson2014} make the case that relatively simple organisms, such as C. elegans or Drosophila (a genus of flies), have ``emotion primitives'' that contribute to ``central states'' of the nervous system which form the neural basis for what we view to be emotional states.
+That is, they argue that there are specific neural circuits that encode a nervous system's state which produce the outcomes that are associated with observable emotions in humans.
+Further, they suggest that the (at least) two states of arousal in Drosophila, regulated by dopamine, and the approach versus avoidance (Darwinian antithetical pairing) with regard to olfactory stimuli found in C. elegans are examples of ``emotion primitives'' that are factors in emotions seen in different animals \citep{Anderson2014}.
+
+When we discuss emotions in Ortus, our assumption is that in complex organisms, the fundamental building blocks for our complex emotional states are different neural circuits that each contribute to varying degrees at different times.
+Our implementation scales this idea back to the point that we have two emotional states, ``fear'' and ``pleasure'', each represented by a single neuron. While simple, both the premise and scalability are supported by \citet{Anderson2014}.
 
 The remaining sections of this paper outline Ortus' design and implementation, describe an initial experiment, discuss the implications of this framework, and analyze its shortcomings.
 
@@ -131,7 +143,7 @@ As Ortus aims to be a virtual analogy to intelligent life, we tried to only impl
 \textbf{BR 2:} Clearly, mammals don't normally get scared when they exhale, nor do they feel a measurable increase in pleasure upon inhalation, however the relations do exist on some level. The concept of ``good'' and ``bad'' sensations or emotions only carry meaning to us because of their associations to other neural circuits that are either fundamentally desirable or undesirable from a longevity/survival perspective.
 As stated by \citet{Verma2015}, ``emotions, motivations, and reinforcement are a closely related, evolutionarily--conserved phenomena maintaining the integrity of an individual and promoting survival in a natural environment''. Taking this idea into account, along with work by \citet{Gore2015}, which suggests that associative learning is funneled through innate behavior circuits to assign positive or negative emotions to neutral sensory stimuli, it seems that building a virtual organism driven by emotional states is a fairly sound approach. 
 
-While at the human level, the emotional ``part'' of the brain is quite complex, it is not unreasonable to assume that as organismic complexity (and thereby intelligence) decreases, the complexity of emotions decreases. Numerous experiments done on rodents, such as those described by \citet{Weiner2015}, show that the major structures of the brain can be examined by lesioning portions of the brain. One can infer then, that representing regions of the brain by single neurons would enable a rough approximation of the region's functionality. If one follows this line of thought, the possibility emerges that organisms like C. elegans may, in fact, be driven by ``emotions'' as well. For example, C. elegans is capable of toxin avoidance, a tap--withdrawal response, as well as learning that it found food at a certain temperature \citep{Wicks1996,Xu2012}. One must ask how this can be. There is nothing external that assists it in differentiating good from bad, yet it wants to avoid certain things, while it is attracted to others. In Ortus, we make the assumption that these behaviors are a result of a \textit{very} simple emotional subsystem that forms the basis for C. elegans' behavior.
+While at the human level, the emotional ``part'' of the brain is quite complex, it is not unreasonable to assume that as organismic complexity (and thereby intelligence) decreases, the complexity of emotions decreases. Numerous experiments done on rodents, such as those described by \citet{Weiner2015}, show that the major structures of the brain can be examined by lesioning portions of the brain. Further, it is well known that damage to a specific part of the brain or nervous system can eliminate certain skills, including down to the neuron level when looking at ablation experiments on C. elegans \citep{Fang-Yen2012}. One can infer then, that representing regions of the brain by single neurons would enable a rough approximation of the region's functionality. If one follows this line of thought, the possibility emerges that organisms like C. elegans may, in fact, be driven by ``emotions'' as well. For example, C. elegans is capable of toxin avoidance, a tap--withdrawal response, as well as learning that it found food at a certain temperature \citep{Wicks1996,Xu2012}. One must ask how this can be. There is nothing external that assists it in differentiating good from bad, yet it wants to avoid certain things, while it is attracted to others. In Ortus, we make the assumption that these behaviors are a result of a \textit{very} simple emotional subsystem that forms the basis for C. elegans' behavior.
 
 
 \textbf{ODE 3:} Ortus employs four different classes of interneurons. First are ``Sensory Extension Interneurons'' (SEIs).\footnote{The two interneurons discussed in Fig. \ref{respiration} are SEIs.} These take input directly from sensory neurons, and pass the input along to the second class of interneurons, ``Sensory Consolidatory Interneurons'' (SCIs).
@@ -280,7 +292,7 @@ Combining the $XCorr$ and $Slope$ computation results, assuming both neurons inv
 
 \section{Experimental Design and Results}
 
-\subsubsection{Experiment.} To test our initial implementation of Ortus, we implemented the configuration described above, with the addition of an $H_2O$ sensory neuron, $sH_2O$.
+\subsubsection{Experiment.} To test our initial implementation of Ortus, we implemented the configuration described above, with the addition of an $H_2O$ sensory neuron, $sH_2O$, and corresponding interneurons..
 We then ``exposed'' Ortus to water via $sH_2O$ stimulation four times in bursts spaced 100 timesteps apart, in order to allow injected activation to naturally decay.
 During each burst of $H_2O$ exposure, we prevented Ortus from exhaling $CO_2$ or inhaling $O_2$, thereby inducing an enhanced state of fear.
 After repeating the conditioning exposure four times, we allowed Ortus 200 timesteps to let any injected activation to decay.
@@ -288,8 +300,10 @@ Finally, we exposed Ortus to water, without inducing a fearful state, to determi
 
 
 \subsubsection{Results.} Since $sCO_2$ activation causes fear, and $H_2O$ was presented ($sH_2O$ was stimulated) during this time, we expected Ortus to become progressively more and more ``scared'' of water each time it was presented while it was in a state of elevated fear.
+Specifically, we wanted to use classical conditioning to teach Ortus to fear water. 
 As can be seen in Fig. \ref{conditioning}, during each exposure to $H_2O$, activation of \texttt{eFEAR} increased when compared to the previous exposure.
-Further, after the four rounds of conditioning, we expected to observe an increase in activation in \texttt{eFEAR} when we presented Ortus with $H_2O$, in the absence of exhalation and inhalation restriction. Fig. \ref{conditioned} confirms this increase in fear activation as a result of $sH_2O$ stimulation alone. Compared to simply exposing Ortus to $sH_2O$ stimulation without prior fear conditioning, in which a very slight raise was observed---as may be seen in Fig. \ref{no_conditioning}, it is clear that we were able to successfully use classical conditioning to instill a fear of water in Ortus that was previously almost non--existent. 
+In Fig. \ref{conditioning} the sharply increasing purple trace is the $H_2O$ sensor, the dark green trace just below it is the $CO_2$ sensor, and the light blue trace below that is the fear response.
+After the four rounds of conditioning, we expected to observe an increase in activation in \texttt{eFEAR} when we presented Ortus with $H_2O$, in the absence of exhalation and inhalation restriction. Fig. \ref{conditioned} confirms this increase in fear activation as a result of $sH_2O$ stimulation alone. Compared to simply exposing Ortus to $sH_2O$ stimulation without prior fear conditioning, in which a very slight raise was observed---as may be seen in Fig. \ref{no_conditioning}, it is clear that we were able to successfully use classical conditioning to instill a fear of water in Ortus that was previously almost non--existent. 
 
 
 % reduce space below captions to make everything fit. 
@@ -341,7 +355,9 @@ In fact, the neural structure needs refinement for combinatoric reasons anyway; 
 Lastly, we would like to make Ortus' learning far more nuanced, and capable of picking up on more subtle changes than it currently can; though working on resolving the aforementioned issues should help the learning aspect as well. Additionally, \citet{Kutsarova2016} indicate that, relative to synaptic strengthening and weakening, axonal branch tips emerge to form new synapses, and that synchronous activity stabilizes synapses and prolongs axonal branches. In addition to refining Ortus' method for altering its synaptic weights, this is one more way for Ortus to modify its approach to learning. It also suggests there is biological precedent to implement a ``floor'' so that as Ortus learns new things, they can't be unlearned beyond a certain point. 
 
 
-Shortcomings aside, the results of our classical conditioning experiment with Ortus show that we successfully created a biologically--based virtual system that has a ``self--sustaining'' respiratory circuit, and is capable of Hebbian and Stentian learning. To suggest Ortus was virtually ``alive'' at any point during our experimentation seems as though it would be quite a stretch, however, once Ortus and similar systems increase in complexity, we must pose the question: when does something cross the boundary from computer program to sentient virtual being? When it can ``feel''? What defines a ``feeling'' then? We have made the case that Ortus is emotion--driven, and have shown that we can both induce fear in it by interrupting its respiration cycle, and teach it to fear things it hadn't previously feared. If Ortus \textit{can} feel, and isn't alive, what would it need to do in order to be alive? Alternatively, If Ortus \textit{can't} feel, what would it take for a virtual organism to be able to ``feel''?
+Shortcomings aside, the results of our classical conditioning experiment with Ortus show that we successfully created a biologically--based virtual system that has a ``self--sustaining'' respiratory circuit, and is capable of Hebbian and Stentian learning.
+We have made the case that Ortus is emotion--driven, and have shown that we can both induce fear in it by interrupting its respiration cycle, and teach it to fear things it hadn't previously feared.
+To suggest Ortus was virtually ``alive'' at any point during our experimentation seems as though it would be a stretch, however, once Ortus and similar systems increase in complexity, we must pose the question: when can a virtual organism ``feel'', if ever?
 
 \section{Conclusion}
 We have presented Ortus, an initial approach to a framework that exhibits basic emotionally--based learning (fear conditioning), self--sustaining inherent behavior (cyclic breathing via a respiratory circuit), and an approach to sensory processing that enables inter-sensory associative learning, with or without an emotional component. While the implementation of Ortus presented is in its initial stages, the design principles are solidly based in biology, and with further development and refinement, the potential exists for Ortus' development of (artificial) biological intelligence to quickly increase. %resulting from emotional amalgamation and the introduction of more complex sensory input.

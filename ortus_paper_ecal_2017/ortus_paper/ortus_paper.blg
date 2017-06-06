@@ -8,45 +8,45 @@ Warning--entry type for "darpa" isn't style-file defined
 Warning--there's a number but no volume in Bowren2016
 Warning--empty journal in Sinapayen2016
 Warning--empty publisher in Weiner2015
-You've used 21 entries,
+You've used 23 entries,
             1935 wiz_defined-function locations,
-            612 strings with 8510 characters,
-and the built_in function-call counts, 9704 in all, are:
-= -- 915
-> -- 531
-< -- 8
-+ -- 188
-- -- 188
-* -- 927
-:= -- 1707
-add.period$ -- 61
-call.type$ -- 21
-change.case$ -- 198
-chr.to.int$ -- 21
-cite$ -- 24
-duplicate$ -- 302
-empty$ -- 601
-format.name$ -- 217
-if$ -- 1836
+            625 strings with 8853 characters,
+and the built_in function-call counts, 10594 in all, are:
+= -- 1004
+> -- 572
+< -- 9
++ -- 202
+- -- 202
+* -- 1010
+:= -- 1861
+add.period$ -- 67
+call.type$ -- 23
+change.case$ -- 215
+chr.to.int$ -- 23
+cite$ -- 26
+duplicate$ -- 330
+empty$ -- 660
+format.name$ -- 235
+if$ -- 2006
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 21
-newline$ -- 106
-num.names$ -- 63
-pop$ -- 166
+missing$ -- 23
+newline$ -- 116
+num.names$ -- 69
+pop$ -- 178
 preamble$ -- 1
-purify$ -- 199
+purify$ -- 216
 quote$ -- 0
-skip$ -- 226
+skip$ -- 247
 stack$ -- 0
-substring$ -- 673
-swap$ -- 31
+substring$ -- 747
+swap$ -- 33
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 124
+type$ -- 136
 warning$ -- 3
-while$ -- 75
+while$ -- 83
 width$ -- 0
-write$ -- 268
+write$ -- 294
 (There were 4 warnings)
